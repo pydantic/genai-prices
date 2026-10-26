@@ -586,6 +586,7 @@ def test_gpt_6_sol_luna_prices(model_ref: str, model_id: str, short_total: Decim
     [
         ('gpt-6-sol', Decimal('0.5527'), Decimal('1.100404')),
         ('gpt-6.1-sol', Decimal('0.5526'), Decimal('1.100204')),
+        ('gpt-6.1-terra', Decimal('0.2763'), Decimal('0.550102')),
         ('gpt-6-luna', Decimal('0.027635'), Decimal('0.0550202')),
     ],
 )
@@ -2717,6 +2718,7 @@ def test_price_deepseek_v4_flash_routed_to_v4_1_flash(timestamp: datetime, off_p
         ('gpt-5.6-sol', 272_001, Decimal('4'), Decimal('8')),
         ('gpt-5.6-terra', 272_001, Decimal('2'), Decimal('4')),
         ('gpt-6.1-sol', 272_001, Decimal('2'), Decimal('4')),
+        ('gpt-6.1-terra', 272_001, Decimal('1'), Decimal('2')),
     ],
 )
 def test_price_long_context_cliff(model_ref: str, first_long_token: int, base_input: Decimal, long_input: Decimal):
