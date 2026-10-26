@@ -82,6 +82,64 @@ it.each([
 })
 
 it.each([
+  ['gemini-2.5-flash', 'flex', '2026-03-31', 2.7325],
+  ['gemini-2.5-flash', 'flex', '2026-04-01', 1.37],
+  ['gemini-2.5-flash', 'priority', '2026-03-31', 2.7325],
+  ['gemini-2.5-flash', 'priority', '2026-04-01', 4.9185],
+  ['gemini-2.5-pro', 'flex', '2026-03-31', 16.9375],
+  ['gemini-2.5-pro', 'flex', '2026-04-01', 8.5],
+  ['gemini-2.5-pro', 'priority', '2026-03-31', 16.9375],
+  ['gemini-2.5-pro', 'priority', '2026-04-01', 30.4875],
+] as const)('prices google %s on the %s service tier on %s', (model, tier, date, total) => {
+  expect(
+    calcPrice({ cache_read_tokens: 250_000, input_tokens: 1_000_000, output_tokens: 1_000_000 }, model, {
+      priceContext: { service_tier: tier },
+      providerId: 'google',
+      timestamp: new Date(`${date}T00:00:00Z`),
+    })?.total_price
+  ).toBeCloseTo(total, 12)
+})
+
+it.each([
+  [
+    'gemini-2.5-flash',
+    'flex',
+    {
+      cache_audio_read_tokens: 100_000,
+      cache_read_tokens: 250_000,
+      input_audio_tokens: 400_000,
+      input_tokens: 1_000_000,
+      output_tokens: 1_000_000,
+    },
+    1.482,
+  ],
+  [
+    'gemini-2.5-flash',
+    'priority',
+    {
+      cache_audio_read_tokens: 100_000,
+      cache_read_tokens: 250_000,
+      input_audio_tokens: 400_000,
+      input_tokens: 1_000_000,
+      output_tokens: 1_000_000,
+    },
+    5.3091,
+  ],
+  ['gemini-2.5-pro', 'flex', { cache_read_tokens: 50_000, input_tokens: 200_000, output_tokens: 100_000 }, 0.6],
+  ['gemini-2.5-pro', 'priority', { cache_read_tokens: 50_000, input_tokens: 200_000, output_tokens: 100_000 }, 2.14875],
+  ['gemini-2.5-pro', 'flex', { cache_read_tokens: 50_000, input_tokens: 200_001, output_tokens: 100_000 }, 0.95000125],
+  ['gemini-2.5-pro', 'priority', { cache_read_tokens: 50_000, input_tokens: 200_001, output_tokens: 100_000 }, 3.3975045],
+] as const)('prices google %s on the %s service tier for usage %o', (model, tier, usage, total) => {
+  expect(
+    calcPrice(usage, model, {
+      priceContext: { service_tier: tier },
+      providerId: 'google',
+      timestamp: new Date('2026-04-01T00:00:00Z'),
+    })?.total_price
+  ).toBeCloseTo(total, 12)
+})
+
+it.each([
   ['o4-mini', 100_000, 100_000, 0.0138, 2.2],
   ['gpt-5.4', 272_000, 272_000, 0.03536, 7.5],
   ['gpt-5.4', 272_001, 272_001, 0.06800025, 11.25],

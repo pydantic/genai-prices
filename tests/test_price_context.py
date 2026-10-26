@@ -98,6 +98,89 @@ def test_batch_processing(provider: str, model: str, timestamp: datetime, total:
 
 
 @pytest.mark.parametrize(
+    'model,tier,timestamp,total',
+    [
+        ('gemini-2.5-flash', 'flex', datetime(2026, 3, 31), '2.7325'),
+        ('gemini-2.5-flash', 'flex', datetime(2026, 4, 1), '1.37'),
+        ('gemini-2.5-flash', 'priority', datetime(2026, 3, 31), '2.7325'),
+        ('gemini-2.5-flash', 'priority', datetime(2026, 4, 1), '4.9185'),
+        ('gemini-2.5-pro', 'flex', datetime(2026, 3, 31), '16.9375'),
+        ('gemini-2.5-pro', 'flex', datetime(2026, 4, 1), '8.5'),
+        ('gemini-2.5-pro', 'priority', datetime(2026, 3, 31), '16.9375'),
+        ('gemini-2.5-pro', 'priority', datetime(2026, 4, 1), '30.4875'),
+    ],
+)
+def test_gemini_service_tiers(model: str, tier: str, timestamp: datetime, total: str) -> None:
+    result = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=250_000, output_tokens=1_000_000),
+        model,
+        provider_id='google',
+        genai_request_timestamp=timestamp,
+        price_context={'service_tier': tier},
+    )
+    assert result.total_price == Decimal(total)
+
+
+@pytest.mark.parametrize(
+    'model,tier,usage,total',
+    [
+        (
+            'gemini-2.5-flash',
+            'flex',
+            Usage(
+                input_tokens=1_000_000,
+                input_audio_tokens=400_000,
+                cache_read_tokens=250_000,
+                cache_audio_read_tokens=100_000,
+                output_tokens=1_000_000,
+            ),
+            '1.482',
+        ),
+        (
+            'gemini-2.5-flash',
+            'priority',
+            Usage(
+                input_tokens=1_000_000,
+                input_audio_tokens=400_000,
+                cache_read_tokens=250_000,
+                cache_audio_read_tokens=100_000,
+                output_tokens=1_000_000,
+            ),
+            '5.3091',
+        ),
+        ('gemini-2.5-pro', 'flex', Usage(input_tokens=200_000, cache_read_tokens=50_000, output_tokens=100_000), '0.6'),
+        (
+            'gemini-2.5-pro',
+            'priority',
+            Usage(input_tokens=200_000, cache_read_tokens=50_000, output_tokens=100_000),
+            '2.14875',
+        ),
+        (
+            'gemini-2.5-pro',
+            'flex',
+            Usage(input_tokens=200_001, cache_read_tokens=50_000, output_tokens=100_000),
+            '0.95000125',
+        ),
+        (
+            'gemini-2.5-pro',
+            'priority',
+            Usage(input_tokens=200_001, cache_read_tokens=50_000, output_tokens=100_000),
+            '3.3975045',
+        ),
+    ],
+)
+def test_gemini_service_tier_rates(model: str, tier: str, usage: Usage, total: str) -> None:
+    result = calc_price(
+        usage,
+        model,
+        provider_id='google',
+        genai_request_timestamp=datetime(2026, 4, 1),
+        price_context={'service_tier': tier},
+    )
+    assert result.total_price == Decimal(total)
+
+
+@pytest.mark.parametrize(
     'model,input_tokens,cache_read_tokens,input_price,output_price',
     [
         ('o4-mini', 100_000, 100_000, '0.0138', '2.2'),

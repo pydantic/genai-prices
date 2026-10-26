@@ -122,6 +122,66 @@ func TestBatchProcessing(t *testing.T) {
 	}
 }
 
+func TestGeminiServiceTiers(t *testing.T) {
+	for _, test := range []struct {
+		model, tier string
+		timestamp   time.Time
+		total       float64
+	}{
+		{"gemini-2.5-flash", "flex", time.Date(2026, 3, 31, 0, 0, 0, 0, time.UTC), 2.7325},
+		{"gemini-2.5-flash", "flex", time.Date(2026, 4, 1, 0, 0, 0, 0, time.UTC), 1.37},
+		{"gemini-2.5-flash", "priority", time.Date(2026, 3, 31, 0, 0, 0, 0, time.UTC), 2.7325},
+		{"gemini-2.5-flash", "priority", time.Date(2026, 4, 1, 0, 0, 0, 0, time.UTC), 4.9185},
+		{"gemini-2.5-pro", "flex", time.Date(2026, 3, 31, 0, 0, 0, 0, time.UTC), 16.9375},
+		{"gemini-2.5-pro", "flex", time.Date(2026, 4, 1, 0, 0, 0, 0, time.UTC), 8.5},
+		{"gemini-2.5-pro", "priority", time.Date(2026, 3, 31, 0, 0, 0, 0, time.UTC), 16.9375},
+		{"gemini-2.5-pro", "priority", time.Date(2026, 4, 1, 0, 0, 0, 0, time.UTC), 30.4875},
+	} {
+		t.Run(test.model+"/"+test.tier+"/"+test.timestamp.Format(time.DateOnly), func(t *testing.T) {
+			result, err := genai_prices.Calculate(genai_prices.PriceRequest{
+				Usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000, genai_prices.UsageCacheReadTokens: 250_000, genai_prices.UsageOutputTokens: 1_000_000},
+				Model: test.model, ProviderID: "google", Timestamp: test.timestamp,
+				PriceContext: map[string]string{"service_tier": test.tier},
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if math.Abs(result.TotalPrice-test.total) > 1e-12 {
+				t.Fatalf("got %v, want %v", result.TotalPrice, test.total)
+			}
+		})
+	}
+}
+
+func TestGeminiServiceTierRates(t *testing.T) {
+	for _, test := range []struct {
+		model, tier string
+		usage       genai_prices.Usage
+		total       float64
+	}{
+		{"gemini-2.5-flash", "flex", genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000, genai_prices.UsageInputAudioTokens: 400_000, genai_prices.UsageCacheReadTokens: 250_000, genai_prices.UsageCacheAudioReadTokens: 100_000, genai_prices.UsageOutputTokens: 1_000_000}, 1.482},
+		{"gemini-2.5-flash", "priority", genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000, genai_prices.UsageInputAudioTokens: 400_000, genai_prices.UsageCacheReadTokens: 250_000, genai_prices.UsageCacheAudioReadTokens: 100_000, genai_prices.UsageOutputTokens: 1_000_000}, 5.3091},
+		{"gemini-2.5-pro", "flex", genai_prices.Usage{genai_prices.UsageInputTokens: 200_000, genai_prices.UsageCacheReadTokens: 50_000, genai_prices.UsageOutputTokens: 100_000}, 0.6},
+		{"gemini-2.5-pro", "priority", genai_prices.Usage{genai_prices.UsageInputTokens: 200_000, genai_prices.UsageCacheReadTokens: 50_000, genai_prices.UsageOutputTokens: 100_000}, 2.14875},
+		{"gemini-2.5-pro", "flex", genai_prices.Usage{genai_prices.UsageInputTokens: 200_001, genai_prices.UsageCacheReadTokens: 50_000, genai_prices.UsageOutputTokens: 100_000}, 0.95000125},
+		{"gemini-2.5-pro", "priority", genai_prices.Usage{genai_prices.UsageInputTokens: 200_001, genai_prices.UsageCacheReadTokens: 50_000, genai_prices.UsageOutputTokens: 100_000}, 3.3975045},
+	} {
+		t.Run(test.model+"/"+test.tier, func(t *testing.T) {
+			result, err := genai_prices.Calculate(genai_prices.PriceRequest{
+				Usage: test.usage, Model: test.model, ProviderID: "google",
+				Timestamp:    time.Date(2026, 4, 1, 0, 0, 0, 0, time.UTC),
+				PriceContext: map[string]string{"service_tier": test.tier},
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if math.Abs(result.TotalPrice-test.total) > 1e-12 {
+				t.Fatalf("got %v, want %v", result.TotalPrice, test.total)
+			}
+		})
+	}
+}
+
 func TestOpenAIPublishedFlexRates(t *testing.T) {
 	for _, test := range []struct {
 		model                        string

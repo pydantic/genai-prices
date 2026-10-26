@@ -888,10 +888,14 @@ models:
         - equals: gemini-2.5-flash-latest
         - equals: gemini-2.5-flash-preview-09-2025
     context_window: 1048576
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-26
     price_comments: >-
       Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history
       before then is not modelled. Batch halves input and output; context caching stays at the standard rate.
+      Flex and Priority launched on 2026-04-01 (https://ai.google.dev/gemini-api/docs/changelog). Their rates on the
+      pricing page (Flex and Priority tabs) are the same on 2026-10-26 and in the 2026-04-09 snapshot
+      https://web.archive.org/web/20260409235154/https://ai.google.dev/gemini-api/docs/pricing. Flex keeps the standard context caching rate;
+      Priority raises it.
     prices:
       input_mtok: 0.3
       input_audio_mtok: 1
@@ -906,6 +910,20 @@ models:
           input_mtok: 0.15
           input_audio_mtok: 0.5
           output_mtok: 1.25
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-04-01 }
+        prices:
+          input_mtok: 0.15
+          input_audio_mtok: 0.5
+          output_mtok: 1.25
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-04-01 }
+        prices:
+          input_mtok: 0.54
+          input_audio_mtok: 1.8
+          cache_read_mtok: 0.054
+          cache_audio_read_mtok: 0.18
+          output_mtok: 4.5
 
   - id: gemini-2.5-flash-image
     name: Gemini 2.5 Flash Image
@@ -1033,8 +1051,12 @@ models:
     price_comments: >-
       See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro. Batch rates verified on 2026-10-14 at
       https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves
-      input and output in both prompt-size tiers; context caching stays at the standard rate.
-    prices_checked: 2026-10-19
+      input and output in both prompt-size tiers; context caching stays at the standard rate. Flex and Priority
+      launched on 2026-04-01 (https://ai.google.dev/gemini-api/docs/changelog). Their rates on the pricing page (Flex
+      and Priority tabs) are the same on 2026-10-26 and in the 2026-04-09 snapshot
+      https://web.archive.org/web/20260409235154/https://ai.google.dev/gemini-api/docs/pricing. Flex keeps the standard context caching rate;
+      Priority raises it.
+    prices_checked: 2026-10-26
     prices:
       input_mtok:
         base: 1.25
@@ -1066,6 +1088,37 @@ models:
             tiers:
               - start: 200000
                 price: 7.5
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-04-01 }
+        prices:
+          input_mtok:
+            base: 0.625
+            tiers:
+              - start: 200000
+                price: 1.25
+          output_mtok:
+            base: 5
+            tiers:
+              - start: 200000
+                price: 7.5
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-04-01 }
+        prices:
+          input_mtok:
+            base: 2.25
+            tiers:
+              - start: 200000
+                price: 4.5
+          cache_read_mtok:
+            base: 0.225
+            tiers:
+              - start: 200000
+                price: 0.45
+          output_mtok:
+            base: 18
+            tiers:
+              - start: 200000
+                price: 27
 
   - id: gemini-2.5-pro-tts
     name: Gemini 2.5 Pro TTS

@@ -11945,7 +11945,7 @@ export const data: Provider[] = [
         },
         context_window: 1048576,
         price_comments:
-          'Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output; context caching stays at the standard rate.',
+          'Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output; context caching stays at the standard rate. Flex and Priority launched on 2026-04-01 (https://ai.google.dev/gemini-api/docs/changelog). Their rates on the pricing page (Flex and Priority tabs) are the same on 2026-10-26 and in the 2026-04-09 snapshot https://web.archive.org/web/20260409235154/https://ai.google.dev/gemini-api/docs/pricing. Flex keeps the standard context caching rate; Priority raises it.',
         prices: {
           input_mtok: 0.3,
           cache_read_mtok: 0.03,
@@ -11966,6 +11966,36 @@ export const data: Provider[] = [
             },
             constraint: {
               start_date: '2026-10-14',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.15,
+              output_mtok: 1.25,
+              input_audio_mtok: 0.5,
+            },
+            constraint: {
+              start_date: '2026-04-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 0.54,
+              cache_read_mtok: 0.054,
+              output_mtok: 4.5,
+              input_audio_mtok: 1.8,
+              cache_audio_read_mtok: 0.18,
+            },
+            constraint: {
+              start_date: '2026-04-01',
               type: 'start_date',
             },
           },
@@ -12143,7 +12173,7 @@ export const data: Provider[] = [
           ],
         },
         price_comments:
-          'See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output in both prompt-size tiers; context caching stays at the standard rate.',
+          'See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output in both prompt-size tiers; context caching stays at the standard rate. Flex and Priority launched on 2026-04-01 (https://ai.google.dev/gemini-api/docs/changelog). Their rates on the pricing page (Flex and Priority tabs) are the same on 2026-10-26 and in the 2026-04-09 snapshot https://web.archive.org/web/20260409235154/https://ai.google.dev/gemini-api/docs/pricing. Flex keeps the standard context caching rate; Priority raises it.',
         prices: {
           input_mtok: {
             base: 1.25,
@@ -12201,6 +12231,73 @@ export const data: Provider[] = [
             },
             constraint: {
               start_date: '2026-10-14',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.625,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 1.25,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 7.5,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-04-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: {
+                base: 2.25,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 4.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.225,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 0.45,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 18,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 27,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-04-01',
               type: 'start_date',
             },
           },

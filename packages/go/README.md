@@ -79,7 +79,8 @@ OpenAI variants cover `flex`, `priority`, and `fast` where the published rate ta
 
 If a context matches no variant, you receive the standard-price estimate.
 This includes unsupported models, unknown tiers, misspelled keys, and dates without verified tier rates.
-The bundled tier rates are verified from October 12, 2026; earlier tier history is not modeled.
+The bundled tier rates are verified from October 12, 2026, and from April 1, 2026 for Google's Gemini 2.5 Flash and
+Gemini 2.5 Pro; earlier tier history is not modeled.
 
 ## Batch API
 
