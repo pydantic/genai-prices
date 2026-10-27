@@ -191,10 +191,11 @@ providers:
     file: prices/providers/baseten.yml
     scope: Models in Baseten's public Model APIs catalog and pricing table.
     sources:
-      - https://docs.baseten.co/inference/model-apis/overview.md
+      - https://docs.baseten.co/inference/model-apis/overview
       - https://www.baseten.co/pricing/
     notes: >-
-      The docs table is authoritative for API model IDs and context windows. The pricing table is authoritative for per-million
+      The docs table is authoritative for API model IDs and context windows; its Markdown export renders the table empty, so
+      read it from the HTML page. The pricing table is authoritative for per-million
       input, cached-input, and output token rates. Match the two tables by their Model API links; some pricing links use short
       aliases while the docs table publishes qualified model IDs. A missing cached-input value is intentional only when the
       pricing table displays a dash. Do not treat third-party namespaces as Baseten provider ownership.
