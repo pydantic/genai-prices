@@ -12,48 +12,38 @@ from prices.prices_types import ClauseStartsWith, ModelPrice
 from prices.update import ProviderYaml
 from prices.utils import package_dir
 
-K3_COLUMNS = """\
-{ title: "Model", width: "12%" },
-{ title: "Unit", width: "10%" },
-{ title: "Cache Write Price (TTL 5min)", width: "13%" },
-{ title: "Cache Write Price (TTL 1h)", width: "13%" },
-{ title: "Cached Input Price", width: "13%" },
-{ title: "Input Price", width: "13%" },
-{ title: "Output Price", width: "10%" },
-{ title: "Context Window", width: "16%" },
-"""
-K3_ROW = (
-    '["kimi-k3", "1M tokens", <>{"$"}3.00</>, <>{"$"}6.00</>, <>{"$"}0.30</>, <>{"$"}3.00</>, <>{"$"}15.00</>,'
-    ' "1,048,576 tokens"],'
+
+def tooltip(label: str) -> str:
+    return f'_jsx(Tooltip,{{tip:`About {label}.`,children:`{label}`}})'
+
+
+def link(model_id: str) -> str:
+    return f'_jsx(_components.a,{{href:`/guide/{model_id}-quickstart`,children:`{model_id}`}})'
+
+
+K3_COLUMNS = (
+    '{title:`Model`,width:`25%`},{title:`Input`,width:`15%`},{title:`Output`,width:`15%`},'
+    f'{{title:{tooltip("Cached Input")},width:`15%`}},{{title:{tooltip("5m writes")},width:`15%`}},'
+    f'{{title:{tooltip("1h writes")},width:`15%`}}'
 )
-K2_COLUMNS = """\
-{ title: "Model", width: "24%" },
-{ title: "Unit", width: "12%" },
-{ title: "Input Price (Cache Hit)", width: "16%" },
-{ title: "Input Price (Cache Miss)", width: "16%" },
-{ title: "Output Price", width: "14%" },
-{ title: "Context Window", width: "18%" },
-"""
-K2_REORDERED_COLUMNS = """\
-{ title: "Output Price", width: "14%" },
-{ title: "Model", width: "24%" },
-{ title: "Context Window", width: "18%" },
-{ title: "Input Price (Cache Miss)", width: "16%" },
-{ title: "Unit", width: "12%" },
-{ title: "Input Price (Cache Hit)", width: "16%" },
-"""
-K2_REORDERED_ROW = '[<>{"$"}4.00</>, "kimi-k2.6", "262,144 tokens", <>{"$"}0.95</>, "1M tokens", <>{"$"}0.16</>],'
-K2_ROW = '["kimi-k2.6", "1M tokens", <>{"$"}0.16</>, <>{"$"}0.95</>, <>{"$"}4.00</>, "262,144 tokens"],'
+K3_ROW = f'[{link("kimi-k3")},`$3.00 / MTok`,`$15.00 / MTok`,`$0.30 / MTok`,`$3.00 / MTok`,`$6.00 / MTok`]'
+K2_COLUMNS = (
+    '{title:`Model`,width:`34%`},{title:`Input`,width:`22%`},{title:`Output`,width:`22%`},'
+    f'{{title:{tooltip("Cached Input")},width:`22%`}}'
+)
+K2_ROW = f'[{link("kimi-k2.6")},`$0.95 / MTok`,`$4.00 / MTok`,`$0.16 / MTok`]'
 
 
-def doc_table(columns: str, *rows: str) -> str:
-    body = '\n'.join(rows)
-    return f'<DocTable\n  columns={{[\n{columns}]}}\n  rows={{[\n{body}\n]}}\n/>\n'
+def section(context: str, columns: str, *rows: str) -> str:
+    return (
+        f'_jsx(_components.p,{{children:`All models support a {context}-token context window.`}}),`\\n`,'
+        f'_jsx(DocTable,{{className:`doc-table-bordered`,columns:[{columns}],rows:[{",".join(rows)}]}})}}),`\\n`,'
+    )
 
 
-def test_moonshot_maps_columns_by_title() -> None:
-    models = source_moonshotai.parse_pricing_markdown(
-        doc_table(K3_COLUMNS, K3_ROW) + doc_table(K2_REORDERED_COLUMNS, K2_REORDERED_ROW)
+def test_moonshot_maps_columns_by_title_and_reads_each_sections_context_window() -> None:
+    models = source_moonshotai.parse_pricing_page(
+        section('1,048,576', K3_COLUMNS, K3_ROW) + section('262,144', K2_COLUMNS, K2_ROW)
     )
 
     assert [(model.id, model.context_window) for model in models] == [('kimi-k3', 1048576), ('kimi-k2.6', 262144)]
@@ -73,34 +63,36 @@ def test_moonshot_maps_columns_by_title() -> None:
 
 
 @pytest.mark.parametrize(
-    ('markdown', 'error'),
+    ('page', 'error'),
     [
-        ('## Model Pricing\n', 'has no DocTable price tables'),
+        ('<table><tbody /></table>', 'has no DocTable price tables'),
         (
-            doc_table(K2_COLUMNS.replace('Output Price', 'Batch Price'), K2_ROW),
+            section('262,144', K2_COLUMNS.replace('`Output`', '`Batch`'), K2_ROW),
             'Unexpected Moonshot AI pricing columns',
         ),
         (
-            doc_table(K2_COLUMNS.replace('{ title: "Output Price", width: "14%" },\n', ''), K2_ROW),
+            section('262,144', K2_COLUMNS.replace('{title:`Output`,width:`22%`},', ''), K2_ROW),
             'Unexpected Moonshot AI pricing columns',
         ),
         (
-            doc_table(K2_COLUMNS.replace('Input Price (Cache Hit)', 'Input Price (Cache Miss)'), K2_ROW),
+            section('262,144', K2_COLUMNS.replace('`Output`', '`Input`'), K2_ROW),
             'Unexpected Moonshot AI pricing columns',
+        ),
+        (section('262,144', K2_COLUMNS, K2_ROW).replace('All models support', 'All models have'), 'no context window'),
+        (section('262,144', K2_COLUMNS, K2_ROW.replace(',`$0.16 / MTok`', '')), 'Unexpected Moonshot AI pricing row'),
+        (
+            section('262,144', K2_COLUMNS, K2_ROW.replace('`kimi-k2.6`', '`Kimi K2.6`')),
+            'Unexpected Moonshot AI pricing row',
         ),
         (
-            doc_table(K2_COLUMNS.replace('Input Price (Cache Hit)', 'Input Price'), K2_ROW),
-            'Unexpected Moonshot AI pricing columns',
+            section('262,144', K2_COLUMNS, K2_ROW.replace('`$4.00 / MTok`', '`-`')),
+            'Unexpected Moonshot AI Output for kimi-k2.6: -',
         ),
-        (doc_table(K2_COLUMNS, K2_ROW.replace(', "262,144 tokens"', '')), 'Unexpected Moonshot AI pricing row'),
-        (doc_table(K2_COLUMNS, K2_ROW.replace('<>{"$"}4.00</>', '4.00')), 'Unexpected Moonshot AI pricing row'),
-        (doc_table(K2_COLUMNS, K2_ROW.replace('1M tokens', '1K tokens')), 'unit or context window'),
-        (doc_table(K2_COLUMNS, K2_ROW.replace('<>{"$"}4.00</>', '"-"')), 'Unexpected Moonshot AI Output Price'),
     ],
 )
-def test_moonshot_rejects_unexpected_tables(markdown: str, error: str) -> None:
+def test_moonshot_rejects_unexpected_tables(page: str, error: str) -> None:
     with pytest.raises(RuntimeError, match=error):
-        source_moonshotai.parse_pricing_markdown(markdown)
+        source_moonshotai.parse_pricing_page(page)
 
 
 @pytest.mark.vcr()
@@ -110,7 +102,7 @@ def test_moonshot_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pyt
 
     source_moonshotai.main(provider_path)
 
-    assert capsys.readouterr().out == 'Moonshot AI prices updated: 0 added, 4 updated\n'
+    assert capsys.readouterr().out == 'Moonshot AI prices updated: 2 added, 4 updated\n'
     kimi_k26 = ProviderYaml(provider_path).provider.find_model('kimi-k2.6')
     assert kimi_k26 is not None
     assert kimi_k26.match == ClauseStartsWith(starts_with='kimi-k2.6')
