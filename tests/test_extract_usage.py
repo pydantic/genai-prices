@@ -720,8 +720,10 @@ def test_moonshot_chat_usage_bills_cache_writes() -> None:
         output_tokens=112,
         output_reasoning_tokens=71,
     )
-    assert extracted_usage.calc_price().input_price == Decimal('0.001119')
-    assert extracted_usage.calc_price().output_price == Decimal('0.00168')
+    price = extracted_usage.calc_price()
+    assert price.model_price.cache_write_mtok == Decimal('3')
+    assert price.input_price == Decimal('0.001119')
+    assert price.output_price == Decimal('0.00168')
 
 
 def test_modal_responses_usage() -> None:
