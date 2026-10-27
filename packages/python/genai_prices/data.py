@@ -12527,6 +12527,14 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='deepseek-ai/DeepSeek-V4.1-Flash-1017',
+                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash-1017'),
+                name='DeepSeek V4.1 Flash 1017',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.005'), output_mtok=Decimal('1')
+                ),
+            ),
+            ModelInfo(
                 id='meta-models/Muse-Spark-Open-816B-A42B',
                 match=ClauseEquals(equals='meta-models/Muse-Spark-Open-816B-A42B'),
                 name='Muse Spark Open',
@@ -13265,6 +13273,20 @@ providers: list[Provider] = [
                 name='Kimi K3',
                 context_window=1048576,
                 prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k3.1-pro',
+                match=ClauseEquals(equals='moonshotai/kimi-k3.1-pro'),
+                name='Kimi K3.1 Pro',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k3.1-pro-highspeed',
+                match=ClauseEquals(equals='moonshotai/kimi-k3.1-pro-highspeed'),
+                name='Kimi K3.1 Pro Highspeed',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('4'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('20')),
             ),
             ModelInfo(
                 id='nousresearch/hermes-2-pro-llama-3-8b',
@@ -28055,14 +28077,20 @@ providers: list[Provider] = [
         models=[
             ModelInfo(
                 id='jev-1.13.0',
-                match=ClauseOr(or_=[ClauseEquals(equals='jev-1.13.0'), ClauseEquals(equals='jev-latest')]),
+                match=ClauseEquals(equals='jev-1.13.0'),
                 name='Jev 1.13.0',
                 context_window=32000,
                 prices=ModelPrice(input_mtok=Decimal('0.042')),
             ),
             ModelInfo(
                 id='jev-1.14.0',
-                match=ClauseOr(or_=[ClauseEquals(equals='jev-1.14.0'), ClauseEquals(equals='jev-preview')]),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='jev-1.14.0'),
+                        ClauseEquals(equals='jev-preview'),
+                        ClauseEquals(equals='jev-latest'),
+                    ]
+                ),
                 name='Jev 1.14.0',
                 context_window=32000,
                 price_comments='Available from October 14, 2026. https://docs.typesafe.ai/models lists `jev-1.14.0` at the same $0.042 input rate as every Jev version. The default context limit is 32k for state plus one question, within the 64k per-request limit.',

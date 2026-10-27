@@ -21681,6 +21681,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-ai/DeepSeek-V4.1-Flash-1017',
+        name: 'DeepSeek V4.1 Flash 1017',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4.1-Flash-1017',
+        },
+        prices: {
+          input_mtok: 0.25,
+          cache_read_mtok: 0.005,
+          output_mtok: 1,
+        },
+      },
+      {
         id: 'meta-models/Muse-Spark-Open-816B-A42B',
         name: 'Muse Spark Open',
         match: {
@@ -22894,6 +22906,32 @@ export const data: Provider[] = [
           input_mtok: 3,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+        },
+      },
+      {
+        id: 'moonshotai/kimi-k3.1-pro',
+        name: 'Kimi K3.1 Pro',
+        match: {
+          equals: 'moonshotai/kimi-k3.1-pro',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'moonshotai/kimi-k3.1-pro-highspeed',
+        name: 'Kimi K3.1 Pro Highspeed',
+        match: {
+          equals: 'moonshotai/kimi-k3.1-pro-highspeed',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 4,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
         },
       },
       {
@@ -49434,14 +49472,7 @@ export const data: Provider[] = [
         id: 'jev-1.13.0',
         name: 'Jev 1.13.0',
         match: {
-          or: [
-            {
-              equals: 'jev-1.13.0',
-            },
-            {
-              equals: 'jev-latest',
-            },
-          ],
+          equals: 'jev-1.13.0',
         },
         context_window: 32000,
         prices: {
@@ -49458,6 +49489,9 @@ export const data: Provider[] = [
             },
             {
               equals: 'jev-preview',
+            },
+            {
+              equals: 'jev-latest',
             },
           ],
         },
