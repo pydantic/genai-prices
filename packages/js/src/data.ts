@@ -21997,6 +21997,34 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'kimi-k3.1-pro',
+        match: {
+          equals: 'kimi-k3.1-pro',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+          cache_write_1h_mtok: 4,
+        },
+      },
+      {
+        id: 'kimi-k3.1-pro-highspeed',
+        match: {
+          equals: 'kimi-k3.1-pro-highspeed',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 4,
+          cache_write_mtok: 4,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
+          cache_write_1h_mtok: 8,
+        },
+      },
+      {
         id: 'moonshot-v1-128k',
         name: 'Moonshot V1 128K',
         match: {
@@ -51264,6 +51292,12 @@ export const data: Provider[] = [
             },
             {
               equals: 'glm-5.3-flashx',
+            },
+            {
+              equals: 'GLM-5.3-FlashX-Legal',
+            },
+            {
+              equals: 'glm-5.3-flashx-legal',
             },
           ],
         },

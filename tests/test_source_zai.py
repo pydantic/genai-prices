@@ -90,4 +90,4 @@ def test_zai_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pytest.C
 
     source_zai.main(provider_path)
 
-    assert capsys.readouterr().out == 'Z.ai prices updated: 1 added, 18 updated\n'
+    assert capsys.readouterr().out == 'Z.ai prices updated: 0 added, 18 updated\n'

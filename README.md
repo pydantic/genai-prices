@@ -67,7 +67,7 @@ The following providers are currently supported:
 - [MiniMax](prices/providers/minimax.yml) - 10 models
 - [Mistral](prices/providers/mistral.yml) - 49 models
 - [Modal](prices/providers/modal.yml) - 10 models
-- [MoonshotAi](prices/providers/moonshotai.yml) - 14 models
+- [MoonshotAi](prices/providers/moonshotai.yml) - 16 models
 - [Novita](prices/providers/novita.yml) - 112 models
 - [OpenAI](prices/providers/openai.yml) - 111 models
 - [OpenAI Decisions](prices/providers/openai_decisions.yml) - 1 models
