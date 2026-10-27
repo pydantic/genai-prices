@@ -28,6 +28,7 @@ PRICING_MARKDOWN = """\
 | [Voxtral Mini Transcribe 2](/models/voxtral-mini-transcribe-26-02) | `voxtral-mini-2602` | Input $0.003 /Min |
 | [Voxtral TTS](/models/voxtral-tts-26-03) | `voxtral-mini-tts-2603` | Input $0 /M Chars<br>Output $16 /M Chars |
 | [Mistral Moderation 2](/models/mistral-moderation-26-03) | `mistral-moderation-2603` | Free<br>$0 /M Tokens |
+| [Shieldstral 1.0](/models/shieldstral-1-0) |  |  |
 """
 
 
@@ -78,9 +79,9 @@ models:
 
     source_mistral.main(provider_path)
 
-    assert capsys.readouterr().out == 'Mistral prices updated: 11 added, 1 updated\n'
+    assert capsys.readouterr().out == 'Mistral prices updated: 19 added, 1 updated\n'
     provider = ProviderYaml(provider_path).provider
-    assert len(provider.models) == 12
+    assert len(provider.models) == 20
     large = provider.find_model('mistral-large-4')
     assert large is not None
     assert large.prices == [
@@ -89,12 +90,12 @@ models:
         ),
         ConditionalPrice(
             constraint=StartDateConstraint(start_date=date.today()),
-            prices=ModelPrice(input_mtok=Decimal('0.68'), cache_read_mtok=Decimal('0.07'), output_mtok=Decimal('2.09')),
+            prices=ModelPrice(input_mtok=Decimal('1.36'), cache_read_mtok=Decimal('0.14'), output_mtok=Decimal('4.18')),
         ),
     ]
 
     source_mistral.main(provider_path)
-    assert capsys.readouterr().out == 'Mistral prices updated: 0 added, 12 updated\n'
+    assert capsys.readouterr().out == 'Mistral prices updated: 0 added, 20 updated\n'
     assert ProviderYaml(provider_path).provider == provider
 
 
