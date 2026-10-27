@@ -11,7 +11,8 @@ This is the GenAI Prices project - a database and tools for calculating LLM infe
 - **Unit Registry**: `prices/units.yml` defines every billable unit and its price key
 - **Packages**: `packages/python/` (PyPI `genai-prices`), `packages/js/` (npm `@pydantic/genai-prices`),
   `packages/go/` (Go module `github.com/pydantic/genai-prices/packages/go`) and `packages/rust/` (crate
-  `genai-prices`) — four implementations that must stay behaviourally identical (see "Python/JS/Go/Rust parity")
+  `genai-prices`, not yet on crates.io) — four implementations that must match the Python reference (see
+  "Python/JS/Go/Rust parity")
 - **Data Pipeline**: Tools to build JSON schemas, validate data, and update from external sources
 - **Price Sources**: Integration with Helicone, OpenRouter, LiteLLM, and other pricing sources
 
@@ -35,7 +36,8 @@ This is the GenAI Prices project - a database and tools for calculating LLM infe
   - `src/prices/`: Python package for data processing
   - `new_data/v2/`: the **live** published data — `data.json`, `data_slim.json` and their schemas (generated)
   - `data.json`, `data_slim.json` + schemas: **frozen v1** compatibility snapshots (see "Pricing Data")
-- `packages/python/`, `packages/js/`, `packages/go/`, `packages/rust/`: published packages. Their provider data
+- `packages/python/`, `packages/js/`, `packages/go/`, `packages/rust/`: the packages (Rust is not yet published to
+  crates.io). Their provider data
   (`data.py`, `data.ts`, `internal/data/prices.json`, `data/prices.json`) and unit data (`data_units.py`,
   `dataUnits.ts`, `data_units.go`, `src/data_units.rs`) are generated — never hand-edit them
 - `tests/`: Python test suite; JS tests live in `packages/js/src/__tests__/`, Go tests in `packages/go/*_test.go`,

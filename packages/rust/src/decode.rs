@@ -22,7 +22,7 @@ type DecodeResult<T> = Result<T, String>;
 
 pub(crate) fn decode_providers(data: &[u8], registry: &Registry) -> crate::Result<Vec<Provider>> {
     let value: Value = serde_json::from_slice(data)
-        .map_err(|error| Error::new(ErrorKind::InvalidData, error.to_string()).with_source(error))?;
+        .map_err(|error| Error::new(ErrorKind::InvalidData, "decode provider JSON").with_source(error))?;
     decode_provider_array(&value, registry).map_err(|message| Error::new(ErrorKind::InvalidData, message))
 }
 
@@ -364,7 +364,7 @@ fn decode_mapping(value: &Value) -> DecodeResult<UsageExtractorMapping> {
     let fields = Fields::of(value, "mapping")?;
     Ok(UsageExtractorMapping {
         path: decode_path(fields.raw("path"))?,
-        dest: fields.string("dest")?.unwrap_or_default().to_owned(),
+        dest: fields.string("dest")?.filter(|dest| !dest.is_empty()).ok_or("mapping has no dest")?.to_owned(),
         required: fields.boolean("required")?,
     })
 }

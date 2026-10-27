@@ -143,11 +143,13 @@ fn openai_long_context_boundary() {
         ("gpt-5.6-sol", 4.0, 8.0),
         ("gpt-5.6-terra", 2.0, 4.0),
         ("gpt-6.1-sol", 2.0, 4.0),
+        ("gpt-6.1-terra", 1.0, 2.0),
     ] {
         for (tokens, rate) in [(272_000.0, base_rate), (272_001.0, long_rate)] {
             let usage = usage([(UsageKey::INPUT_TOKENS, tokens)]);
-            let calculation =
-                genai_prices::calculate(&PriceRequest::new(model, &usage).with_provider_id("openai")).unwrap();
+            let request =
+                PriceRequest::new(model, &usage).with_provider_id("openai").with_timestamp(date(2026, 10, 27));
+            let calculation = genai_prices::calculate(&request).unwrap();
             assert_close(calculation.input_price, tokens * rate / 1_000_000.0, 1e-12);
         }
     }
@@ -216,7 +218,8 @@ fn aws_converse_cache_write_ttl() {
         assert_eq!(raw.usage, extracted.usage);
         assert!(extracted.model_id.as_deref().is_some_and(|id| id != model), "{:?}", extracted.model_id);
         assert_eq!(extracted.usage, want_usage);
-        let price = genai_prices::calculate(&extracted.price_request().unwrap()).unwrap();
+        let request = extracted.price_request().unwrap().with_timestamp(date(2026, 10, 27));
+        let price = genai_prices::calculate(&request).unwrap();
         assert_close(price.total_price, want_price, 1e-12);
     }
 }

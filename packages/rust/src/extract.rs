@@ -100,7 +100,7 @@ impl Calculator {
             Body::Value(value) => value,
             Body::Json(json) => {
                 parsed = serde_json::from_slice::<Value>(json).map_err(|error| {
-                    Error::new(ErrorKind::InvalidResponse, format!("decode response JSON: {error}")).with_source(error)
+                    Error::new(ErrorKind::InvalidResponse, "decode response JSON").with_source(error)
                 })?;
                 &parsed
             }
@@ -261,7 +261,7 @@ fn extract_path<'a>(
 /// The first object in `items` whose string `field` satisfies `matcher`.
 fn find_array_item<'a>(items: &'a [Value], field: &str, matcher: &MatchLogic) -> Result<Option<&'a Value>> {
     for item in items {
-        if let Some(Value::String(text)) = item.get(field) {
+        if let Some(text) = item.get(field).and_then(Value::as_str).filter(|text| !text.is_empty()) {
             if matcher.matches(&Subject::new(text))? {
                 return Ok(Some(item));
             }

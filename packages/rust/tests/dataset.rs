@@ -56,6 +56,11 @@ fn dataset() {
                 if raw.model_ref != row.model {
                     failures.push(format!("{label}: model {:?}, want {:?}", raw.model_ref, row.model));
                 }
+                for (key, got) in &raw.usage {
+                    if got != 0.0 && !expected.usage.contains_key(key) {
+                        failures.push(format!("{label}: unexpected usage {key} = {got}"));
+                    }
+                }
                 for (key, want) in &expected.usage {
                     match raw.usage.get(key) {
                         Some(got) if (got - want).abs() <= 1e-12 => {}
@@ -98,9 +103,9 @@ fn dataset() {
                 };
                 check("input", calculation.input_price, extractor.input_price.as_ref());
                 check("output", calculation.output_price, extractor.output_price.as_ref());
-                if extractor.total_price.is_some() {
-                    check("total", calculation.total_price, extractor.total_price.as_ref());
-                }
+                let total = calculation.input_price + calculation.output_price;
+                let want_total = extractor.total_price.clone().unwrap_or_else(|| total.to_string());
+                check("total", calculation.total_price, Some(&want_total));
             }
         }
     }

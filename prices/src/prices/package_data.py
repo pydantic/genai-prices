@@ -333,6 +333,8 @@ def _go_usage_key_identifier(usage_key: str) -> str:
 
 def package_rust_data(provider_data: JsonData, units: Mapping[str, Mapping[str, Any]]) -> None:
     """Generate the data bundled by the Rust crate."""
+    if len({usage_key.upper() for usage_key in units}) != len(units):
+        raise ValueError('usage keys must stay unique when uppercased into Rust constant names')
     rust_package_dir = root_dir / 'packages' / 'rust'
     rust_data_dir = rust_package_dir / 'data'
     rust_data_dir.mkdir(parents=True, exist_ok=True)
@@ -350,7 +352,8 @@ def package_rust_data(provider_data: JsonData, units: Mapping[str, Mapping[str, 
         price_key = cast(str, unit.get('price_key', usage_key))
         dimensions = cast(Mapping[str, str], unit['dimensions'])
         dimension_entries = ', '.join(
-            f'({json.dumps(key)}, {json.dumps(value)})' for key, value in sorted(dimensions.items())
+            f'({json.dumps(key, ensure_ascii=False)}, {json.dumps(value, ensure_ascii=False)})'
+            for key, value in sorted(dimensions.items())
         )
         entries.append(
             f'    UnitDef {{ usage_key: {json.dumps(usage_key)}, price_key: {json.dumps(price_key)}, '

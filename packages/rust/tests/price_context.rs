@@ -71,6 +71,9 @@ fn openai_service_tiers() {
         ("gpt-5-mini", "flex", 1.096_875),
         ("gpt-6.1-sol", "fast", 36.1),
         ("gpt-6.1-sol", "priority", 36.1),
+        ("gpt-6.1-terra", "flex", 4.5125),
+        ("gpt-6.1-terra", "fast", 18.05),
+        ("gpt-6.1-terra", "priority", 18.05),
     ] {
         let usage = token_usage();
         let request = PriceRequest::new(model, &usage)
