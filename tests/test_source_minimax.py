@@ -12,53 +12,47 @@ from prices.prices_types import ClauseEquals, ClauseOr, ModelPrice, Tier, Tiered
 from prices.update import ProviderYaml
 from prices.utils import package_dir
 
-BADGE = '<span className="rounded-full">Permanent 50% off</span>'
-M3_HEADER = '        | Model | Input | Output | Prompt caching Read |\n        | :- | :- | :- | :- |\n'
+M3_HEADER = (
+    '| **Model** | **Input** \\$ / M tokens | **Output** \\$ / M tokens | **Prompt caching Read** \\$ / M tokens |\n'
+    '| :- | :-: | :-: | :-: |\n'
+)
 M3_ROWS = (
-    f'        | **MiniMax-M3**<br />≤ 512k input tokens {BADGE} | ~~\\$0.60~~ \\$0.30 / M tokens'
-    ' | ~~\\$2.40~~ \\$1.20 / M tokens | ~~\\$0.12~~ \\$0.06 / M tokens |\n'
-    f'        | **MiniMax-M3**<br />> 512k input tokens\\* {BADGE} | ~~\\$1.20~~ \\$0.60 / M tokens'
-    ' | ~~\\$4.80~~ \\$2.40 / M tokens | ~~\\$0.24~~ \\$0.12 / M tokens |\n'
+    '| **MiniMax-M3** ≤ 512k input tokens Permanent 50% off | ~~\\$0.60~~ \\$0.30 | ~~\\$2.40~~ \\$1.20'
+    ' | ~~\\$0.12~~ \\$0.06 |\n'
+    '| **MiniMax-M3** > 512k input tokens\\* Permanent 50% off | ~~\\$1.20~~ \\$0.60 | ~~\\$4.80~~ \\$2.40'
+    ' | ~~\\$0.24~~ \\$0.12 |\n'
 )
-FLAT_HEADER = (
-    '    | Model | Input | Output | Prompt caching Read | Prompt caching Write |\n    | :- | :- | :- | :- | :- |\n'
-)
-M27_ROW = (
-    '    | **MiniMax-M2.7** | \\$0.3 / M tokens | \\$1.2 / M tokens | \\$0.06 / M tokens | \\$0.375 / M tokens |\n'
-)
+FLAT_HEADER = '| Model | Input | Output | Prompt caching Read | Prompt caching Write |\n| :- | :- | :- | :- | :- |\n'
+M27_ROW = '| **MiniMax-M2.7** | \\$0.3 | \\$1.2 | \\$0.06 | \\$0.375 |\n'
+PRIORITY_ROWS = M3_ROWS.replace('\\$0.30 |', '\\$0.45 |')
 
 
 def page(llm: str) -> str:
     return f"""\
-  <section id="models/text" className="pricing-section" data-pricing-title="LLM">
-    ## LLM
+## LLM
+
+[Recharge Now](https://platform.minimax.io/user-center/payment/balance)
 
 {llm}
-  </section>
+## Audio
 
-  <section id="models/speech" className="pricing-section" data-pricing-title="Audio">
-    ## Audio
-
-    | **API** | **Endpoint** | **Description** | **Price** |
-    | :- | :- | :- | :- |
-    | Speech Recognition | Speech-to-Text | Audio-to-text transcription. | \\$0.38 / hour |
-  </section>
+| **API** | **Endpoint** | **Description** | **Price** |
+| :- | :- | :- | :- |
+| Speech Recognition | Speech-to-Text | Audio-to-text transcription. | \\$0.38 / hour |
 """
 
 
 PRICING_MARKDOWN = page(
     f"""\
-    <Tabs>
-      <Tab title="Standard">
-{M3_HEADER}{M3_ROWS}\
-      </Tab>
+{FLAT_HEADER}{M27_ROW}
+**Standard**
 
-      <Tab title="Priority*">
-{M3_HEADER}{M3_ROWS.replace('0.30 /', '0.45 /')}\
-      </Tab>
-    </Tabs>
+{M3_HEADER}{M3_ROWS}
+**Priority**\\*
 
-{FLAT_HEADER}{M27_ROW}"""
+{M3_HEADER}{PRIORITY_ROWS}
+\\* Priority provides priority admission for faster response times. Pricing is 1.5x standard.
+"""
 )
 
 
@@ -87,7 +81,7 @@ def test_minimax_parses_standard_tab_bands_and_flat_models() -> None:
     ('markdown', 'error'),
     [
         ('## Audio\n', 'has no LLM section'),
-        (page('<Tab title="Batch">\n</Tab>'), 'tab other than Standard and Priority'),
+        (page('**Batch**\n'), 'tier other than Standard and Priority'),
         (page('| Model | Price |\n| :- | :- |\n| **MiniMax-M2** | \\$1 |\n'), 'Unexpected MiniMax LLM pricing columns'),
         (page('| Model | Input |\n| :- | :- |\n'), 'Unexpected MiniMax LLM pricing columns'),
         (page('| Model | Input | Output | Input |\n| :- | :- | :- | :- |\n'), 'Unexpected MiniMax LLM pricing columns'),
@@ -105,12 +99,11 @@ def test_minimax_parses_standard_tab_bands_and_flat_models() -> None:
                 + M3_ROWS.split('\n')[0]
                 + '\n\n'
                 + FLAT_HEADER
-                + '| **MiniMax-M3**<br />> 512k input tokens | \\$1 / M tokens | \\$1 / M tokens | \\$1 / M tokens'
-                ' | \\$1 / M tokens |\n'
+                + '| **MiniMax-M3** > 512k input tokens | \\$1 | \\$1 | \\$1 | \\$1 |\n'
             ),
             'context bands for MiniMax-M3 price different units',
         ),
-        (page(FLAT_HEADER + M27_ROW.replace('\\$0.3 / M tokens', '\\$0.3 / hour')), 'Unexpected MiniMax price cell'),
+        (page(FLAT_HEADER + M27_ROW.replace('\\$0.3 |', '\\$0.3 / hour |')), 'Unexpected MiniMax price cell'),
     ],
 )
 def test_minimax_rejects_unexpected_pricing_layout(markdown: str, error: str) -> None:
@@ -126,7 +119,7 @@ def test_minimax_refuses_conflicting_rates_for_one_shared_model(
     legacy = (
         M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M9')
         + M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M2.5')
-        + M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M2.1').replace('\\$0.3 /', '\\$0.4 /')
+        + M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M2.1').replace('\\$0.3 |', '\\$0.4 |')
     )
     monkeypatch.setattr(
         source_minimax,
