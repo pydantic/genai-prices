@@ -52,7 +52,7 @@ models:
       input_mtok: 2
       cache_read_mtok: 0.25
       output_mtok: 6
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: Qwen/Qwen3.8-Max-VL-Thinking
     name: Qwen3.8-Max VL
@@ -62,7 +62,7 @@ models:
       input_mtok: 2
       cache_read_mtok: 0.25
       output_mtok: 6
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: deepseek-ai/DeepSeek-V4.1-Flash
     name: DeepSeek V4.1 Flash
@@ -72,7 +72,7 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.03
       output_mtok: 1.2
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: deepseek-ai/DeepSeek-V4.1-Flash-1017
     name: DeepSeek V4.1 Flash 1017
@@ -82,7 +82,7 @@ models:
       input_mtok: 0.25
       cache_read_mtok: 0.005
       output_mtok: 1
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: meta-models/Muse-Spark-Open-816B-A42B
     name: Muse Spark Open
@@ -92,7 +92,7 @@ models:
       input_mtok: 1.25
       cache_read_mtok: 0.15
       output_mtok: 4.25
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: moonshotai/Kimi-K3
     name: Kimi K3
@@ -101,7 +101,7 @@ models:
     match:
       equals: moonshotai/Kimi-K3
     context_window: 1048576
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
     price_comments: >-
       Modal Shared Endpoint pricing. Reasoning tokens use the same $15/MTok rate as completion tokens.
       See https://modal.com/library/moonshot/kimi-k3.
@@ -118,7 +118,7 @@ models:
       input_mtok: 0.15
       cache_read_mtok: 0.03
       output_mtok: 0.5
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: thinkingmachines/Inkling-NVFP4
     name: Inkling NVFP4
@@ -126,7 +126,7 @@ models:
       Thinking Machines Lab's reasoning model, served by Modal as a Shared Endpoint.
     match:
       equals: thinkingmachines/Inkling-NVFP4
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
     price_comments: >-
       Modal Shared Endpoint dashboard pricing. Reasoning tokens use the same $5/MTok rate as completion tokens.
     prices:
@@ -142,7 +142,7 @@ models:
       input_mtok: 1.4
       cache_read_mtok: 0.26
       output_mtok: 4.4
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: zai-org/GLM-5.3-Flash
     name: GLM 5.3 Flash
@@ -152,4 +152,4 @@ models:
       input_mtok: 0.45
       cache_read_mtok: 0.09
       output_mtok: 1.5
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27

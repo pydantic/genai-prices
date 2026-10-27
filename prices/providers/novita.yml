@@ -13,7 +13,7 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.05
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: baichuan/baichuan-m2-32b
     name: Baichuan M2 32B
@@ -23,7 +23,7 @@ models:
     prices:
       input_mtok: 0.07
       output_mtok: 0.07
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: baidu/cobuddy
     name: CoBuddy
@@ -34,7 +34,7 @@ models:
       input_mtok: 0.28
       cache_read_mtok: 0.07
       output_mtok: 1.13
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: baidu/ernie-4.5-21B-a3b
     name: ERNIE 4.5 21B A3B
@@ -44,7 +44,7 @@ models:
     prices:
       input_mtok: 0.07
       output_mtok: 0.28
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: cognitivecomputations/dolphin-mixtral-8x22b
     match:
@@ -61,7 +61,7 @@ models:
     prices:
       input_mtok: 0.03
       output_mtok: 0.03
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: deepseek/deepseek-r1
     name: DeepSeek R1
@@ -73,7 +73,7 @@ models:
     prices:
       input_mtok: 4
       output_mtok: 4
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: deepseek/deepseek-r1-0528
     name: DeepSeek R1 0528
@@ -84,7 +84,7 @@ models:
       input_mtok: 0.7
       cache_read_mtok: 0.35
       output_mtok: 2.5
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: deepseek/deepseek-r1-0528-qwen3-8b
     name: DeepSeek R1 Distill Qwen3 8B 0528
@@ -94,7 +94,7 @@ models:
     prices:
       input_mtok: 0.06
       output_mtok: 0.09
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: deepseek/deepseek-r1-distill-llama-70b
     match:
@@ -135,7 +135,7 @@ models:
     prices:
       input_mtok: 0.7
       output_mtok: 2.5
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: deepseek/deepseek-v4-flash-0731
     name: DeepSeek V4 Flash 0731
@@ -146,7 +146,7 @@ models:
       input_mtok: 0.44
       cache_read_mtok: 0.028
       output_mtok: 1.32
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: deepseek/deepseek-v4-flash-0731-p
     name: deepseek/deepseek-v4-flash-0731-p
@@ -157,7 +157,7 @@ models:
       input_mtok: 0.44
       cache_read_mtok: 0.0148
       output_mtok: 1.32
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: deepseek/deepseek-v4-pro
     name: DeepSeek V4 Pro
@@ -168,7 +168,7 @@ models:
       input_mtok: 1.6
       cache_read_mtok: 0.135
       output_mtok: 3.2
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: deepseek/deepseek-v4-pro-0813
     name: DeepSeek V4 Pro 0813
@@ -181,7 +181,7 @@ models:
       input_mtok: 1.32
       cache_read_mtok: 0.044
       output_mtok: 3.96
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: deepseek/deepseek-v4.1-flash
     name: DeepSeek V4.1 Flash
@@ -196,7 +196,7 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.006
       output_mtok: 1.2
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: deepseek/deepseek_v3
     name: DeepSeek V3
@@ -206,7 +206,7 @@ models:
     prices:
       input_mtok: 0.89
       output_mtok: 0.89
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: google/gemma-2-9b-it
     match:
@@ -223,7 +223,7 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.1
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: google/gemma-3-27b-it
     name: Gemma 3 27B
@@ -233,7 +233,7 @@ models:
     prices:
       input_mtok: 0.119
       output_mtok: 0.2
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: google/gemma-4-26b-a4b-it
     name: Gemma 4 26B A4B
@@ -243,7 +243,7 @@ models:
     prices:
       input_mtok: 0.13
       output_mtok: 0.4
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: google/gemma-4-31b-it
     name: Gemma 4 31B
@@ -253,7 +253,7 @@ models:
     prices:
       input_mtok: 0.14
       output_mtok: 0.4
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: gryphe/mythomax-l2-13b
     name: MythoMax L2 13B
@@ -263,7 +263,7 @@ models:
     prices:
       input_mtok: 0.09
       output_mtok: 0.09
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: inclusionai/ling-3.0-flash
     name: Ling 3.0 Flash
@@ -274,7 +274,7 @@ models:
       input_mtok: 0.06
       cache_read_mtok: 0.012
       output_mtok: 0.18
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: inclusionai/ling-3.0-flash-fin
     name: Ling 3.0 Flash Fin
@@ -285,7 +285,7 @@ models:
       input_mtok: 0.075
       cache_read_mtok: 0.015
       output_mtok: 0.22
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: inclusionai/ling-3.0-flash-sante
     name: Ling 3.0 Flash Sante
@@ -296,7 +296,7 @@ models:
       input_mtok: 0.075
       cache_read_mtok: 0.015
       output_mtok: 0.22
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: inclusionai/ling-3.0-flash-vl
     name: Ling 3.0 Flash VL
@@ -307,7 +307,7 @@ models:
       input_mtok: 0.075
       cache_read_mtok: 0.015
       output_mtok: 0.22
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: inclusionai/ling-3.1-flash
     name: Ling 3.1 Flash
@@ -318,7 +318,7 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.06
       output_mtok: 0.9
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: jondurbin/airoboros-l2-70b
     match:
@@ -366,7 +366,7 @@ models:
         prices:
           input_mtok: 0.02
           output_mtok: 0.05
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: meta-llama/llama-3.1-8b-instruct-bf16
     match:
@@ -390,7 +390,7 @@ models:
     prices:
       input_mtok: 0.02
       output_mtok: 0.02
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: meta-llama/llama-3.2-3b-instruct
     match:
@@ -414,7 +414,7 @@ models:
         prices:
           input_mtok: 0.135
           output_mtok: 0.4
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: meta-llama/llama-4-maverick-17b-128e-instruct-fp8
     name: Llama 4 Maverick Instruct
@@ -424,7 +424,7 @@ models:
     prices:
       input_mtok: 0.27
       output_mtok: 0.85
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: meta-llama/llama-4-scout-17b-16e-instruct
     name: Llama 4 Scout Instruct
@@ -434,7 +434,7 @@ models:
     prices:
       input_mtok: 0.18
       output_mtok: 0.59
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: microsoft/wizardlm-2-8x22b
     name: WizardLM 2 8x22B
@@ -444,7 +444,7 @@ models:
     prices:
       input_mtok: 0.62
       output_mtok: 0.62
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: mindai/macaron-v1-tall
     name: Macaron V1 Tall
@@ -455,7 +455,7 @@ models:
       input_mtok: 0.2475
       cache_read_mtok: 0.044
       output_mtok: 1.43
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: mindai/macaron-v1-venti
     name: Macaron V1 Venti
@@ -466,7 +466,7 @@ models:
       input_mtok: 0.825
       cache_read_mtok: 0.165
       output_mtok: 2.475
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: ming-image-0.1-design
     name: ming image 0.1 design
@@ -477,7 +477,7 @@ models:
     prices:
       input_mtok: 1
       output_mtok: 1
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: minimax/minimax-m2.5
     name: MiniMax M2.5
@@ -488,7 +488,7 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.03
       output_mtok: 1.2
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: minimax/minimax-m2.7
     name: MiniMax M2.7
@@ -499,7 +499,7 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.06
       output_mtok: 1.2
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: minimax/minimax-m2.7-highspeed
     name: MiniMax M2.7-highspeed
@@ -510,7 +510,7 @@ models:
       input_mtok: 0.6
       cache_read_mtok: 0.06
       output_mtok: 2.4
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: minimax/minimax-m3
     name: MiniMax M3
@@ -533,7 +533,7 @@ models:
         tiers:
           - start: 524288
             price: 2.4
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: minimax/minimax-m3.1-flash
     name: MiniMax M3.1 Flash
@@ -544,7 +544,7 @@ models:
       input_mtok: 0.15
       cache_read_mtok: 0.015
       output_mtok: 0.6
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: minimaxai/minimax-m1-80k
     name: MiniMax M1
@@ -554,7 +554,7 @@ models:
     prices:
       input_mtok: 0.55
       output_mtok: 2.2
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: mistralai/mistral-7b-instruct
     match:
@@ -579,7 +579,7 @@ models:
     prices:
       input_mtok: 0.6
       output_mtok: 2.5
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: moonshotai/kimi-k2-instruct
     name: Kimi K2 Instruct
@@ -589,7 +589,7 @@ models:
     prices:
       input_mtok: 0.57
       output_mtok: 2.3
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: moonshotai/kimi-k2-thinking
     name: Kimi K2 Thinking
@@ -600,7 +600,7 @@ models:
       input_mtok: 0.6
       cache_read_mtok: 0.15
       output_mtok: 2.5
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: moonshotai/kimi-k2.5
     name: Kimi K2.5
@@ -611,7 +611,7 @@ models:
       input_mtok: 0.6
       cache_read_mtok: 0.1
       output_mtok: 3
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: moonshotai/kimi-k2.6
     name: Kimi K2.6
@@ -622,7 +622,7 @@ models:
       input_mtok: 0.8
       cache_read_mtok: 0.16
       output_mtok: 3.4
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: moonshotai/kimi-k2.7-code
     name: Kimi K2.7 Code
@@ -633,7 +633,7 @@ models:
       input_mtok: 0.95
       cache_read_mtok: 0.19
       output_mtok: 4
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: moonshotai/kimi-k3
     name: Kimi K3
@@ -646,7 +646,7 @@ models:
       input_mtok: 3
       cache_read_mtok: 0.3
       output_mtok: 15
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: moonshotai/kimi-k3.1-pro
     name: Kimi K3.1 Pro
@@ -657,7 +657,7 @@ models:
       input_mtok: 2
       cache_read_mtok: 0.2
       output_mtok: 10
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: moonshotai/kimi-k3.1-pro-highspeed
     name: Kimi K3.1 Pro Highspeed
@@ -668,7 +668,7 @@ models:
       input_mtok: 4
       cache_read_mtok: 0.2
       output_mtok: 20
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: nousresearch/hermes-2-pro-llama-3-8b
     name: Hermes 2 Pro Llama 3 8B
@@ -678,7 +678,7 @@ models:
     prices:
       input_mtok: 0.14
       output_mtok: 0.14
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: nousresearch/nous-hermes-llama2-13b
     match:
@@ -696,7 +696,7 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.2
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: openai/gpt-oss-120b
     name: OpenAI GPT OSS 120B
@@ -706,7 +706,7 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.25
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: openchat/openchat-7b
     match:
@@ -724,7 +724,7 @@ models:
     prices:
       input_mtok: 0.02
       output_mtok: 0.02
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: qwen/qwen-2-7b-instruct
     match:
@@ -758,7 +758,7 @@ models:
     prices:
       input_mtok: 0.25
       output_mtok: 0.75
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: qwen/qwen3-omni-30b-a3b-thinking
     name: Qwen3 Omni 30B A3B Thinking
@@ -768,7 +768,7 @@ models:
     prices:
       input_mtok: 0.25
       output_mtok: 0.97
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: qwen/qwen3-vl-30b-a3b-instruct
     name: Qwen3 VL 30B A3B Instruct
@@ -778,7 +778,7 @@ models:
     prices:
       input_mtok: 0.2
       output_mtok: 0.7
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: qwen/qwen3.5-122b-a10b
     name: Qwen3.5 122B A10B
@@ -788,7 +788,7 @@ models:
     prices:
       input_mtok: 0.4
       output_mtok: 3.2
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: qwen/qwen3.5-27b
     name: Qwen3.5 27B
@@ -798,7 +798,7 @@ models:
     prices:
       input_mtok: 0.3
       output_mtok: 2.4
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: qwen/qwen3.5-35b-a3b
     name: Qwen3.5 35B A3B
@@ -808,7 +808,7 @@ models:
     prices:
       input_mtok: 0.25
       output_mtok: 2
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: qwen/qwen3.5-397b-a17b
     name: Qwen3.5 397B A17B
@@ -818,7 +818,7 @@ models:
     prices:
       input_mtok: 0.6
       output_mtok: 3.6
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: qwen/qwen3.6-27b
     name: Qwen3.6 27B
@@ -828,7 +828,7 @@ models:
     prices:
       input_mtok: 0.6
       output_mtok: 3.6
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: qwen/qwen3.6-35b-a3b
     name: Qwen3.6 35B A3B
@@ -838,7 +838,7 @@ models:
     prices:
       input_mtok: 0.248
       output_mtok: 1.485
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: qwen/qwen3.7-max
     name: Qwen3.7 Max
@@ -849,7 +849,7 @@ models:
       input_mtok: 1.25
       cache_read_mtok: 0.25
       output_mtok: 3.75
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: qwen/qwen3.8-2.4t-a95b
     name: Qwen3.8 2.4T A95B
@@ -860,7 +860,7 @@ models:
       input_mtok: 2
       cache_read_mtok: 0.25
       output_mtok: 6
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: qwen/qwen3.8-27b
     name: Qwen3.8 27B
@@ -871,7 +871,7 @@ models:
       input_mtok: 0.42
       cache_read_mtok: 0.085
       output_mtok: 3
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: qwen/qwen3.8-flash
     name: Qwen3.8 Flash
@@ -882,7 +882,7 @@ models:
       input_mtok: 0.15
       cache_read_mtok: 0.016
       output_mtok: 0.47
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: qwen/qwen3.8-max
     name: Qwen3.8 Max
@@ -893,7 +893,7 @@ models:
       input_mtok: 2
       cache_read_mtok: 0.25
       output_mtok: 6
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: sao10k/l3-70b-euryale-v2.1
     name: Llama 3 70B Euryale V2.1
@@ -903,7 +903,7 @@ models:
     prices:
       input_mtok: 1.48
       output_mtok: 1.48
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: sao10k/l3-8b-lunaris
     match:
@@ -937,7 +937,7 @@ models:
       input_mtok: 0.2
       cache_read_mtok: 0.04
       output_mtok: 1.15
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: stepfun/step-5-preview
     name: Step 5 Preview
@@ -948,7 +948,7 @@ models:
       input_mtok: 1
       cache_read_mtok: 0.1
       output_mtok: 2.7
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: teknium/openhermes-2.5-mistral-7b
     match:
@@ -967,7 +967,7 @@ models:
       input_mtok: 0.14
       cache_read_mtok: 0.035
       output_mtok: 0.58
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: tencent/hy4-preview
     name: Hy4 Preview
@@ -978,7 +978,7 @@ models:
       input_mtok: 0.834
       cache_read_mtok: 0.042
       output_mtok: 2.501
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: xiaomimimo/mimo-v2.5
     name: Xiaomi MiMo V2.5
@@ -1011,7 +1011,7 @@ models:
       input_mtok: 0.14
       cache_read_mtok: 0.0028
       output_mtok: 0.28
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: xiaomimimo/mimo-v2.6-pro
     name: MiMo V2.6 Pro
@@ -1022,7 +1022,7 @@ models:
       input_mtok: 0.435
       cache_read_mtok: 0.0036
       output_mtok: 0.87
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: zai-org/autoglm-phone-9b-multilingual
     name: AutoGLM Phone 9B Multilingual
@@ -1032,7 +1032,7 @@ models:
     prices:
       input_mtok: 0.035
       output_mtok: 0.138
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: zai-org/glm-4.5-air
     name: GLM 4.5 Air
@@ -1043,7 +1043,7 @@ models:
       input_mtok: 0.13
       cache_read_mtok: 0.025
       output_mtok: 0.85
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: zai-org/glm-4.5v
     name: GLM 4.5V
@@ -1054,7 +1054,7 @@ models:
       input_mtok: 0.6
       cache_read_mtok: 0.11
       output_mtok: 1.8
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: zai-org/glm-4.6
     name: GLM 4.6
@@ -1065,7 +1065,7 @@ models:
       input_mtok: 0.55
       cache_read_mtok: 0.11
       output_mtok: 2.2
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: zai-org/glm-4.6v
     name: GLM 4.6V
@@ -1076,7 +1076,7 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.055
       output_mtok: 0.9
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: zai-org/glm-4.7
     name: GLM 4.7
@@ -1089,7 +1089,7 @@ models:
       input_mtok: 0.6
       cache_read_mtok: 0.11
       output_mtok: 2.2
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: zai-org/glm-4.7-flash
     name: GLM 4.7 Flash
@@ -1100,7 +1100,7 @@ models:
       input_mtok: 0.07
       cache_read_mtok: 0.01
       output_mtok: 0.4
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: zai-org/glm-5
     name: GLM 5
@@ -1111,7 +1111,7 @@ models:
       input_mtok: 1
       cache_read_mtok: 0.2
       output_mtok: 3.2
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: zai-org/glm-5.1
     name: GLM 5.1
@@ -1122,7 +1122,7 @@ models:
       input_mtok: 1.38
       cache_read_mtok: 0.26
       output_mtok: 4.4
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: zai-org/glm-5.2
     name: GLM 5.2
@@ -1133,7 +1133,7 @@ models:
       input_mtok: 1.4
       cache_read_mtok: 0.26
       output_mtok: 4.4
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: zai-org/glm-5.3
     name: GLM 5.3
@@ -1146,7 +1146,7 @@ models:
       input_mtok: 1.4
       cache_read_mtok: 0.26
       output_mtok: 4.4
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
 
   - id: zai-org/glm-5.3-flash
     name: GLM 5.3 Flash
@@ -1157,4 +1157,4 @@ models:
       input_mtok: 0.15
       cache_read_mtok: 0.03
       output_mtok: 0.5
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-27
