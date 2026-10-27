@@ -25,6 +25,7 @@
 - Python package, CLI
 - JavaScript/TypeScript package, CLI
 - Go package
+- Rust crate
 - TODO: API and web UI
 
 ### Providers
@@ -96,6 +97,10 @@ See the [JS/TS README](packages/js/README.md) for instructions on how to install
 ### Go Package
 
 See the [Go README](packages/go/README.md) for instructions on how to install and use the Go package.
+
+### Rust Crate
+
+See the [Rust README](packages/rust/README.md) for instructions on how to install and use the Rust crate.
 
 ### Download data
 
