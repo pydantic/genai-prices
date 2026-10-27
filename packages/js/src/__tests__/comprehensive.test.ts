@@ -299,6 +299,7 @@ describe('Comprehensive API Tests', () => {
       ['openai', 'gpt-5.6-sol', 272_001, 4, 8],
       ['openai', 'gpt-5.6-terra', 272_001, 2, 4],
       ['openai', 'gpt-6.1-sol', 272_001, 2, 4],
+      ['openai', 'gpt-6.1-terra', 272_001, 1, 2],
     ]
 
     it.each(cases)(
