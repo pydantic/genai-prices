@@ -41,7 +41,7 @@ Prices | are per 1M tokens
 >
 > | Model | Input | Cached Input | Cached Input Storage | Output |
 > | :- | :- | :- | :- | :- |
-> | GLM-OCR | \\$0.03 | \\\\ | \\\\ | \\$0.03 |
+   > | GLM-OCR | \\$0.03 | \\\\ | \\\\ | \\$0.03 |
 > | GLM-4.6V-Flash | Free | Free | Free | Free |
 >
 > | Model | Price |
