@@ -35,7 +35,7 @@ jobs:
           PYDANTIC_AI_NO_BANNER: "1"
         run: >-
           uv run --isolated --no-project
-          --with 'pydantic-ai-harness==0.56.0'
+          --with 'pydantic-ai-harness==0.60.0'
           --with 'pydantic-ai-slim[anthropic,openai,mcp,spec]>=2.54.0'
           --with 'pytest==8.4.1'
           sh -c 'python -m unittest scripts.test_price_check_agent && python -m pytest "$GITHUB_WORKSPACE/scripts/test_price_check_sources.py" "$GITHUB_WORKSPACE/scripts/test_price_check_scope_policy.py"'
