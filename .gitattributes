@@ -20,3 +20,5 @@ packages/js/src/data.ts linguist-generated=true
 packages/js/src/dataUnits.ts linguist-generated=true
 packages/go/data_units.go linguist-generated=true
 packages/go/internal/data/prices.json linguist-generated=true
+packages/rust/data/prices.json linguist-generated=true
+packages/rust/src/data_units.rs linguist-generated=true
