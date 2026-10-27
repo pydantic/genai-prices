@@ -6046,6 +6046,27 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gpt-6.1-terra',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-6.1-terra'),
+                        ClauseRegex(regex='^gpt-6\\.1-terra-\\d{4}-\\d{2}-\\d{2}$'),
+                    ]
+                ),
+                name='GPT-6.1 Terra',
+                price_comments='Prompts over 272,000 tokens are billed at the long-context rates.',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('2'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('1.25'), tiers=[Tier(start=272000, price=Decimal('2.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.05'), tiers=[Tier(start=272000, price=Decimal('0.1'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('7.5'))]),
+                ),
+            ),
+            ModelInfo(
                 id='grok-4.5',
                 match=ClauseEquals(equals='grok-4.5'),
                 name='Grok 4.5',
