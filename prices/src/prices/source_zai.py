@@ -18,7 +18,8 @@ UNPRICED_CELLS = {'Free', '-', '\\\\'}
 def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     models: list[ModelInfo] = []
     seen: set[str] = set()
-    for header, rows in markdown_tables(markdown):
+    # Older models are listed in a blockquote under "Other Pricing".
+    for header, rows in markdown_tables(re.sub(r'^> ?', '', markdown, flags=re.MULTILINE)):
         if header[:2] != ['Model', 'Input']:
             continue
         if header != TOKEN_TABLE_HEADER:

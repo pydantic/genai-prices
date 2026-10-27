@@ -35,18 +35,18 @@ Prices | are per 1M tokens
 | :- | :- |
 | Web Search | \\$0.01 / use |
 
-<Accordion title="Other Pricing">
-    ### Vision Models
-
-    | Model | Input | Cached Input | Cached Input Storage | Output |
-    | :- | :- | :- | :- | :- |
-    | GLM-OCR | \\$0.03 | \\\\ | \\\\ | \\$0.03 |
-    | GLM-4.6V-Flash | Free | Free | Free | Free |
-
-    | Model | Price |
-    | :- | :- |
-    | CogView-4 | \\$0.01 |
-</Accordion>
+> **Other Pricing**
+>
+> ### Vision Models
+>
+> | Model | Input | Cached Input | Cached Input Storage | Output |
+> | :- | :- | :- | :- | :- |
+> | GLM-OCR | \\$0.03 | \\\\ | \\\\ | \\$0.03 |
+> | GLM-4.6V-Flash | Free | Free | Free | Free |
+>
+> | Model | Price |
+> | :- | :- |
+> | CogView-4 | \\$0.01 |
 """
 
 
@@ -90,4 +90,4 @@ def test_zai_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pytest.C
 
     source_zai.main(provider_path)
 
-    assert capsys.readouterr().out == 'Z.ai prices updated: 0 added, 18 updated\n'
+    assert capsys.readouterr().out == 'Z.ai prices updated: 1 added, 18 updated\n'
