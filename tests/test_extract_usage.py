@@ -700,6 +700,30 @@ def test_openrouter_decisions_usage() -> None:
     assert extracted_usage.calc_price().total_price == Decimal('0.000019992')
 
 
+def test_moonshot_chat_usage_bills_cache_writes() -> None:
+    response_data = {
+        'model': 'kimi-k3',
+        'usage': {
+            'prompt_tokens': 373,
+            'completion_tokens': 112,
+            'total_tokens': 485,
+            'completion_tokens_details': {'reasoning_tokens': 71},
+            'prompt_tokens_details': {'cache_write_tokens': 256},
+        },
+    }
+
+    extracted_usage = extract_usage(response_data, provider_id='moonshotai', api_flavor='chat')
+
+    assert extracted_usage.usage == Usage(
+        input_tokens=373,
+        cache_write_tokens=256,
+        output_tokens=112,
+        output_reasoning_tokens=71,
+    )
+    assert extracted_usage.calc_price().input_price == Decimal('0.001119')
+    assert extracted_usage.calc_price().output_price == Decimal('0.00168')
+
+
 def test_modal_responses_usage() -> None:
     response_data = {
         'model': 'moonshotai/Kimi-K3',

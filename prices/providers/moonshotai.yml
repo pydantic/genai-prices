@@ -20,6 +20,10 @@ extractors:
       - path: [prompt_tokens_details, cached_tokens]
         dest: cache_read_tokens
         required: false
+      # The response does not echo the requested TTL, so writes bill at the default 5-minute rate.
+      - path: [prompt_tokens_details, cache_write_tokens]
+        dest: cache_write_tokens
+        required: false
       - path: [completion_tokens_details, reasoning_tokens]
         dest: output_reasoning_tokens
         required: false

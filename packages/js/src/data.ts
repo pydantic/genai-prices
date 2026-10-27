@@ -21807,6 +21807,11 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
             path: ['completion_tokens_details', 'reasoning_tokens'],
             dest: 'output_reasoning_tokens',
             required: false,
