@@ -13,7 +13,8 @@ from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice
 from prices.update import ProviderYaml
 from prices.utils import package_dir
 
-CATALOG_URL = 'https://docs.baseten.co/inference/model-apis/overview.md'
+# The Markdown export renders this page's model table empty, so the catalog is read from the page's compiled MDX.
+CATALOG_URL = 'https://docs.baseten.co/inference/model-apis/overview'
 PRICING_URL = 'https://www.baseten.co/pricing/'
 MIN_MODEL_COUNT = 11
 PRICING_ID_ALIASES = {
@@ -32,11 +33,11 @@ class CatalogModel:
     context_window: int
 
 
-def parse_catalog(markdown: str) -> list[CatalogModel]:
-    table = re.search(r'export const SupportedModelsTable.*?const rows = \[(.*?)\];', markdown, re.DOTALL)
+def parse_catalog(page: str) -> list[CatalogModel]:
+    table = re.search(r'SupportedModelsTable=\(\)=>\{const rows=\[(.*?)\];', page)
     if table is None:
         raise RuntimeError('Baseten model catalog table was not found')
-    rows = re.findall(r'model: "([^"]+)",\s*slug: "([^"]+)",\s*context: ([0-9]+),\s*maxOutput: [0-9]+', table.group(1))
+    rows = re.findall(r'\{model:`([^`]+)`,slug:`([^`]+)`,context:([0-9]+),maxOutput:[0-9]+\}', table.group(1))
     models = [
         CatalogModel(id=model_id, name=name, context_window=int(context) * 1000) for name, model_id, context in rows
     ]
@@ -68,8 +69,8 @@ def parse_pricing_page(page: str) -> dict[str, ModelPrice]:
     return prices
 
 
-def parse_models(catalog_markdown: str, pricing_page: str) -> list[ModelInfo]:
-    catalog = parse_catalog(catalog_markdown)
+def parse_models(catalog_page: str, pricing_page: str) -> list[ModelInfo]:
+    catalog = parse_catalog(catalog_page)
     prices = parse_pricing_page(pricing_page)
     # New models often reach the catalog before the pricing page, so price only what both list.
     if unpriced := sorted({model.id for model in catalog} - prices.keys()):
