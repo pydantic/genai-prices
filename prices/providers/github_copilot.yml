@@ -71,7 +71,7 @@ models:
     match:
       equals: claude-fable-5
     context_window: 264000
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     prices:
       input_mtok: 10
       cache_read_mtok: 1
@@ -83,7 +83,7 @@ models:
     match:
       equals: claude-fable-5.1
     context_window: 264000
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     prices:
       input_mtok: 10
       cache_read_mtok: 0.25
@@ -95,7 +95,7 @@ models:
     match:
       equals: claude-haiku-4.5
     context_window: 144000
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     prices:
       input_mtok: 1
       cache_read_mtok: 0.10
@@ -106,7 +106,7 @@ models:
     name: Claude Haiku 5.5
     match:
       equals: claude-haiku-5.5
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: >-
       Priced by prompt length: every token in a request whose prompt exceeds 100,000 tokens is billed at the
       higher rate. https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing
@@ -149,7 +149,7 @@ models:
     match:
       equals: claude-opus-4.8
     context_window: 264000
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     prices:
       input_mtok: 5
       cache_read_mtok: 0.50
@@ -161,7 +161,7 @@ models:
     match:
       equals: claude-opus-4.8-fast
     context_window: 264000
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: Fast mode is priced at 2x the standard Opus 4.8 rates.
     prices:
       input_mtok: 10
@@ -174,7 +174,7 @@ models:
     match:
       equals: claude-opus-5
     context_window: 264000
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     prices:
       input_mtok: 5
       cache_read_mtok: 0.50
@@ -185,7 +185,7 @@ models:
     name: Claude Opus 5.5
     match:
       equals: claude-opus-5.5
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     prices:
       input_mtok: 4
       cache_read_mtok: 0.20
@@ -196,7 +196,7 @@ models:
     name: Claude Sonnet 4
     match:
       equals: claude-sonnet-4
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     prices:
       input_mtok: 3
       cache_read_mtok: 0.30
@@ -208,7 +208,7 @@ models:
     collapse: false
     match:
       equals: claude-sonnet-4.6
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     prices:
       input_mtok: 3
       cache_read_mtok: 0.30
@@ -220,7 +220,7 @@ models:
     match:
       equals: claude-sonnet-5
     context_window: 264000
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     prices:
       input_mtok: 2
       cache_read_mtok: 0.20
@@ -232,7 +232,7 @@ models:
     collapse: false
     match:
       equals: claude-sonnet-5.5
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     prices:
       input_mtok: 2
       cache_read_mtok: 0.10
@@ -280,7 +280,7 @@ models:
     match:
       equals: gemini-3.8-flash
     context_window: 265536
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: Copilot does not charge for cache writes on the Gemini models.
     prices:
       input_mtok: 0.75
@@ -291,7 +291,7 @@ models:
     name: Gemini 4 Argon
     match:
       equals: gemini-4-argon
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: >-
       Promotional rates published at https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing,
       stated to run until December 1, 2026; the page does not publish the post-promotion Copilot rates, so none are
@@ -378,7 +378,7 @@ models:
         - equals: gpt-5.3-codex
         - regex: '^gpt-5\.3-codex-\d{4}-\d{2}-\d{2}$'
     context_window: 400000
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     prices:
       input_mtok: 1.75
       cache_read_mtok: 0.175
@@ -429,7 +429,7 @@ models:
       or:
         - equals: gpt-5.4-nano
         - regex: '^gpt-5\.4-nano-\d{4}-\d{2}-\d{2}$'
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     prices:
       input_mtok: 0.20
       cache_read_mtok: 0.02
@@ -468,7 +468,7 @@ models:
         - equals: gpt-5.6-luna
         - regex: '^gpt-5\.6-luna-\d{4}-\d{2}-\d{2}$'
     context_window: 328000
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: Prompts over 200,000 tokens are billed at the long-context rates.
     prices:
       input_mtok:
@@ -499,7 +499,7 @@ models:
         - equals: gpt-5.6-sol
         - regex: '^gpt-5\.6-sol-\d{4}-\d{2}-\d{2}$'
     context_window: 400000
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: Prompts over 272,000 tokens are billed at the long-context rates.
     prices:
       input_mtok:
@@ -530,7 +530,7 @@ models:
         - equals: gpt-5.6-terra
         - regex: '^gpt-5\.6-terra-\d{4}-\d{2}-\d{2}$'
     context_window: 400000
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: Prompts over 272,000 tokens are billed at the long-context rates.
     prices:
       input_mtok:
@@ -560,7 +560,7 @@ models:
       or:
         - equals: gpt-6-astra
         - regex: '^gpt-6-astra-\d{4}-\d{2}-\d{2}$'
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: Prompts over 272,000 tokens are billed at the long-context rates.
     prices:
       input_mtok:
@@ -590,7 +590,7 @@ models:
       or:
         - equals: gpt-6-luna
         - regex: '^gpt-6-luna-\d{4}-\d{2}-\d{2}$'
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: Prompts over 272,000 tokens are billed at the long-context rates.
     prices:
       input_mtok:
@@ -620,7 +620,7 @@ models:
       or:
         - equals: gpt-6-sol
         - regex: '^gpt-6-sol-\d{4}-\d{2}-\d{2}$'
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: Prompts over 272,000 tokens are billed at the long-context rates.
     prices:
       input_mtok:
@@ -651,7 +651,7 @@ models:
         - equals: gpt-6.1-sol
         - regex: '^gpt-6\.1-sol-\d{4}-\d{2}-\d{2}$'
     context_window: 400000
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: Prompts over 272,000 tokens are billed at the long-context rates.
     prices:
       input_mtok:
@@ -675,12 +675,42 @@ models:
           - start: 272000
             price: 15
 
+  - id: gpt-6.1-terra
+    name: GPT-6.1 Terra
+    match:
+      or:
+        - equals: gpt-6.1-terra
+        - regex: '^gpt-6\.1-terra-\d{4}-\d{2}-\d{2}$'
+    prices_checked: 2026-10-27
+    price_comments: Prompts over 272,000 tokens are billed at the long-context rates.
+    prices:
+      input_mtok:
+        base: 1
+        tiers:
+          - start: 272000
+            price: 2
+      cache_read_mtok:
+        base: 0.05
+        tiers:
+          - start: 272000
+            price: 0.10
+      cache_write_mtok:
+        base: 1.25
+        tiers:
+          - start: 272000
+            price: 2.50
+      output_mtok:
+        base: 5
+        tiers:
+          - start: 272000
+            price: 7.50
+
   - id: grok-4.5
     name: Grok 4.5
     match:
       equals: grok-4.5
     context_window: 328000
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: Prompts over 200,000 tokens are billed at the long-context rates.
     prices:
       input_mtok:
@@ -704,7 +734,7 @@ models:
     match:
       equals: grok-4.6
     context_window: 328000
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: Prompts over 200,000 tokens are billed at the long-context rates.
     prices:
       input_mtok:
@@ -727,7 +757,7 @@ models:
     name: Grok 4.7
     match:
       equals: grok-4.7
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: Prompts over 200,000 tokens are billed at the long-context rates.
     prices:
       input_mtok:
@@ -762,7 +792,7 @@ models:
     match:
       equals: kimi-k3
     context_window: 1048576
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     prices:
       input_mtok: 3
       cache_read_mtok: 0.30
@@ -785,7 +815,7 @@ models:
     match:
       equals: mai-code-1.1-flash
     context_window: 256000
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     prices:
       input_mtok: 0.20
       cache_read_mtok: 0.02
