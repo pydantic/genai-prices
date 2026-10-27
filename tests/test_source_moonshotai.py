@@ -32,6 +32,11 @@ K2_COLUMNS = (
     f'{{title:{tooltip("Cached Input")},width:`22%`}}'
 )
 K2_ROW = f'[{link("kimi-k2.6")},`$0.95 / MTok`,`$4.00 / MTok`,`$0.16 / MTok`]'
+K2_REORDERED_COLUMNS = (
+    f'{{title:`Model`,width:`34%`}},{{title:{tooltip("Cached Input")},width:`22%`}},'
+    '{title:`Output`,width:`22%`},{title:`Input`,width:`22%`}'
+)
+K2_REORDERED_ROW = f'[{link("kimi-k2.6")},`$0.16 / MTok`,`$4.00 / MTok`,`$0.95 / MTok`]'
 
 
 def section(context: str, columns: str, *rows: str) -> str:
@@ -43,7 +48,7 @@ def section(context: str, columns: str, *rows: str) -> str:
 
 def test_moonshot_maps_columns_by_title_and_reads_each_sections_context_window() -> None:
     models = source_moonshotai.parse_pricing_page(
-        section('1,048,576', K3_COLUMNS, K3_ROW) + section('262,144', K2_COLUMNS, K2_ROW)
+        section('1,048,576', K3_COLUMNS, K3_ROW) + section('262,144', K2_REORDERED_COLUMNS, K2_REORDERED_ROW)
     )
 
     assert [(model.id, model.context_window) for model in models] == [('kimi-k3', 1048576), ('kimi-k2.6', 262144)]
@@ -103,6 +108,30 @@ def test_moonshot_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pyt
     source_moonshotai.main(provider_path)
 
     assert capsys.readouterr().out == 'Moonshot AI prices updated: 2 added, 4 updated\n'
-    kimi_k26 = ProviderYaml(provider_path).provider.find_model('kimi-k2.6')
+    provider = ProviderYaml(provider_path).provider
+    pro = provider.find_model('kimi-k3.1-pro')
+    assert pro is not None
+    assert pro.context_window == 1048576
+    assert pro.prices == ModelPrice.model_validate(
+        {
+            'input_mtok': '2',
+            'cache_read_mtok': '0.2',
+            'cache_write_mtok': '2',
+            'cache_write_1h_mtok': '4',
+            'output_mtok': '10',
+        }
+    )
+    highspeed = provider.find_model('kimi-k3.1-pro-highspeed')
+    assert highspeed is not None
+    assert highspeed.prices == ModelPrice.model_validate(
+        {
+            'input_mtok': '4',
+            'cache_read_mtok': '0.2',
+            'cache_write_mtok': '4',
+            'cache_write_1h_mtok': '8',
+            'output_mtok': '20',
+        }
+    )
+    kimi_k26 = provider.find_model('kimi-k2.6')
     assert kimi_k26 is not None
     assert kimi_k26.match == ClauseStartsWith(starts_with='kimi-k2.6')
