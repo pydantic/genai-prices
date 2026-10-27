@@ -58,6 +58,9 @@ def test_price_context_contract(case: dict[str, Any]) -> None:
         ('gpt-5-mini', 'flex', '1.096875'),
         ('gpt-6.1-sol', 'fast', '36.1'),
         ('gpt-6.1-sol', 'priority', '36.1'),
+        ('gpt-6.1-terra', 'flex', '4.5125'),
+        ('gpt-6.1-terra', 'fast', '18.05'),
+        ('gpt-6.1-terra', 'priority', '18.05'),
     ],
 )
 def test_openai_service_tiers(model: str, tier: str, total: str) -> None:
@@ -65,7 +68,7 @@ def test_openai_service_tiers(model: str, tier: str, total: str) -> None:
         Usage(input_tokens=1_000_000, cache_read_tokens=250_000, output_tokens=1_000_000),
         model,
         provider_id='openai',
-        genai_request_timestamp=datetime(2026, 10, 12),
+        genai_request_timestamp=datetime(2026, 10, 26),
         price_context={'service_tier': tier},
     )
     assert result.total_price == Decimal(total)

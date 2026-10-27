@@ -10,7 +10,7 @@ gh variable set AGENTIC_WORKFLOWS_ENABLED --body true
 gh workflow run agentic-price-check.lock.yml
 ```
 
-This [gh-aw](https://github.com/github/gh-aw) workflow schedules a check of all twenty-five covered provider records
+This [gh-aw](https://github.com/github/gh-aw) workflow schedules a check of all twenty-six covered provider records
 each Monday at 06:00 UTC and supports manual dispatch. The same invocation also revisits pending requested-model rollouts from Genie Pricer. See the [gh-aw schedule syntax] and
 [GitHub Actions schedule syntax]. The workflow combines
 verified new models and rate changes into one ready-for-review PR titled `Update provider prices`. Scheduled runs target
@@ -124,7 +124,7 @@ no personal-token expiry to monitor.
 
 The weekly workflow is `.github/workflows/agentic-price-check.md`. [Genie Pricer](GENIE_PRICER.md) provides a separate targeted Slack entrypoint. It covers OpenAI, OpenAI Decisions, Anthropic, Google
 (Gemini), Mistral, DeepSeek, xAI, Groq, Cerebras, MiniMax, MoonshotAI, Avian, Perplexity, Cohere, Voyage AI, Cloudflare
-Workers AI, Cursor, Arcee, Baseten, GitHub Copilot, Databricks, TypeSafe, Z.AI, Meta, and Modal.
+Workers AI, Cursor, Arcee, Baseten, GitHub Copilot, Databricks, TypeSafe, Z.AI, Meta, Modal, and ElevenLabs.
 
 You define each provider's scope, official URLs, and pricing mappings in `.github/agentic-price-check-providers.yml`.
 Each run reads that manifest once, completes research provider by provider, and starts one full validation pass after edits

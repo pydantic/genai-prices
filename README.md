@@ -47,7 +47,8 @@ The following providers are currently supported:
 - [Databricks](prices/providers/databricks.yml) - 20 models
 - [Deepseek](prices/providers/deepseek.yml) - 8 models
 - [Doubleword](prices/providers/doubleword.yml) - 28 models
-- [Fireworks](prices/providers/fireworks.yml) - 44 models
+- [ElevenLabs](prices/providers/elevenlabs.yml) - 2 models
+- [Fireworks](prices/providers/fireworks.yml) - 45 models
 - [GitHub Copilot](prices/providers/github_copilot.yml) - 42 models
 - [Google](prices/providers/google.yml) - 69 models
 - [Groq](prices/providers/groq.yml) - 37 models
@@ -65,16 +66,16 @@ The following providers are currently supported:
 - [Meta](prices/providers/meta.yml) - 6 models
 - [MiniMax](prices/providers/minimax.yml) - 10 models
 - [Mistral](prices/providers/mistral.yml) - 49 models
-- [Modal](prices/providers/modal.yml) - 8 models
+- [Modal](prices/providers/modal.yml) - 9 models
 - [MoonshotAi](prices/providers/moonshotai.yml) - 14 models
-- [Novita](prices/providers/novita.yml) - 109 models
-- [OpenAI](prices/providers/openai.yml) - 110 models
+- [Novita](prices/providers/novita.yml) - 110 models
+- [OpenAI](prices/providers/openai.yml) - 111 models
 - [OpenAI Decisions](prices/providers/openai_decisions.yml) - 1 models
 - [OpenRouter](prices/providers/openrouter.yml) - 894 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 20 models
 - [Perplexity](prices/providers/perplexity.yml) - 23 models
-- [QuickSilver Pro](prices/providers/quicksilverpro.yml) - 71 models
-- [Together AI](prices/providers/together.yml) - 92 models
+- [QuickSilver Pro](prices/providers/quicksilverpro.yml) - 73 models
+- [Together AI](prices/providers/together.yml) - 93 models
 - [TypeSafe](prices/providers/typesafe.yml) - 2 models
 - [Voyage AI](prices/providers/voyageai.yml) - 24 models
 - [X AI](prices/providers/x_ai.yml) - 22 models

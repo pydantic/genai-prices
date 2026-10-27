@@ -8705,6 +8705,51 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'elevenlabs',
+    name: 'ElevenLabs',
+    pricing_urls: ['https://elevenlabs.io/pricing/api'],
+    api_pattern: 'https://api\\.(?:(?:us|eu\\.residency|in\\.residency|sg\\.residency)\\.)?elevenlabs\\.io(?:/|$)',
+    price_comments:
+      'The Realtime API is OpenAI Realtime-compatible (https://elevenlabs.io/docs/eleven-agents/guides/openai-realtime-compatibility) and bills each session per minute of connected audio plus tokens. The per-minute rate counts wall-clock connection time, not speech, and is priced here as `audio_hours`. The Realtime API sends no usage in `response.done` (observed `null` on both models, 2026-10-21), so no extractor is mapped; the totals are only available after the call from the conversation details endpoint (https://elevenlabs.io/docs/api-reference/conversations/get, `metadata.charging`).',
+    model_match: {
+      starts_with: 'eleven_',
+    },
+    provider_match: {
+      contains: 'elevenlabs',
+    },
+    models: [
+      {
+        id: 'eleven_realtime_v1_max',
+        name: 'Eleven Realtime v1 Max',
+        match: {
+          equals: 'eleven_realtime_v1_max',
+        },
+        price_comments:
+          '$0.08 per connected minute ($4.80 per hour), $1.80/M input and $9.00/M output tokens: https://elevenlabs.io/pricing/api. The page lists no cached input rate; $0.18/M cached input (10% of input) is what the conversation details endpoint charged on 2026-10-21.',
+        prices: {
+          input_mtok: 1.8,
+          cache_read_mtok: 0.18,
+          output_mtok: 9,
+          audio_hours: 4.8,
+        },
+      },
+      {
+        id: 'eleven_realtime_v1_mini',
+        name: 'Eleven Realtime v1 Mini',
+        match: {
+          equals: 'eleven_realtime_v1_mini',
+        },
+        price_comments:
+          '$0.08 per connected minute ($4.80 per hour), $0.20/M input and $6.00/M output tokens: https://elevenlabs.io/pricing/api.',
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 6,
+          audio_hours: 4.8,
+        },
+      },
+    ],
+  },
+  {
     id: 'fireworks',
     name: 'Fireworks',
     pricing_urls: ['https://fireworks.ai/pricing'],
@@ -8848,6 +8893,18 @@ export const data: Provider[] = [
           input_mtok: 0.3,
           cache_read_mtok: 0.006,
           output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'deepseek-v4p1-flash-1017-us',
+        name: 'DeepSeek V4.1 Flash 1017 US',
+        match: {
+          equals: 'accounts/fireworks/routers/deepseek-v4p1-flash-1017-us',
+        },
+        prices: {
+          input_mtok: 0.45,
+          cache_read_mtok: 0.009,
+          output_mtok: 1.8,
         },
       },
       {
@@ -21547,6 +21604,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'Qwen/Qwen3.8-Max-VL-Thinking',
+        name: 'Qwen3.8-Max VL',
+        match: {
+          equals: 'Qwen/Qwen3.8-Max-VL-Thinking',
+        },
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.25,
+          output_mtok: 6,
+        },
+      },
+      {
         id: 'deepseek-ai/DeepSeek-V4.1-Flash',
         name: 'DeepSeek V4.1 Flash',
         match: {
@@ -22630,6 +22699,19 @@ export const data: Provider[] = [
               },
             ],
           },
+        },
+      },
+      {
+        id: 'minimax/minimax-m3.1-flash',
+        name: 'MiniMax M3.1 Flash',
+        match: {
+          equals: 'minimax/minimax-m3.1-flash',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.015,
+          output_mtok: 0.6,
         },
       },
       {
@@ -28134,6 +28216,244 @@ export const data: Provider[] = [
             constraint: {
               start_date: '2026-10-14',
               type: 'start_date',
+            },
+          },
+        ],
+      },
+      {
+        id: 'gpt-6.1-terra',
+        name: 'GPT-6.1 Terra',
+        description: 'Fast, efficient model for visual reasoning, precise computer use, and clear, natural writing.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6.1-terra',
+            },
+            {
+              regex: '^gpt-6\\.1-terra-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'Flex/priority/fast rates verified on 2026-10-26 at https://developers.openai.com/api/docs/pricing. Batch and flex are 50% of standard; fast (formerly priority) is 2x. Cache reads cost 5% of input; cache writes are the 30-minute retention rate (1.25x input). The 12-hour retention rate ($2.50) is not modeled. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Refs: https://developers.openai.com/api/docs/models/gpt-6.1-terra, https://developers.openai.com/api/docs/changelog',
+        prices: {
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.05,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 272000,
+                price: 7.5,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+          storage_searches_kcount: 2.5,
+        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.625,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1.25,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.025,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.05,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 2.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 3.75,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 4,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 2.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.1,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.2,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 10,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 15,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 4,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 2.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.1,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.2,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 10,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 15,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 0.625,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1.25,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.025,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.05,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 2.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 3.75,
+                  },
+                ],
+              },
             },
           },
         ],
@@ -47542,6 +47862,32 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'kimi-k3.1-pro',
+        name: 'Kimi K3.1 Pro',
+        match: {
+          equals: 'kimi-k3.1-pro',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'kimi-k3.1-pro-highspeed',
+        name: 'Kimi K3.1 Pro Highspeed',
+        match: {
+          equals: 'kimi-k3.1-pro-highspeed',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 4,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
+        },
+      },
+      {
         id: 'mimo-v2.5',
         name: 'MiMo-V2.5',
         match: {
@@ -47962,6 +48308,19 @@ export const data: Provider[] = [
           input_mtok: 0.3,
           cache_read_mtok: 0.06,
           output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'MiniMaxAI/MiniMax-M3.1-Flash',
+        name: 'Minimax M3.1 Flash',
+        match: {
+          equals: 'MiniMaxAI/MiniMax-M3.1-Flash',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.015,
+          output_mtok: 0.6,
         },
       },
       {

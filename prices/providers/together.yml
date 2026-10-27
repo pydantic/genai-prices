@@ -32,7 +32,18 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.06
       output_mtok: 1.2
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-23
+
+  - id: MiniMaxAI/MiniMax-M3.1-Flash
+    name: Minimax M3.1 Flash
+    match:
+      equals: MiniMaxAI/MiniMax-M3.1-Flash
+    context_window: 1048576
+    prices:
+      input_mtok: 0.15
+      cache_read_mtok: 0.015
+      output_mtok: 0.6
+    prices_checked: 2026-10-23
 
   - id: Nexusflow/NexusRaven-V2-13B
     match:
@@ -150,7 +161,7 @@ models:
     prices:
       input_mtok: 0.17
       output_mtok: 0.25
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-23
 
   - id: Qwen/Qwen3.6-Plus
     name: Qwen3.6 Plus
@@ -160,7 +171,7 @@ models:
     prices:
       input_mtok: 0.5
       output_mtok: 3
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-23
 
   - id: Qwen/Qwen3.7-Max
     name: Qwen3.7 Max
@@ -170,7 +181,7 @@ models:
       input_mtok: 2.5
       cache_read_mtok: 0.5
       output_mtok: 7.5
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-23
 
   - id: Qwen/Qwen3.7-Plus
     name: Qwen3.7 Plus
@@ -180,7 +191,7 @@ models:
     prices:
       input_mtok: 0.32
       output_mtok: 1.28
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-23
 
   - id: Qwen/Qwen3.8-2.4T-A95B
     name: Qwen3.8-2.4T-A95B
@@ -190,7 +201,7 @@ models:
       input_mtok: 2
       cache_read_mtok: 0.5
       output_mtok: 6
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-23
 
   - id: Qwen/Qwen3.8-Flash
     name: Qwen3.8 Flash
@@ -200,7 +211,7 @@ models:
     prices:
       input_mtok: 0.15
       output_mtok: 0.47
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-23
 
   - id: Undi95/ReMM-SLERP-L2-13B
     match:
@@ -270,7 +281,7 @@ models:
       input_mtok: 1.32
       cache_read_mtok: 0.13
       output_mtok: 3.96
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-23
 
   - id: deepseek-ai/DeepSeek-V4.1-Flash
     name: DeepSeek V4.1 Flash
@@ -283,7 +294,7 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.006
       output_mtok: 1.2
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-23
 
   - id: deepseek-ai/deepseek-coder-33b-instruct
     match:
@@ -463,7 +474,7 @@ models:
       input_mtok: 0.35
       cache_read_mtok: 0.04
       output_mtok: 1.5
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-23
 
   - id: meta-models/Muse-Spark-Open-816B-A42B
     name: Muse Spark Open 816B A42B
@@ -474,7 +485,7 @@ models:
       input_mtok: 1.25
       cache_read_mtok: 0.15
       output_mtok: 4.25
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-23
 
   - id: microsoft/WizardLM-2-8x22B
     match:
@@ -541,7 +552,7 @@ models:
       input_mtok: 3
       cache_read_mtok: 0.3
       output_mtok: 15
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-23
 
   - id: nvidia/NVIDIA-Nemotron-3.5-Super-VL
     name: NVIDIA Nemotron 3.5 Super VL
@@ -552,7 +563,7 @@ models:
       input_mtok: 0.15
       cache_read_mtok: 0.02
       output_mtok: 0.5
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-23
 
   - id: openai/gpt-oss-120b
     name: GPT-OSS 120B
@@ -562,7 +573,7 @@ models:
     prices:
       input_mtok: 0.15
       output_mtok: 0.6
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-23
 
   - id: openchat/openchat-3.5-1210
     match:
@@ -580,7 +591,7 @@ models:
       input_mtok: 0.4
       cache_read_mtok: 0.04
       output_mtok: 1.2
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-23
 
   - id: snorkelai/Snorkel-Mistral-PairRM-DPO
     match:
@@ -612,14 +623,14 @@ models:
       input_mtok: 1
       cache_read_mtok: 0.17
       output_mtok: 4.05
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-23
 
   - id: together/Tev1-4B-experimental
     name: Tev1 4B Experimental
     match:
       equals: together/Tev1-4B-experimental
     context_window: 32768
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-23
     price_comments: >-
       Rates follow the serverless catalog (https://docs.together.ai/docs/serverless/models), which lists
       $0.042 per million input tokens; the model page and https://www.together.ai/pricing list $0.04.
@@ -724,7 +735,7 @@ models:
       input_mtok: 1.4
       cache_read_mtok: 0.26
       output_mtok: 4.4
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-23
 
   - id: zai-org/GLM-5.3
     name: GLM-5.3
@@ -735,7 +746,7 @@ models:
       input_mtok: 1.4
       cache_read_mtok: 0.26
       output_mtok: 4.4
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-23
 
   - id: zai-org/GLM-5.3-Flash
     name: GLM-5.3 Flash
@@ -746,7 +757,7 @@ models:
       input_mtok: 0.15
       cache_read_mtok: 0.03
       output_mtok: 0.5
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-23
 
   - id: zero-one-ai/Yi-34B
     match:

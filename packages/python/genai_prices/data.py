@@ -5072,6 +5072,36 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
+        id='elevenlabs',
+        name='ElevenLabs',
+        api_pattern='https://api\\.(?:(?:us|eu\\.residency|in\\.residency|sg\\.residency)\\.)?elevenlabs\\.io(?:/|$)',
+        pricing_urls=['https://elevenlabs.io/pricing/api'],
+        price_comments='The Realtime API is OpenAI Realtime-compatible (https://elevenlabs.io/docs/eleven-agents/guides/openai-realtime-compatibility) and bills each session per minute of connected audio plus tokens. The per-minute rate counts wall-clock connection time, not speech, and is priced here as `audio_hours`. The Realtime API sends no usage in `response.done` (observed `null` on both models, 2026-10-21), so no extractor is mapped; the totals are only available after the call from the conversation details endpoint (https://elevenlabs.io/docs/api-reference/conversations/get, `metadata.charging`).',
+        model_match=ClauseStartsWith(starts_with='eleven_'),
+        provider_match=ClauseContains(contains='elevenlabs'),
+        models=[
+            ModelInfo(
+                id='eleven_realtime_v1_max',
+                match=ClauseEquals(equals='eleven_realtime_v1_max'),
+                name='Eleven Realtime v1 Max',
+                price_comments='$0.08 per connected minute ($4.80 per hour), $1.80/M input and $9.00/M output tokens: https://elevenlabs.io/pricing/api. The page lists no cached input rate; $0.18/M cached input (10% of input) is what the conversation details endpoint charged on 2026-10-21.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.8'),
+                    cache_read_mtok=Decimal('0.18'),
+                    output_mtok=Decimal('9'),
+                    audio_hours=Decimal('4.8'),
+                ),
+            ),
+            ModelInfo(
+                id='eleven_realtime_v1_mini',
+                match=ClauseEquals(equals='eleven_realtime_v1_mini'),
+                name='Eleven Realtime v1 Mini',
+                price_comments='$0.08 per connected minute ($4.80 per hour), $0.20/M input and $6.00/M output tokens: https://elevenlabs.io/pricing/api.',
+                prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('6'), audio_hours=Decimal('4.8')),
+            ),
+        ],
+    ),
+    Provider(
         id='fireworks',
         name='Fireworks',
         api_pattern='https://api\\.fireworks\\.ai',
@@ -5166,6 +5196,14 @@ providers: list[Provider] = [
                 name='DeepSeek V4.1 Flash 1017',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.006'), output_mtok=Decimal('1.2')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek-v4p1-flash-1017-us',
+                match=ClauseEquals(equals='accounts/fireworks/routers/deepseek-v4p1-flash-1017-us'),
+                name='DeepSeek V4.1 Flash 1017 US',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.45'), cache_read_mtok=Decimal('0.009'), output_mtok=Decimal('1.8')
                 ),
             ),
             ModelInfo(
@@ -12454,6 +12492,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
+                id='Qwen/Qwen3.8-Max-VL-Thinking',
+                match=ClauseEquals(equals='Qwen/Qwen3.8-Max-VL-Thinking'),
+                name='Qwen3.8-Max VL',
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('6')),
+            ),
+            ModelInfo(
                 id='deepseek-ai/DeepSeek-V4.1-Flash',
                 match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash'),
                 name='DeepSeek V4.1 Flash',
@@ -13115,6 +13159,15 @@ providers: list[Provider] = [
                         base=Decimal('0.06'), tiers=[Tier(start=524288, price=Decimal('0.12'))]
                     ),
                     output_mtok=TieredPrices(base=Decimal('1.2'), tiers=[Tier(start=524288, price=Decimal('2.4'))]),
+                ),
+            ),
+            ModelInfo(
+                id='minimax/minimax-m3.1-flash',
+                match=ClauseEquals(equals='minimax/minimax-m3.1-flash'),
+                name='MiniMax M3.1 Flash',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.015'), output_mtok=Decimal('0.6')
                 ),
             ),
             ModelInfo(
@@ -15744,6 +15797,98 @@ providers: list[Provider] = [
                             ),
                         ),
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
+                    ),
+                ],
+            ),
+            ModelInfo(
+                id='gpt-6.1-terra',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gpt-6.1-terra'),
+                        ClauseRegex(regex='^gpt-6\\.1-terra-\\d{4}-\\d{2}-\\d{2}$'),
+                    ]
+                ),
+                name='GPT-6.1 Terra',
+                description='Fast, efficient model for visual reasoning, precise computer use, and clear, natural writing.',
+                context_window=1050000,
+                price_comments='Flex/priority/fast rates verified on 2026-10-26 at https://developers.openai.com/api/docs/pricing. Batch and flex are 50% of standard; fast (formerly priority) is 2x. Cache reads cost 5% of input; cache writes are the 30-minute retention rate (1.25x input). The 12-hour retention rate ($2.50) is not modeled. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Refs: https://developers.openai.com/api/docs/models/gpt-6.1-terra, https://developers.openai.com/api/docs/changelog',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('2'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('1.25'), tiers=[Tier(start=272000, price=Decimal('2.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.05'), tiers=[Tier(start=272000, price=Decimal('0.1'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('7.5'))]),
+                    web_searches_kcount=Decimal('10'),
+                    storage_searches_kcount=Decimal('2.5'),
+                ),
+                price_variants=[
+                    PriceVariant(when={'service_tier': 'default'}, prices=ModelPrice(), constraint=None),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('1'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('0.625'), tiers=[Tier(start=272000, price=Decimal('1.25'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.025'), tiers=[Tier(start=272000, price=Decimal('0.05'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('3.75'))]
+                            ),
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('15'))]
+                            ),
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'fast'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('15'))]
+                            ),
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'processing': 'batch'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('0.5'), tiers=[Tier(start=272000, price=Decimal('1'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('0.625'), tiers=[Tier(start=272000, price=Decimal('1.25'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.025'), tiers=[Tier(start=272000, price=Decimal('0.05'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('3.75'))]
+                            ),
+                        ),
                     ),
                 ],
             ),
@@ -27028,6 +27173,20 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='kimi-k3.1-pro',
+                match=ClauseEquals(equals='kimi-k3.1-pro'),
+                name='Kimi K3.1 Pro',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
+                id='kimi-k3.1-pro-highspeed',
+                match=ClauseEquals(equals='kimi-k3.1-pro-highspeed'),
+                name='Kimi K3.1 Pro Highspeed',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('4'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('20')),
+            ),
+            ModelInfo(
                 id='mimo-v2.5',
                 match=ClauseEquals(equals='mimo-v2.5'),
                 name='MiMo-V2.5',
@@ -27309,6 +27468,15 @@ providers: list[Provider] = [
                 context_window=524288,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.06'), output_mtok=Decimal('1.2')
+                ),
+            ),
+            ModelInfo(
+                id='MiniMaxAI/MiniMax-M3.1-Flash',
+                match=ClauseEquals(equals='MiniMaxAI/MiniMax-M3.1-Flash'),
+                name='Minimax M3.1 Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.015'), output_mtok=Decimal('0.6')
                 ),
             ),
             ModelInfo(

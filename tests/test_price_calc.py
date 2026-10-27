@@ -241,6 +241,65 @@ def test_cursor_provider_inference():
     assert grok_price.model.id == 'grok-4.6'
 
 
+ELEVENLABS_USAGE = Usage(audio_seconds=60, input_tokens=1_000_000, cache_read_tokens=500_000, output_tokens=1_000_000)
+ELEVENLABS_TIMESTAMP = datetime(2026, 10, 22, tzinfo=UTC)
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'expected_total_price'),
+    [
+        ('eleven_realtime_v1_max', Decimal('10.07')),
+        ('eleven_realtime_v1_mini', Decimal('6.28')),
+        ('ELEVEN_REALTIME_V1_MAX', Decimal('10.07')),
+    ],
+)
+def test_elevenlabs_realtime_prices(model_ref: str, expected_total_price: Decimal):
+    by_provider_id = calc_price(
+        ELEVENLABS_USAGE, model_ref, provider_id='elevenlabs', genai_request_timestamp=ELEVENLABS_TIMESTAMP
+    )
+    by_model_namespace = calc_price(ELEVENLABS_USAGE, model_ref, genai_request_timestamp=ELEVENLABS_TIMESTAMP)
+
+    for price in (by_provider_id, by_model_namespace):
+        assert price.provider.id == 'elevenlabs'
+        assert price.total_price == expected_total_price
+
+
+@pytest.mark.parametrize(
+    'provider_api_url',
+    [
+        'https://api.elevenlabs.io',
+        'https://api.us.elevenlabs.io/v1/convai',
+        'https://api.eu.residency.elevenlabs.io/v1/convai',
+        'https://api.in.residency.elevenlabs.io/v1/convai',
+        'https://api.sg.residency.elevenlabs.io/v1/convai',
+    ],
+)
+def test_elevenlabs_realtime_selected_by_api_url(provider_api_url: str):
+    price = calc_price(
+        ELEVENLABS_USAGE,
+        'eleven_realtime_v1_max',
+        provider_api_url=provider_api_url,
+        genai_request_timestamp=ELEVENLABS_TIMESTAMP,
+    )
+
+    assert price.provider.id == 'elevenlabs'
+    assert price.total_price == Decimal('10.07')
+
+
+@pytest.mark.parametrize(
+    'provider_api_url',
+    ['https://api.elevenlabs.io.evil.example/v1', 'https://api.elevenlabs.ioevil.example/v1'],
+)
+def test_elevenlabs_api_url_requires_the_real_host(provider_api_url: str):
+    with pytest.raises(LookupError, match='Unable to find provider'):
+        calc_price(Usage(input_tokens=1), 'eleven_realtime_v1_max', provider_api_url=provider_api_url)
+
+
+def test_elevenlabs_does_not_price_other_models_in_its_namespace():
+    with pytest.raises(LookupError, match='Unable to find model'):
+        calc_price(Usage(input_tokens=1), 'eleven_multilingual_v2', provider_id='elevenlabs')
+
+
 @pytest.mark.parametrize(
     ('model_ref', 'expected_total_price'),
     [
@@ -527,6 +586,7 @@ def test_gpt_6_sol_luna_prices(model_ref: str, model_id: str, short_total: Decim
     [
         ('gpt-6-sol', Decimal('0.5527'), Decimal('1.100404')),
         ('gpt-6.1-sol', Decimal('0.5526'), Decimal('1.100204')),
+        ('gpt-6.1-terra', Decimal('0.2763'), Decimal('0.550102')),
         ('gpt-6-luna', Decimal('0.027635'), Decimal('0.0550202')),
     ],
 )
@@ -2658,6 +2718,7 @@ def test_price_deepseek_v4_flash_routed_to_v4_1_flash(timestamp: datetime, off_p
         ('gpt-5.6-sol', 272_001, Decimal('4'), Decimal('8')),
         ('gpt-5.6-terra', 272_001, Decimal('2'), Decimal('4')),
         ('gpt-6.1-sol', 272_001, Decimal('2'), Decimal('4')),
+        ('gpt-6.1-terra', 272_001, Decimal('1'), Decimal('2')),
     ],
 )
 def test_price_long_context_cliff(model_ref: str, first_long_token: int, base_input: Decimal, long_input: Decimal):

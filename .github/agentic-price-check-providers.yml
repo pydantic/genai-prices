@@ -270,3 +270,15 @@ providers:
       Match exact IDs moonshotai/Kimi-K3 and thinkingmachines/Inkling-NVFP4. Reasoning tokens use the completion rate.
       Exclude Dedicated Endpoint compute prices. The general model library is not a complete pricing catalog, so do not
       infer removals from it.
+
+  - name: ElevenLabs
+    file: prices/providers/elevenlabs.yml
+    scope: Realtime API models (eleven_realtime_v1_mini and eleven_realtime_v1_max) only.
+    sources:
+      - https://elevenlabs.io/pricing/api
+    notes: >-
+      Map "Connected audio (per additional minute)" to audio_hours by multiplying the per-minute rate by 60. Map "Input tokens
+      (per 1M)" and "Output tokens (per 1M)" to input_mtok and output_mtok. Each plan row lists the same rates; report differing
+      rows as unchecked. The page publishes no cached-input rate, so leave the recorded cache_read_mtok unchecked. Exclude
+      burst pricing, included minutes, plan fees, and every non-Realtime product. The pricing page is not a complete catalog,
+      so do not infer removals from it.

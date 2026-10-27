@@ -103,6 +103,10 @@ cursor-get: ## get cursor model prices
 doubleword-get: ## get doubleword realtime model prices
 	uv run -m prices get_doubleword_prices
 
+.PHONY: elevenlabs-get
+elevenlabs-get: ## get elevenlabs realtime model prices
+	uv run -m prices get_elevenlabs_prices
+
 .PHONY: github-copilot-get
 github-copilot-get: ## get github copilot prices
 	uv run -m prices get_github_copilot_prices
@@ -191,7 +195,7 @@ openrouter-provider-get: ## get openrouter provider prices
 	uv run -m prices get_openrouter_provider_prices
 
 .PHONY: get-all-prices
-get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get avian-get azure-get baseten-get cerebras-get cloudflare-get cursor-get doubleword-get github-copilot-get meta-get minimax-get moonshotai-get novita-get openai-decisions-get ovhcloud-get quicksilverpro-get typesafe-get voyageai-get zai-get groq-get perplexity-get together-get xai-get openrouter-provider-get google-get anthropic-get databricks-get fireworks-get modal-get aws-get openai-get mistral-get ## get all prices
+get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get avian-get azure-get baseten-get cerebras-get cloudflare-get cursor-get doubleword-get elevenlabs-get github-copilot-get meta-get minimax-get moonshotai-get novita-get openai-decisions-get ovhcloud-get quicksilverpro-get typesafe-get voyageai-get zai-get groq-get perplexity-get together-get xai-get openrouter-provider-get google-get anthropic-get databricks-get fireworks-get modal-get aws-get openai-get mistral-get ## get all prices
 
 .PHONE: update-price-discrepancies
 update-price-discrepancies: ## update price discrepancies
