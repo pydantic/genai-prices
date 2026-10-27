@@ -11,21 +11,16 @@ from prices.utils import get_markdown, markdown_tables, package_dir
 
 PRICING_URL = 'https://developers.openai.com/api/docs/pricing.md'
 MIN_MODEL_COUNT = 30
-CONTEXT_TIER_HEADER = [
-    'Model',
-    'Short context input',
-    'Short context cached input',
-    'Short context cache writes',
-    'Short context output',
-    'Long context input',
-    'Long context cached input',
-    'Long context cache writes',
-    'Long context output',
-]
-SPECIALIZED_HEADER = ['Category', 'Model', 'Input', 'Cached input', 'Output']
-FLAT_HEADER = ['Model', 'Input', 'Cached input', 'Output']
+# Price columns by name, without their `Short context`/`Long context` prefix.
+COLUMN_KEYS: dict[str, str | None] = {
+    'input': 'input_mtok',
+    'cached input': 'cache_read_mtok',
+    '30m write': 'cache_write_mtok',
+    # The 12-hour cache retention rate isn't modeled; cache writes use the 30-minute rate.
+    '12h write': None,
+    'output': 'output_mtok',
+}
 NON_STANDARD_TABS = {'Batch', 'Flex', 'Fast', 'Ultrafast', 'Priority'}
-KEYS = ('input_mtok', 'cache_read_mtok', 'cache_write_mtok', 'output_mtok')
 # Long context starts above 272K input tokens; the engines select a tier when the count is greater than `start`.
 LONG_CONTEXT_START = 272_000
 MODEL_CELL = re.compile(r'(?P<id>[\w.-]+)(?: \(<272K context length\))?')
@@ -34,20 +29,12 @@ MODEL_CELL = re.compile(r'(?P<id>[\w.-]+)(?: \(<272K context length\))?')
 def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     """Parse the standard-tier text token rates; batch, flex and fast tabs and non-text units stay curated."""
     rates: dict[str, ModelPrice] = {}
-    for header, rows in _standard_tables(markdown):
+    for model_column, columns, rows in _standard_tables(markdown):
         for row in rows:
-            if header == CONTEXT_TIER_HEADER:
-                model_cell, prices = row[0], ModelPrice.model_validate(_context_tier_prices(row))
-            else:
-                model_cell, cells = (row[1], row[2:]) if header == SPECIALIZED_HEADER else (row[0], row[1:])
-                if cells[0] == 'Free':
-                    continue
-                prices = ModelPrice.model_validate(
-                    {
-                        key: _dollars(cell, row)
-                        for key, cell in zip(('input_mtok', 'cache_read_mtok', 'output_mtok'), cells)
-                    }
-                )
+            model_cell, cells = row[model_column], row[model_column + 1 :]
+            if cells[0] == 'Free':
+                continue
+            prices = ModelPrice.model_validate(_prices(columns, cells, row))
             if not (match := MODEL_CELL.fullmatch(model_cell)):
                 raise RuntimeError(f'Unexpected OpenAI pricing row: {row}')
             if rates.setdefault(match['id'], prices) != prices:
@@ -77,36 +64,45 @@ def get_openai_prices() -> None:  # pragma: no cover - thin CLI alias for main
     main()
 
 
-def _standard_tables(markdown: str) -> list[tuple[list[str], list[list[str]]]]:
+def _standard_tables(markdown: str) -> list[tuple[int, list[tuple[bool, str | None]], list[list[str]]]]:
     """Yield the text tables outside a Batch, Flex or Fast tab; the tab label is the line before each heading."""
     sections = re.split(r'^### .*$', markdown, flags=re.MULTILINE)
-    tables: list[tuple[list[str], list[list[str]]]] = []
+    tables: list[tuple[int, list[tuple[bool, str | None]], list[list[str]]]] = []
     for before, section in zip(sections, sections[1:]):
         tab = next((line.strip() for line in reversed(before.splitlines()) if line.strip()), '')
         if tab in NON_STANDARD_TABS:
             continue
-        tables += [
-            (header, rows)
-            for header, rows in markdown_tables(section)
-            if header in (CONTEXT_TIER_HEADER, SPECIALIZED_HEADER, FLAT_HEADER)
-        ]
+        for header, rows in markdown_tables(section):
+            if 'Model' in header[:2] and (columns := _columns(header[header.index('Model') + 1 :])):
+                tables.append((header.index('Model'), columns, rows))
     return tables
 
 
-def _context_tier_prices(row: list[str]) -> dict[str, Decimal | TieredPrices]:
-    short = [_dollars(cell, row) for cell in row[1:5]]
-    long = [_dollars(cell, row) for cell in row[5:9]]
-    has_long_context = any(price is not None for price in long)
-    prices: dict[str, Decimal | TieredPrices] = {}
-    for key, base, tier in zip(KEYS, short, long):
-        if base is None and tier is None:
-            continue
-        if base is None or (has_long_context and tier is None):
-            raise RuntimeError(f'OpenAI pricing row has a short or long context rate without its pair: {row}')
-        prices[key] = (
-            TieredPrices(base=base, tiers=[Tier(start=LONG_CONTEXT_START, price=tier)]) if tier is not None else base
-        )
-    return prices
+def _columns(names: list[str]) -> list[tuple[bool, str | None]] | None:
+    """Map each column to whether it is a long context rate and its price key; `None` if any column is unknown."""
+    columns: list[tuple[bool, str | None]] = []
+    for name in names:
+        key = name.removeprefix('Short context ').removeprefix('Long context ').lower()
+        if key not in COLUMN_KEYS:
+            return None
+        columns.append((name.startswith('Long context '), COLUMN_KEYS[key]))
+    return columns
+
+
+def _prices(
+    columns: list[tuple[bool, str | None]], cells: list[str], row: list[str]
+) -> dict[str, Decimal | TieredPrices]:
+    short: dict[str, Decimal] = {}
+    long: dict[str, Decimal] = {}
+    for (is_long, key), cell in zip(columns, cells):
+        if key and (price := _dollars(cell, row)) is not None:
+            (long if is_long else short)[key] = price
+    if long and short.keys() != long.keys():
+        raise RuntimeError(f'OpenAI pricing row has a short or long context rate without its pair: {row}')
+    return {
+        key: TieredPrices(base=base, tiers=[Tier(start=LONG_CONTEXT_START, price=long[key])]) if long else base
+        for key, base in short.items()
+    }
 
 
 def _dollars(cell: str, row: list[str]) -> Decimal | None:
