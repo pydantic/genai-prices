@@ -25,11 +25,11 @@ MARKUP = re.compile(r'<[^>]+>|\[([^]]+)]\([^)]*\)')
 
 
 def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
-    section = re.search(r'^## LLM\s*$(.*?)^## ', markdown, flags=re.MULTILINE | re.DOTALL)
+    section = re.search(r'^## LLM\s*$(.*?)(?=^## |\Z)', markdown, flags=re.MULTILINE | re.DOTALL)
     if section is None:
         raise RuntimeError('MiniMax pricing page has no LLM section')
-    standard = re.sub(r'^\*\*Priority\*\*.*?(?=^\*\*\w+\*\*|\Z)', '', section.group(1), flags=re.M | re.S)
-    if set(re.findall(r'^\*\*(\w+)\*\*', standard, flags=re.MULTILINE)) - {'Standard'}:
+    standard = re.sub(r'^\*\*Priority\*\*.*?(?=^\*\*[^*\n]+\*\*|\Z)', '', section.group(1), flags=re.M | re.S)
+    if set(re.findall(r'^\*\*([^*\n]+)\*\*', standard, flags=re.MULTILINE)) - {'Standard'}:
         raise RuntimeError('MiniMax LLM pricing has a tier other than Standard and Priority')
 
     flat: dict[str, Rates] = {}

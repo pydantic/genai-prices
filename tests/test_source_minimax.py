@@ -75,6 +75,7 @@ def test_minimax_parses_standard_tab_bands_and_flat_models() -> None:
         output_mtok=TieredPrices(base=Decimal('1.20'), tiers=[Tier(start=512000, price=Decimal('2.40'))]),
     )
     assert models[1].prices_checked == date.today()
+    assert source_minimax.parse_pricing_markdown(PRICING_MARKDOWN.split('## Audio')[0]) == models
 
 
 @pytest.mark.parametrize(
@@ -82,6 +83,7 @@ def test_minimax_parses_standard_tab_bands_and_flat_models() -> None:
     [
         ('## Audio\n', 'has no LLM section'),
         (page('**Batch**\n'), 'tier other than Standard and Priority'),
+        (page('**Batch API**\n'), 'tier other than Standard and Priority'),
         (page('| Model | Price |\n| :- | :- |\n| **MiniMax-M2** | \\$1 |\n'), 'Unexpected MiniMax LLM pricing columns'),
         (page('| Model | Input |\n| :- | :- |\n'), 'Unexpected MiniMax LLM pricing columns'),
         (page('| Model | Input | Output | Input |\n| :- | :- | :- | :- |\n'), 'Unexpected MiniMax LLM pricing columns'),
