@@ -25,16 +25,17 @@ MARKUP = re.compile(r'<[^>]+>|\[([^]]+)]\([^)]*\)')
 
 
 def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
-    section = re.search(r'^\s*## LLM\s*$(.*?)</section>', markdown, flags=re.MULTILINE | re.DOTALL)
+    section = re.search(r'^## LLM\s*$(.*?)(?=^## |\Z)', markdown, flags=re.MULTILINE | re.DOTALL)
     if section is None:
         raise RuntimeError('MiniMax pricing page has no LLM section')
-    standard = re.sub(r'<Tab title="Priority\*?">.*?</Tab>', '', section.group(1), flags=re.DOTALL)
-    if set(re.findall(r'<Tab title="([^"]*)"', standard)) - {'Standard'}:
-        raise RuntimeError('MiniMax LLM pricing has a tab other than Standard and Priority')
+    standard = re.sub(r'^\*\*Priority\*\*.*?(?=^\*\*[^*\n]+\*\*|\Z)', '', section.group(1), flags=re.M | re.S)
+    if set(re.findall(r'^\*\*([^*\n]+)\*\*', standard, flags=re.MULTILINE)) - {'Standard'}:
+        raise RuntimeError('MiniMax LLM pricing has a tier other than Standard and Priority')
 
     flat: dict[str, Rates] = {}
     tiered: dict[str, list[tuple[str, int, Rates]]] = {}
     for header, rows in markdown_tables(standard):
+        header = [re.sub(r'\*\*|\\\$ / M tokens', '', cell).strip() for cell in header]
         if (
             header[0] != 'Model'
             or len(set(header)) != len(header)
@@ -46,9 +47,9 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
                 raise RuntimeError(f'Unexpected MiniMax model cell: {row[0]}')
             name, label = model.groups()
             rates = {PRICE_COLUMNS[column]: _price(cell) for column, cell in zip(header[1:], row[1:])}
-            if band := re.match(r'<br />([≤>]) ([0-9]+)k input tokens', label):
+            if band := re.match(r' ([≤>]) ([0-9]+)k input tokens', label):
                 tiered.setdefault(name, []).append((band.group(1), int(band.group(2)) * 1000, rates))
-            elif re.sub(r'<span[^>]*>[^<]*</span>', '', label).strip() or name in flat:
+            elif re.sub(r'Permanent [0-9]+% off', '', label).strip() or name in flat:
                 raise RuntimeError(f'Unexpected MiniMax pricing row: {row[0]}')
             else:
                 flat[name] = rates
@@ -117,6 +118,6 @@ def _model(name: str, prices: ModelPrice) -> ModelInfo:
 
 
 def _price(cell: str) -> Decimal:
-    if not (match := re.fullmatch(r'(?:~~\\\$[0-9.]+~~ )?\\\$([0-9]+(?:\.[0-9]+)?) / M tokens', cell)):
+    if not (match := re.fullmatch(r'(?:~~\\\$[0-9.]+~~ )?\\\$([0-9]+(?:\.[0-9]+)?)', cell)):
         raise RuntimeError(f'Unexpected MiniMax price cell: {cell}')
     return Decimal(match.group(1))
