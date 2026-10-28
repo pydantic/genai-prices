@@ -20670,8 +20670,16 @@ export const data: Provider[] = [
       },
       {
         id: 'mistral-embed',
+        name: 'Mistral Embed',
         match: {
-          equals: 'mistral-embed',
+          or: [
+            {
+              equals: 'mistral-embed',
+            },
+            {
+              equals: 'mistral-embed-2312',
+            },
+          ],
         },
         context_window: 8192,
         prices: {
@@ -20693,16 +20701,6 @@ export const data: Provider[] = [
             },
           },
         ],
-      },
-      {
-        id: 'mistral-embed-2312',
-        name: 'Mistral Embed',
-        match: {
-          equals: 'mistral-embed-2312',
-        },
-        prices: {
-          input_mtok: 0.1,
-        },
       },
       {
         id: 'mistral-large',
@@ -21527,29 +21525,20 @@ export const data: Provider[] = [
         },
         context_window: 32768,
         price_comments:
-          'Mistral raised output pricing from $0.30 to $0.40 per MTok on 2026-08-11. Ref: https://github.com/mistralai/platform-docs-public/commit/1996c3f1eca754d02436a37fcc899440794a18a5',
+          'Mistral raised output pricing from $0.30 to $0.40 per MTok on 2026-08-11. Ref: https://github.com/mistralai/platform-docs-public/commit/1996c3f1eca754d02436a37fcc899440794a18a5 Audio input is $0.004/min ($0.24/hour) per https://docs.mistral.ai/inference/pricing. It was missing here, not newly introduced, so it applies to every record.',
         prices: [
           {
             prices: {
               input_mtok: 0.1,
               cache_read_mtok: 0.01,
               output_mtok: 0.3,
+              audio_hours: 0.24,
+              input_audio_hours: 0.24,
             },
           },
           {
             constraint: {
               start_date: '2026-08-11',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 0.1,
-              cache_read_mtok: 0.01,
-              output_mtok: 0.4,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-10-28',
               type: 'start_date',
             },
             prices: {

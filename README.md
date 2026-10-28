@@ -65,7 +65,7 @@ The following providers are currently supported:
 - [HuggingFace (together)](prices/providers/huggingface_together.yml) - 36 models
 - [Meta](prices/providers/meta.yml) - 6 models
 - [MiniMax](prices/providers/minimax.yml) - 10 models
-- [Mistral](prices/providers/mistral.yml) - 52 models
+- [Mistral](prices/providers/mistral.yml) - 51 models
 - [Modal](prices/providers/modal.yml) - 10 models
 - [MoonshotAi](prices/providers/moonshotai.yml) - 16 models
 - [Novita](prices/providers/novita.yml) - 112 models

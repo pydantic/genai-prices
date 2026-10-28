@@ -11963,7 +11963,8 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='mistral-embed',
-                match=ClauseEquals(equals='mistral-embed'),
+                match=ClauseOr(or_=[ClauseEquals(equals='mistral-embed'), ClauseEquals(equals='mistral-embed-2312')]),
+                name='Mistral Embed',
                 context_window=8192,
                 prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.1')),
                 price_variants=[
@@ -11973,12 +11974,6 @@ providers: list[Provider] = [
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
                     )
                 ],
-            ),
-            ModelInfo(
-                id='mistral-embed-2312',
-                match=ClauseEquals(equals='mistral-embed-2312'),
-                name='Mistral Embed',
-                prices=ModelPrice(input_mtok=Decimal('0.1')),
             ),
             ModelInfo(
                 id='mistral-large',
@@ -12433,21 +12428,19 @@ providers: list[Provider] = [
                 name='Voxtral Small 24B 2507',
                 description='Voxtral Small is an enhancement of Mistral Small 3, incorporating state-of-the-art audio input capabilities while retaining best-in-class text performance. It excels at speech transcription, translation and audio understanding.',
                 context_window=32768,
-                price_comments='Mistral raised output pricing from $0.30 to $0.40 per MTok on 2026-08-11. Ref: https://github.com/mistralai/platform-docs-public/commit/1996c3f1eca754d02436a37fcc899440794a18a5',
+                price_comments='Mistral raised output pricing from $0.30 to $0.40 per MTok on 2026-08-11. Ref: https://github.com/mistralai/platform-docs-public/commit/1996c3f1eca754d02436a37fcc899440794a18a5 Audio input is $0.004/min ($0.24/hour) per https://docs.mistral.ai/inference/pricing. It was missing here, not newly introduced, so it applies to every record.',
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
-                            input_mtok=Decimal('0.1'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.3')
+                            input_mtok=Decimal('0.1'),
+                            cache_read_mtok=Decimal('0.01'),
+                            output_mtok=Decimal('0.3'),
+                            audio_hours=Decimal('0.24'),
+                            input_audio_hours=Decimal('0.24'),
                         )
                     ),
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 8, 11)),
-                        prices=ModelPrice(
-                            input_mtok=Decimal('0.1'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.4')
-                        ),
-                    ),
-                    ConditionalPrice(
-                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 28)),
                         prices=ModelPrice(
                             input_mtok=Decimal('0.1'),
                             cache_read_mtok=Decimal('0.01'),
