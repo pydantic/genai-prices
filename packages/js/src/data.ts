@@ -20695,6 +20695,16 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'mistral-embed-2312',
+        name: 'Mistral Embed',
+        match: {
+          equals: 'mistral-embed-2312',
+        },
+        prices: {
+          input_mtok: 0.1,
+        },
+      },
+      {
         id: 'mistral-large',
         name: 'Mistral Large',
         description:
@@ -21476,6 +21486,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'voxtral-mini-transcribe-realtime-2602',
+        name: 'Voxtral Mini Transcribe Realtime',
+        match: {
+          equals: 'voxtral-mini-transcribe-realtime-2602',
+        },
+        prices: {
+          audio_hours: 0.36,
+          input_audio_hours: 0.36,
+        },
+      },
+      {
         id: 'voxtral-mini-transcribe-realtime-3-0',
         name: 'Voxtral Mini Transcribe Realtime 3',
         match: {
@@ -21526,6 +21547,19 @@ export const data: Provider[] = [
               output_mtok: 0.4,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-10-28',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.1,
+              cache_read_mtok: 0.01,
+              output_mtok: 0.4,
+              audio_hours: 0.24,
+              input_audio_hours: 0.24,
+            },
+          },
         ],
         price_variants: [
           {
@@ -21565,6 +21599,18 @@ export const data: Provider[] = [
           input_mtok: 1.4,
           cache_read_mtok: 0.14,
           output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-glm-5-3-flash',
+        name: 'Z.ai GLM 5.3 Flash',
+        match: {
+          equals: 'zai-glm-5-3-flash',
+        },
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.03,
+          output_mtok: 0.5,
         },
       },
     ],
@@ -47726,6 +47772,51 @@ export const data: Provider[] = [
               {
                 start: 200000,
                 price: 15,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'gpt-6.1-terra',
+        name: 'GPT-6.1 Terra',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6.1-terra',
+            },
+            {
+              equals: 'gpt-6.1-terra-pro',
+            },
+          ],
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 200000,
+                price: 2,
+              },
+            ],
+          },
+          cache_write_mtok: 1.25,
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 200000,
+                price: 7.5,
               },
             ],
           },

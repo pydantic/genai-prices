@@ -11975,6 +11975,12 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='mistral-embed-2312',
+                match=ClauseEquals(equals='mistral-embed-2312'),
+                name='Mistral Embed',
+                prices=ModelPrice(input_mtok=Decimal('0.1')),
+            ),
+            ModelInfo(
                 id='mistral-large',
                 match=ClauseOr(
                     or_=[
@@ -12404,6 +12410,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(audio_hours=Decimal('0.21'), input_audio_hours=Decimal('0.21')),
             ),
             ModelInfo(
+                id='voxtral-mini-transcribe-realtime-2602',
+                match=ClauseEquals(equals='voxtral-mini-transcribe-realtime-2602'),
+                name='Voxtral Mini Transcribe Realtime',
+                prices=ModelPrice(audio_hours=Decimal('0.36'), input_audio_hours=Decimal('0.36')),
+            ),
+            ModelInfo(
                 id='voxtral-mini-transcribe-realtime-3-0',
                 match=ClauseEquals(equals='voxtral-mini-transcribe-realtime-3-0'),
                 name='Voxtral Mini Transcribe Realtime 3',
@@ -12434,6 +12446,16 @@ providers: list[Provider] = [
                             input_mtok=Decimal('0.1'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.4')
                         ),
                     ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 28)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.1'),
+                            cache_read_mtok=Decimal('0.01'),
+                            output_mtok=Decimal('0.4'),
+                            audio_hours=Decimal('0.24'),
+                            input_audio_hours=Decimal('0.24'),
+                        ),
+                    ),
                 ],
                 price_variants=[
                     PriceVariant(
@@ -12457,6 +12479,14 @@ providers: list[Provider] = [
                 name='Z.ai GLM 5.3',
                 prices=ModelPrice(
                     input_mtok=Decimal('1.4'), cache_read_mtok=Decimal('0.14'), output_mtok=Decimal('4.4')
+                ),
+            ),
+            ModelInfo(
+                id='zai-glm-5-3-flash',
+                match=ClauseEquals(equals='zai-glm-5-3-flash'),
+                name='Z.ai GLM 5.3 Flash',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('0.5')
                 ),
             ),
         ],
@@ -27096,6 +27126,18 @@ providers: list[Provider] = [
                     cache_write_mtok=Decimal('2.5'),
                     cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=200000, price=Decimal('0.2'))]),
                     output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=200000, price=Decimal('15'))]),
+                ),
+            ),
+            ModelInfo(
+                id='gpt-6.1-terra',
+                match=ClauseOr(or_=[ClauseEquals(equals='gpt-6.1-terra'), ClauseEquals(equals='gpt-6.1-terra-pro')]),
+                name='GPT-6.1 Terra',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=200000, price=Decimal('2'))]),
+                    cache_write_mtok=Decimal('1.25'),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=200000, price=Decimal('0.2'))]),
+                    output_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=200000, price=Decimal('7.5'))]),
                 ),
             ),
             ModelInfo(
