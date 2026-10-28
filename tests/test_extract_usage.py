@@ -1889,8 +1889,14 @@ def test_accumulate_extracted_usage():
     with pytest.raises(ValueError, match='models do not match'):
         _ = model_less + extracted
     # sum() starts from the int 0, so __radd__ has to accept it like Usage.__radd__ does.
-    assert sum([extracted, extracted]).usage == double_extracted.usage
-    assert sum([model_less, model_less]).usage == Usage(input_tokens=10, output_tokens=84)
+    # isinstance() rather than `sum(...).usage` directly: sum() is typed `_T | int` (the empty
+    # sequence is 0), and pyright cannot attribute-access `.usage` through that union.
+    total = sum([extracted, extracted])
+    assert isinstance(total, ExtractedUsage)
+    assert total.usage == double_extracted.usage
+    total_model_less = sum([model_less, model_less])
+    assert isinstance(total_model_less, ExtractedUsage)
+    assert total_model_less.usage == Usage(input_tokens=10, output_tokens=84)
 
 
 @pytest.mark.parametrize('with_details', [True, False])
