@@ -20,6 +20,10 @@ extractors:
       - path: [prompt_tokens_details, cached_tokens]
         dest: cache_read_tokens
         required: false
+      # The response does not echo the requested TTL, so writes bill at the default 5-minute rate.
+      - path: [prompt_tokens_details, cache_write_tokens]
+        dest: cache_write_tokens
+        required: false
       - path: [completion_tokens_details, reasoning_tokens]
         dest: output_reasoning_tokens
         required: false
@@ -157,7 +161,7 @@ models:
     match:
       starts_with: kimi-k2.6
     context_window: 262144
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: "Ref: https://platform.kimi.ai/docs/pricing/chat-k26.md"
     prices:
       input_mtok: 0.95
@@ -173,7 +177,7 @@ models:
     match:
       equals: kimi-k2.7-code
     context_window: 262144
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: "Ref: https://platform.kimi.ai/docs/pricing/chat-k27-code.md"
     prices:
       input_mtok: 0.95
@@ -188,7 +192,7 @@ models:
     match:
       equals: kimi-k2.7-code-highspeed
     context_window: 262144
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: "Ref: https://platform.kimi.ai/docs/pricing/chat-k27-code.md"
     prices:
       input_mtok: 1.90
@@ -203,7 +207,7 @@ models:
     match:
       equals: kimi-k3
     context_window: 1048576
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: >-
       Ref: https://platform.kimi.ai/docs/pricing/chat-k3.md. Re-verified on 2026-10-15: input,
       cached input and output rates are unchanged; the page now also publishes 5-minute cache
@@ -215,6 +219,30 @@ models:
       cache_write_mtok: 3.00
       cache_write_1h_mtok: 6.00
       output_mtok: 15.00
+
+  - id: kimi-k3.1-pro
+    match:
+      equals: kimi-k3.1-pro
+    context_window: 1048576
+    prices:
+      input_mtok: 2
+      cache_write_mtok: 2
+      cache_read_mtok: 0.2
+      output_mtok: 10
+      cache_write_1h_mtok: 4
+    prices_checked: 2026-10-27
+
+  - id: kimi-k3.1-pro-highspeed
+    match:
+      equals: kimi-k3.1-pro-highspeed
+    context_window: 1048576
+    prices:
+      input_mtok: 4
+      cache_write_mtok: 4
+      cache_read_mtok: 0.2
+      output_mtok: 20
+      cache_write_1h_mtok: 8
+    prices_checked: 2026-10-27
 
   - id: moonshot-v1-128k
     name: Moonshot V1 128K

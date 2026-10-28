@@ -107,7 +107,7 @@ def test_moonshot_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pyt
 
     source_moonshotai.main(provider_path)
 
-    assert capsys.readouterr().out == 'Moonshot AI prices updated: 2 added, 4 updated\n'
+    assert capsys.readouterr().out == 'Moonshot AI prices updated: 0 added, 6 updated\n'
     provider = ProviderYaml(provider_path).provider
     pro = provider.find_model('kimi-k3.1-pro')
     assert pro is not None

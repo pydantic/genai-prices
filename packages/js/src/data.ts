@@ -21807,6 +21807,11 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
             path: ['completion_tokens_details', 'reasoning_tokens'],
             dest: 'output_reasoning_tokens',
             required: false,
@@ -21994,6 +21999,34 @@ export const data: Provider[] = [
           cache_read_mtok: 0.3,
           output_mtok: 15,
           cache_write_1h_mtok: 6,
+        },
+      },
+      {
+        id: 'kimi-k3.1-pro',
+        match: {
+          equals: 'kimi-k3.1-pro',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+          cache_write_1h_mtok: 4,
+        },
+      },
+      {
+        id: 'kimi-k3.1-pro-highspeed',
+        match: {
+          equals: 'kimi-k3.1-pro-highspeed',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 4,
+          cache_write_mtok: 4,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
+          cache_write_1h_mtok: 8,
         },
       },
       {
@@ -51264,6 +51297,12 @@ export const data: Provider[] = [
             },
             {
               equals: 'glm-5.3-flashx',
+            },
+            {
+              equals: 'GLM-5.3-FlashX-Legal',
+            },
+            {
+              equals: 'glm-5.3-flashx-legal',
             },
           ],
         },

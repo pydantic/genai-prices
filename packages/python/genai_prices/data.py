@@ -12601,6 +12601,9 @@ providers: list[Provider] = [
                         path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
                     ),
                     UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
                         path=['completion_tokens_details', 'reasoning_tokens'],
                         dest='output_reasoning_tokens',
                         required=False,
@@ -12728,6 +12731,30 @@ providers: list[Provider] = [
                     cache_read_mtok=Decimal('0.3'),
                     output_mtok=Decimal('15'),
                     cache_write_1h_mtok=Decimal('6'),
+                ),
+            ),
+            ModelInfo(
+                id='kimi-k3.1-pro',
+                match=ClauseEquals(equals='kimi-k3.1-pro'),
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2'),
+                    cache_write_mtok=Decimal('2'),
+                    cache_read_mtok=Decimal('0.2'),
+                    output_mtok=Decimal('10'),
+                    cache_write_1h_mtok=Decimal('4'),
+                ),
+            ),
+            ModelInfo(
+                id='kimi-k3.1-pro-highspeed',
+                match=ClauseEquals(equals='kimi-k3.1-pro-highspeed'),
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('4'),
+                    cache_write_mtok=Decimal('4'),
+                    cache_read_mtok=Decimal('0.2'),
+                    output_mtok=Decimal('20'),
+                    cache_write_1h_mtok=Decimal('8'),
                 ),
             ),
             ModelInfo(
@@ -28986,7 +29013,14 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='GLM-5.3-FlashX',
-                match=ClauseOr(or_=[ClauseEquals(equals='GLM-5.3-FlashX'), ClauseEquals(equals='glm-5.3-flashx')]),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='GLM-5.3-FlashX'),
+                        ClauseEquals(equals='glm-5.3-flashx'),
+                        ClauseEquals(equals='GLM-5.3-FlashX-Legal'),
+                        ClauseEquals(equals='glm-5.3-flashx-legal'),
+                    ]
+                ),
                 name='GLM-5.3-FlashX',
                 description='Z.AI variant of GLM-5.3-Flash with separate standard rates on the international platform pricing page.',
                 price_comments='https://docs.z.ai/guides/overview/pricing',
