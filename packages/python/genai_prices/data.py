@@ -5107,6 +5107,7 @@ providers: list[Provider] = [
         api_pattern='https://api\\.fireworks\\.ai',
         pricing_urls=['https://fireworks.ai/pricing'],
         model_match=ClauseStartsWith(starts_with='accounts/fireworks/'),
+        provider_match=ClauseContains(contains='fireworks'),
         extractors=[
             UsageExtractor(
                 root='usage',
