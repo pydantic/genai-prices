@@ -20670,8 +20670,16 @@ export const data: Provider[] = [
       },
       {
         id: 'mistral-embed',
+        name: 'Mistral Embed',
         match: {
-          equals: 'mistral-embed',
+          or: [
+            {
+              equals: 'mistral-embed',
+            },
+            {
+              equals: 'mistral-embed-2312',
+            },
+          ],
         },
         context_window: 8192,
         prices: {
@@ -21476,6 +21484,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'voxtral-mini-transcribe-realtime-2602',
+        name: 'Voxtral Mini Transcribe Realtime',
+        match: {
+          equals: 'voxtral-mini-transcribe-realtime-2602',
+        },
+        prices: {
+          audio_hours: 0.36,
+          input_audio_hours: 0.36,
+        },
+      },
+      {
         id: 'voxtral-mini-transcribe-realtime-3-0',
         name: 'Voxtral Mini Transcribe Realtime 3',
         match: {
@@ -21506,13 +21525,15 @@ export const data: Provider[] = [
         },
         context_window: 32768,
         price_comments:
-          'Mistral raised output pricing from $0.30 to $0.40 per MTok on 2026-08-11. Ref: https://github.com/mistralai/platform-docs-public/commit/1996c3f1eca754d02436a37fcc899440794a18a5',
+          'Mistral raised output pricing from $0.30 to $0.40 per MTok on 2026-08-11. Ref: https://github.com/mistralai/platform-docs-public/commit/1996c3f1eca754d02436a37fcc899440794a18a5 Audio input is $0.004/min ($0.24/hour) per https://docs.mistral.ai/inference/pricing. It was missing here, not newly introduced, so it applies to every record.',
         prices: [
           {
             prices: {
               input_mtok: 0.1,
               cache_read_mtok: 0.01,
               output_mtok: 0.3,
+              audio_hours: 0.24,
+              input_audio_hours: 0.24,
             },
           },
           {
@@ -21524,6 +21545,8 @@ export const data: Provider[] = [
               input_mtok: 0.1,
               cache_read_mtok: 0.01,
               output_mtok: 0.4,
+              audio_hours: 0.24,
+              input_audio_hours: 0.24,
             },
           },
         ],
@@ -21565,6 +21588,18 @@ export const data: Provider[] = [
           input_mtok: 1.4,
           cache_read_mtok: 0.14,
           output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-glm-5-3-flash',
+        name: 'Z.ai GLM 5.3 Flash',
+        match: {
+          equals: 'zai-glm-5-3-flash',
+        },
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.03,
+          output_mtok: 0.5,
         },
       },
     ],
@@ -47726,6 +47761,51 @@ export const data: Provider[] = [
               {
                 start: 200000,
                 price: 15,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'gpt-6.1-terra',
+        name: 'GPT-6.1 Terra',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6.1-terra',
+            },
+            {
+              equals: 'gpt-6.1-terra-pro',
+            },
+          ],
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 200000,
+                price: 2,
+              },
+            ],
+          },
+          cache_write_mtok: 1.25,
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 200000,
+                price: 7.5,
               },
             ],
           },
