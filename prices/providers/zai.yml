@@ -32,7 +32,7 @@ models:
       or:
         - equals: GLM-4-32B-0414-128K
         - equals: glm-4-32b-0414-128k
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: >-
       https://docs.z.ai/guides/overview/pricing. The page publishes no cached-input
       rate for this model.
@@ -47,7 +47,7 @@ models:
       or:
         - equals: GLM-4.5
         - equals: glm-4.5
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: https://docs.z.ai/guides/overview/pricing
     prices:
       input_mtok: 0.6
@@ -61,7 +61,7 @@ models:
       or:
         - equals: GLM-4.5-Air
         - equals: glm-4.5-air
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: https://docs.z.ai/guides/overview/pricing
     prices:
       input_mtok: 0.2
@@ -75,7 +75,7 @@ models:
       or:
         - equals: GLM-4.5-AirX
         - equals: glm-4.5-airx
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: https://docs.z.ai/guides/overview/pricing
     prices:
       input_mtok: 1.1
@@ -89,7 +89,7 @@ models:
       or:
         - equals: GLM-4.5-X
         - equals: glm-4.5-x
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: https://docs.z.ai/guides/overview/pricing
     prices:
       input_mtok: 2.2
@@ -103,7 +103,7 @@ models:
       or:
         - equals: GLM-4.5V
         - equals: glm-4.5v
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: https://docs.z.ai/guides/overview/pricing
     prices:
       input_mtok: 0.6
@@ -117,7 +117,7 @@ models:
       or:
         - equals: GLM-4.6
         - equals: glm-4.6
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: https://docs.z.ai/guides/overview/pricing
     prices:
       input_mtok: 0.6
@@ -133,7 +133,7 @@ models:
         - equals: GLM-4.6V
         - equals: glm-4.6v
     context_window: 128000
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: Context length is 128K per https://docs.z.ai/guides/vlm/glm-4.6v.
     prices:
       input_mtok: 0.3
@@ -147,7 +147,7 @@ models:
       or:
         - equals: GLM-4.6V-FlashX
         - equals: glm-4.6v-flashx
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: https://docs.z.ai/guides/overview/pricing
     prices:
       input_mtok: 0.04
@@ -161,7 +161,7 @@ models:
       or:
         - equals: GLM-4.7
         - equals: glm-4.7
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: https://docs.z.ai/guides/overview/pricing
     prices:
       input_mtok: 0.6
@@ -176,7 +176,7 @@ models:
       or:
         - equals: GLM-4.7-FlashX
         - equals: glm-4.7-flashx
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: https://docs.z.ai/guides/overview/pricing
     prices:
       input_mtok: 0.07
@@ -190,7 +190,7 @@ models:
       or:
         - equals: GLM-5
         - equals: glm-5
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: https://docs.z.ai/guides/overview/pricing
     prices:
       input_mtok: 1
@@ -205,7 +205,7 @@ models:
       or:
         - equals: GLM-5.1
         - equals: glm-5.1
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: https://docs.z.ai/guides/overview/pricing
     prices:
       input_mtok: 1.4
@@ -222,7 +222,7 @@ models:
         - equals: GLM-5.2
         - equals: glm-5.2
     context_window: 1000000
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     prices:
       input_mtok: 1.4
       cache_read_mtok: 0.26
@@ -239,7 +239,7 @@ models:
         - equals: GLM-5.3
         - equals: glm-5.3
     context_window: 1000000
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     prices:
       input_mtok: 1.4
       cache_read_mtok: 0.26
@@ -255,7 +255,7 @@ models:
         - equals: GLM-5.3-Flash
         - equals: glm-5.3-flash
     context_window: 1000000
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: >-
       The 50% launch promotion ended at 24:00 on September 9, 2026 (UTC+8), which is 16:00 UTC.
       `start_date` is a UTC date, so the list prices start on 2026-09-10 and requests from 16:00
@@ -282,7 +282,9 @@ models:
       or:
         - equals: GLM-5.3-FlashX
         - equals: glm-5.3-flashx
-    prices_checked: 2026-10-18
+        - equals: GLM-5.3-FlashX-Legal
+        - equals: glm-5.3-flashx-legal
+    prices_checked: 2026-10-27
     price_comments: https://docs.z.ai/guides/overview/pricing
     prices:
       input_mtok: 0.37
@@ -296,7 +298,7 @@ models:
       or:
         - equals: GLM-OCR
         - equals: glm-ocr
-    prices_checked: 2026-10-18
+    prices_checked: 2026-10-27
     price_comments: >-
       https://docs.z.ai/guides/overview/pricing and
       https://docs.z.ai/guides/vlm/glm-ocr ("Pricing is uniform for both API input

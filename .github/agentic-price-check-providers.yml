@@ -114,14 +114,11 @@ providers:
     scope: Public Moonshot platform chat models.
     sources:
       - https://platform.kimi.ai/docs/models.md
-      - https://platform.kimi.ai/docs/pricing/chat-k3.md
-      - https://platform.kimi.ai/docs/pricing/chat-k27-code.md
-      - https://platform.kimi.ai/docs/pricing/chat-k26.md
-      - https://platform.kimi.ai/docs/pricing/chat-k25.md
-      - https://platform.kimi.ai/docs/pricing/chat-v1.md
+      - https://platform.kimi.ai/docs/pricing/chat
     notes: >-
-      models.md is the catalog and lists discontinued models; the other sources are plain-markdown pricing pages, one per
-      model family (index: https://platform.kimi.ai/docs/llms.txt). The pricing/chat overview page has no per-model prices. Match exact API model IDs. Compare cache-hit, input, and output columns separately when the page publishes them.
+      models.md is the catalog and lists discontinued models. The pricing/chat page lists every model family's prices; its
+      Markdown export renders the price tables empty, so read the HTML page. Match exact API model IDs. Compare cache-hit,
+      input, output and cache-write columns separately when the page publishes them.
 
   - name: Avian
     file: prices/providers/avian.yml
@@ -191,10 +188,11 @@ providers:
     file: prices/providers/baseten.yml
     scope: Models in Baseten's public Model APIs catalog and pricing table.
     sources:
-      - https://docs.baseten.co/inference/model-apis/overview.md
+      - https://docs.baseten.co/inference/model-apis/overview
       - https://www.baseten.co/pricing/
     notes: >-
-      The docs table is authoritative for API model IDs and context windows. The pricing table is authoritative for per-million
+      The docs table is authoritative for API model IDs and context windows; its Markdown export renders the table empty, so
+      read it from the HTML page. The pricing table is authoritative for per-million
       input, cached-input, and output token rates. Match the two tables by their Model API links; some pricing links use short
       aliases while the docs table publishes qualified model IDs. A missing cached-input value is intentional only when the
       pricing table displays a dash. Do not treat third-party namespaces as Baseten provider ownership.

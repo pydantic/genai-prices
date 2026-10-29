@@ -45,7 +45,7 @@ The notification job uses the `price-updates` GitHub environment. You can restri
 and store the webhook secret there instead of at repository scope. The job fails if the secret is missing or Slack rejects
 the request. It does not undo a successfully created PR.
 
-The workflow imports the public [Pydantic AI engine] and runs CLAI 2 with harness version `0.56.0`.
+The workflow imports the public [Pydantic AI engine] and runs CLAI 2 with harness version `0.60.0`.
 `engine.model: anthropic/glm-5.3-flash` selects the Anthropic Messages protocol. The engine removes the
 `anthropic/` routing prefix before sending the model ID upstream. gh-aw configures the API proxy to forward
 `/v1/messages` to `https://api.z.ai/api/anthropic/v1/messages` and inject `ZAI_API_KEY` as `x-api-key`.

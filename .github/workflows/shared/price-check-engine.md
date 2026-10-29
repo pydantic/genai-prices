@@ -4,7 +4,7 @@
 # from the sandbox and injects it upstream in the API proxy.
 engine:
   id: pydantic-ai
-  version: '0.56.0'
+  version: '0.60.0'
   env:
     PAI_AGENT: scripts.price_check_agent:agent
     ANTHROPIC_BASE_URL: https://api.z.ai/api/anthropic

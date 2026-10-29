@@ -10,21 +10,10 @@ from prices import source_baseten
 from prices.prices_types import ModelPrice, StartDateConstraint
 from prices.update import ProviderYaml
 
-CATALOG_MARKDOWN = """\
-export const SupportedModelsTable = () => {
-  const rows = [{
-    model: "GLM 4.7",
-    slug: "zai-org/GLM-4.7",
-    context: 200,
-    maxOutput: 200
-  }, {
-    model: "OpenAI GPT 120B",
-    slug: "openai/gpt-oss-120b",
-    context: 128,
-    maxOutput: 128
-  }];
-};
-"""
+CATALOG_PAGE = (
+    'const SupportedModelsTable=()=>{const rows=[{model:`GLM 4.7`,slug:`zai-org/GLM-4.7`,context:200,maxOutput:200},'
+    '{model:`OpenAI GPT 120B`,slug:`openai/gpt-oss-120b`,context:128,maxOutput:128}];'
+)
 PRICING_PAGE = (
     r'\"__typename\":\"LibraryModelRecord\",\"tryModelApiLink\":'
     r'\"https://app.baseten.co/model-apis/glm-4-7\",\"perfCost\":0.6,'
@@ -36,7 +25,7 @@ PRICING_PAGE = (
 
 
 def test_parse_models_joins_catalog_and_pricing() -> None:
-    models = source_baseten.parse_models(CATALOG_MARKDOWN, PRICING_PAGE)
+    models = source_baseten.parse_models(CATALOG_PAGE, PRICING_PAGE)
 
     assert [model.id for model in models] == ['zai-org/GLM-4.7', 'openai/gpt-oss-120b']
     assert models[0].context_window == 200_000
@@ -53,7 +42,7 @@ def test_parse_catalog_rejects_missing_table() -> None:
 
 
 def test_parse_catalog_rejects_duplicate_models() -> None:
-    duplicate = CATALOG_MARKDOWN.replace('openai/gpt-oss-120b', 'zai-org/GLM-4.7')
+    duplicate = CATALOG_PAGE.replace('openai/gpt-oss-120b', 'zai-org/GLM-4.7')
 
     with pytest.raises(RuntimeError, match='Baseten model catalog contains duplicate model IDs'):
         source_baseten.parse_catalog(duplicate)
@@ -80,7 +69,7 @@ def test_parse_pricing_page_rejects_duplicate_models() -> None:
 
 def test_parse_models_skips_catalog_models_without_prices(capsys: pytest.CaptureFixture[str]) -> None:
     models = source_baseten.parse_models(
-        CATALOG_MARKDOWN, PRICING_PAGE.rsplit(r'\"__typename\":\"LibraryModelRecord\"', 1)[0]
+        CATALOG_PAGE, PRICING_PAGE.rsplit(r'\"__typename\":\"LibraryModelRecord\"', 1)[0]
     )
 
     assert [model.id for model in models] == ['zai-org/GLM-4.7']
@@ -105,7 +94,7 @@ models:
     prices: {input_mtok: 9}
 """
     )
-    [model] = source_baseten.parse_models(CATALOG_MARKDOWN, PRICING_PAGE)[:1]
+    [model] = source_baseten.parse_models(CATALOG_PAGE, PRICING_PAGE)[:1]
 
     assert ProviderYaml(provider_path).upsert_models([model], source='Baseten sources', min_count=1) == (0, 1)
 
@@ -124,7 +113,7 @@ models:
 def test_baseten_updater_adds_models(tmp_path: Path) -> None:
     provider_path = tmp_path / 'baseten.yml'
     provider_path.write_text('id: baseten\nname: Baseten\napi_pattern: baseten\nmodels: []\n')
-    [model] = source_baseten.parse_models(CATALOG_MARKDOWN, PRICING_PAGE)[:1]
+    [model] = source_baseten.parse_models(CATALOG_PAGE, PRICING_PAGE)[:1]
 
     assert ProviderYaml(provider_path).upsert_models([model], source='Baseten sources', min_count=1) == (1, 0)
     assert ProviderYaml(provider_path).provider.find_model(model.id) is not None

@@ -10434,6 +10434,59 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-6.1-terra',
+        name: 'GPT-6.1 Terra',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6.1-terra',
+            },
+            {
+              regex: '^gpt-6\\.1-terra-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        price_comments: 'Prompts over 272,000 tokens are billed at the long-context rates.',
+        prices: {
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 1.25,
+            tiers: [
+              {
+                start: 272000,
+                price: 2.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.05,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 272000,
+                price: 7.5,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'grok-4.5',
         name: 'Grok 4.5',
         match: {
@@ -20617,8 +20670,16 @@ export const data: Provider[] = [
       },
       {
         id: 'mistral-embed',
+        name: 'Mistral Embed',
         match: {
-          equals: 'mistral-embed',
+          or: [
+            {
+              equals: 'mistral-embed',
+            },
+            {
+              equals: 'mistral-embed-2312',
+            },
+          ],
         },
         context_window: 8192,
         prices: {
@@ -21423,6 +21484,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'voxtral-mini-transcribe-realtime-2602',
+        name: 'Voxtral Mini Transcribe Realtime',
+        match: {
+          equals: 'voxtral-mini-transcribe-realtime-2602',
+        },
+        prices: {
+          audio_hours: 0.36,
+          input_audio_hours: 0.36,
+        },
+      },
+      {
         id: 'voxtral-mini-transcribe-realtime-3-0',
         name: 'Voxtral Mini Transcribe Realtime 3',
         match: {
@@ -21453,13 +21525,15 @@ export const data: Provider[] = [
         },
         context_window: 32768,
         price_comments:
-          'Mistral raised output pricing from $0.30 to $0.40 per MTok on 2026-08-11. Ref: https://github.com/mistralai/platform-docs-public/commit/1996c3f1eca754d02436a37fcc899440794a18a5',
+          'Mistral raised output pricing from $0.30 to $0.40 per MTok on 2026-08-11. Ref: https://github.com/mistralai/platform-docs-public/commit/1996c3f1eca754d02436a37fcc899440794a18a5 Audio input is $0.004/min ($0.24/hour) per https://docs.mistral.ai/inference/pricing. It was missing here, not newly introduced, so it applies to every record.',
         prices: [
           {
             prices: {
               input_mtok: 0.1,
               cache_read_mtok: 0.01,
               output_mtok: 0.3,
+              audio_hours: 0.24,
+              input_audio_hours: 0.24,
             },
           },
           {
@@ -21471,6 +21545,8 @@ export const data: Provider[] = [
               input_mtok: 0.1,
               cache_read_mtok: 0.01,
               output_mtok: 0.4,
+              audio_hours: 0.24,
+              input_audio_hours: 0.24,
             },
           },
         ],
@@ -21512,6 +21588,18 @@ export const data: Provider[] = [
           input_mtok: 1.4,
           cache_read_mtok: 0.14,
           output_mtok: 4.4,
+        },
+      },
+      {
+        id: 'zai-glm-5-3-flash',
+        name: 'Z.ai GLM 5.3 Flash',
+        match: {
+          equals: 'zai-glm-5-3-flash',
+        },
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.03,
+          output_mtok: 0.5,
         },
       },
     ],
@@ -21628,6 +21716,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-ai/DeepSeek-V4.1-Flash-1017',
+        name: 'DeepSeek V4.1 Flash 1017',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4.1-Flash-1017',
+        },
+        prices: {
+          input_mtok: 0.25,
+          cache_read_mtok: 0.005,
+          output_mtok: 1,
+        },
+      },
+      {
         id: 'meta-models/Muse-Spark-Open-816B-A42B',
         name: 'Muse Spark Open',
         match: {
@@ -21739,6 +21839,11 @@ export const data: Provider[] = [
           {
             path: ['prompt_tokens_details', 'cached_tokens'],
             dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['prompt_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
             required: false,
           },
           {
@@ -21929,6 +22034,34 @@ export const data: Provider[] = [
           cache_read_mtok: 0.3,
           output_mtok: 15,
           cache_write_1h_mtok: 6,
+        },
+      },
+      {
+        id: 'kimi-k3.1-pro',
+        match: {
+          equals: 'kimi-k3.1-pro',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+          cache_write_1h_mtok: 4,
+        },
+      },
+      {
+        id: 'kimi-k3.1-pro-highspeed',
+        match: {
+          equals: 'kimi-k3.1-pro-highspeed',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 4,
+          cache_write_mtok: 4,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
+          cache_write_1h_mtok: 8,
         },
       },
       {
@@ -22841,6 +22974,32 @@ export const data: Provider[] = [
           input_mtok: 3,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+        },
+      },
+      {
+        id: 'moonshotai/kimi-k3.1-pro',
+        name: 'Kimi K3.1 Pro',
+        match: {
+          equals: 'moonshotai/kimi-k3.1-pro',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'moonshotai/kimi-k3.1-pro-highspeed',
+        name: 'Kimi K3.1 Pro Highspeed',
+        match: {
+          equals: 'moonshotai/kimi-k3.1-pro-highspeed',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 4,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
         },
       },
       {
@@ -47608,6 +47767,51 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-6.1-terra',
+        name: 'GPT-6.1 Terra',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6.1-terra',
+            },
+            {
+              equals: 'gpt-6.1-terra-pro',
+            },
+          ],
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 200000,
+                price: 2,
+              },
+            ],
+          },
+          cache_write_mtok: 1.25,
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 200000,
+                price: 7.5,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'gpt-oss-120b',
         name: 'GPT-OSS 120B',
         match: {
@@ -49381,14 +49585,7 @@ export const data: Provider[] = [
         id: 'jev-1.13.0',
         name: 'Jev 1.13.0',
         match: {
-          or: [
-            {
-              equals: 'jev-1.13.0',
-            },
-            {
-              equals: 'jev-latest',
-            },
-          ],
+          equals: 'jev-1.13.0',
         },
         context_window: 32000,
         prices: {
@@ -49405,6 +49602,9 @@ export const data: Provider[] = [
             },
             {
               equals: 'jev-preview',
+            },
+            {
+              equals: 'jev-latest',
             },
           ],
         },
@@ -51177,6 +51377,12 @@ export const data: Provider[] = [
             },
             {
               equals: 'glm-5.3-flashx',
+            },
+            {
+              equals: 'GLM-5.3-FlashX-Legal',
+            },
+            {
+              equals: 'glm-5.3-flashx-legal',
             },
           ],
         },
