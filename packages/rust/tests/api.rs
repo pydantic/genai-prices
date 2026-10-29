@@ -336,8 +336,5 @@ fn fireworks_litellm_prefix_resolves_bundled_data() {
     let request = PriceRequest::new("fireworks_ai/accounts/fireworks/models/deepseek-r1-0528", &usage)
         .with_provider_id("litellm");
     let calculation = genai_prices::calculate(&request).unwrap();
-    assert_eq!(
-        (calculation.provider_id.as_str(), calculation.model_id.as_str()),
-        ("fireworks", "deepseek-r1-0528")
-    );
+    assert_eq!((calculation.provider_id.as_str(), calculation.model_id.as_str()), ("fireworks", "deepseek-r1-0528"));
 }
