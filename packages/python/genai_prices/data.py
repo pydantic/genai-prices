@@ -12042,8 +12042,21 @@ providers: list[Provider] = [
                             input_mtok=Decimal('1.36'), cache_read_mtok=Decimal('0.14'), output_mtok=Decimal('4.18')
                         ),
                     ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 29)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.7'), cache_read_mtok=Decimal('0.07'), output_mtok=Decimal('2.1')
+                        ),
+                    ),
                 ],
                 price_variants=[
+                    PriceVariant(
+                        when={'processing': 'batch'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.35'), cache_read_mtok=Decimal('0.035'), output_mtok=Decimal('1.05')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 29)),
+                    ),
                     PriceVariant(
                         when={'processing': 'batch'},
                         prices=ModelPrice(

@@ -20818,8 +20818,33 @@ export const data: Provider[] = [
               output_mtok: 4.18,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-10-29',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.7,
+              cache_read_mtok: 0.07,
+              output_mtok: 2.1,
+            },
+          },
         ],
         price_variants: [
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: 0.35,
+              cache_read_mtok: 0.035,
+              output_mtok: 1.05,
+            },
+            constraint: {
+              start_date: '2026-10-29',
+              type: 'start_date',
+            },
+          },
           {
             when: {
               processing: 'batch',
