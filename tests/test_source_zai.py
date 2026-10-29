@@ -35,18 +35,18 @@ Prices | are per 1M tokens
 | :- | :- |
 | Web Search | \\$0.01 / use |
 
-<Accordion title="Other Pricing">
-    ### Vision Models
-
-    | Model | Input | Cached Input | Cached Input Storage | Output |
-    | :- | :- | :- | :- | :- |
-    | GLM-OCR | \\$0.03 | \\\\ | \\\\ | \\$0.03 |
-    | GLM-4.6V-Flash | Free | Free | Free | Free |
-
-    | Model | Price |
-    | :- | :- |
-    | CogView-4 | \\$0.01 |
-</Accordion>
+> **Other Pricing**
+>
+> ### Vision Models
+>
+> | Model | Input | Cached Input | Cached Input Storage | Output |
+> | :- | :- | :- | :- | :- |
+   > | GLM-OCR | \\$0.03 | \\\\ | \\\\ | \\$0.03 |
+> | GLM-4.6V-Flash | Free | Free | Free | Free |
+>
+> | Model | Price |
+> | :- | :- |
+> | CogView-4 | \\$0.01 |
 """
 
 

@@ -1,0 +1,226 @@
+//! Behaviour that the shared parity suite does not pin down: malformed data shapes, floating-point
+//! tolerance in usage decomposition, and error reporting.
+
+// Exact float comparisons mirror the other engines' tests.
+#![allow(clippy::float_cmp)]
+
+mod common;
+
+use common::{assert_close, calculator, usage};
+use genai_prices::{Calculator, ErrorKind, ExtractRequest, PriceRequest, Usage, UsageKey};
+
+fn provider(body: &str) -> String {
+    format!(r#"[{{"id":"testing","name":"Testing","api_pattern":"testing",{body}}}]"#)
+}
+
+#[test]
+fn rejects_malformed_shapes() {
+    for data in [
+        r#"[{"id":1,"name":"Testing","api_pattern":"testing"}]"#.to_owned(),
+        r#"[{"id":"testing","name":"Testing","api_pattern":"testing","models":{}}]"#.to_owned(),
+        r#"[{"id":"testing","name":"Testing","api_pattern":"testing","fallback_model_providers":[1]}]"#.to_owned(),
+        "[1]".to_owned(),
+        provider(
+            r#""extractors":[{"root":"usage","mappings":[{"path":"input","dest":"input_tokens","required":"yes"}]}]"#,
+        ),
+        provider(
+            r#""models":[{"id":"model","match":{"equals":"model"},"prices":{"input_mtok":{"base":1,"tiers":5}}}]"#,
+        ),
+        provider(
+            r#""models":[{"id":"model","match":{"equals":"model"},"prices":{"input_mtok":{"base":"1","tiers":[]}}}]"#,
+        ),
+        provider(
+            r#""models":[{"id":"model","match":{"equals":"model"},"prices":{"input_mtok":{"base":1,"tiers":[{"start":1.5,"price":1}]}}}]"#,
+        ),
+        provider(
+            r#""models":[{"id":"model","match":{"equals":"model"},"prices":{"input_mtok":{"base":1,"tiers":[{"start":1,"price":"1"}]}}}]"#,
+        ),
+        provider(
+            r#""models":[{"id":"model","match":{"equals":"model"},"prices":{"input_mtok":{"base":1,"tiers":[1]}}}]"#,
+        ),
+        provider(
+            r#""models":[{"id":"model","match":{"equals":"model"},"prices":[{"prices":{}},{"constraint":null,"prices":{}}]}]"#,
+        ),
+        provider(
+            r#""models":[{"id":"model","match":{"equals":"model"},"prices":[{"prices":{}},{"constraint":5,"prices":{}}]}]"#,
+        ),
+        provider(
+            r#""models":[{"id":"model","match":{"equals":"model"},"prices":[{"prices":{}},{"constraint":{"type":null,"start_date":"2026-01-01"},"prices":{}}]}]"#,
+        ),
+        provider(
+            r#""models":[{"id":"model","match":{"equals":"model"},"prices":[{"prices":{}},{"constraint":{"type":"start_date","start_time":"01:00:00Z","end_time":"02:00:00Z"},"prices":{}}]}]"#,
+        ),
+        provider(
+            r#""models":[{"id":"model","match":{"equals":"model"},"prices":[{"prices":{}},{"constraint":{"start_date":1},"prices":{}}]}]"#,
+        ),
+        provider(r#""models":[{"id":"model","match":{"equals":"model"},"price_variants":[{"prices":{}}]}]"#),
+        provider(r#""models":[{"id":"model","match":{"equals":"model"},"price_variants":[{"when":5,"prices":{}}]}]"#),
+        provider(
+            r#""models":[{"id":"model","match":{"equals":"model"},"price_variants":[{"when":{"a":"b"},"prices":5}]}]"#,
+        ),
+        provider(r#""models":[{"id":"model","match":{"and":"model"}}]"#),
+        provider(r#""models":[{"id":"model","match":{"regex":1}}]"#),
+        provider(r#""models":[{"id":"model","match":{"starts_with":["model"]}}]"#),
+        provider(r#""models":[{"id":"model","match":5}]"#),
+    ] {
+        let result = Calculator::from_json(&data);
+        assert_eq!(common::error_kind(&result), Some(ErrorKind::InvalidData), "accepted or misclassified {data}");
+    }
+}
+
+#[test]
+fn accepts_optional_fields_and_explicit_nulls() {
+    let calculator = calculator(&provider(
+        r#""model_match":null,"provider_match":null,"fallback_model_providers":null,
+        "extractors":[{"api_flavor":"","root":"usage","mappings":[{"path":"input","dest":"input_tokens"},{"path":"note","dest":"output_tokens"}]}],
+        "models":[
+            {"id":"free","match":{"equals":"free"}},
+            {"id":"timed","match":{"equals":"timed"},"prices":[{"prices":{"input_mtok":1}},
+                {"constraint":{"type":"time_of_date","start_time":"00:00:00Z","end_time":"00:00:01Z"},"prices":{"input_mtok":2}}],
+             "price_variants":[{"when":{"tier":"x"},"constraint":null,"prices":{"input_mtok":3,"output_mtok":null}}]}
+        ]"#,
+    ));
+    let one = usage([(UsageKey::INPUT_TOKENS, 1.0)]);
+    let free = calculator.calculate(&PriceRequest::new("free", &one).with_provider_id("testing"));
+    assert_eq!(free.unwrap().total_price, 0.0);
+    let million = usage([(UsageKey::INPUT_TOKENS, 1_000_000.0)]);
+    let timed = PriceRequest::new("timed", &million)
+        .with_provider_id("testing")
+        .with_timestamp(common::utc(2026, 1, 1, 12, 0, 0));
+    assert_eq!(calculator.calculate(&timed).unwrap().total_price, 1.0);
+    let tiered = timed.clone().with_price_context("tier", "y").with_price_context("tier", "x");
+    assert_eq!(calculator.calculate(&tiered).unwrap().total_price, 3.0, "the last duplicate context key wins");
+    assert_eq!(calculator.calculate(&timed.with_price_context("tier", "y")).unwrap().total_price, 1.0);
+
+    // Optional mappings skip values that are not numbers.
+    let extracted = calculator
+        .extract_usage(&ExtractRequest::new(r#"{"usage":{"input":5,"note":"n/a"}}"#).with_provider_id("testing"))
+        .unwrap();
+    assert_eq!(extracted.usage, usage([(UsageKey::INPUT_TOKENS, 5.0)]));
+    assert_eq!(extracted.model_id, None);
+}
+
+#[test]
+fn decomposition_tolerates_rounding_error() {
+    let calculator = calculator(&provider(
+        r#""models":[{"id":"model","match":{"equals":"model"},"prices":{"input_mtok":1,"cache_read_mtok":1,"cache_write_mtok":1}}]"#,
+    ));
+    // 0.3 - (0.1 + 0.2) is about -5.6e-17, which is rounding error rather than inconsistent usage.
+    let rounded =
+        usage([(UsageKey::INPUT_TOKENS, 0.3), (UsageKey::CACHE_READ_TOKENS, 0.1), (UsageKey::CACHE_WRITE_TOKENS, 0.2)]);
+    let calculation = calculator.calculate(&PriceRequest::new("model", &rounded).with_provider_id("testing")).unwrap();
+    assert_close(calculation.input_price, 0.3 / 1e6, 1e-18);
+
+    let overlapping =
+        usage([(UsageKey::INPUT_TOKENS, 1.0), (UsageKey::CACHE_READ_TOKENS, 0.6), (UsageKey::CACHE_WRITE_TOKENS, 0.6)]);
+    let error =
+        calculator.calculate(&PriceRequest::new("model", &overlapping).with_provider_id("testing")).unwrap_err();
+    assert_eq!(
+        error.to_string(),
+        "invalid usage: more-specific usage for cache_read_tokens, cache_write_tokens totals 1.2, \
+         which exceeds input_tokens (1)",
+    );
+
+    let exceeding = usage([(UsageKey::INPUT_TOKENS, 1.0), (UsageKey::CACHE_READ_TOKENS, 2.0)]);
+    let error = calculator.calculate(&PriceRequest::new("model", &exceeding).with_provider_id("testing")).unwrap_err();
+    assert_eq!(error.to_string(), "invalid usage: cache_read_tokens (2) cannot exceed input_tokens (1)");
+}
+
+#[cfg(feature = "bundled")]
+#[test]
+fn unknown_model_without_a_provider() {
+    let usage = Usage::new();
+    let error = genai_prices::calculate(&PriceRequest::new("no-such-model", &usage)).unwrap_err();
+    assert_eq!(error.kind(), ErrorKind::ProviderNotFound, "{error}");
+}
+
+#[test]
+fn catastrophic_regex_fails_instead_of_hanging() {
+    // A lookahead inside the repetition forces the backtracking engine, and two branches that match the same
+    // text make it exponential. The backtrack limit plays the role of the Go engine's match timeout.
+    let calculator = calculator(&provider(r#""models":[{"id":"model","match":{"regex":"^((?=a)a|a)+b"}}]"#));
+    let (model, usage) = ("a".repeat(64), Usage::new());
+    let error = calculator.calculate(&PriceRequest::new(&model, &usage).with_provider_id("testing")).unwrap_err();
+    assert_eq!(error.kind(), ErrorKind::Match, "{error}");
+}
+
+#[cfg(feature = "bundled")]
+#[test]
+fn litellm_routing_follows_python() {
+    let usage = usage([(UsageKey::INPUT_TOKENS, 1_000.0)]);
+    let price = |model| genai_prices::calculate(&PriceRequest::new(model, &usage).with_provider_id("litellm"));
+    let routed = price("openai/gpt-5").unwrap();
+    assert_eq!((routed.provider_id.as_str(), routed.model_id.as_str()), ("openai", "gpt-5"));
+    // A known prefix routes even with nothing after it, so the empty model is not found in that provider.
+    let error = price("openai/").unwrap_err();
+    assert_eq!(error.to_string(), r#"model not found: unable to find model with model_ref="" in openai"#);
+    // Unknown or empty prefixes fall back to inferring the provider from the whole reference.
+    for model in ["nope/gpt-5", "/gpt-5"] {
+        assert_eq!(price(model).unwrap_err().kind(), ErrorKind::ProviderNotFound, "{model}");
+    }
+}
+
+#[test]
+fn extraction_matches_the_model_like_python() {
+    let calculator = calculator(
+        r#"[
+        {"id":"testing","name":"Testing","api_pattern":"testing","fallback_model_providers":["catalog"],
+         "extractors":[{"root":"usage","mappings":[{"path":"input","dest":"input_tokens","required":true}]}],
+         "models":[{"id":"canonical-id","match":{"equals":"alias"},"prices":{"input_mtok":2}}]},
+        {"id":"catalog","name":"Catalog","api_pattern":"catalog",
+         "models":[{"id":"shared","match":{"equals":"shared-model"},"prices":{"input_mtok":3}}]}
+    ]"#,
+    );
+    let extract = |body: &str| calculator.extract_usage(&ExtractRequest::new(body).with_provider_id("testing"));
+
+    // The matched model's ID is reported, and pricing uses that model without matching its ID again: the ID
+    // `canonical-id` would not match the `alias` rule.
+    let extracted = extract(r#"{"model":"ALIAS","usage":{"input":1000000}}"#).unwrap();
+    assert_eq!(extracted.model_id.as_deref(), Some("canonical-id"));
+    let price = calculator.calculate(&extracted.price_request().unwrap()).unwrap();
+    assert_eq!((price.model_id.as_str(), price.total_price), ("canonical-id", 2.0));
+    let rematched =
+        calculator.calculate(&PriceRequest::new("canonical-id", &extracted.usage).with_provider_id("testing"));
+    assert_eq!(common::error_kind(&rematched), Some(ErrorKind::ModelNotFound));
+
+    // Models found through a fallback provider are priced as that provider's model.
+    let fallback = extract(r#"{"model":"shared-model","usage":{"input":1000000}}"#).unwrap();
+    let price = calculator.calculate(&fallback.price_request().unwrap()).unwrap();
+    assert_eq!((price.provider_id.as_str(), price.model_id.as_str(), price.total_price), ("testing", "shared", 3.0));
+
+    // An unknown model is an error, but the raw extraction still reads the usage.
+    let body = r#"{"model":"brand-new","usage":{"input":5}}"#;
+    assert_eq!(common::error_kind(&extract(body)), Some(ErrorKind::ModelNotFound));
+    let raw = calculator.extract_provider_usage(&ExtractRequest::new(body).with_provider_id("testing")).unwrap();
+    assert_eq!((raw.model_ref.as_deref(), raw.usage.get("input_tokens")), (Some("brand-new"), Some(5.0)));
+    assert_eq!(
+        serde_json::to_value(&raw).unwrap(),
+        serde_json::json!({"usage": {"input_tokens": 5.0}, "model_ref": "brand-new", "provider_id": "testing", "warnings": []}),
+    );
+
+    // A response without a model is not an error, and there is nothing to price.
+    let anonymous = extract(r#"{"usage":{"input":5}}"#).unwrap();
+    assert_eq!((anonymous.model_id.as_deref(), anonymous.price_request()), (None, None));
+
+    // A request from one snapshot cannot silently price a different model in another.
+    let other = calculator_without_the_model();
+    assert_eq!(
+        common::error_kind(&other.calculate(&extracted.price_request().unwrap())),
+        Some(ErrorKind::ModelNotFound)
+    );
+}
+
+fn calculator_without_the_model() -> Calculator {
+    calculator(r#"[{"id":"testing","name":"Testing","api_pattern":"testing","models":[]}]"#)
+}
+
+#[cfg(feature = "bundled")]
+#[test]
+fn compact_dates_with_unicode_digits() {
+    let usage = usage([(UsageKey::INPUT_TOKENS, 1_000.0)]);
+    let price = |model| genai_prices::calculate(&PriceRequest::new(model, &usage).with_provider_id("openai"));
+    // Python reads Arabic-Indic digits matched by `\d` as the date 2025-08-07, so the dated alias matches.
+    assert_eq!(price("gpt-5-mini-20\u{662}\u{665}0807").unwrap().model_id, "gpt-5-mini");
+    // An unknown model with such digits is not found rather than a panic.
+    assert_eq!(price("unknown-20\u{662}\u{665}1211").unwrap_err().kind(), ErrorKind::ModelNotFound);
+}

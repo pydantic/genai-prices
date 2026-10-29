@@ -814,6 +814,12 @@ def test_package_python_data_preserves_bundled_registry_if_runtime_provider_vali
     assert 'transient_tokens' not in bundled_registry.units
 
 
+def test_rust_package_data_rejects_colliding_constant_names() -> None:
+    unit = {'per': 1_000_000, 'dimensions': {'family': 'transient'}}
+    with pytest.raises(ValueError, match='unique when uppercased'):
+        package_data.package_rust_data([], {'foo_tokens': unit, 'FOO_tokens': unit})
+
+
 def test_runtime_provider_parsing_uses_supplied_extractor_registry() -> None:
     from genai_prices import types as runtime_types
 

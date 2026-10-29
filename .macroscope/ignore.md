@@ -18,6 +18,8 @@ packages/js/src/data.ts
 packages/js/src/dataUnits.ts
 packages/go/data_units.go
 packages/go/internal/data/prices.json
+packages/rust/data/prices.json
+packages/rust/src/data_units.rs
 
 # === Vendored / dependency directories ===
 **/.git/**

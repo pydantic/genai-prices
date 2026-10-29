@@ -25,6 +25,7 @@
 - Python package, CLI
 - JavaScript/TypeScript package, CLI
 - Go package
+- Rust crate
 - TODO: API and web UI
 
 ### Providers
@@ -48,7 +49,7 @@ The following providers are currently supported:
 - [Doubleword](prices/providers/doubleword.yml) - 28 models
 - [ElevenLabs](prices/providers/elevenlabs.yml) - 2 models
 - [Fireworks](prices/providers/fireworks.yml) - 45 models
-- [GitHub Copilot](prices/providers/github_copilot.yml) - 42 models
+- [GitHub Copilot](prices/providers/github_copilot.yml) - 43 models
 - [Google](prices/providers/google.yml) - 69 models
 - [Groq](prices/providers/groq.yml) - 37 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 3 models
@@ -64,16 +65,16 @@ The following providers are currently supported:
 - [HuggingFace (together)](prices/providers/huggingface_together.yml) - 36 models
 - [Meta](prices/providers/meta.yml) - 6 models
 - [MiniMax](prices/providers/minimax.yml) - 10 models
-- [Mistral](prices/providers/mistral.yml) - 49 models
-- [Modal](prices/providers/modal.yml) - 9 models
-- [MoonshotAi](prices/providers/moonshotai.yml) - 14 models
-- [Novita](prices/providers/novita.yml) - 110 models
+- [Mistral](prices/providers/mistral.yml) - 51 models
+- [Modal](prices/providers/modal.yml) - 10 models
+- [MoonshotAi](prices/providers/moonshotai.yml) - 16 models
+- [Novita](prices/providers/novita.yml) - 112 models
 - [OpenAI](prices/providers/openai.yml) - 111 models
 - [OpenAI Decisions](prices/providers/openai_decisions.yml) - 1 models
 - [OpenRouter](prices/providers/openrouter.yml) - 894 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 20 models
 - [Perplexity](prices/providers/perplexity.yml) - 23 models
-- [QuickSilver Pro](prices/providers/quicksilverpro.yml) - 73 models
+- [QuickSilver Pro](prices/providers/quicksilverpro.yml) - 74 models
 - [Together AI](prices/providers/together.yml) - 93 models
 - [TypeSafe](prices/providers/typesafe.yml) - 2 models
 - [Voyage AI](prices/providers/voyageai.yml) - 24 models
@@ -96,6 +97,10 @@ See the [JS/TS README](packages/js/README.md) for instructions on how to install
 ### Go Package
 
 See the [Go README](packages/go/README.md) for instructions on how to install and use the Go package.
+
+### Rust Crate
+
+See the [Rust README](packages/rust/README.md) for instructions on how to install and use the Rust crate.
 
 ### Download data
 

@@ -1,0 +1,6 @@
+# Pinned so a new stable release (and its new lints) cannot break unrelated PRs. Bump deliberately.
+# The minimum supported version is `rust-version` in Cargo.toml, checked separately in CI.
+[toolchain]
+channel = "1.96.1"
+components = ["rustfmt", "clippy", "llvm-tools-preview"]
+profile = "minimal"

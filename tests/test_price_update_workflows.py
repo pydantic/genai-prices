@@ -66,7 +66,7 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     assert source['engine']['model'] == 'anthropic/glm-5.3-flash'
     engine = read_workflow('shared/price-check-engine.md')['engine']
     assert engine['id'] == 'pydantic-ai'
-    assert engine['version'] == '0.56.0'
+    assert engine['version'] == '0.60.0'
     assert engine['env'] == {
         'PAI_AGENT': 'scripts.price_check_agent:agent',
         'ANTHROPIC_BASE_URL': 'https://api.z.ai/api/anthropic',
@@ -104,7 +104,7 @@ def test_price_updates_create_pr_before_notifying_slack() -> None:
     assert execution_step['env']['PAI_MODEL'] == 'anthropic/glm-5.3-flash'
     assert execution_step['env']['PAI_AGENT'] == 'scripts.price_check_agent:agent'
     assert execution_step['env']['ANTHROPIC_API_KEY'] == '${{ secrets.ZAI_API_KEY }}'
-    assert compiled['jobs']['agent']['env']['GH_AW_ENGINE_VERSION'] == '0.56.0'
+    assert compiled['jobs']['agent']['env']['GH_AW_ENGINE_VERSION'] == '0.60.0'
     assert 'observability' not in source
     excluded_env = read_workflow('shared/price-check-engine.md')['excluded-env']
     assert excluded_env == [

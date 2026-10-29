@@ -29,7 +29,7 @@ PRICE_KEYS: dict[tuple[str, str], tuple[str, ...]] = {
 def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     models: list[ModelInfo] = []
     for line in markdown.splitlines():
-        if not line.startswith('| ['):
+        if not line.startswith('| [') or line.endswith('|  |  |'):
             continue
         if not (row := ROW.fullmatch(line)):
             raise RuntimeError(f'Unexpected Mistral pricing row: {line}')
