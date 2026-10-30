@@ -15753,6 +15753,18 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='gpt-6-rosalind',
+                match=ClauseEquals(equals='gpt-6-rosalind'),
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=272000, price=Decimal('30'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('18.75'), tiers=[Tier(start=272000, price=Decimal('37.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(base=Decimal('1.5'), tiers=[Tier(start=272000, price=Decimal('3'))]),
+                    output_mtok=TieredPrices(base=Decimal('75'), tiers=[Tier(start=272000, price=Decimal('112.5'))]),
+                ),
+            ),
+            ModelInfo(
                 id='gpt-6-sol',
                 match=ClauseOr(
                     or_=[ClauseEquals(equals='gpt-6-sol'), ClauseRegex(regex='^gpt-6-sol-\\d{4}-\\d{2}-\\d{2}$')]

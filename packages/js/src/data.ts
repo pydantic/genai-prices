@@ -27921,6 +27921,50 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gpt-6-rosalind',
+        match: {
+          equals: 'gpt-6-rosalind',
+        },
+        prices: {
+          input_mtok: {
+            base: 15,
+            tiers: [
+              {
+                start: 272000,
+                price: 30,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 18.75,
+            tiers: [
+              {
+                start: 272000,
+                price: 37.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 1.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 3,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 75,
+            tiers: [
+              {
+                start: 272000,
+                price: 112.5,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'gpt-6-sol',
         name: 'GPT-6 Sol',
         description: 'Model for complex coding and agentic workflows.',
