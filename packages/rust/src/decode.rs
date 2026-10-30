@@ -186,7 +186,14 @@ fn decode_model(value: &Value, registry: &Registry) -> DecodeResult<Model> {
     Ok(Model {
         id: id.to_owned(),
         name: fields.string("name")?.map(str::to_owned),
-        context_window: fields.raw("context_window").and_then(Value::as_u64),
+        context_window: fields
+            .get("context_window")
+            .map(|value| {
+                value.as_u64().ok_or_else(|| {
+                    context(format!("context_window must be a non-negative integer, got {}", type_name(value)))
+                })
+            })
+            .transpose()?,
         match_logic,
         prices,
         price_variants,

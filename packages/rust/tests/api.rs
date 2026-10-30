@@ -44,6 +44,29 @@ fn catalog_lists_providers_and_models() {
     assert_eq!(by_url.id(), "openai");
     assert!(calculator.find_provider(Some("no-such-provider"), None).unwrap().is_none());
     assert!(calculator.find_provider(None, None).unwrap().is_none());
+
+    assert_eq!(format!("{openai:?}"), r#"ProviderInfo { id: "openai", .. }"#);
+    assert_eq!(format!("{gpt_5:?}"), r#"ModelInfo { id: "gpt-5", .. }"#);
+}
+
+#[test]
+fn context_window_must_be_a_non_negative_integer() {
+    let data = |window: &str| {
+        format!(
+            r#"[{{"id": "p", "name": "P", "api_pattern": "x", "models": [
+                {{"id": "m", "match": {{"equals": "m"}}, "prices": {{}}, "context_window": {window}}}
+            ]}}]"#
+        )
+    };
+    let calculator = Calculator::from_json(data("null")).unwrap();
+    let model = calculator.providers().next().unwrap().models().next().unwrap();
+    assert_eq!(model.context_window(), None);
+
+    for window in ["\"1000\"", "-1", "1.5"] {
+        let error = Calculator::from_json(data(window)).unwrap_err();
+        assert_eq!(error.kind(), ErrorKind::InvalidData);
+        assert!(error.to_string().contains("context_window must be a non-negative integer"), "{error}");
+    }
 }
 
 #[test]
