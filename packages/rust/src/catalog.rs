@@ -1,10 +1,12 @@
+use std::fmt;
+
 use crate::calculator::Calculator;
 use crate::error::Result;
 use crate::matching::find_provider;
 use crate::model::{Model, Provider};
 
 /// A provider in the pricing data, as returned by [`Calculator::providers`] and [`Calculator::find_provider`].
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct ProviderInfo<'a>(&'a Provider);
 
 impl<'a> ProviderInfo<'a> {
@@ -32,7 +34,7 @@ impl<'a> ProviderInfo<'a> {
 }
 
 /// A model in the pricing data, as returned by [`ProviderInfo::models`].
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct ModelInfo<'a>(&'a Model);
 
 impl<'a> ModelInfo<'a> {
@@ -52,6 +54,18 @@ impl<'a> ModelInfo<'a> {
     #[must_use]
     pub fn context_window(self) -> Option<u64> {
         self.0.context_window
+    }
+}
+
+impl fmt::Debug for ProviderInfo<'_> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("ProviderInfo").field("id", &self.id()).finish_non_exhaustive()
+    }
+}
+
+impl fmt::Debug for ModelInfo<'_> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("ModelInfo").field("id", &self.id()).finish_non_exhaustive()
     }
 }
 
