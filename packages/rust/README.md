@@ -158,6 +158,24 @@ assert_eq!(raw.usage.get("input_tokens"), Some(1000.0));
 
 `PriceCalculation`, `ExtractedUsage` and `ProviderUsage` implement `serde::Serialize` for logging or forwarding.
 
+## List providers and models
+
+```rust
+use genai_prices::Calculator;
+
+let calculator = Calculator::bundled();
+let provider = calculator.find_provider(Some("openai"), None)?.expect("openai is in the bundled data");
+
+assert_eq!(provider.name(), "OpenAI");
+assert!(provider.api_flavors().any(|flavor| flavor == "responses"));
+for model in provider.models() {
+    println!("{} {:?} {:?}", model.id(), model.name(), model.context_window());
+}
+# Ok::<(), genai_prices::Error>(())
+```
+
+`find_provider` selects a provider as a `PriceRequest` does: by ID or alias, then by API URL.
+
 ## Load current pricing data
 
 The crate does not make network requests. Download [`REMOTE_DATA_URL`] with the HTTP client you already use and
