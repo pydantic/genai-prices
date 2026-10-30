@@ -8,6 +8,7 @@
 #![forbid(unsafe_code)]
 
 mod calculator;
+mod catalog;
 #[rustfmt::skip]
 mod data_units;
 mod decode;
@@ -23,6 +24,7 @@ mod usage;
 pub use calculator::Calculator;
 #[cfg(feature = "bundled")]
 pub use calculator::calculate;
+pub use catalog::{ModelInfo, ProviderInfo};
 pub use error::{Error, ErrorKind, Result};
 #[cfg(feature = "bundled")]
 pub use extract::{extract_provider_usage, extract_usage};

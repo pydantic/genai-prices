@@ -29,6 +29,57 @@ fn calculator_is_shareable_across_threads() {
 }
 
 #[test]
+fn catalog_lists_providers_and_models() {
+    let calculator = Calculator::bundled();
+    let openai = calculator.find_provider(Some(" OpenAI "), None).unwrap().unwrap();
+    assert_eq!((openai.id(), openai.name()), ("openai", "OpenAI"));
+    assert!(openai.api_flavors().any(|flavor| flavor == "chat"));
+    assert!(calculator.providers().any(|provider| provider.id() == "openai"));
+
+    let gpt_5 = openai.models().find(|model| model.id() == "gpt-5").unwrap();
+    assert!(gpt_5.name().is_some());
+    assert!(gpt_5.context_window().is_some_and(|window| window > 0));
+
+    let by_url = calculator.find_provider(None, Some("https://api.openai.com/v1")).unwrap().unwrap();
+    assert_eq!(by_url.id(), "openai");
+    assert!(calculator.find_provider(Some("no-such-provider"), None).unwrap().is_none());
+    assert!(calculator.find_provider(None, None).unwrap().is_none());
+
+    assert_eq!(format!("{openai:?}"), r#"ProviderInfo { id: "openai", .. }"#);
+    assert_eq!(format!("{gpt_5:?}"), r#"ModelInfo { id: "gpt-5", .. }"#);
+}
+
+#[test]
+fn a_malformed_model_name_names_the_model() {
+    let data = r#"[{"id": "p", "name": "P", "api_pattern": "x", "models": [
+        {"id": "m", "name": 1, "match": {"equals": "m"}, "prices": {}}
+    ]}]"#;
+    let error = Calculator::from_json(data).unwrap_err();
+    assert_eq!(error.kind(), ErrorKind::InvalidData);
+    assert!(error.to_string().contains(r#"model "m" name must be a string"#), "{error}");
+}
+
+#[test]
+fn context_window_must_be_a_non_negative_integer() {
+    let data = |window: &str| {
+        format!(
+            r#"[{{"id": "p", "name": "P", "api_pattern": "x", "models": [
+                {{"id": "m", "match": {{"equals": "m"}}, "prices": {{}}, "context_window": {window}}}
+            ]}}]"#
+        )
+    };
+    let calculator = Calculator::from_json(data("null")).unwrap();
+    let model = calculator.providers().next().unwrap().models().next().unwrap();
+    assert_eq!(model.context_window(), None);
+
+    for window in ["\"1000\"", "-1", "1.5"] {
+        let error = Calculator::from_json(data(window)).unwrap_err();
+        assert_eq!(error.kind(), ErrorKind::InvalidData);
+        assert!(error.to_string().contains("context_window must be a non-negative integer"), "{error}");
+    }
+}
+
+#[test]
 fn provider_selectors_follow_python() {
     let usage = usage([(UsageKey::INPUT_TOKENS, 1_000.0)]);
     let price = |request: PriceRequest<'_>| genai_prices::calculate(&request);

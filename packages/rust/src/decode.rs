@@ -135,6 +135,7 @@ fn decode_provider(value: &Value, registry: &Registry) -> DecodeResult<Provider>
 
     Ok(Provider {
         id: id.to_owned(),
+        name: name.to_owned(),
         api_regex,
         model_match,
         provider_match,
@@ -182,7 +183,21 @@ fn decode_model(value: &Value, registry: &Registry) -> DecodeResult<Model> {
         .map(decode_price_variant)
         .collect::<DecodeResult<_>>()
         .map_err(|error| context(format!("price variant: {error}")))?;
-    Ok(Model { id: id.to_owned(), match_logic, prices, price_variants })
+    Ok(Model {
+        id: id.to_owned(),
+        name: fields.string("name").map_err(context)?.map(str::to_owned),
+        context_window: fields
+            .get("context_window")
+            .map(|value| {
+                value.as_u64().ok_or_else(|| {
+                    context(format!("context_window must be a non-negative integer, got {}", type_name(value)))
+                })
+            })
+            .transpose()?,
+        match_logic,
+        prices,
+        price_variants,
+    })
 }
 
 fn decode_model_price(value: &Value) -> DecodeResult<ModelPrice> {
