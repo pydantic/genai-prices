@@ -8,6 +8,7 @@ use crate::time::Timestamp;
 #[derive(Debug)]
 pub(crate) struct Provider {
     pub(crate) id: String,
+    pub(crate) name: String,
     pub(crate) api_regex: fancy_regex::Regex,
     pub(crate) model_match: Option<MatchLogic>,
     pub(crate) provider_match: Option<MatchLogic>,
@@ -19,6 +20,8 @@ pub(crate) struct Provider {
 #[derive(Debug)]
 pub(crate) struct Model {
     pub(crate) id: String,
+    pub(crate) name: Option<String>,
+    pub(crate) context_window: Option<u64>,
     pub(crate) match_logic: MatchLogic,
     pub(crate) prices: ModelPrices,
     pub(crate) price_variants: Vec<PriceVariant>,

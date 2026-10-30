@@ -29,6 +29,24 @@ fn calculator_is_shareable_across_threads() {
 }
 
 #[test]
+fn catalog_lists_providers_and_models() {
+    let calculator = Calculator::bundled();
+    let openai = calculator.find_provider(Some(" OpenAI "), None).unwrap().unwrap();
+    assert_eq!((openai.id(), openai.name()), ("openai", "OpenAI"));
+    assert!(openai.api_flavors().any(|flavor| flavor == "chat"));
+    assert!(calculator.providers().any(|provider| provider.id() == "openai"));
+
+    let gpt_5 = openai.models().find(|model| model.id() == "gpt-5").unwrap();
+    assert!(gpt_5.name().is_some());
+    assert!(gpt_5.context_window().is_some_and(|window| window > 0));
+
+    let by_url = calculator.find_provider(None, Some("https://api.openai.com/v1")).unwrap().unwrap();
+    assert_eq!(by_url.id(), "openai");
+    assert!(calculator.find_provider(Some("no-such-provider"), None).unwrap().is_none());
+    assert!(calculator.find_provider(None, None).unwrap().is_none());
+}
+
+#[test]
 fn provider_selectors_follow_python() {
     let usage = usage([(UsageKey::INPUT_TOKENS, 1_000.0)]);
     let price = |request: PriceRequest<'_>| genai_prices::calculate(&request);
