@@ -106,7 +106,7 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.006
       output_mtok: 1.2
-    prices_checked: 2026-10-23
+    prices_checked: 2026-10-30
 
   - id: deepseek-v4p1-flash-1017
     name: DeepSeek V4.1 Flash 1017
@@ -118,7 +118,7 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.006
       output_mtok: 1.2
-    prices_checked: 2026-10-23
+    prices_checked: 2026-10-30
 
   - id: deepseek-v4p1-flash-1017-us
     name: DeepSeek V4.1 Flash 1017 US
@@ -128,7 +128,7 @@ models:
       input_mtok: 0.45
       cache_read_mtok: 0.009
       output_mtok: 1.8
-    prices_checked: 2026-10-23
+    prices_checked: 2026-10-30
 
   - id: deepseek-v4p1-flash-us
     name: DeepSeek V4.1 Flash US
@@ -138,7 +138,7 @@ models:
       input_mtok: 0.45
       cache_read_mtok: 0.009
       output_mtok: 1.8
-    prices_checked: 2026-10-23
+    prices_checked: 2026-10-30
 
   - id: ember-1
     name: Ember-1
@@ -148,7 +148,7 @@ models:
       input_mtok: 3
       cache_read_mtok: 0.3
       output_mtok: 15
-    prices_checked: 2026-10-23
+    prices_checked: 2026-10-30
 
   - id: gemma-3-27b-it
     name: Gemma 3 27B Instruct
@@ -232,7 +232,7 @@ models:
       input_mtok: 1.4
       cache_read_mtok: 0.26
       output_mtok: 4.4
-    prices_checked: 2026-10-23
+    prices_checked: 2026-10-30
 
   - id: glm-5p3-fast
     name: GLM 5.3 Fast
@@ -242,7 +242,7 @@ models:
       input_mtok: 2.1
       cache_read_mtok: 0.39
       output_mtok: 6.6
-    prices_checked: 2026-10-23
+    prices_checked: 2026-10-30
 
   - id: glm-5p3-flash
     name: GLM 5.3 Flash
@@ -252,7 +252,7 @@ models:
       input_mtok: 0.15
       cache_read_mtok: 0.03
       output_mtok: 0.5
-    prices_checked: 2026-10-23
+    prices_checked: 2026-10-30
 
   - id: glm-5p3-flash-us
     name: GLM 5.3 Flash US
@@ -262,7 +262,7 @@ models:
       input_mtok: 0.225
       cache_read_mtok: 0.045
       output_mtok: 0.75
-    prices_checked: 2026-10-23
+    prices_checked: 2026-10-30
 
   - id: glm-5p3-us
     name: GLM 5.3 US
@@ -272,7 +272,7 @@ models:
       input_mtok: 2.1
       cache_read_mtok: 0.39
       output_mtok: 6.6
-    prices_checked: 2026-10-23
+    prices_checked: 2026-10-30
 
   - id: gpt-oss-120b
     name: OpenAI gpt-oss-120b
@@ -282,7 +282,7 @@ models:
     match:
       equals: accounts/fireworks/models/gpt-oss-120b
     context_window: 131072
-    prices_checked: 2026-10-23
+    prices_checked: 2026-10-30
     price_comments: Standard serverless pricing. See https://fireworks.ai/models/fireworks/gpt-oss-120b.
     prices:
       - prices:
@@ -394,7 +394,7 @@ models:
     match:
       equals: accounts/fireworks/models/kimi-k3
     context_window: 1040000
-    prices_checked: 2026-10-23
+    prices_checked: 2026-10-30
     price_comments: Standard serverless pricing. See https://fireworks.ai/models/fireworks/kimi-k3. Fast and US router
       variants have separate model IDs.
     prices:
@@ -407,7 +407,7 @@ models:
     match:
       equals: accounts/fireworks/routers/kimi-k3-fast
     context_window: 1040000
-    prices_checked: 2026-10-23
+    prices_checked: 2026-10-30
     price_comments: Fast serverless pricing. See https://docs.fireworks.ai/serverless/pricing.
     prices:
       input_mtok: 4.50
@@ -419,7 +419,7 @@ models:
     match:
       equals: accounts/fireworks/routers/kimi-k3-us
     context_window: 1040000
-    prices_checked: 2026-10-23
+    prices_checked: 2026-10-30
     price_comments: >-
       US-only serverless pricing. Since 2026-09-01 US-only models cost 1.5x the base model.
       See https://docs.fireworks.ai/serverless/us-only-serverless.
@@ -497,7 +497,7 @@ models:
     match:
       equals: accounts/fireworks/models/minimax-m3
     context_window: 524288
-    prices_checked: 2026-10-23
+    prices_checked: 2026-10-30
     prices:
       input_mtok: 0.30
       cache_read_mtok: 0.06
@@ -511,7 +511,7 @@ models:
       input_mtok: 1.25
       cache_read_mtok: 0.15
       output_mtok: 4.25
-    prices_checked: 2026-10-23
+    prices_checked: 2026-10-30
 
   - id: nemotron-3-ultra-nvfp4
     name: NVIDIA Nemotron 3 Ultra NVFP4
@@ -523,7 +523,7 @@ models:
     match:
       equals: accounts/fireworks/models/nemotron-3-ultra-nvfp4
     context_window: 262000
-    prices_checked: 2026-10-23
+    prices_checked: 2026-10-30
     prices:
       input_mtok: 0.60
       cache_read_mtok: 0.12
@@ -537,7 +537,7 @@ models:
       input_mtok: 0.05
       cache_read_mtok: 0.01
       output_mtok: 0.2
-    prices_checked: 2026-10-23
+    prices_checked: 2026-10-30
 
   - id: qwen2p5-vl-72b-instruct
     name: Qwen2.5-VL 72B Instruct
@@ -598,4 +598,14 @@ models:
       input_mtok: 2
       cache_read_mtok: 0.25
       output_mtok: 6
-    prices_checked: 2026-10-23
+    prices_checked: 2026-10-30
+
+  - id: ultramarine-1-flash-us-us
+    name: Ultramarine 1 Flash US
+    match:
+      equals: accounts/fireworks/routers/ultramarine-1-flash-us-us
+    prices:
+      input_mtok: 0.225
+      cache_read_mtok: 0.045
+      output_mtok: 0.75
+    prices_checked: 2026-10-30
