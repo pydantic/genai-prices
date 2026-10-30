@@ -50,6 +50,16 @@ fn catalog_lists_providers_and_models() {
 }
 
 #[test]
+fn a_malformed_model_name_names_the_model() {
+    let data = r#"[{"id": "p", "name": "P", "api_pattern": "x", "models": [
+        {"id": "m", "name": 1, "match": {"equals": "m"}, "prices": {}}
+    ]}]"#;
+    let error = Calculator::from_json(data).unwrap_err();
+    assert_eq!(error.kind(), ErrorKind::InvalidData);
+    assert!(error.to_string().contains(r#"model "m" name must be a string"#), "{error}");
+}
+
+#[test]
 fn context_window_must_be_a_non_negative_integer() {
     let data = |window: &str| {
         format!(

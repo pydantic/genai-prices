@@ -185,7 +185,7 @@ fn decode_model(value: &Value, registry: &Registry) -> DecodeResult<Model> {
         .map_err(|error| context(format!("price variant: {error}")))?;
     Ok(Model {
         id: id.to_owned(),
-        name: fields.string("name")?.map(str::to_owned),
+        name: fields.string("name").map_err(context)?.map(str::to_owned),
         context_window: fields
             .get("context_window")
             .map(|value| {
