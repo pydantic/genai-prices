@@ -1903,6 +1903,27 @@ def test_accumulate_extracted_usage():
     with pytest.raises(TypeError):
         _ = Usage() + 1
 
+    # A model-less extraction (xAI Realtime has no model reference) is a supported state, and
+    # two of them accumulate; only a model vs no-model pair is a mismatch.
+    model_less = ExtractedUsage(
+        usage=Usage(input_tokens=5, output_tokens=42),
+        model=None,
+        provider=extracted.provider,
+        auto_update_timestamp=None,
+    )
+    assert (model_less + model_less).usage == Usage(input_tokens=10, output_tokens=84)
+    with pytest.raises(ValueError, match='models do not match'):
+        _ = model_less + extracted
+    # sum() starts from the int 0, so __radd__ has to accept it like Usage.__radd__ does.
+    # isinstance() rather than `sum(...).usage` directly: sum() is typed `_T | int` (the empty
+    # sequence is 0), and pyright cannot attribute-access `.usage` through that union.
+    total = sum([extracted, extracted])
+    assert isinstance(total, ExtractedUsage)
+    assert total.usage == double_extracted.usage
+    total_model_less = sum([model_less, model_less])
+    assert isinstance(total_model_less, ExtractedUsage)
+    assert total_model_less.usage == Usage(input_tokens=10, output_tokens=84)
+
 
 @pytest.mark.parametrize('with_details', [True, False])
 def test_xai_responses_usage_and_price(with_details: bool) -> None:
