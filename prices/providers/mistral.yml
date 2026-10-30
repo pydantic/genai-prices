@@ -387,7 +387,7 @@ models:
     match:
       equals: mistral-large-2512
     context_window: 262144
-    prices_checked: 2026-10-30
+    prices_checked: 2026-10-28
     prices:
       input_mtok: 0.5
       cache_read_mtok: 0.05
@@ -502,7 +502,7 @@ models:
         - equals: mistral-medium-3
         - equals: mistral-medium-2604
     context_window: 262144
-    prices_checked: 2026-10-30
+    prices_checked: 2026-10-28
     price_comments: >-
       Ref: https://mistral.ai/pricing/api
     prices:
@@ -893,7 +893,7 @@ models:
         - equals: voxtral-mini-latest
         - equals: voxtral-mini-2602
     context_window: 16384
-    prices_checked: 2026-10-30
+    prices_checked: 2026-10-28
     price_comments: See https://docs.mistral.ai/models/voxtral-mini-transcribe-26-02.
     prices:
       audio_hours: 0.18
@@ -921,7 +921,7 @@ models:
     prices:
       audio_hours: 0.36
       input_audio_hours: 0.36
-    prices_checked: 2026-10-30
+    prices_checked: 2026-10-28
 
   - id: voxtral-mini-transcribe-realtime-3-0
     name: Voxtral Mini Transcribe Realtime 3
