@@ -300,7 +300,7 @@ models:
         - equals: gpt-35-turbo
         - equals: gpt-3.5-turbo-0125
     context_window: 16385
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
     prices:
@@ -382,7 +382,7 @@ models:
         - equals: gpt-4-0613
         - starts_with: ft:gpt-4-0
     context_window: 8192
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
     prices:
@@ -425,7 +425,7 @@ models:
         - equals: gpt-4-1106-preview
         - equals: gpt-4-turbo-preview
     context_window: 128000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
     prices:
@@ -461,7 +461,7 @@ models:
         - equals: gpt-4.1
         - equals: gpt-4.1-2025-04-14
     context_window: 1000000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     prices:
       input_mtok: 2
       cache_read_mtok: 0.5
@@ -505,7 +505,7 @@ models:
         - equals: gpt-4.1-mini
         - equals: gpt-4.1-mini-2025-04-14
     context_window: 1000000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     prices:
       input_mtok: 0.4
       cache_read_mtok: 0.1
@@ -549,7 +549,7 @@ models:
         - equals: gpt-4.1-nano
         - equals: gpt-4.1-nano-2025-04-14
     context_window: 1000000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     prices:
       input_mtok: 0.1
       cache_read_mtok: 0.025
@@ -606,7 +606,7 @@ models:
         - equals: gpt-4o-2024-08-06
         - equals: gpt-4o-2024-11-20
     context_window: 128000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     prices:
       input_mtok: 2.5
       cache_read_mtok: 1.25
@@ -647,7 +647,7 @@ models:
     match:
       equals: gpt-4o-2024-05-13
     context_window: 128000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
@@ -705,7 +705,7 @@ models:
         - equals: gpt-4o-mini-search-preview
         - equals: gpt-4o-mini-search-preview-2025-03-11
     context_window: 128000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     prices:
       input_mtok: 0.15
       cache_read_mtok: 0.075
@@ -862,7 +862,7 @@ models:
         - equals: gpt-5-chat-latest
         - equals: gpt-5-codex
     context_window: 400000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     prices:
       input_mtok: 1.25
       cache_read_mtok: 0.125
@@ -928,7 +928,7 @@ models:
         - equals: gpt-5-mini
         - equals: gpt-5-mini-2025-08-07
     context_window: 400000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     prices:
       input_mtok: 0.25
       cache_read_mtok: 0.025
@@ -977,7 +977,7 @@ models:
         - equals: gpt-5-nano
         - starts_with: gpt-5-nano-
     context_window: 400000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     prices:
       input_mtok: 0.05
       cache_read_mtok: 0.005
@@ -1010,7 +1010,7 @@ models:
         - equals: gpt-5-pro
         - equals: gpt-5-pro-2025-10-06
     context_window: 400000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
     prices:
@@ -1028,7 +1028,7 @@ models:
   - id: gpt-5-search-api
     match:
       equals: gpt-5-search-api
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Rates from https://developers.openai.com/api/docs/pricing (Specialized models, Standard):
       input $1.25 / 1M tokens, cached input $0.125 / 1M tokens, output $10 / 1M tokens. The pricing page
@@ -1058,7 +1058,7 @@ models:
         - equals: gpt-5-1-chat
         - equals: gpt-5-1-chat-latest
     context_window: 400000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     prices:
       input_mtok: 1.25
       cache_read_mtok: 0.125
@@ -1131,7 +1131,7 @@ models:
         - equals: gpt-5.2-codex
         - equals: gpt-5-2-codex
     context_window: 400000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     prices:
       input_mtok: 1.75
       cache_read_mtok: 0.175
@@ -1178,7 +1178,7 @@ models:
         - equals: gpt-5.2-pro-2025-12-11
         - equals: gpt-5-2-pro-2025-12-11
     context_window: 400000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
     prices:
@@ -1221,7 +1221,7 @@ models:
         - equals: gpt-5.3-codex
         - equals: gpt-5-3-codex
     context_window: 400000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     prices:
       input_mtok: 1.75
       cache_read_mtok: 0.175
@@ -1256,7 +1256,7 @@ models:
         - equals: gpt-5-4
         - equals: gpt-5-4-2026-03-05
     context_window: 1050000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing. Batch cached rates use
@@ -1361,7 +1361,7 @@ models:
         - equals: gpt-5-4-mini
         - equals: gpt-5-4-mini-2026-03-17
     context_window: 400000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     prices:
       input_mtok: 0.75
       cache_read_mtok: 0.075
@@ -1411,7 +1411,7 @@ models:
         - equals: gpt-5-4-nano
         - equals: gpt-5-4-nano-2026-03-17
     context_window: 400000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     prices:
       input_mtok: 0.2
       cache_read_mtok: 0.02
@@ -1448,7 +1448,7 @@ models:
         - equals: gpt-5-4-pro
         - equals: gpt-5-4-pro-2026-03-05
     context_window: 1050000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
@@ -1518,7 +1518,7 @@ models:
         - equals: gpt-5.5-codex
         - equals: gpt-5-5-codex
     context_window: 1000000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
@@ -1599,7 +1599,7 @@ models:
   - id: gpt-5.5-cyber
     match:
       equals: gpt-5.5-cyber
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Rates from https://developers.openai.com/api/docs/pricing (Cyber models, Standard): input
       $12.50 / 1M tokens, output $75 / 1M tokens. The page published no cached-input rate on 2026-10-15; it
@@ -1625,7 +1625,7 @@ models:
         - equals: gpt-5-5-pro
         - equals: gpt-5-5-pro-2026-04-23
     context_window: 1000000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing. The Batch table
@@ -1665,7 +1665,7 @@ models:
   - id: gpt-5.6-cyber
     match:
       equals: gpt-5.6-cyber
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Rates from https://developers.openai.com/api/docs/pricing (Cyber models, Standard): input
       $12.50 / 1M tokens, cached input $1.25 / 1M tokens, cache writes $15.625 / 1M tokens (1.25x input),
@@ -1687,7 +1687,7 @@ models:
         - regex: ^gpt-5\.6-luna-\d{4}-\d{2}-\d{2}$
         - regex: ^gpt-5-6-luna-\d{4}-\d{2}-\d{2}$
     context_window: 1050000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
@@ -1854,7 +1854,7 @@ models:
         - regex: ^gpt-5\.6-sol-\d{4}-\d{2}-\d{2}$
         - regex: ^gpt-5-6-sol-\d{4}-\d{2}-\d{2}$
     context_window: 1050000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
@@ -2021,7 +2021,7 @@ models:
         - regex: ^gpt-5\.6-terra-\d{4}-\d{2}-\d{2}$
         - regex: ^gpt-5-6-terra-\d{4}-\d{2}-\d{2}$
     context_window: 1050000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
@@ -2184,7 +2184,7 @@ models:
         - equals: gpt-6-astra
         - regex: ^gpt-6-astra-\d{4}-\d{2}-\d{2}$
     context_window: 1050000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
@@ -2321,7 +2321,7 @@ models:
         - equals: gpt-6-luna
         - regex: ^gpt-6-luna-\d{4}-\d{2}-\d{2}$
     context_window: 1050000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
@@ -2449,6 +2449,32 @@ models:
               - start: 272000
                 price: 0.375
 
+  - id: gpt-6-rosalind
+    match:
+      equals: gpt-6-rosalind
+    prices:
+      input_mtok:
+        base: 15
+        tiers:
+          - start: 272000
+            price: 30
+      cache_write_mtok:
+        base: 18.75
+        tiers:
+          - start: 272000
+            price: 37.5
+      cache_read_mtok:
+        base: 1.5
+        tiers:
+          - start: 272000
+            price: 3
+      output_mtok:
+        base: 75
+        tiers:
+          - start: 272000
+            price: 112.5
+    prices_checked: 2026-10-31
+
   - id: gpt-6-sol
     name: GPT-6 Sol
     description: Model for complex coding and agentic workflows.
@@ -2458,7 +2484,7 @@ models:
         - equals: gpt-6-sol
         - regex: ^gpt-6-sol-\d{4}-\d{2}-\d{2}$
     context_window: 1050000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
@@ -2594,7 +2620,7 @@ models:
         - equals: gpt-6.1-sol
         - regex: ^gpt-6\.1-sol-\d{4}-\d{2}-\d{2}$
     context_window: 1050000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
@@ -2730,7 +2756,7 @@ models:
         - equals: gpt-6.1-terra
         - regex: ^gpt-6\.1-terra-\d{4}-\d{2}-\d{2}$
     context_window: 1050000
-    prices_checked: 2026-10-26
+    prices_checked: 2026-10-31
     price_comments: >-
       Flex/priority/fast rates verified on 2026-10-26 at https://developers.openai.com/api/docs/pricing.
       Batch and flex are 50% of standard; fast (formerly priority) is 2x. Cache reads cost 5% of input; cache writes
@@ -2898,7 +2924,7 @@ models:
       or:
         - equals: gpt-chat-latest
         - equals: chat-latest
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
       Verified against OpenAI on 2026-10-15: the official Model ID is `chat-latest`
@@ -3242,7 +3268,7 @@ models:
       input_mtok: 5
       cache_read_mtok: 0.5
       output_mtok: 25
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
 
   - id: gpt-rosalind-research
     match:
@@ -3251,7 +3277,7 @@ models:
       input_mtok: 5
       cache_read_mtok: 0.5
       output_mtok: 25
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
 
   - id: gpt-transcribe
     match:
@@ -3281,7 +3307,7 @@ models:
         - equals: o1-2024-12-17
     # https://developers.openai.com/api/docs/models/o1
     context_window: 200000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing. The Batch table
       publishes no cached-input rate, so cached input keeps the standard rate.
@@ -3338,7 +3364,7 @@ models:
         - equals: o1-pro
         - equals: o1-pro-2025-03-19
     context_window: 200000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
     prices:
@@ -3364,7 +3390,7 @@ models:
         - equals: o3-2025-04-16
     # https://developers.openai.com/api/docs/models/o3
     context_window: 200000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     prices:
       - prices:
           input_mtok: 10
@@ -3443,7 +3469,7 @@ models:
         - equals: o3-mini-high
     # https://developers.openai.com/api/docs/models/o3-mini
     context_window: 200000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     price_comments: >-
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing. The Batch table
       publishes no cached-input rate, so cached input keeps the standard rate.
@@ -3470,7 +3496,7 @@ models:
     context_window: 200000
     price_comments: >-
       Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     prices:
       input_mtok: 20
       output_mtok: 80
@@ -3492,7 +3518,7 @@ models:
         - equals: o4-mini
     # https://developers.openai.com/api/docs/models/o4-mini
     context_window: 200000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     prices:
       input_mtok: 1.1
       cache_read_mtok: 0.275
@@ -3569,7 +3595,7 @@ models:
     match:
       equals: text-embedding-3-large
     context_window: 8192
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     prices:
       input_mtok: 0.13
 
@@ -3579,7 +3605,7 @@ models:
     match:
       equals: text-embedding-3-small
     context_window: 8192
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     prices:
       input_mtok: 0.02
 
@@ -3592,7 +3618,7 @@ models:
         - equals: text-embedding-ada-002
         - equals: text-embedding-ada-002-v2
     context_window: 8192
-    prices_checked: 2026-10-19
+    prices_checked: 2026-10-31
     prices:
       input_mtok: 0.1
 
