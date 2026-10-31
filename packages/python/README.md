@@ -278,6 +278,13 @@ To calculate the price of models, run for example:
 uvx genai-prices calc --input-tokens 100000 --output-tokens 3000 o1 o3 claude-opus-4
 ```
 
+To select price variants, pass `--price-context key=value`, the CLI form of `price_context`. Repeat it for several keys:
+
+```bash
+uvx genai-prices calc --input-tokens 100000 --output-tokens 3000 --price-context service_tier=flex openai:o3
+uvx genai-prices calc --input-tokens 100000 --output-tokens 3000 --price-context processing=batch openai:o3
+```
+
 CLI output notes:
 
 - Rich output is the default.

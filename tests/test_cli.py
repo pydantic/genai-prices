@@ -253,6 +253,54 @@ Context Window: 200,000
     assert err == ''
 
 
+@pytest.mark.parametrize(
+    'price_context,total_price',
+    [
+        ([], '$10.0'),
+        (['--price-context', 'service_tier=flex'], '$5.00'),
+        (['--price-context', 'processing=batch'], '$5.0'),
+        # `region` selects no variant, so each case costs $5 only if the `service_tier` pair, first or last, reaches the calculation.
+        (['--price-context', 'service_tier=flex', '--price-context', 'region=eu'], '$5.00'),
+        (['--price-context', 'region=eu', '--price-context', 'service_tier=flex'], '$5.00'),
+        (['--price-context', 'region=eu,service_tier=flex'], '$5.00'),
+        (['--price-context', ' service_tier=flex , region=eu '], '$5.00'),
+    ],
+)
+def test_calc_price_context(capsys: pytest.CaptureFixture[str], price_context: list[str], total_price: str):
+    args = ['--plain', 'calc', '-i', '1000000', '-o', '1000000', '-t', '2026-10-14', *price_context, 'openai:o3']
+    assert cli_logic(args) == 0
+    out, err = capsys.readouterr()
+    assert f'   Total Price: {total_price}\n' in out
+    assert err == ''
+
+
+@pytest.mark.parametrize('plain', [True, False])
+@pytest.mark.parametrize(
+    'price_context,error',
+    [
+        (['bogus'], "Error: Invalid --price-context 'bogus', expected key=value\n"),
+        (['=flex'], "Error: Invalid --price-context '=flex', expected key=value\n"),
+        (['service_tier='], "Error: Invalid --price-context 'service_tier=', expected key=value\n"),
+        (
+            ['service_tier=flex', 'service_tier=priority'],
+            "Error: Duplicate --price-context 'service_tier', it was already set to 'flex'\n",
+        ),
+        (
+            ['service_tier=flex, service_tier=priority'],
+            "Error: Duplicate --price-context 'service_tier', it was already set to 'flex'\n",
+        ),
+    ],
+)
+def test_calc_price_context_invalid(
+    capsys: pytest.CaptureFixture[str], plain: bool, price_context: list[str], error: str
+):
+    options = [arg for pair in price_context for arg in ('--price-context', pair)]
+    assert cli_logic([*(['--plain'] if plain else []), 'calc', '-i', '1000', *options, 'o3']) == 1
+    out, err = capsys.readouterr()
+    assert out == ''
+    assert err == error
+
+
 def test_list(capsys: pytest.CaptureFixture[str]):
     assert cli_logic(['--plain', 'list']) == 0
     out, err = capsys.readouterr()

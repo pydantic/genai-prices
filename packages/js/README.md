@@ -295,6 +295,10 @@ genai-prices gpt-5 --input-tokens 1000 --output-tokens 100
 # Specify provider explicitly
 genai-prices openai:gpt-5 --input-tokens 1000 --output-tokens 100
 
+# Select price variants, the CLI form of priceContext (repeat for several keys)
+genai-prices openai:o3 --input-tokens 1000 --output-tokens 100 --price-context service_tier=flex
+genai-prices openai:o3 --input-tokens 1000 --output-tokens 100 --price-context processing=batch
+
 # List available providers and models
 genai-prices list
 genai-prices list openai
