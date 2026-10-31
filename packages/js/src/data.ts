@@ -9447,6 +9447,18 @@ export const data: Provider[] = [
           output_mtok: 6,
         },
       },
+      {
+        id: 'ultramarine-1-flash-us-us',
+        name: 'Ultramarine 1 Flash US',
+        match: {
+          equals: 'accounts/fireworks/routers/ultramarine-1-flash-us-us',
+        },
+        prices: {
+          input_mtok: 0.225,
+          cache_read_mtok: 0.045,
+          output_mtok: 0.75,
+        },
+      },
     ],
   },
   {
@@ -20383,6 +20395,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-v4-1-flash-1017',
+        name: 'DeepSeek V4.1 Flash 1017',
+        match: {
+          equals: 'deepseek-v4-1-flash-1017',
+        },
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.007,
+          output_mtok: 1.2,
+        },
+      },
+      {
         id: 'devstral-2512',
         name: 'Devstral 2 2512',
         description:
@@ -20794,8 +20818,33 @@ export const data: Provider[] = [
               output_mtok: 4.18,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-10-29',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.7,
+              cache_read_mtok: 0.07,
+              output_mtok: 2.1,
+            },
+          },
         ],
         price_variants: [
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: 0.35,
+              cache_read_mtok: 0.035,
+              output_mtok: 1.05,
+            },
+            constraint: {
+              start_date: '2026-10-29',
+              type: 'start_date',
+            },
+          },
           {
             when: {
               processing: 'batch',
@@ -27870,6 +27919,50 @@ export const data: Provider[] = [
             },
           },
         ],
+      },
+      {
+        id: 'gpt-6-rosalind',
+        match: {
+          equals: 'gpt-6-rosalind',
+        },
+        prices: {
+          input_mtok: {
+            base: 15,
+            tiers: [
+              {
+                start: 272000,
+                price: 30,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 18.75,
+            tiers: [
+              {
+                start: 272000,
+                price: 37.5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 1.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 3,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 75,
+            tiers: [
+              {
+                start: 272000,
+                price: 112.5,
+              },
+            ],
+          },
+        },
       },
       {
         id: 'gpt-6-sol',
@@ -46986,6 +47079,18 @@ export const data: Provider[] = [
               output_mtok: 12.5,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-10-29',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 2.5,
+              cache_write_mtok: 3.125,
+              cache_read_mtok: 0.25,
+              output_mtok: 12.5,
+            },
+          },
         ],
       },
       {
@@ -46995,11 +47100,27 @@ export const data: Provider[] = [
           equals: 'claude-fable-5-1',
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 2.5,
-          cache_read_mtok: 0.0625,
-          output_mtok: 12.5,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 2.5,
+              cache_read_mtok: 0.0625,
+              output_mtok: 12.5,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-29',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 2.5,
+              cache_write_mtok: 3.125,
+              cache_read_mtok: 0.0625,
+              output_mtok: 12.5,
+            },
+          },
+        ],
       },
       {
         id: 'claude-haiku-4-5',
@@ -47022,6 +47143,18 @@ export const data: Provider[] = [
             },
             prices: {
               input_mtok: 0.25,
+              output_mtok: 1.25,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-29',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.25,
+              cache_write_mtok: 0.3125,
+              cache_read_mtok: 0.025,
               output_mtok: 1.25,
             },
           },
@@ -47103,6 +47236,18 @@ export const data: Provider[] = [
               output_mtok: 6.25,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-10-29',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1.25,
+              cache_write_mtok: 1.5625,
+              cache_read_mtok: 0.125,
+              output_mtok: 6.25,
+            },
+          },
         ],
       },
       {
@@ -47126,6 +47271,18 @@ export const data: Provider[] = [
             },
             prices: {
               input_mtok: 1.25,
+              output_mtok: 6.25,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-29',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1.25,
+              cache_write_mtok: 1.5625,
+              cache_read_mtok: 0.125,
               output_mtok: 6.25,
             },
           },
@@ -47178,6 +47335,18 @@ export const data: Provider[] = [
             },
             prices: {
               input_mtok: 0.5,
+              output_mtok: 2.5,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-10-29',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.5,
+              cache_write_mtok: 0.625,
+              cache_read_mtok: 0.05,
               output_mtok: 2.5,
             },
           },
