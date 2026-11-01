@@ -1462,11 +1462,26 @@ export const data: Provider[] = [
         match: {
           equals: 'deepseek/deepseek-v4.1-flash',
         },
-        prices: {
-          input_mtok: 0.22,
-          cache_read_mtok: 0.007,
-          output_mtok: 0.66,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.22,
+              cache_read_mtok: 0.007,
+              output_mtok: 0.66,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-01',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.22,
+              cache_read_mtok: 0.007,
+              output_mtok: 1.2,
+            },
+          },
+        ],
       },
       {
         id: 'deepseek/deepseek-v4.1-flash-1017',
