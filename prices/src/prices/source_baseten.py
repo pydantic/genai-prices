@@ -34,7 +34,7 @@ class CatalogModel:
 
 
 def parse_catalog(page: str) -> list[CatalogModel]:
-    table = re.search(r'SupportedModelsTable=\(\)=>\{const rows=\[(.*?)\];', page)
+    table = re.search(r'SupportedModelsTable=\(\)=>\{[^\[]*?const rows=\[(.*?)\];', page)
     if table is None:
         raise RuntimeError('Baseten model catalog table was not found')
     rows = re.findall(r'\{model:`([^`]+)`,slug:`([^`]+)`,context:([0-9]+),maxOutput:[0-9]+\}', table.group(1))
