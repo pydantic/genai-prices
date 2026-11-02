@@ -42,16 +42,18 @@ def page(llm: str) -> str:
 """
 
 
+def tab(name: str, table: str) -> str:
+    return f'> [tab] {name}\n>\n' + ''.join(f'> {line}\n' for line in table.splitlines()) + '\n'
+
+
+PRIORITY_TAB = tab('Priority\\*', M3_HEADER + PRIORITY_ROWS)
 PRICING_MARKDOWN = page(
     f"""\
 {FLAT_HEADER}{M27_ROW}
-**Standard**
-
-{M3_HEADER}{M3_ROWS}
-**Priority**\\*
-
-{M3_HEADER}{PRIORITY_ROWS}
-\\* Priority provides priority admission for faster response times. Pricing is 1.5x standard.
+{tab('Standard', M3_HEADER + M3_ROWS)}{PRIORITY_TAB}\
+> [!NOTE]
+>
+> Note:
 """
 )
 
@@ -82,8 +84,10 @@ def test_minimax_parses_standard_tab_bands_and_flat_models() -> None:
     ('markdown', 'error'),
     [
         ('## Audio\n', 'has no LLM section'),
-        (page('**Batch**\n'), 'tier other than Standard and Priority'),
-        (page('**Batch API**\n'), 'tier other than Standard and Priority'),
+        (page('> [tab] Batch\n'), 'tier other than Standard and Priority'),
+        (page('> [tab] Batch API\n'), 'tier other than Standard and Priority'),
+        (page('> [tab] Priority Plus\n'), 'tier other than Standard and Priority'),
+        (page('> [tab] Priority\n> [tab] Batch\n'), 'tier other than Standard and Priority'),
         (page('| Model | Price |\n| :- | :- |\n| **MiniMax-M2** | \\$1 |\n'), 'Unexpected MiniMax LLM pricing columns'),
         (page('| Model | Input |\n| :- | :- |\n'), 'Unexpected MiniMax LLM pricing columns'),
         (page('| Model | Input | Output | Input |\n| :- | :- | :- | :- |\n'), 'Unexpected MiniMax LLM pricing columns'),

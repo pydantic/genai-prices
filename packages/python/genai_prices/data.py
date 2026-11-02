@@ -3334,9 +3334,19 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='reflection/Beam-1.0'),
                 name='Beam',
                 context_window=1048000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('1.3'), cache_read_mtok=Decimal('0.13'), output_mtok=Decimal('4.3')
-                ),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.3'), cache_read_mtok=Decimal('0.13'), output_mtok=Decimal('4.3')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 2)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.4'), cache_read_mtok=Decimal('0.04'), output_mtok=Decimal('1.2')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='thinkingmachines/inkling',
@@ -5561,8 +5571,8 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
-                id='ultramarine-1-flash-us-us',
-                match=ClauseEquals(equals='accounts/fireworks/routers/ultramarine-1-flash-us-us'),
+                id='ultramarine-1-flash-us',
+                match=ClauseEquals(equals='accounts/fireworks/routers/ultramarine-1-flash-us'),
                 name='Ultramarine 1 Flash US',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.225'), cache_read_mtok=Decimal('0.045'), output_mtok=Decimal('0.75')

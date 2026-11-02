@@ -67,6 +67,14 @@ def test_perplexity_parses_only_the_agent_api_models_it_hosts() -> None:
     ]
 
 
+def test_perplexity_reads_agent_models_from_a_tab_blockquote() -> None:
+    quoted = '> [tab] Perplexity\n>\n' + ''.join(f'> {line}\n' for line in AGENT_MODELS.splitlines())
+
+    assert source_perplexity.parse_agent_models_markdown(quoted) == source_perplexity.parse_agent_models_markdown(
+        AGENT_MODELS
+    )
+
+
 @pytest.mark.parametrize(
     ('markdown', 'error'),
     [

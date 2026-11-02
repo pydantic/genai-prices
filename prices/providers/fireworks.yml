@@ -600,10 +600,10 @@ models:
       output_mtok: 6
     prices_checked: 2026-11-02
 
-  - id: ultramarine-1-flash-us-us
+  - id: ultramarine-1-flash-us
     name: Ultramarine 1 Flash US
     match:
-      equals: accounts/fireworks/routers/ultramarine-1-flash-us-us
+      equals: accounts/fireworks/routers/ultramarine-1-flash-us
     prices:
       input_mtok: 0.225
       cache_read_mtok: 0.045

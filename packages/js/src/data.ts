@@ -5741,11 +5741,26 @@ export const data: Provider[] = [
           equals: 'reflection/Beam-1.0',
         },
         context_window: 1048000,
-        prices: {
-          input_mtok: 1.3,
-          cache_read_mtok: 0.13,
-          output_mtok: 4.3,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 1.3,
+              cache_read_mtok: 0.13,
+              output_mtok: 4.3,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-02',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.4,
+              cache_read_mtok: 0.04,
+              output_mtok: 1.2,
+            },
+          },
+        ],
       },
       {
         id: 'thinkingmachines/inkling',
@@ -9463,10 +9478,10 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'ultramarine-1-flash-us-us',
+        id: 'ultramarine-1-flash-us',
         name: 'Ultramarine 1 Flash US',
         match: {
-          equals: 'accounts/fireworks/routers/ultramarine-1-flash-us-us',
+          equals: 'accounts/fireworks/routers/ultramarine-1-flash-us',
         },
         prices: {
           input_mtok: 0.225,
