@@ -34,7 +34,8 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
             raise RuntimeError(f'Unexpected Fireworks pricing row: {line}')
         suffix = ('-fast' if model['fast'] else '') + ('-us' if model['us'] else '')
         # https://docs.fireworks.ai/serverless/serverless-modes and /serverless/us-only-serverless name these routers.
-        api_id = f'accounts/fireworks/{"routers" if suffix else "models"}/{model["slug"]}{suffix}'
+        slug = model['slug'].removesuffix('-us') if model['us'] else model['slug']
+        api_id = f'accounts/fireworks/{"routers" if suffix else "models"}/{slug}{suffix}'
         if any(existing.id == api_id for existing in models):
             raise RuntimeError(f'Duplicate Fireworks pricing row: {line}')
         input_mtok, cache_read_mtok, output_mtok = (Decimal(rate) for rate in rates.groups())

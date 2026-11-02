@@ -37,6 +37,17 @@ def test_fireworks_fast_and_us_rows_are_router_models() -> None:
     )
 
 
+def test_fireworks_us_slug_does_not_double_the_router_suffix() -> None:
+    row = (
+        '| [Ultramarine 1 Flash (US)](https://app.fireworks.ai/models/fireworks/ultramarine-1-flash-us)'
+        ' | \\$0.225 / \\$0.045 / \\$0.75 | — |'
+    )
+
+    models = source_fireworks.parse_pricing_markdown(f'{source_fireworks.TABLE_HEADER}\n| - | - | - |\n{row}\n')
+
+    assert [model.id for model in models] == ['accounts/fireworks/routers/ultramarine-1-flash-us']
+
+
 @pytest.mark.parametrize(
     ('markdown', 'error'),
     [
