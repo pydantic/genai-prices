@@ -27,6 +27,10 @@ PRICING_MARKDOWN = f"""\
 | Model | Release status | Category | Input | Cached input | Output |
 | ----- | -------------- | -------- | ----: | -----------: | -----: |
 | Gemini 4 Argon[^gemini-4-argon-promo] | GA | Powerful | $2.00 | $0.10 | $10.00 |
+
+| Model | Release status | Text input | Cached text input | Image input | Cached image input | Image output |
+| ----- | -------------- | ---------: | ----------------: | ----------: | -----------------: | -----------: |
+| GPT Image 2.5 Flare | Public preview | $5.00 | $1.25 | $8.00 | $2.00 | $30.00 |
 """
 
 
@@ -102,4 +106,4 @@ def test_copilot_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pyte
 
     source_github_copilot.main(provider_path)
 
-    assert capsys.readouterr().out == 'GitHub Copilot prices updated: 0 added, 33 updated\n'
+    assert capsys.readouterr().out == 'GitHub Copilot prices updated: 0 added, 29 updated\n'
