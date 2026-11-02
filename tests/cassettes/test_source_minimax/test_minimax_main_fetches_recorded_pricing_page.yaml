@@ -20,31 +20,31 @@ interactions:
     status: 200
     headers:
       alb_receive_time:
-      - "1793097025.406"
+      - "1793606056.117"
       alb_request_id:
-      - e45bff5828b566f3cb008631787db848423395c4
+      - 0f051cf604c59b043fd2f18cce3c4b569608dae4
       cache-control:
       - max-age=0, no-cache, no-store
       cf-cache-status:
-      - EXPIRED
+      - HIT
       cf-ray:
-      - a5110678dfa798aa-IAD
+      - a54191facfa615c5-IAD
       connection:
       - keep-alive
       content-disposition:
       - inline
       content-length:
-      - "8820"
+      - "8864"
       content-security-policy:
       - default-src 'none'
       content-type:
       - text/markdown; charset=utf-8
       date:
-      - Tue, 27 Oct 2026 10:30:25 GMT
+      - Mon, 02 Nov 2026 07:54:16 GMT
       expires:
-      - Tue, 27 Oct 2026 10:30:25 GMT
+      - Mon, 02 Nov 2026 07:54:16 GMT
       last-modified:
-      - Tue, 27 Oct 2026 10:30:25 GMT
+      - Sat, 31 Oct 2026 18:10:15 GMT
       link:
       - >-
         </docs/llms.txt>; rel="llms-txt", </docs/llms-full.txt>; rel="llms-full-txt",
@@ -56,25 +56,31 @@ interactions:
       strict-transport-security:
       - max-age=63072000
       vary:
-      - rsc, accept-encoding
+      - accept-encoding
       x-cache-status:
       - BYPASS
-      x-content-type-options:
-      - nosniff
       x-frame-options:
       - DENY
       x-from:
       - ak
       x-llms-txt:
       - /docs/llms.txt
-      x-matched-path:
-      - /_mintlify/_markdown/_sites/[subdomain]/[[...slug]]
+      x-mint-proxy-version:
+      - 1.0.0-prod
+      x-mintlify-client-version:
+      - 0.0.4044
       x-robots-tag:
       - noindex
+      x-served-version:
+      - dpl_6cCEiK8XNNvaLBBkWzcBhdE9QfLC
       x-vercel-cache:
-      - HIT
+      - MISS
       x-vercel-id:
-      - iad1::iad1::k5vlh-1793097025434-64b130c20ba1
+      - iad1::iad1::5bjmc-1793470215820-e7a06917a713
+      x-vercel-project-id:
+      - prj_qLbcBKz7xH7FMLPokJgiafgACigN
+      x-version:
+      - dpl_6cCEiK8XNNvaLBBkWzcBhdE9QfLC
     body:
       type: text
       content: |
@@ -103,19 +109,19 @@ interactions:
         
         ### **MiniMax M3.1-Flash** Key Highlights
         
-        > **1M-token context**
+        > [accordion] 1M-token context
         >
         > MiniMax-M3.1-Flash supports up to a 1,000,000-token context window for long documents, codebases, and multi-step agent sessions.
         
-        > **Agent and coding workflows**
+        > [accordion] Agent and coding workflows
         >
         > MiniMax-M3.1-Flash is designed for agentic reasoning, tool use, coding, and structured task execution.
         
-        > **Tunable thinking depth (effort)**
+        > [accordion] Tunable thinking depth (effort)
         >
         > Tune thinking depth with `effort`, which accepts `low`, `medium`, `high`, `xhigh`, and `max`; higher levels think more thoroughly. When omitted, the default is `max`. See [Thinking](#thinking).
         
-        > **Multimodal chat input**
+        > [accordion] Multimodal chat input
         >
         > Supports multimodal inputs, including text, images, and video, for a wide range of content understanding and analysis scenarios.
         
@@ -308,19 +314,19 @@ interactions:
         
         ## API Reference
         
-        > **[Anthropic API Compatible (Recommended)](https://platform.minimax.io/docs/api-reference/text-anthropic-api.md)**
+        > [card] [Anthropic API Compatible (Recommended)](https://platform.minimax.io/docs/api-reference/text-anthropic-api.md)
         >
         > Call MiniMax models via Anthropic SDK, supporting streaming output and Interleaved Thinking
         
-        > **[OpenAI API Compatible](https://platform.minimax.io/docs/api-reference/text-openai-api.md)**
+        > [card] [OpenAI API Compatible](https://platform.minimax.io/docs/api-reference/text-openai-api.md)
         >
         > Call MiniMax models via OpenAI SDK
         
-        > **[Using MiniMax M-series Models in AI Coding Tools](https://platform.minimax.io/docs/m-plan/openclaw.md)**
+        > [card] [Using MiniMax M-series Models in AI Coding Tools](https://platform.minimax.io/docs/m-plan/openclaw.md)
         >
         > Use MiniMax M-series models in Claude Code, Cursor, and other tools
         
-        > **[Chat Model](https://platform.minimax.io/docs/guides/text-chat)**
+        > [card] [Chat Model](https://platform.minimax.io/docs/guides/text-chat)
         >
         > M2-her chat model, designed for role-playing and multi-turn dialogue scenarios
         
@@ -338,7 +344,7 @@ interactions:
         * [Anthropic SDK Documentation](https://docs.anthropic.com/en/api/client-sdks)
         * [OpenAI SDK Documentation](https://platform.openai.com/docs/libraries)
         * [MiniMax M3.1-Flash](https://www.minimax.io/blog/minimax-m31f)
-  recorded_at: 2026-10-27T10:30:25.539888+00:00
+  recorded_at: 2026-11-02T07:54:16.241222+00:00
 - request:
     method: GET
     uri: https://platform.minimax.io/docs/pricing/overview.md
@@ -359,31 +365,31 @@ interactions:
     status: 200
     headers:
       alb_receive_time:
-      - "1793097026.694"
+      - "1793606056.453"
       alb_request_id:
-      - 96ebbde9532b118321b95d2c9046a515ef51ad26
+      - b49eabd9dd624e8319b6c8c8989027a15f471714
       cache-control:
       - max-age=0, no-cache, no-store
       cf-cache-status:
-      - EXPIRED
+      - HIT
       cf-ray:
-      - a5110680dd46bae3-IAD
+      - a54191fce9e820ba-IAD
       connection:
       - keep-alive
       content-disposition:
       - inline
       content-length:
-      - "22438"
+      - "22184"
       content-security-policy:
       - default-src 'none'
       content-type:
       - text/markdown; charset=utf-8
       date:
-      - Tue, 27 Oct 2026 10:30:26 GMT
+      - Mon, 02 Nov 2026 07:54:16 GMT
       expires:
-      - Tue, 27 Oct 2026 10:30:26 GMT
+      - Mon, 02 Nov 2026 07:54:16 GMT
       last-modified:
-      - Tue, 27 Oct 2026 10:30:26 GMT
+      - Sat, 31 Oct 2026 18:09:18 GMT
       link:
       - >-
         </docs/llms.txt>; rel="llms-txt", </docs/llms-full.txt>; rel="llms-full-txt",
@@ -395,25 +401,31 @@ interactions:
       strict-transport-security:
       - max-age=63072000
       vary:
-      - rsc, accept-encoding
+      - accept-encoding
       x-cache-status:
       - BYPASS
-      x-content-type-options:
-      - nosniff
       x-frame-options:
       - DENY
       x-from:
       - ak
       x-llms-txt:
       - /docs/llms.txt
-      x-matched-path:
-      - /_mintlify/_markdown/_sites/[subdomain]/[[...slug]]
+      x-mint-proxy-version:
+      - 1.0.0-prod
+      x-mintlify-client-version:
+      - 0.0.4044
       x-robots-tag:
       - noindex
+      x-served-version:
+      - dpl_6cCEiK8XNNvaLBBkWzcBhdE9QfLC
       x-vercel-cache:
-      - HIT
+      - MISS
       x-vercel-id:
-      - iad1::iad1::qlrhm-1793097026717-ee8cbd80fd9f
+      - iad1::iad1::jfdzd-1793470158648-9cd05045d0c2
+      x-vercel-project-id:
+      - prj_qLbcBKz7xH7FMLPokJgiafgACigN
+      x-version:
+      - dpl_6cCEiK8XNNvaLBBkWzcBhdE9QfLC
     body:
       type: text
       content: |
@@ -438,10 +450,10 @@ interactions:
         [MCP](#tools/mcp)
         [Server Tools](#tools/tools)
         
-        Subscriptions & Packages
+        Packages
         
-        [Audio Subscription](#packages/speech)
-        [Video Packages](#packages/video)
+        [Audio](#packages/speech)
+        [Video](#packages/video)
         
         Billing Guides
         
@@ -450,7 +462,7 @@ interactions:
         [Package Usage Rules](#guides/packages)
         [FAQ](#guides/faq)
         
-        > **Pricing navigation**
+        > [accordion] Pricing navigation
         >
         > [Pricing Overview](#overview)
         >
@@ -467,10 +479,10 @@ interactions:
         > [MCP](#tools/mcp)
         > [Server Tools](#tools/tools)
         >
-        > Subscriptions & Packages
+        > Packages
         >
-        > [Audio Subscription](#packages/speech)
-        > [Video Packages](#packages/video)
+        > [Audio](#packages/speech)
+        > [Video](#packages/video)
         >
         > Billing Guides
         >
@@ -479,7 +491,7 @@ interactions:
         > [Package Usage Rules](#guides/packages)
         > [FAQ](#guides/faq)
         
-        Explore MiniMax model and tool pricing, choose an Audio Subscription or Video Package, or learn about billing.
+        Explore MiniMax model and tool pricing, choose an Audio or Video Package, or learn about billing.
         
         ## LLM
         
@@ -489,21 +501,21 @@ interactions:
         | :- | :-: | :-: | :-: |
         | **MiniMax-M3.1-Flash** | \$0.15 | \$0.60 | \$0.015 |
         
-        **Standard**
+        > [tab] Standard
+        >
+        > | **Model** | **Input** \$ / M tokens | **Output** \$ / M tokens | **Prompt caching Read** \$ / M tokens |
+        > | :- | :-: | :-: | :-: |
+        > | **MiniMax-M3** ≤ 512k input tokens Permanent 50% off | ~~\$0.60~~ \$0.30 | ~~\$2.40~~ \$1.20 | ~~\$0.12~~ \$0.06 |
+        > | **MiniMax-M3** > 512k input tokens\* Permanent 50% off | ~~\$1.20~~ \$0.60 | ~~\$4.80~~ \$2.40 | ~~\$0.24~~ \$0.12 |
         
-        | **Model** | **Input** \$ / M tokens | **Output** \$ / M tokens | **Prompt caching Read** \$ / M tokens |
-        | :- | :-: | :-: | :-: |
-        | **MiniMax-M3** ≤ 512k input tokens Permanent 50% off | ~~\$0.60~~ \$0.30 | ~~\$2.40~~ \$1.20 | ~~\$0.12~~ \$0.06 |
-        | **MiniMax-M3** > 512k input tokens\* Permanent 50% off | ~~\$1.20~~ \$0.60 | ~~\$4.80~~ \$2.40 | ~~\$0.24~~ \$0.12 |
-        
-        **Priority**\*
-        
-        | **Model** | **Input** \$ / M tokens | **Output** \$ / M tokens | **Prompt caching Read** \$ / M tokens |
-        | :- | :-: | :-: | :-: |
-        | **MiniMax-M3** ≤ 512k input tokens Permanent 50% off | ~~\$0.90~~ \$0.45 | ~~\$3.60~~ \$1.80 | ~~\$0.18~~ \$0.09 |
-        | **MiniMax-M3** > 512k input tokens Permanent 50% off | ~~\$1.80~~ \$0.90 | ~~\$7.20~~ \$3.60 | ~~\$0.36~~ \$0.18 |
-        
-        \* Priority provides priority admission for faster response times and improved request reliability. Set `service_tier` to `priority` to enable it. Pricing is 1.5x standard.
+        > [tab] Priority\*
+        >
+        > | **Model** | **Input** \$ / M tokens | **Output** \$ / M tokens | **Prompt caching Read** \$ / M tokens |
+        > | :- | :-: | :-: | :-: |
+        > | **MiniMax-M3** ≤ 512k input tokens Permanent 50% off | ~~\$0.90~~ \$0.45 | ~~\$3.60~~ \$1.80 | ~~\$0.18~~ \$0.09 |
+        > | **MiniMax-M3** > 512k input tokens Permanent 50% off | ~~\$1.80~~ \$0.90 | ~~\$7.20~~ \$3.60 | ~~\$0.36~~ \$0.18 |
+        >
+        > \* Priority provides priority admission for faster response times and improved request reliability. Set `service_tier` to `priority` to enable it. Pricing is 1.5x standard.
         
         > [!NOTE]
         >
@@ -551,11 +563,18 @@ interactions:
             </tr>
         
             <tr>
-              <td>**MiniMax-H3-Highspeed**\
+              <td rowSpan="2">**MiniMax-H3-Highspeed**\
               Balances quality and speed, for everyday content creation.</td>
               <td>768P</td>
               <td>\$0.06</td>
               <td>\$0.06</td>
+              <td>\$0.03</td>
+            </tr>
+        
+            <tr>
+              <td>480P</td>
+              <td>\$0.04</td>
+              <td>\$0.04</td>
               <td>\$0.03</td>
             </tr>
         
@@ -581,7 +600,7 @@ interactions:
         * **Video input**: Billed by input duration at the output resolution of the selected model.
         * **Task types**: For the same model and resolution, all task types share the same unit price. Audio input is free.
         
-        > **View flagship model task types**
+        > [accordion] View flagship model task types
         >
         > <table>
         >   <thead>
@@ -659,7 +678,7 @@ interactions:
         
         * **MiniMax-H3-Max**: The first **2 images** per task are free; additional images are billed per image. Input video is billed by duration at the output resolution. Audio input is free.
         
-        > **View extended model task types**
+        > [accordion] View extended model task types
         >
         > <table>
         >   <thead>
@@ -700,7 +719,7 @@ interactions:
         | :- | -: | -: |
         | MiniMax-H3-Context-IR | \$0.90 | \$3.60 |
         
-        > **Legacy Models**
+        > [accordion] Legacy Models
         >
         > | Model | Price |
         > | :- | :- |
@@ -742,7 +761,7 @@ interactions:
         | **Voice Design** | Generate a voice (voice\_id) from a natural-language description; usable in both sync and async T2A endpoints. | \$3 per voice | Charged when the designed voice is first used for synthesis, not at generation time. In-API preview synthesis is billed at \$60 / M characters. |
         | **Rapid Voice Cloning** | LLM-powered voice cloning that produces a high-fidelity replica in seconds, without long high-quality reference audio. | \$1.5 per voice | Charged when the cloned voice is first used for synthesis, not at cloning time. Preview characters are billed at the selected preview model's rate. |
         
-        > **Legacy Models**
+        > [accordion] Legacy Models
         >
         > | API | Model | Price |
         > | :- | :- | :- |
@@ -771,7 +790,7 @@ interactions:
         | Music-2.6 (Discontinued) | RPM = 120, contact sales to increase | \$0.15/up-to-5 minutes music |
         | Lyrics Generation (Discontinued) | Lyrics generation/editing | \$0.01/per song |
         
-        > **Legacy Models**
+        > [accordion] Legacy Models
         >
         > | Model | Description | Price |
         > | :- | :- | :-: |
@@ -799,7 +818,7 @@ interactions:
         | :- | :- | :- |
         | **web\_search** | Web search; the model runs the search on the server and answers based on the results. See [Server Tools](https://platform.minimax.io/docs/guides/server-tools.md). | \$0.01 / request |
         
-        ## Audio Subscription
+        ## Audio
         
         [Purchase Now](https://platform.minimax.io/subscribe/audio-subscription)
         
@@ -811,7 +830,7 @@ interactions:
         | **Audio points per month** | 100,000 | 300,000 | 1,100,000 | 3,300,000 | 20,000,000 | As many audio points as you need |
         | **Functions** | • Voice slots: 10 • RPM: 10 • Faster speed of generating speech • Supports T2A v2, T2A large v2 API • Supports all speech models | • Voice slots: 100 • RPM: 50 • Faster speed of generating speech • Supports T2A v2, T2A large v2 API • Supports all speech models | • Voice slots: 250 • RPM: 200  • Faster speed of generating speech • Supports T2A v2, T2A large v2 API • Supports all speech models | • Voice slots: 500 • RPM: 500 • Faster speed of generating speech • Supports T2A v2, T2A large v2 API • Supports all speech models | • Voice slots: 800 • RPM: 800 • Faster speed of generating speech • Supports T2A v2, T2A large v2 API • Supports all speech models | • Unlimited RPM/TPM • Priority access to model updates • More voices and more cloning options • Exclusive security and stability guarantees |
         
-        ## Video Packages
+        ## Video
         
         [Purchase Now](https://platform.minimax.io/subscribe/subscription)
         
@@ -845,23 +864,23 @@ interactions:
         
         ## Payment Methods
         
-        MiniMax offers pay-as-you-go billing, Audio Subscription plans, and Video Packages. Choose a billing option based on the models you use, how much you expect to use them, and for how long.
+        MiniMax offers pay-as-you-go billing, Audio and Video Packages. Choose a billing option based on the models you use, how much you expect to use them, and for how long.
         
         ### Compare Billing Options
         
-        | Feature | Pay-as-you-go | Subscriptions and Packages |
+        | Feature | Pay-as-you-go | Packages |
         | - | - | - |
-        | Use cases | Use any MiniMax model or tool and pay for what you use, with the flexibility to support a wide range of business needs and API workloads. | For speech or video workloads where you expect to use the included points during the subscription term or before the package expires. |
-        | How you pay | Add funds to your account and pay for what you use | Purchase an Audio Subscription or a prepaid Video Package |
+        | Use cases | Use any MiniMax model or tool and pay for what you use, with the flexibility to support a wide range of business needs and API workloads. | For speech or video workloads where you expect to make good use of the included points. |
+        | How you pay | Add funds to your account and pay for what you use | Purchase an Audio or Video Package |
         | Coverage | All MiniMax models and tools | All speech models; Hailuo video models |
         | Billing units | Varies by model, configuration, and type of usage | Audio points per month; video points |
-        | Get started | [Recharge Now](https://platform.minimax.io/user-center/payment/balance) | [View Audio Subscription](#packages/speech) · [View Video Packages](#packages/video) |
+        | Get started | [Recharge Now](https://platform.minimax.io/user-center/payment/balance) | [View Audio](#packages/speech) · [View Video](#packages/video) |
         
         ### Before You Buy
         
-        Check the supported models, included points, and how long the subscription or package lasts. Audio Subscription plans support all speech models. Video Packages support Hailuo video models; MiniMax H3 is not yet supported.
+        Check the supported models, included points, and how long the package lasts. Audio packages support all speech models. Video Packages support Hailuo Video models; MiniMax H3 is not yet supported.
         
-        [View Audio Subscription](#packages/speech) · [View Video Packages](#packages/video) · [View Usage Rules](#guides/packages)
+        [View Audio](#packages/speech) · [View Video](#packages/video) · [View Usage Rules](#guides/packages)
         
         ## Pay-as-you-go Billing
         
@@ -879,55 +898,55 @@ interactions:
         >
         > For each billing item, multiply actual usage by the applicable unit price. First, convert usage to the unit listed in the pricing table. For example, if a price is listed per million tokens, divide the token count by 1,000,000 before multiplying by the price. If a request includes multiple billing items, add their costs together.
         
-        See Model Pricing and Tool Pricing for individual rates. Audio Subscription plans and Video Packages are also available for supported models. To compare these options, see [Payment Methods](#guides/compare).
+        See Model Pricing and Tool Pricing for individual rates. Audio and Video Packages are also available for supported models. To compare these options, see [Payment Methods](#guides/compare).
         
         ## Package Usage Rules
         
-        Audio Subscription plans and Video Packages include points for use with supported models and APIs. Before purchasing, check which models are supported, how many points are included, and how long the subscription or package lasts.
+        Audio and Video Packages include points for use with supported models and APIs. Before purchasing, check which models are supported, how many points are included, and how long the package lasts.
         
         ### Coverage
         
-        | Feature | Audio Subscription | Video Packages |
+        | Feature | Audio | Video |
         | - | - | - |
         | Supported models | All speech models | Hailuo video models; MiniMax H3 is not supported yet |
         | Supported APIs | T2A v2 and T2A large v2 | Video Generation API |
         | Included points | Audio points per month | Video points |
-        | Subscription term / package validity | Monthly, 3-month (10% off), or annual (20% off) subscriptions | The four standard packages are valid for 1 month |
-        | Plan details | [Audio Subscription](#packages/speech) | [Video Packages](#packages/video) |
+        | Package duration | 1 month, 3 months (10% off), or 1 year (20% off) | 1 month for all four standard packages |
+        | Plan details | [Audio](#packages/speech) | [Video](#packages/video) |
         
         ### How Points Are Used
         
-        * **Audio points:** Starter, Standard, Pro, Scale, and Business each include a monthly allowance of audio points. The allowance varies by plan. See the [Audio Subscription table](#packages/speech) for included points, voice slots, and rate limits.
+        * **Audio points:** Starter, Standard, Pro, Scale, and Business each include a monthly allowance of audio points. The allowance varies by plan. See the [Audio package pricing table](#packages/speech) for included points, voice slots, and rate limits.
         * **Video points:** Points used depend on the model, resolution, and video duration. One point does not equal one video. See the [video point deduction rules](#packages/video/package-rules).
         * **Failed video tasks:** No points are deducted when video generation fails or a video triggers a security review.
         
         ### Expiration and Usage Limits
         
-        Unused video points expire with the package and do not roll over. Your video point balance resets to zero when the package expires. For Audio Subscription plans, see the subscription table for available terms, monthly audio points, and plan features. Rate limits and other included features are listed in the relevant pricing tables.
+        Unused video points expire with the package and do not roll over. Your video point balance resets to zero when the package expires. For Audio packages, see the pricing table for available terms, monthly audio points, and plan features. Rate limits and other included features are listed in the relevant pricing tables.
         
         ## FAQ
         
-        Find answers to common questions about pay-as-you-go billing, Audio Subscription plans, and Video Packages. See the relevant pricing tables for exact prices and included features.
+        Find answers to common questions about pay-as-you-go billing, Audio and Video Packages. See the relevant pricing tables for exact prices and included features.
         
         ### Billing and Usage
         
-        > **What’s the difference between the Standard and Priority service tiers for MiniMax-M3?**
+        > [accordion] What’s the difference between the Standard and Priority service tiers for MiniMax-M3?
         >
         > Priority gives your requests priority access for faster responses and improved reliability. It costs 1.5 times the Standard rate. To enable it, set `service_tier` to `priority`. See the LLM pricing tables for the rates that apply to each input length.
         
-        > **Does video output pricing include charges for input media?**
+        > [accordion] Does video output pricing include charges for input media?
         >
         > H3 video output and input media are billed separately. Images beyond the free allowance incur an additional charge. Input video is billed based on its duration and the output resolution. If you regenerate a video, the input media from the original task is billed again. See the video pricing tables for the applicable rates.
         
-        > **How do I add funds to my account?**
+        > [accordion] How do I add funds to my account?
         >
         > Visit the [Recharge page](https://platform.minimax.io/user-center/payment/balance) to add funds to your account for pay-as-you-go API usage.
         
-        > **Which models can I use with subscriptions and packages?**
+        > [accordion] Which models can I use with packages?
         >
-        > You can use Audio Subscription plans with all speech models via the T2A v2 and T2A large v2 APIs. Video Packages support Hailuo video models, but do not currently support MiniMax H3. Before you buy, check the supported models, included points, and plan duration. For details, see [Package Usage Rules](#guides/packages).
+        > You can use Audio Packages with all speech models via the T2A v2 and T2A large v2 APIs. Video Packages support Hailuo video models, but do not currently support MiniMax H3. Before you buy, check the supported models, included points, and plan duration. For details, see [Package Usage Rules](#guides/packages).
         
-        > **What happens to unused video points when my package expires?**
+        > [accordion] What happens to unused video points when my package expires?
         >
         > Any unused video points expire when your package ends, and your video point balance resets to zero. Each of the four standard video packages is valid for one month.
-  recorded_at: 2026-10-27T10:30:26.822309+00:00
+  recorded_at: 2026-11-02T07:54:16.579494+00:00

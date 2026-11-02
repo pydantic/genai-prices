@@ -46,7 +46,7 @@ def distinct_mtok(v: Decimal | None, aggregate_v: Decimal | None) -> Decimal | N
 
 def markdown_tables(markdown: str) -> list[tuple[list[str], list[list[str]]]]:
     """Return every GFM table in `markdown` as its header cells and non-empty body rows."""
-    lines = [line.strip() for line in markdown.splitlines()] + ['']
+    lines = [re.sub(r'^(?:> ?)+', '', line.strip()).strip() for line in markdown.splitlines()] + ['']
     tables: list[tuple[list[str], list[list[str]]]] = []
     for index, line in enumerate(lines[:-1]):
         separator = lines[index + 1]

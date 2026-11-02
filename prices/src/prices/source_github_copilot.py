@@ -29,6 +29,9 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     defaults: dict[str, tuple[int | None, Rates]] = {}
     long_context: dict[str, list[tuple[int, Rates]]] = {}
     for header, rows in markdown_tables(markdown):
+        # Image generation is an internal tool call of the session's model, so it has no model ID callers can send.
+        if 'Model' not in header or 'Image output' in header:
+            continue
         if unknown := set(header) - PRICE_COLUMNS.keys() - OTHER_COLUMNS:
             raise RuntimeError(f'Unexpected GitHub Copilot pricing columns: {sorted(unknown)}')
         for row in rows:

@@ -27,6 +27,10 @@ PRICING_MARKDOWN = f"""\
 | Model | Release status | Category | Input | Cached input | Output |
 | ----- | -------------- | -------- | ----: | -----------: | -----: |
 | Gemini 4 Argon[^gemini-4-argon-promo] | GA | Powerful | $2.00 | $0.10 | $10.00 |
+
+| Model | Release status | Text input | Cached text input | Image input | Cached image input | Image output |
+| ----- | -------------- | ---------: | ----------------: | ----------: | -----------------: | -----------: |
+| GPT Image 2.5 Flare | Public preview | $5.00 | $1.25 | $8.00 | $2.00 | $30.00 |
 """
 
 
@@ -82,6 +86,12 @@ def test_copilot_rejects_unexpected_pricing_rows(markdown: str, error: str) -> N
         source_github_copilot.parse_pricing_markdown(markdown)
 
 
+def test_copilot_reads_a_reordered_table_by_column_name() -> None:
+    markdown = '| Release status | Model | Input | Output |\n| - | - | - | - |\n| GA | GPT-5.4 | $2.50 | $15.00 |\n'
+
+    assert [model.id for model in source_github_copilot.parse_pricing_markdown(markdown)] == ['gpt-5.4']
+
+
 def test_copilot_refuses_to_guess_ids_for_unlisted_models(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     provider_path = tmp_path / 'github_copilot.yml'
     copyfile(package_dir / 'providers/github_copilot.yml', provider_path)
@@ -102,4 +112,4 @@ def test_copilot_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pyte
 
     source_github_copilot.main(provider_path)
 
-    assert capsys.readouterr().out == 'GitHub Copilot prices updated: 0 added, 33 updated\n'
+    assert capsys.readouterr().out == 'GitHub Copilot prices updated: 0 added, 29 updated\n'
