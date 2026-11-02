@@ -28,7 +28,9 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     section = re.search(r'^## LLM\s*$(.*?)(?=^## |\Z)', markdown, flags=re.MULTILINE | re.DOTALL)
     if section is None:
         raise RuntimeError('MiniMax pricing page has no LLM section')
-    standard = re.sub(r'^> \[tab\] Priority[^\n]*(?:\n>[^\n]*)*', '', section.group(1), flags=re.MULTILINE)
+    standard = re.sub(
+        r'^> \[tab\] Priority(?:\\\*)?$(?:\n>(?! \[tab\] )[^\n]*)*', '', section.group(1), flags=re.MULTILINE
+    )
     if set(re.findall(r'^> \[tab\] ([^\n]+)', standard, flags=re.MULTILINE)) - {'Standard'}:
         raise RuntimeError('MiniMax LLM pricing has a tier other than Standard and Priority')
 

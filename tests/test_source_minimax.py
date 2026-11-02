@@ -46,10 +46,11 @@ def tab(name: str, table: str) -> str:
     return f'> [tab] {name}\n>\n' + ''.join(f'> {line}\n' for line in table.splitlines()) + '\n'
 
 
+PRIORITY_TAB = tab('Priority\\*', M3_HEADER + PRIORITY_ROWS)
 PRICING_MARKDOWN = page(
     f"""\
 {FLAT_HEADER}{M27_ROW}
-{tab('Standard', M3_HEADER + M3_ROWS)}{tab('Priority*', M3_HEADER + PRIORITY_ROWS)}\
+{tab('Standard', M3_HEADER + M3_ROWS)}{PRIORITY_TAB}\
 > [!NOTE]
 >
 > Note:
@@ -85,6 +86,8 @@ def test_minimax_parses_standard_tab_bands_and_flat_models() -> None:
         ('## Audio\n', 'has no LLM section'),
         (page('> [tab] Batch\n'), 'tier other than Standard and Priority'),
         (page('> [tab] Batch API\n'), 'tier other than Standard and Priority'),
+        (page('> [tab] Priority Plus\n'), 'tier other than Standard and Priority'),
+        (page('> [tab] Priority\n> [tab] Batch\n'), 'tier other than Standard and Priority'),
         (page('| Model | Price |\n| :- | :- |\n| **MiniMax-M2** | \\$1 |\n'), 'Unexpected MiniMax LLM pricing columns'),
         (page('| Model | Input |\n| :- | :- |\n'), 'Unexpected MiniMax LLM pricing columns'),
         (page('| Model | Input | Output | Input |\n| :- | :- | :- | :- |\n'), 'Unexpected MiniMax LLM pricing columns'),
