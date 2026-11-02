@@ -739,6 +739,16 @@ def test_litellm_provider_id():
     assert provider.id == 'openai'
     assert model.id == 'gpt-4o-mini'
 
+    # LiteLLM spells Fireworks `fireworks_ai`, while Fireworks' own model refs start with
+    # `accounts/fireworks/`. The extracted prefix has no provider id of its own, so the provider
+    # needs the `fireworks` match to resolve; without it the whole ref fell through to model
+    # matching and raised LookupError.
+    provider, model = snapshot.find_provider_model(
+        'fireworks_ai/accounts/fireworks/models/deepseek-r1-0528', None, 'litellm', None
+    )
+    assert provider.id == 'fireworks'
+    assert model.id == 'deepseek-r1-0528'
+
 
 @pytest.mark.parametrize(
     ('provider_id', 'model_ref', 'expected_provider', 'provider_model', 'context_window'),

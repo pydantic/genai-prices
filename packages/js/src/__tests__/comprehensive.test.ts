@@ -720,6 +720,18 @@ describe('Comprehensive API Tests', () => {
       expect(result!.total_price).toBeGreaterThanOrEqual(0)
     })
 
+    it('should resolve the fireworks_ai prefix to the Fireworks provider', () => {
+      // LiteLLM spells Fireworks "fireworks_ai"; Fireworks' own refs start with accounts/fireworks/.
+      const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
+      const result = calcPrice(usage, 'fireworks_ai/accounts/fireworks/models/deepseek-r1-0528', { providerId: 'litellm' })
+
+      expect(result).not.toBeNull()
+      expect(result).toMatchObject({
+        model: { id: 'deepseek-r1-0528' },
+        provider: { id: 'fireworks' },
+      })
+    })
+
     it('should handle litellm provider_id with non-prefixed model names', () => {
       const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
       const result = calcPrice(usage, 'gpt-4o-mini', { providerId: 'litellm' })

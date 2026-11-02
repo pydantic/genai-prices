@@ -380,3 +380,12 @@ fn error_messages_name_the_failure() {
     assert_eq!(error.kind(), ErrorKind::ModelNotFound);
     assert_eq!(error.to_string(), r#"model not found: unable to find model with model_ref="missing" in openai"#);
 }
+
+#[test]
+fn fireworks_litellm_prefix_resolves_bundled_data() {
+    let usage = usage([(UsageKey::INPUT_TOKENS, 1_000.0)]);
+    let request = PriceRequest::new("fireworks_ai/accounts/fireworks/models/deepseek-r1-0528", &usage)
+        .with_provider_id("litellm");
+    let calculation = genai_prices::calculate(&request).unwrap();
+    assert_eq!((calculation.provider_id.as_str(), calculation.model_id.as_str()), ("fireworks", "deepseek-r1-0528"));
+}

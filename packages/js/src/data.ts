@@ -8787,6 +8787,9 @@ export const data: Provider[] = [
     model_match: {
       starts_with: 'accounts/fireworks/',
     },
+    provider_match: {
+      contains: 'fireworks',
+    },
     extractors: [
       {
         api_flavor: 'chat',
