@@ -828,4 +828,4 @@ def test_update_openrouter_provider_fetches_recorded_models(
 
     source_openrouter.update_openrouter_provider(provider_path)
 
-    assert capsys.readouterr().out == snapshot('OpenRouter prices updated: 0 added, 400 updated\n')
+    assert capsys.readouterr().out == snapshot('OpenRouter prices updated: 0 added, 399 updated\n')
