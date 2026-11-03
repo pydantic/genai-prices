@@ -758,34 +758,46 @@ def test_hourly_importer_failures_alert_slack_once() -> None:
     )
 
 
-@pytest.mark.parametrize(
-    ('previous_run', 'previous_failing', 'current_failing', 'newly_failing'),
-    [
-        ('', '', 'import baseten', 'import baseten'),
-        ('41', '', 'import baseten', 'import baseten'),
-        ('41', 'import baseten', 'import baseten', ''),
-        ('41', 'import baseten', 'import baseten\nimport mistral', 'import mistral'),
-        ('41', 'import baseten', 'pull-request', 'pull-request'),
-    ],
-)
-def test_importer_failure_alerts_on_each_job_that_was_passing_in_the_previous_run(
-    tmp_path: Path, previous_run: str, previous_failing: str, current_failing: str, newly_failing: str
-) -> None:
+def fake_run_view(tmp_path: Path) -> None:
     fake_gh = tmp_path / 'gh'
     fake_gh.write_text(
         '#!/bin/bash\n'
         'echo "$*" >> "$GH_CALLS"\n'
-        'if [ "$2" = list ]; then printf %s "$PREVIOUS_RUN"\n'
-        'elif [ "$3" = 99 ]; then printf "$CURRENT_FAILING\\n"\n'
-        'else printf "$PREVIOUS_FAILING\\n"; fi\n'
+        'if [ "$2" = list ]; then printf %s "$PREVIOUS_RUN"; exit; fi\n'
+        '[ "$3" = 99 ] && jobs="$CURRENT_JOBS" || jobs="$PREVIOUS_JOBS"\n'
+        'while [ "$1" != --jq ]; do shift; done\n'
+        'jq -r "$2" <<< "$jobs"\n'
     )
     fake_gh.chmod(0o755)
+
+
+def run_jobs(*failing: str) -> str:
+    passing = [{'name': 'import openai', 'conclusion': 'success'}, {'name': 'pull-request', 'conclusion': 'success'}]
+    jobs = [job for job in passing if job['name'] not in failing]
+    jobs += [{'name': name, 'conclusion': 'failure'} for name in [*failing, 'manual-updates']]
+    return json.dumps({'jobs': jobs})
+
+
+@pytest.mark.parametrize(
+    ('previous_run', 'previous_failing', 'current_failing', 'newly_failing'),
+    [
+        ('', [], ['import baseten'], 'import baseten'),
+        ('41', [], ['import baseten'], 'import baseten'),
+        ('41', ['import baseten'], ['import baseten'], ''),
+        ('41', ['import baseten'], ['import baseten', 'import mistral'], 'import mistral'),
+        ('41', ['import baseten'], ['pull-request'], 'pull-request'),
+    ],
+)
+def test_importer_failure_alerts_on_each_job_that_was_passing_in_the_previous_run(
+    tmp_path: Path, previous_run: str, previous_failing: list[str], current_failing: list[str], newly_failing: str
+) -> None:
+    fake_run_view(tmp_path)
     output = tmp_path / 'output'
     calls = tmp_path / 'calls'
     script = read_workflow('update-prices.yml')['jobs']['importer-failure']['steps'][0]['run']
 
     subprocess.run(
-        ['bash', '-e', '-o', 'pipefail', '-c', script],
+        ['bash', '-e', '-c', script],
         env={
             **os.environ,
             'PATH': f'{tmp_path}:{os.environ["PATH"]}',
@@ -794,8 +806,8 @@ def test_importer_failure_alerts_on_each_job_that_was_passing_in_the_previous_ru
             'GITHUB_RUN_ID': '99',
             'GH_CALLS': str(calls),
             'PREVIOUS_RUN': previous_run,
-            'PREVIOUS_FAILING': previous_failing,
-            'CURRENT_FAILING': current_failing,
+            'PREVIOUS_JOBS': run_jobs(*previous_failing),
+            'CURRENT_JOBS': run_jobs(*current_failing),
         },
         check=True,
     )
@@ -812,8 +824,9 @@ def test_importer_failure_lookup_error_fails_instead_of_alerting(tmp_path: Path)
     output = tmp_path / 'output'
     script = read_workflow('update-prices.yml')['jobs']['importer-failure']['steps'][0]['run']
 
+    # GitHub runs a step without an explicit `shell` as `bash -e`, without pipefail.
     result = subprocess.run(
-        ['bash', '-e', '-o', 'pipefail', '-c', script],
+        ['bash', '-e', '-c', script],
         env={
             **os.environ,
             'PATH': f'{tmp_path}:{os.environ["PATH"]}',

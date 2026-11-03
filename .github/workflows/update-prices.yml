@@ -348,6 +348,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          set -o pipefail
           failing() {
             gh run view "$1" --repo "$GITHUB_REPOSITORY" --json jobs --jq '.jobs[]
               | select(.conclusion == "failure" and (.name | startswith("import ") or . == "pull-request")) | .name' | sort
