@@ -20828,7 +20828,7 @@ export const data: Provider[] = [
         },
         context_window: 1048576,
         price_comments:
-          'Current launch promotional rates are $0.68 input, $0.07 cached input, and $2.09 output per million tokens. The published list rates are $1.36/$0.14/$4.18. The October 6 changelog says the promotion lasts two weeks but does not state an exact effective end date, so no future price change is scheduled here. The batch variant is half the promotional rate; when the list rates return, prepend a dated batch variant at $0.68/$0.07/$2.09. https://docs.mistral.ai/models/mistral-large-4-0 https://docs.mistral.ai/inference/pricing https://docs.mistral.ai/resources/changelogs',
+          'Launched at promotional rates of $0.68 input, $0.07 cached input and $2.09 output per million tokens. The list rates of $1.36/$0.14/$4.18 applied from 2026-10-20, and the pricing page first listed $0.7/$0.07/$2.1 on 2026-10-29. Batch is half the standard rate in each period. https://docs.mistral.ai/models/mistral-large-4-0 https://docs.mistral.ai/inference/pricing https://docs.mistral.ai/resources/changelogs',
         prices: [
           {
             prices: {
