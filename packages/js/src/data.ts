@@ -32629,6 +32629,17 @@ export const data: Provider[] = [
               output_mtok: 1.14,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.25,
+              cache_read_mtok: 0.11,
+              output_mtok: 1,
+            },
+          },
         ],
       },
       {
@@ -32661,6 +32672,16 @@ export const data: Provider[] = [
               input_mtok: 0.25,
               cache_read_mtok: 0.13,
               output_mtok: 0.95,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.55,
+              output_mtok: 1.65,
             },
           },
         ],
@@ -32876,17 +32897,6 @@ export const data: Provider[] = [
               output_mtok: 0.42,
             },
           },
-          {
-            constraint: {
-              start_date: '2026-11-03',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 0.26,
-              cache_read_mtok: 0.13,
-              output_mtok: 0.38,
-            },
-          },
         ],
       },
       {
@@ -32933,6 +32943,17 @@ export const data: Provider[] = [
               output_mtok: 0.182,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.14,
+              cache_read_mtok: 0.03,
+              output_mtok: 0.28,
+            },
+          },
         ],
       },
       {
@@ -32974,9 +32995,9 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.059,
-              cache_read_mtok: 0.035,
-              output_mtok: 0.3,
+              input_mtok: 0.14,
+              cache_read_mtok: 0.07,
+              output_mtok: 0.28,
             },
           },
         ],
@@ -33050,9 +33071,9 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 1.6,
-              cache_read_mtok: 0.135,
-              output_mtok: 3.2,
+              input_mtok: 1.416,
+              cache_read_mtok: 0.118,
+              output_mtok: 2.832,
             },
           },
         ],
@@ -33071,26 +33092,11 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1048576,
-        prices: [
-          {
-            prices: {
-              input_mtok: 0.66,
-              cache_read_mtok: 0.022,
-              output_mtok: 1.98,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-11-03',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 0.115,
-              cache_read_mtok: 0.11,
-              output_mtok: 4,
-            },
-          },
-        ],
+        prices: {
+          input_mtok: 0.66,
+          cache_read_mtok: 0.022,
+          output_mtok: 1.98,
+        },
       },
       {
         id: 'deepseek/deepseek-v4.1-flash',
@@ -33142,9 +33148,9 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.045,
-              cache_read_mtok: 0.012,
-              output_mtok: 0.5,
+              input_mtok: 0.21,
+              cache_read_mtok: 0.0042,
+              output_mtok: 0.84,
             },
           },
         ],
@@ -34370,6 +34376,18 @@ export const data: Provider[] = [
               output_mtok: 4.125,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.75,
+              cache_write_mtok: 0.041666666666666664,
+              cache_read_mtok: 0.075,
+              output_mtok: 3.75,
+            },
+          },
         ],
       },
       {
@@ -34645,17 +34663,6 @@ export const data: Provider[] = [
               output_mtok: 0.05,
             },
           },
-          {
-            constraint: {
-              start_date: '2026-11-03',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 0.05,
-              cache_read_mtok: 0.02,
-              output_mtok: 0.1,
-            },
-          },
         ],
       },
       {
@@ -34724,9 +34731,9 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.09,
-              cache_read_mtok: 0.045,
-              output_mtok: 0.27,
+              input_mtok: 0.15,
+              cache_read_mtok: 0.0425,
+              output_mtok: 0.6,
             },
           },
         ],
@@ -34783,6 +34790,17 @@ export const data: Provider[] = [
             prices: {
               input_mtok: 0.2,
               cache_read_mtok: 0.05,
+              output_mtok: 0.4,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.06,
               output_mtok: 0.4,
             },
           },
@@ -36178,9 +36196,8 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.2,
-              cache_read_mtok: 0.1,
-              output_mtok: 0.52,
+              input_mtok: 0.45,
+              output_mtok: 0.9,
             },
           },
         ],
@@ -36222,6 +36239,17 @@ export const data: Provider[] = [
               input_mtok: 0.1875,
               cache_read_mtok: 0.05,
               output_mtok: 0.6525,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.35,
+              cache_read_mtok: 0.17,
+              output_mtok: 1,
             },
           },
         ],
@@ -36648,6 +36676,16 @@ export const data: Provider[] = [
               output_mtok: 2.2,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.4,
+              output_mtok: 2.2,
+            },
+          },
         ],
       },
       {
@@ -36755,6 +36793,17 @@ export const data: Provider[] = [
               input_mtok: 0.27,
               cache_read_mtok: 0.03,
               output_mtok: 0.95,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.3,
+              cache_read_mtok: 0.03,
+              output_mtok: 1.2,
             },
           },
         ],
@@ -37354,6 +37403,17 @@ export const data: Provider[] = [
               output_mtok: 0.03,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.015,
+              output_mtok: 0.15,
+            },
+          },
         ],
       },
       {
@@ -37541,8 +37601,9 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.075,
-              output_mtok: 0.2,
+              input_mtok: 0.1,
+              cache_read_mtok: 0.01,
+              output_mtok: 0.3,
             },
           },
         ],
@@ -37799,6 +37860,17 @@ export const data: Provider[] = [
               output_mtok: 2.5,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.532,
+              cache_read_mtok: 0.209,
+              output_mtok: 3.325,
+            },
+          },
         ],
       },
       {
@@ -37831,6 +37903,17 @@ export const data: Provider[] = [
               input_mtok: 0.65,
               cache_read_mtok: 0.15,
               output_mtok: 3.41,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.95,
+              cache_read_mtok: 0.16,
+              output_mtok: 4,
             },
           },
         ],
@@ -37883,9 +37966,9 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.6,
-              cache_read_mtok: 0.15,
-              output_mtok: 3.5,
+              input_mtok: 0.95,
+              cache_read_mtok: 0.19,
+              output_mtok: 4,
             },
           },
         ],
@@ -37930,8 +38013,8 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.192,
-              cache_read_mtok: 0.182,
+              input_mtok: 3,
+              cache_read_mtok: 0.3,
               output_mtok: 15,
             },
           },
@@ -38431,9 +38514,8 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.3,
-              cache_read_mtok: 0.15,
-              output_mtok: 2.4,
+              input_mtok: 0.085,
+              output_mtok: 0.4,
             },
           },
         ],
@@ -38532,11 +38614,26 @@ export const data: Provider[] = [
           ],
         },
         context_window: 262144,
-        prices: {
-          input_mtok: 0.07,
-          cache_read_mtok: 0.04,
-          output_mtok: 0.2,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.07,
+              cache_read_mtok: 0.04,
+              output_mtok: 0.2,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.05,
+              cache_read_mtok: 0.01,
+              output_mtok: 0.2,
+            },
+          },
+        ],
       },
       {
         id: 'nvidia/nemotron-3.5-lightning:free',
@@ -41217,6 +41314,16 @@ export const data: Provider[] = [
               output_mtok: 0.6,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.1,
+              output_mtok: 0.5,
+            },
+          },
         ],
       },
       {
@@ -41271,7 +41378,8 @@ export const data: Provider[] = [
             },
             prices: {
               input_mtok: 0.03,
-              output_mtok: 0.13,
+              cache_read_mtok: 0.009,
+              output_mtok: 0.14,
             },
           },
         ],
@@ -42410,6 +42518,16 @@ export const data: Provider[] = [
               output_mtok: 0.24,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.1,
+              output_mtok: 0.22,
+            },
+          },
         ],
       },
       {
@@ -42536,16 +42654,6 @@ export const data: Provider[] = [
               output_mtok: 0.3,
             },
           },
-          {
-            constraint: {
-              start_date: '2026-11-03',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 0.1,
-              output_mtok: 0.3,
-            },
-          },
         ],
       },
       {
@@ -42588,6 +42696,17 @@ export const data: Provider[] = [
             prices: {
               input_mtok: 0.08,
               output_mtok: 0.28,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.14,
+              cache_read_mtok: 0.09,
+              output_mtok: 0.4,
             },
           },
         ],
@@ -42658,16 +42777,6 @@ export const data: Provider[] = [
             prices: {
               input_mtok: 0.07,
               output_mtok: 0.28,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-11-03',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 0.15,
-              output_mtok: 0.6,
             },
           },
         ],
@@ -42850,25 +42959,10 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: [
-          {
-            prices: {
-              input_mtok: 0.09,
-              output_mtok: 1.1,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-11-03',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 0.1,
-              cache_read_mtok: 0.07,
-              output_mtok: 1.1,
-            },
-          },
-        ],
+        prices: {
+          input_mtok: 0.09,
+          output_mtok: 1.1,
+        },
       },
       {
         id: 'qwen/qwen3-next-80b-a3b-instruct:free',
@@ -42970,6 +43064,16 @@ export const data: Provider[] = [
             prices: {
               input_mtok: 0.15,
               output_mtok: 0.6,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.2,
+              output_mtok: 0.7,
             },
           },
         ],
@@ -43105,8 +43209,8 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.26,
-              output_mtok: 2.6,
+              input_mtok: 0.195,
+              output_mtok: 1.56,
             },
           },
         ],
@@ -43149,9 +43253,9 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.14,
+              input_mtok: 0.1625,
               cache_read_mtok: 0.05,
-              output_mtok: 1,
+              output_mtok: 1.3,
             },
           },
         ],
@@ -43198,17 +43302,6 @@ export const data: Provider[] = [
               output_mtok: 2.34,
             },
           },
-          {
-            constraint: {
-              start_date: '2026-11-03',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 0.5,
-              cache_read_mtok: 0.3,
-              output_mtok: 3.6,
-            },
-          },
         ],
       },
       {
@@ -43224,24 +43317,10 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: [
-          {
-            prices: {
-              input_mtok: 0.1,
-              output_mtok: 0.15,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-11-03',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 0.17,
-              output_mtok: 0.25,
-            },
-          },
-        ],
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.15,
+        },
       },
       {
         id: 'qwen/qwen3.5-flash-02-23',
@@ -43447,17 +43526,6 @@ export const data: Provider[] = [
               input_mtok: 0.1,
               cache_read_mtok: 0.05,
               output_mtok: 0.95,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-11-03',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 0.1,
-              cache_read_mtok: 0.025,
-              output_mtok: 0.9,
             },
           },
         ],
@@ -43794,11 +43862,27 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 2,
-          cache_read_mtok: 0.25,
-          output_mtok: 6,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 2,
+              cache_read_mtok: 0.25,
+              output_mtok: 6,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 2,
+              cache_write_mtok: 2.5,
+              cache_read_mtok: 0.25,
+              output_mtok: 6,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3.8-27b',
@@ -43828,9 +43912,10 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.15,
-              cache_read_mtok: 0.0375,
-              output_mtok: 1.875,
+              input_mtok: 0.425,
+              cache_write_mtok: 0.53125,
+              cache_read_mtok: 0.085,
+              output_mtok: 2.55,
             },
           },
         ],
@@ -44131,9 +44216,9 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.25,
-              cache_read_mtok: 0.05,
-              output_mtok: 1,
+              input_mtok: 0.4,
+              cache_read_mtok: 0.04,
+              output_mtok: 1.2,
             },
           },
         ],
@@ -45673,9 +45758,9 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.4,
-              cache_read_mtok: 0.08,
-              output_mtok: 2,
+              input_mtok: 0.119,
+              cache_read_mtok: 0.00255,
+              output_mtok: 0.238,
             },
           },
         ],
@@ -45693,26 +45778,11 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: [
-          {
-            prices: {
-              input_mtok: 0.435,
-              cache_read_mtok: 0.0036,
-              output_mtok: 0.87,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-11-03',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 0.48,
-              cache_read_mtok: 0.096,
-              output_mtok: 1.8,
-            },
-          },
-        ],
+        prices: {
+          input_mtok: 0.435,
+          cache_read_mtok: 0.0036,
+          output_mtok: 0.87,
+        },
       },
       {
         id: 'xiaomi/mimo-v2.6-flash',
@@ -45843,6 +45913,17 @@ export const data: Provider[] = [
               output_mtok: 0.85,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.2,
+              cache_read_mtok: 0.03,
+              output_mtok: 1.1,
+            },
+          },
         ],
       },
       {
@@ -45889,9 +45970,9 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.5,
-              cache_read_mtok: 0.1,
-              output_mtok: 2,
+              input_mtok: 0.6,
+              cache_read_mtok: 0.11,
+              output_mtok: 2.2,
             },
           },
         ],
@@ -45926,6 +46007,17 @@ export const data: Provider[] = [
             prices: {
               input_mtok: 0.3,
               cache_read_mtok: 0.055,
+              output_mtok: 0.9,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.3,
+              cache_read_mtok: 0.05,
               output_mtok: 0.9,
             },
           },
@@ -46170,9 +46262,9 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.006,
-              cache_read_mtok: 0.005,
-              output_mtok: 6.8,
+              input_mtok: 1.4,
+              cache_read_mtok: 0.26,
+              output_mtok: 4.4,
             },
           },
         ],
@@ -46216,9 +46308,9 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.08,
-              cache_read_mtok: 0.076,
-              output_mtok: 3.6,
+              input_mtok: 1.4,
+              cache_read_mtok: 0.26,
+              output_mtok: 4.4,
             },
           },
         ],
@@ -46278,17 +46370,6 @@ export const data: Provider[] = [
               input_mtok: 0.15,
               cache_read_mtok: 0.03,
               output_mtok: 0.5,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-11-03',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 0.0313,
-              cache_read_mtok: 0.03,
-              output_mtok: 0.0846,
             },
           },
         ],

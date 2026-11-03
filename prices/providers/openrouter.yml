@@ -1674,6 +1674,12 @@ models:
           input_mtok: 0.29
           cache_read_mtok: 0.11
           output_mtok: 1.14
+      - constraint:
+          start_date: 2026-11-03
+        prices:
+          input_mtok: 0.25
+          cache_read_mtok: 0.11
+          output_mtok: 1
     context_window: 163840
     prices_checked: 2026-11-03
 
@@ -1698,6 +1704,11 @@ models:
           input_mtok: 0.25
           cache_read_mtok: 0.13
           output_mtok: 0.95
+      - constraint:
+          start_date: 2026-11-03
+        prices:
+          input_mtok: 0.55
+          output_mtok: 1.65
     prices_checked: 2026-11-03
 
   - id: "deepseek/deepseek-chat:free"
@@ -1839,12 +1850,6 @@ models:
           input_mtok: 0.28
           cache_read_mtok: 0.028
           output_mtok: 0.42
-      - constraint:
-          start_date: 2026-11-03
-        prices:
-          input_mtok: 0.26
-          cache_read_mtok: 0.13
-          output_mtok: 0.38
     prices_checked: 2026-11-03
 
   - id: deepseek/deepseek-v3.2-exp
@@ -1875,6 +1880,12 @@ models:
           input_mtok: 0.091
           cache_read_mtok: 0.0182
           output_mtok: 0.182
+      - constraint:
+          start_date: 2026-11-03
+        prices:
+          input_mtok: 0.14
+          cache_read_mtok: 0.03
+          output_mtok: 0.28
     prices_checked: 2026-11-03
 
   - id: deepseek/deepseek-v4-flash-0731
@@ -1898,9 +1909,9 @@ models:
       - constraint:
           start_date: 2026-11-03
         prices:
-          input_mtok: 0.059
-          cache_read_mtok: 0.035
-          output_mtok: 0.3
+          input_mtok: 0.14
+          cache_read_mtok: 0.07
+          output_mtok: 0.28
     prices_checked: 2026-11-03
 
   - id: deepseek/deepseek-v4-flash-vision-exp
@@ -1943,9 +1954,9 @@ models:
       - constraint:
           start_date: 2026-11-03
         prices:
-          input_mtok: 1.6
-          cache_read_mtok: 0.135
-          output_mtok: 3.2
+          input_mtok: 1.416
+          cache_read_mtok: 0.118
+          output_mtok: 2.832
     prices_checked: 2026-11-03
 
   - id: deepseek/deepseek-v4-pro-0813
@@ -1956,17 +1967,10 @@ models:
         - equals: deepseek/deepseek-v4-pro-20260813
     context_window: 1048576
     prices:
-      - prices:
-          input_mtok: 0.66
-          cache_read_mtok: 0.022
-          output_mtok: 1.98
-      - constraint:
-          start_date: 2026-11-03
-        prices:
-          input_mtok: 0.115
-          cache_read_mtok: 0.11
-          output_mtok: 4
-    prices_checked: 2026-11-03
+      input_mtok: 0.66
+      cache_read_mtok: 0.022
+      output_mtok: 1.98
+    prices_checked: 2026-10-20
 
   - id: deepseek/deepseek-v4.1-flash
     name: DeepSeek V4.1 Flash
@@ -1995,9 +1999,9 @@ models:
       - constraint:
           start_date: 2026-11-03
         prices:
-          input_mtok: 0.045
-          cache_read_mtok: 0.012
-          output_mtok: 0.5
+          input_mtok: 0.21
+          cache_read_mtok: 0.0042
+          output_mtok: 0.84
     prices_checked: 2026-11-03
 
   - id: deepseek/deepseek-v4.1-flash:batch
@@ -2854,6 +2858,13 @@ models:
           cache_write_mtok: 0.041666666666666664
           cache_read_mtok: 0.0825
           output_mtok: 4.125
+      - constraint:
+          start_date: 2026-11-03
+        prices:
+          input_mtok: 0.75
+          cache_write_mtok: 0.041666666666666664
+          cache_read_mtok: 0.075
+          output_mtok: 3.75
     context_window: 1048576
     prices_checked: 2026-11-03
 
@@ -3037,12 +3048,6 @@ models:
           input_mtok: 0.04
           cache_read_mtok: 0.02
           output_mtok: 0.05
-      - constraint:
-          start_date: 2026-11-03
-        prices:
-          input_mtok: 0.05
-          cache_read_mtok: 0.02
-          output_mtok: 0.1
     context_window: 131072
     prices_checked: 2026-11-03
 
@@ -3085,9 +3090,9 @@ models:
       - constraint:
           start_date: 2026-11-03
         prices:
-          input_mtok: 0.09
-          cache_read_mtok: 0.045
-          output_mtok: 0.27
+          input_mtok: 0.15
+          cache_read_mtok: 0.0425
+          output_mtok: 0.6
     prices_checked: 2026-11-03
 
   - id: google/gemma-4-26b-a4b-it:free
@@ -3128,6 +3133,12 @@ models:
         prices:
           input_mtok: 0.2
           cache_read_mtok: 0.05
+          output_mtok: 0.4
+      - constraint:
+          start_date: 2026-11-03
+        prices:
+          input_mtok: 0.15
+          cache_read_mtok: 0.06
           output_mtok: 0.4
 
   - id: google/gemma-4-31b-it:free
@@ -4084,9 +4095,8 @@ models:
       - constraint:
           start_date: 2026-11-03
         prices:
-          input_mtok: 0.2
-          cache_read_mtok: 0.1
-          output_mtok: 0.52
+          input_mtok: 0.45
+          output_mtok: 0.9
     prices_checked: 2026-11-03
 
   - id: meta-llama/llama-3.3-70b-instruct:free
@@ -4112,6 +4122,12 @@ models:
           input_mtok: 0.1875
           cache_read_mtok: 0.05
           output_mtok: 0.6525
+      - constraint:
+          start_date: 2026-11-03
+        prices:
+          input_mtok: 0.35
+          cache_read_mtok: 0.17
+          output_mtok: 1
     prices_checked: 2026-11-03
 
   - id: "meta-llama/llama-4-maverick:free"
@@ -4403,6 +4419,11 @@ models:
         prices:
           input_mtok: 0.55
           output_mtok: 2.2
+      - constraint:
+          start_date: 2026-11-03
+        prices:
+          input_mtok: 0.4
+          output_mtok: 2.2
     context_window: 1000000
     prices_checked: 2026-11-03
 
@@ -4473,6 +4494,12 @@ models:
           input_mtok: 0.27
           cache_read_mtok: 0.03
           output_mtok: 0.95
+      - constraint:
+          start_date: 2026-11-03
+        prices:
+          input_mtok: 0.3
+          cache_read_mtok: 0.03
+          output_mtok: 1.2
     prices_checked: 2026-11-03
 
   - id: minimax/minimax-m2.7
@@ -4903,6 +4930,12 @@ models:
         prices:
           input_mtok: 0.029
           output_mtok: 0.03
+      - constraint:
+          start_date: 2026-11-03
+        prices:
+          input_mtok: 0.15
+          cache_read_mtok: 0.015
+          output_mtok: 0.15
     prices_checked: 2026-11-03
 
   - id: "mistralai/mistral-nemo:free"
@@ -5021,8 +5054,9 @@ models:
       - constraint:
           start_date: 2026-11-03
         prices:
-          input_mtok: 0.075
-          output_mtok: 0.2
+          input_mtok: 0.1
+          cache_read_mtok: 0.01
+          output_mtok: 0.3
     prices_checked: 2026-11-03
 
   - id: mistralai/mistral-tiny
@@ -5194,6 +5228,12 @@ models:
           input_mtok: 0.5
           cache_read_mtok: 0.15
           output_mtok: 2.5
+      - constraint:
+          start_date: 2026-11-03
+        prices:
+          input_mtok: 0.532
+          cache_read_mtok: 0.209
+          output_mtok: 3.325
     prices_checked: 2026-11-03
 
   - id: moonshotai/kimi-k2.6
@@ -5214,6 +5254,12 @@ models:
           input_mtok: 0.65
           cache_read_mtok: 0.15
           output_mtok: 3.41
+      - constraint:
+          start_date: 2026-11-03
+        prices:
+          input_mtok: 0.95
+          cache_read_mtok: 0.16
+          output_mtok: 4
     prices_checked: 2026-11-03
 
   - id: moonshotai/kimi-k2.6:free
@@ -5245,9 +5291,9 @@ models:
       - constraint:
           start_date: 2026-11-03
         prices:
-          input_mtok: 0.6
-          cache_read_mtok: 0.15
-          output_mtok: 3.5
+          input_mtok: 0.95
+          cache_read_mtok: 0.19
+          output_mtok: 4
 
   - id: moonshotai/kimi-k3
     name: Kimi K3
@@ -5272,8 +5318,8 @@ models:
       - constraint:
           start_date: 2026-11-03
         prices:
-          input_mtok: 0.192
-          cache_read_mtok: 0.182
+          input_mtok: 3
+          cache_read_mtok: 0.3
           output_mtok: 15
 
   - id: moonshotai/kimi-k3.1-pro
@@ -5610,9 +5656,8 @@ models:
       - constraint:
           start_date: 2026-11-03
         prices:
-          input_mtok: 0.3
-          cache_read_mtok: 0.15
-          output_mtok: 2.4
+          input_mtok: 0.085
+          output_mtok: 0.4
     prices_checked: 2026-11-03
 
   - id: nvidia/nemotron-3-super-120b-a12b:free
@@ -5679,9 +5724,16 @@ models:
         - equals: nvidia/nemotron-3.5-lightning-20260807
     context_window: 262144
     prices:
-      input_mtok: 0.07
-      cache_read_mtok: 0.04
-      output_mtok: 0.2
+      - prices:
+          input_mtok: 0.07
+          cache_read_mtok: 0.04
+          output_mtok: 0.2
+      - constraint:
+          start_date: 2026-11-03
+        prices:
+          input_mtok: 0.05
+          cache_read_mtok: 0.01
+          output_mtok: 0.2
     prices_checked: 2026-11-03
 
   - id: nvidia/nemotron-3.5-lightning:free
@@ -7385,6 +7437,11 @@ models:
           input_mtok: 0.15
           cache_read_mtok: 0.075
           output_mtok: 0.6
+      - constraint:
+          start_date: 2026-11-03
+        prices:
+          input_mtok: 0.1
+          output_mtok: 0.5
     prices_checked: 2026-11-03
 
   - id: openai/gpt-oss-120b:batch
@@ -7421,7 +7478,8 @@ models:
           start_date: 2026-11-03
         prices:
           input_mtok: 0.03
-          output_mtok: 0.13
+          cache_read_mtok: 0.009
+          output_mtok: 0.14
     context_window: 131072
     prices_checked: 2026-11-03
 
@@ -8219,6 +8277,11 @@ models:
         prices:
           input_mtok: 0.12
           output_mtok: 0.24
+      - constraint:
+          start_date: 2026-11-03
+        prices:
+          input_mtok: 0.1
+          output_mtok: 0.22
     prices_checked: 2026-11-03
 
   - id: qwen/qwen3-235b-a22b
@@ -8296,11 +8359,6 @@ models:
         prices:
           input_mtok: 0.09
           output_mtok: 0.3
-      - constraint:
-          start_date: 2026-11-03
-        prices:
-          input_mtok: 0.1
-          output_mtok: 0.3
     prices_checked: 2026-11-03
 
   - id: qwen/qwen3-30b-a3b-thinking-2507
@@ -8328,6 +8386,12 @@ models:
         prices:
           input_mtok: 0.08
           output_mtok: 0.28
+      - constraint:
+          start_date: 2026-11-03
+        prices:
+          input_mtok: 0.14
+          cache_read_mtok: 0.09
+          output_mtok: 0.4
     prices_checked: 2026-11-03
 
   - id: qwen/qwen3-8b
@@ -8372,11 +8436,6 @@ models:
         prices:
           input_mtok: 0.07
           output_mtok: 0.28
-      - constraint:
-          start_date: 2026-11-03
-        prices:
-          input_mtok: 0.15
-          output_mtok: 0.6
     prices_checked: 2026-11-03
 
   - id: qwen/qwen3-coder-flash
@@ -8488,15 +8547,8 @@ models:
         - equals: qwen/qwen3-next-80b-a3b-instruct
         - equals: qwen/qwen3-next-80b-a3b-instruct-2509
     prices:
-      - prices:
-          input_mtok: 0.09
-          output_mtok: 1.1
-      - constraint:
-          start_date: 2026-11-03
-        prices:
-          input_mtok: 0.1
-          cache_read_mtok: 0.07
-          output_mtok: 1.1
+      input_mtok: 0.09
+      output_mtok: 1.1
     prices_checked: 2026-11-03
 
   - id: qwen/qwen3-next-80b-a3b-instruct:free
@@ -8564,6 +8616,11 @@ models:
         prices:
           input_mtok: 0.15
           output_mtok: 0.6
+      - constraint:
+          start_date: 2026-11-03
+        prices:
+          input_mtok: 0.2
+          output_mtok: 0.7
     prices_checked: 2026-11-03
 
   - id: qwen/qwen3-vl-30b-a3b-thinking
@@ -8647,8 +8704,8 @@ models:
       - constraint:
           start_date: 2026-11-03
         prices:
-          input_mtok: 0.26
-          output_mtok: 2.6
+          input_mtok: 0.195
+          output_mtok: 1.56
     context_window: 262144
     prices_checked: 2026-11-03
 
@@ -8673,9 +8730,9 @@ models:
       - constraint:
           start_date: 2026-11-03
         prices:
-          input_mtok: 0.14
+          input_mtok: 0.1625
           cache_read_mtok: 0.05
-          output_mtok: 1
+          output_mtok: 1.3
     prices_checked: 2026-11-03
 
   - id: qwen/qwen3.5-397b-a17b
@@ -8701,12 +8758,6 @@ models:
           input_mtok: 0.39
           cache_read_mtok: 0.3
           output_mtok: 2.34
-      - constraint:
-          start_date: 2026-11-03
-        prices:
-          input_mtok: 0.5
-          cache_read_mtok: 0.3
-          output_mtok: 3.6
     prices_checked: 2026-11-03
 
   - id: qwen/qwen3.5-9b
@@ -8717,14 +8768,8 @@ models:
         - equals: qwen/qwen3.5-9b
         - equals: qwen/qwen3.5-9b-20260310
     prices:
-      - prices:
-          input_mtok: 0.1
-          output_mtok: 0.15
-      - constraint:
-          start_date: 2026-11-03
-        prices:
-          input_mtok: 0.17
-          output_mtok: 0.25
+      input_mtok: 0.1
+      output_mtok: 0.15
     prices_checked: 2026-11-03
 
   - id: qwen/qwen3.5-flash-02-23
@@ -8843,12 +8888,6 @@ models:
           input_mtok: 0.1
           cache_read_mtok: 0.05
           output_mtok: 0.95
-      - constraint:
-          start_date: 2026-11-03
-        prices:
-          input_mtok: 0.1
-          cache_read_mtok: 0.025
-          output_mtok: 0.9
     prices_checked: 2026-11-03
 
   - id: qwen/qwen3.6-flash
@@ -9041,9 +9080,17 @@ models:
         - equals: qwen/qwen3.8-2.4t-a95b-20260812
     context_window: 1048576
     prices:
-      input_mtok: 2
-      cache_read_mtok: 0.25
-      output_mtok: 6
+      - prices:
+          input_mtok: 2
+          cache_read_mtok: 0.25
+          output_mtok: 6
+      - constraint:
+          start_date: 2026-11-03
+        prices:
+          input_mtok: 2
+          cache_write_mtok: 2.5
+          cache_read_mtok: 0.25
+          output_mtok: 6
     prices_checked: 2026-11-03
 
   - id: qwen/qwen3.8-27b
@@ -9061,9 +9108,10 @@ models:
       - constraint:
           start_date: 2026-11-03
         prices:
-          input_mtok: 0.15
-          cache_read_mtok: 0.0375
-          output_mtok: 1.875
+          input_mtok: 0.425
+          cache_write_mtok: 0.53125
+          cache_read_mtok: 0.085
+          output_mtok: 2.55
     prices_checked: 2026-11-03
 
   - id: qwen/qwen3.8-flash
@@ -9270,9 +9318,9 @@ models:
       - constraint:
           start_date: 2026-11-03
         prices:
-          input_mtok: 0.25
-          cache_read_mtok: 0.05
-          output_mtok: 1
+          input_mtok: 0.4
+          cache_read_mtok: 0.04
+          output_mtok: 1.2
     prices_checked: 2026-11-03
 
   - id: reka-flash-3:free
@@ -10250,9 +10298,9 @@ models:
       - constraint:
           start_date: 2026-11-03
         prices:
-          input_mtok: 0.4
-          cache_read_mtok: 0.08
-          output_mtok: 2
+          input_mtok: 0.119
+          cache_read_mtok: 0.00255
+          output_mtok: 0.238
     prices_checked: 2026-11-03
 
   - id: xiaomi/mimo-v2.5-pro
@@ -10263,16 +10311,9 @@ models:
         - equals: xiaomi/mimo-v2.5-pro
         - equals: xiaomi/mimo-v2.5-pro-20260422
     prices:
-      - prices:
-          input_mtok: 0.435
-          cache_read_mtok: 0.0036
-          output_mtok: 0.87
-      - constraint:
-          start_date: 2026-11-03
-        prices:
-          input_mtok: 0.48
-          cache_read_mtok: 0.096
-          output_mtok: 1.8
+      input_mtok: 0.435
+      cache_read_mtok: 0.0036
+      output_mtok: 0.87
     prices_checked: 2026-11-03
 
   - id: xiaomi/mimo-v2.6-flash
@@ -10363,6 +10404,12 @@ models:
           input_mtok: 0.13
           cache_read_mtok: 0.025
           output_mtok: 0.85
+      - constraint:
+          start_date: 2026-11-03
+        prices:
+          input_mtok: 0.2
+          cache_read_mtok: 0.03
+          output_mtok: 1.1
     context_window: 131072
     prices_checked: 2026-11-03
 
@@ -10396,9 +10443,9 @@ models:
       - constraint:
           start_date: 2026-11-03
         prices:
-          input_mtok: 0.5
-          cache_read_mtok: 0.1
-          output_mtok: 2
+          input_mtok: 0.6
+          cache_read_mtok: 0.11
+          output_mtok: 2.2
     prices_checked: 2026-11-03
 
   - id: z-ai/glm-4.6v
@@ -10417,6 +10464,12 @@ models:
         prices:
           input_mtok: 0.3
           cache_read_mtok: 0.055
+          output_mtok: 0.9
+      - constraint:
+          start_date: 2026-11-03
+        prices:
+          input_mtok: 0.3
+          cache_read_mtok: 0.05
           output_mtok: 0.9
     context_window: 131072
     prices_checked: 2026-11-03
@@ -10558,9 +10611,9 @@ models:
       - constraint:
           start_date: 2026-11-03
         prices:
-          input_mtok: 0.006
-          cache_read_mtok: 0.005
-          output_mtok: 6.8
+          input_mtok: 1.4
+          cache_read_mtok: 0.26
+          output_mtok: 4.4
     context_window: 1048576
     prices_checked: 2026-11-03
 
@@ -10585,9 +10638,9 @@ models:
       - constraint:
           start_date: 2026-11-03
         prices:
-          input_mtok: 0.08
-          cache_read_mtok: 0.076
-          output_mtok: 3.6
+          input_mtok: 1.4
+          cache_read_mtok: 0.26
+          output_mtok: 4.4
     context_window: 1048576
 
   - id: z-ai/glm-5.3-flash
@@ -10625,12 +10678,6 @@ models:
           input_mtok: 0.15
           cache_read_mtok: 0.03
           output_mtok: 0.5
-      - constraint:
-          start_date: 2026-11-03
-        prices:
-          input_mtok: 0.0313
-          cache_read_mtok: 0.03
-          output_mtok: 0.0846
     context_window: 1310720
 
   - id: z-ai/glm-5.3-flash:batch
