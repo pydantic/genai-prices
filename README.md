@@ -57,10 +57,10 @@ The following providers are currently supported:
 - [HuggingFace (groq)](prices/providers/huggingface_groq.yml) - 5 models
 - [HuggingFace (hyperbolic)](prices/providers/huggingface_hyperbolic.yml) - 12 models
 - [HuggingFace (nebius)](prices/providers/huggingface_nebius.yml) - 26 models
-- [HuggingFace (novita)](prices/providers/huggingface_novita.yml) - 84 models
-- [HuggingFace (nscale)](prices/providers/huggingface_nscale.yml) - 21 models
+- [HuggingFace (novita)](prices/providers/huggingface_novita.yml) - 85 models
+- [HuggingFace (nscale)](prices/providers/huggingface_nscale.yml) - 24 models
 - [HuggingFace (ovhcloud)](prices/providers/huggingface_ovhcloud.yml) - 11 models
-- [HuggingFace (publicai)](prices/providers/huggingface_publicai.yml) - 12 models
+- [HuggingFace (publicai)](prices/providers/huggingface_publicai.yml) - 13 models
 - [HuggingFace (sambanova)](prices/providers/huggingface_sambanova.yml) - 8 models
 - [HuggingFace (together)](prices/providers/huggingface_together.yml) - 36 models
 - [Meta](prices/providers/meta.yml) - 6 models
@@ -71,7 +71,7 @@ The following providers are currently supported:
 - [Novita](prices/providers/novita.yml) - 112 models
 - [OpenAI](prices/providers/openai.yml) - 112 models
 - [OpenAI Decisions](prices/providers/openai_decisions.yml) - 1 models
-- [OpenRouter](prices/providers/openrouter.yml) - 894 models
+- [OpenRouter](prices/providers/openrouter.yml) - 903 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 20 models
 - [Perplexity](prices/providers/perplexity.yml) - 23 models
 - [QuickSilver Pro](prices/providers/quicksilverpro.yml) - 74 models
