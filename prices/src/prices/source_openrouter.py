@@ -31,6 +31,15 @@ map_providers = {
     'microsoft': 'azure',
     'amazon': 'aws',
 }
+AUTHOR_ENDPOINTS = {
+    'amazon': {'amazon-bedrock'},
+    'bytedance-seed': {'seed'},
+    'google': {'google-ai-studio', 'google-vertex'},
+    'mistralai': {'mistral'},
+    'qwen': {'alibaba'},
+    'rekaai': {'reka'},
+    'x-ai': {'xai'},
+}
 
 
 class OpenRouterModel(BaseModel):
@@ -383,7 +392,8 @@ def representative_pricing(model: OpenRouterModel, endpoints: list[OpenRouterEnd
     """
     standard = [e for e in endpoints if e.service_tier is None and not e.pricing.has_negative_price()]
     author = model.canonical_slug.split('/', 1)[0]
-    own = [e for e in standard if e.tag.split('/', 1)[0] in {author, map_providers.get(author)}]
+    hosts = AUTHOR_ENDPOINTS.get(author, {author})
+    own = [e for e in standard if e.tag.split('/', 1)[0] in hosts]
     candidates = sorted(own or standard, key=lambda e: e.pricing.prompt or 0)
     if not candidates:
         return model.pricing

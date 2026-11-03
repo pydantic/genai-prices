@@ -19705,7 +19705,7 @@ providers: list[Provider] = [
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 3)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('0.09'), cache_read_mtok=Decimal('0.041'), output_mtok=Decimal('0.31')
+                            input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.0425'), output_mtok=Decimal('0.6')
                         ),
                     ),
                 ],
@@ -24432,7 +24432,7 @@ providers: list[Provider] = [
                     ),
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 3)),
-                        prices=ModelPrice(input_mtok=Decimal('0.26'), output_mtok=Decimal('2.6')),
+                        prices=ModelPrice(input_mtok=Decimal('0.195'), output_mtok=Decimal('1.56')),
                     ),
                 ],
             ),
@@ -24455,6 +24455,12 @@ providers: list[Provider] = [
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 19)),
                         prices=ModelPrice(
                             input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('1')
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 3)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.1625'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('1.3')
                         ),
                     ),
                 ],
@@ -24482,12 +24488,6 @@ providers: list[Provider] = [
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 20)),
                         prices=ModelPrice(
                             input_mtok=Decimal('0.39'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('2.34')
-                        ),
-                    ),
-                    ConditionalPrice(
-                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 3)),
-                        prices=ModelPrice(
-                            input_mtok=Decimal('0.55'), cache_read_mtok=Decimal('0.225'), output_mtok=Decimal('3.5')
                         ),
                     ),
                 ],
@@ -24585,7 +24585,7 @@ providers: list[Provider] = [
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 3)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('0.32'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('3.2')
+                            input_mtok=Decimal('0.45'), cache_read_mtok=Decimal('0.025'), output_mtok=Decimal('2.7')
                         ),
                     ),
                 ],
@@ -24796,7 +24796,22 @@ providers: list[Provider] = [
                 ),
                 name='Qwen3.8 2.4T A95B',
                 context_window=1048576,
-                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('6')),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('6')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 3)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2'),
+                            cache_write_mtok=Decimal('2.5'),
+                            cache_read_mtok=Decimal('0.25'),
+                            output_mtok=Decimal('6'),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='qwen/qwen3.8-27b',
@@ -24814,7 +24829,10 @@ providers: list[Provider] = [
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 3)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('0.175'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('2.5')
+                            input_mtok=Decimal('0.425'),
+                            cache_write_mtok=Decimal('0.53125'),
+                            cache_read_mtok=Decimal('0.085'),
+                            output_mtok=Decimal('2.55'),
                         ),
                     ),
                 ],

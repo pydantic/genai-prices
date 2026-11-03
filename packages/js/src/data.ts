@@ -34625,9 +34625,9 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.09,
-              cache_read_mtok: 0.041,
-              output_mtok: 0.31,
+              input_mtok: 0.15,
+              cache_read_mtok: 0.0425,
+              output_mtok: 0.6,
             },
           },
         ],
@@ -43103,8 +43103,8 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.26,
-              output_mtok: 2.6,
+              input_mtok: 0.195,
+              output_mtok: 1.56,
             },
           },
         ],
@@ -43139,6 +43139,17 @@ export const data: Provider[] = [
               input_mtok: 0.15,
               cache_read_mtok: 0.05,
               output_mtok: 1,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.1625,
+              cache_read_mtok: 0.05,
+              output_mtok: 1.3,
             },
           },
         ],
@@ -43183,17 +43194,6 @@ export const data: Provider[] = [
               input_mtok: 0.39,
               cache_read_mtok: 0.3,
               output_mtok: 2.34,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-11-03',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 0.55,
-              cache_read_mtok: 0.225,
-              output_mtok: 3.5,
             },
           },
         ],
@@ -43373,9 +43373,9 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.32,
+              input_mtok: 0.45,
               cache_read_mtok: 0.025,
-              output_mtok: 3.2,
+              output_mtok: 2.7,
             },
           },
         ],
@@ -43756,11 +43756,27 @@ export const data: Provider[] = [
           ],
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 2,
-          cache_read_mtok: 0.25,
-          output_mtok: 6,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 2,
+              cache_read_mtok: 0.25,
+              output_mtok: 6,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 2,
+              cache_write_mtok: 2.5,
+              cache_read_mtok: 0.25,
+              output_mtok: 6,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3.8-27b',
@@ -43790,9 +43806,10 @@ export const data: Provider[] = [
               type: 'start_date',
             },
             prices: {
-              input_mtok: 0.175,
-              cache_read_mtok: 0.05,
-              output_mtok: 2.5,
+              input_mtok: 0.425,
+              cache_write_mtok: 0.53125,
+              cache_read_mtok: 0.085,
+              output_mtok: 2.55,
             },
           },
         ],

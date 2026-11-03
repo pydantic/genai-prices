@@ -585,13 +585,17 @@ def test_openrouter_provider_models_tier_prompt_length_overrides_and_skip_unrepr
 
 
 def endpoint(tag: str, prompt: str, service_tier: str | None = None) -> OpenRouterEndpoint:
-    return OpenRouterEndpoint(tag=tag, service_tier=service_tier, pricing=pricing_with_extras({'prompt': prompt}))
+    # Each endpoint's output rate is a distinct multiple of its input rate, so a mixed-up rate card shows.
+    completion = str(Decimal(prompt) * 3)
+    pricing = pricing_with_extras({'prompt': prompt, 'completion': completion})
+    return OpenRouterEndpoint(tag=tag, service_tier=service_tier, pricing=pricing)
 
 
 @pytest.mark.parametrize(
-    'endpoints,expected',
+    'model_id,endpoints,expected',
     [
         pytest.param(
+            'mistralai/mistral-large-4',
             [
                 endpoint('wafer', '0.000000006'),
                 endpoint('mistral/flex', '0.0000003', 'flex'),
@@ -602,6 +606,17 @@ def endpoint(tag: str, prompt: str, service_tier: str | None = None) -> OpenRout
             id='author-cheapest-standard',
         ),
         pytest.param(
+            'google/gemini-3.1-flash-lite',
+            [
+                endpoint('deepinfra', '0.0000001'),
+                endpoint('google-vertex/eu', '0.000000275'),
+                endpoint('google-ai-studio', '0.00000025'),
+            ],
+            '0.00000025',
+            id='author-under-another-tag',
+        ),
+        pytest.param(
+            'z-ai/glm-5.2',
             [
                 endpoint('wafer', '0.000000006'),
                 endpoint('together', '0.0000014'),
@@ -611,12 +626,18 @@ def endpoint(tag: str, prompt: str, service_tier: str | None = None) -> OpenRout
             '0.0000006',
             id='lower-median-without-author',
         ),
-        pytest.param([endpoint('mistral', '0.0000007', 'priority')], '0.000001', id='no-standard-endpoint'),
+        pytest.param(
+            'mistralai/mistral-large-4', [endpoint('mistral', '0.0000007', 'priority')], '0.000001', id='no-standard'
+        ),
     ],
 )
-def test_openrouter_prices_from_a_representative_endpoint(endpoints: list[OpenRouterEndpoint], expected: str) -> None:
-    model = openrouter_model('mistralai/mistral-large-4', canonical_slug='mistralai/mistral-large-4-20261006')
-    assert source_openrouter.representative_pricing(model, endpoints).prompt == Decimal(expected)
+def test_openrouter_prices_from_a_representative_endpoint(
+    model_id: str, endpoints: list[OpenRouterEndpoint], expected: str
+) -> None:
+    pricing = source_openrouter.representative_pricing(openrouter_model(model_id), endpoints)
+    fallback = OpenRouterPricing(prompt=Decimal('0.000001'), completion=Decimal('0.000002'))
+    chosen = next((e.pricing for e in endpoints if e.pricing.prompt == Decimal(expected)), fallback)
+    assert pricing == chosen
 
 
 def test_openrouter_batch_routes_take_cache_writes_at_their_input_discount() -> None:
