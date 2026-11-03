@@ -49281,11 +49281,26 @@ export const data: Provider[] = [
           equals: 'mimo-v2.6-pro',
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 0.348,
-          cache_read_mtok: 0.00288,
-          output_mtok: 0.696,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.348,
+              cache_read_mtok: 0.00288,
+              output_mtok: 0.696,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.426,
+              cache_read_mtok: 0.0036,
+              output_mtok: 0.861,
+            },
+          },
+        ],
       },
       {
         id: 'minimax-m3',
