@@ -8926,6 +8926,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-v4p1-flash-1017-ultrafast',
+        name: 'DeepSeek V4.1 Flash 1017 Ultra-fast (Preview)',
+        match: {
+          equals: 'accounts/fireworks/routers/deepseek-v4p1-flash-1017-ultrafast',
+        },
+        prices: {
+          input_mtok: 2.4,
+          cache_read_mtok: 0.048,
+          output_mtok: 9.6,
+        },
+      },
+      {
         id: 'deepseek-v4p1-flash-1017-us',
         name: 'DeepSeek V4.1 Flash 1017 US',
         match: {
@@ -9483,11 +9495,26 @@ export const data: Provider[] = [
         match: {
           equals: 'accounts/fireworks/routers/ultramarine-1-flash-us',
         },
-        prices: {
-          input_mtok: 0.225,
-          cache_read_mtok: 0.045,
-          output_mtok: 0.75,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.225,
+              cache_read_mtok: 0.045,
+              output_mtok: 0.75,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.03,
+              output_mtok: 0.5,
+            },
+          },
+        ],
       },
     ],
   },
@@ -37161,13 +37188,42 @@ export const data: Provider[] = [
           ],
         },
         price_comments:
-          'Current launch promotional rates are $0.68 input, $0.07 cached input, and $2.09 output per million tokens. The October 6 changelog says the promotion lasts two weeks but does not state an exact effective end date, so no future price change is scheduled here. This model is available on the global route with a 1,048,576-token context and the EU route with a 524,288-token context, so no single context_window is listed. The EU endpoint is priced at 10% above its global counterpart; callers can select it with request context route=mistral/eu. https://openrouter.ai/api/v1/models/mistralai/mistral-large-4-0/endpoints https://docs.mistral.ai/resources/changelogs',
-        prices: {
-          input_mtok: 0.68,
-          cache_read_mtok: 0.07,
-          output_mtok: 2.09,
-        },
+          'Launched at promotional rates of $0.68 input, $0.07 cached input and $2.09 output per million tokens. The endpoints listed $0.7/$0.07/$2.1 when checked on 2026-11-03; no source dates the change on OpenRouter, so the new rates start on that check date. This model is available on the global route with a 1,048,576-token context and the EU route with a 524,288-token context, so no single context_window is listed. The EU endpoint is priced at 10% above its global counterpart; callers can select it with request context route=mistral/eu. https://openrouter.ai/api/v1/models/mistralai/mistral-large-4-0/endpoints https://docs.mistral.ai/resources/changelogs',
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.68,
+              cache_read_mtok: 0.07,
+              output_mtok: 2.09,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.7,
+              cache_read_mtok: 0.07,
+              output_mtok: 2.1,
+            },
+          },
+        ],
         price_variants: [
+          {
+            when: {
+              route: 'mistral/eu',
+            },
+            prices: {
+              input_mtok: 0.77,
+              cache_read_mtok: 0.077,
+              output_mtok: 2.31,
+            },
+            constraint: {
+              start_date: '2026-11-03',
+              type: 'start_date',
+            },
+          },
           {
             when: {
               route: 'mistral/eu',

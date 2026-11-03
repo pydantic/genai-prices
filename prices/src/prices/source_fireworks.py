@@ -14,13 +14,15 @@ PRICING_URL = 'https://docs.fireworks.ai/serverless/pricing.md'
 MIN_MODEL_COUNT = 8
 TABLE_HEADER = '| Model | Standard | Priority |'
 MODEL_CELL = re.compile(
-    r'\[(?P<name>[^]]+?)(?P<fast> Fast)?(?P<us> \(US\))?]\(https://app\.fireworks\.ai/models/fireworks/(?P<slug>[\w.-]+)\)'
+    r'\[(?P<name>[^]]+?)(?P<mode> Fast| Ultra-fast \(Preview\))?(?P<us> \(US\))?]'
+    r'\(https://app\.fireworks\.ai/models/fireworks/(?P<slug>[\w.-]+)\)'
 )
+MODE_SUFFIXES = {None: '', ' Fast': '-fast', ' Ultra-fast (Preview)': '-ultrafast'}
 STANDARD_CELL = re.compile(r'\\\$(\d+(?:\.\d+)?) / \\\$(\d+(?:\.\d+)?) / \\\$(\d+(?:\.\d+)?)')
 
 
 def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
-    """Parse the Standard serverless rates; Fast and US-only rows are separate router models."""
+    """Parse the Standard serverless rates; Fast, Ultra-fast and US-only rows are separate router models."""
     lines = markdown.splitlines()
     if TABLE_HEADER not in lines:
         raise RuntimeError('Fireworks pricing page has no text and vision models table')
@@ -32,7 +34,7 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
         rates = STANDARD_CELL.fullmatch(cells[1]) if model else None
         if model is None or rates is None:
             raise RuntimeError(f'Unexpected Fireworks pricing row: {line}')
-        suffix = ('-fast' if model['fast'] else '') + ('-us' if model['us'] else '')
+        suffix = MODE_SUFFIXES[model['mode']] + ('-us' if model['us'] else '')
         # https://docs.fireworks.ai/serverless/serverless-modes and /serverless/us-only-serverless name these routers.
         slug = model['slug'].removesuffix('-us') if model['us'] else model['slug']
         api_id = f'accounts/fireworks/{"routers" if suffix else "models"}/{slug}{suffix}'
@@ -42,7 +44,7 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
         models.append(
             ModelInfo(
                 id=api_id,
-                name=f'{model["name"]}{model["fast"] or ""}{" US" if model["us"] else ""}',
+                name=f'{model["name"]}{model["mode"] or ""}{" US" if model["us"] else ""}',
                 match=ClauseEquals(equals=api_id),
                 prices=ModelPrice(input_mtok=input_mtok, cache_read_mtok=cache_read_mtok, output_mtok=output_mtok),
                 prices_checked=date.today(),
