@@ -21,6 +21,7 @@ from prices.prices_types import (
     TieredPrices,
 )
 from prices.source_openrouter import (
+    OpenRouterEndpoint,
     OpenRouterModel,
     OpenRouterPricing,
     OpenRouterResponse,
@@ -583,6 +584,41 @@ def test_openrouter_provider_models_tier_prompt_length_overrides_and_skip_unrepr
     assert models[1].prices == ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2'))
 
 
+def endpoint(tag: str, prompt: str, service_tier: str | None = None) -> OpenRouterEndpoint:
+    return OpenRouterEndpoint(tag=tag, service_tier=service_tier, pricing=pricing_with_extras({'prompt': prompt}))
+
+
+@pytest.mark.parametrize(
+    'endpoints,expected',
+    [
+        pytest.param(
+            [
+                endpoint('wafer', '0.000000006'),
+                endpoint('mistral/flex', '0.0000003', 'flex'),
+                endpoint('mistral/eu', '0.00000077'),
+                endpoint('mistral', '0.0000007'),
+            ],
+            '0.0000007',
+            id='author-cheapest-standard',
+        ),
+        pytest.param(
+            [
+                endpoint('wafer', '0.000000006'),
+                endpoint('together', '0.0000014'),
+                endpoint('novita', '0.0000006'),
+                endpoint('fireworks', '0.0000015'),
+            ],
+            '0.0000006',
+            id='lower-median-without-author',
+        ),
+        pytest.param([endpoint('mistral', '0.0000007', 'priority')], '0.000001', id='no-standard-endpoint'),
+    ],
+)
+def test_openrouter_prices_from_a_representative_endpoint(endpoints: list[OpenRouterEndpoint], expected: str) -> None:
+    model = openrouter_model('mistralai/mistral-large-4', canonical_slug='mistralai/mistral-large-4-20261006')
+    assert source_openrouter.representative_pricing(model, endpoints).prompt == Decimal(expected)
+
+
 def test_openrouter_batch_routes_take_cache_writes_at_their_input_discount() -> None:
     base = pricing_with_extras(
         {
@@ -792,6 +828,4 @@ def test_update_openrouter_provider_fetches_recorded_models(
 
     source_openrouter.update_openrouter_provider(provider_path)
 
-    assert capsys.readouterr().out == snapshot("""\
-OpenRouter prices updated: 0 added, 420 updated
-""")
+    assert capsys.readouterr().out == snapshot('OpenRouter prices updated: 0 added, 400 updated\n')

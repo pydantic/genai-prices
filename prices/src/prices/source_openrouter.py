@@ -17,7 +17,7 @@ from .variants import rate_pairs, shape
 
 MODELS_URL = 'https://openrouter.ai/api/v1/models'
 MIN_MODEL_COUNT = 100
-# A model's listed price is its cheapest provider's current, often discounted, rate, which drifts by the hour.
+# Endpoint rates move with discounts and new hosts, so small moves are drift rather than price changes.
 PRICE_TOLERANCE = Decimal('0.05')
 TIERED_PRICE_FIELDS = {
     'input_mtok': 'prompt',
@@ -57,6 +57,12 @@ class OpenRouterModel(BaseModel):
 
     def model_name(self) -> str:
         return self.name.split(':', 1)[-1].strip()
+
+    def has_fixed_price(self) -> bool:
+        # A `~...-latest` alias redirects to another model, and its reported rates flip within minutes.
+        return (
+            self.provider_id() != 'openrouter' and not self.pricing.has_negative_price() and not self.id.startswith('~')
+        )
 
     def model_info(
         self, inc_description: bool = True, *, strip_provider: bool = True, include_context_window: bool = False
@@ -145,6 +151,20 @@ class OpenRouterPricing(BaseModel, extra='allow'):
 
 class OpenRouterResponse(BaseModel):
     data: list[OpenRouterModel]
+
+
+class OpenRouterEndpoint(BaseModel):
+    tag: str
+    service_tier: str | None
+    pricing: OpenRouterPricing
+
+
+class OpenRouterEndpoints(BaseModel):
+    endpoints: list[OpenRouterEndpoint]
+
+
+class OpenRouterEndpointsResponse(BaseModel):
+    data: OpenRouterEndpoints
 
 
 def report_unknown_pricing_fields(models: list[OpenRouterModel]) -> dict[str, int]:
@@ -274,10 +294,7 @@ def parse_provider_models(models: list[OpenRouterModel]) -> list[ModelInfo]:
     by_id = {model.id: model for model in models}
     model_infos: list[ModelInfo] = []
     for model in models:
-        if model.provider_id() == 'openrouter' or model.pricing.has_negative_price():
-            continue
-        if model.id.startswith('~'):
-            # A `~...-latest` alias redirects to another model, and its reported rates flip within minutes.
+        if not model.has_fixed_price():
             continue
         if (base := by_id.get(model.id.removesuffix(':batch'))) and model.id.endswith(':batch'):
             model = with_batch_cache_writes(model, base)
@@ -339,13 +356,38 @@ def with_batch_cache_writes(batch: OpenRouterModel, base: OpenRouterModel) -> Op
 
 def update_openrouter_provider(provider_path: Path | None = None) -> None:
     """Update only the `openrouter` provider's prices, keeping a dated entry for every rate change."""
-    response = httpx2.get(MODELS_URL, timeout=30.0)
-    response.raise_for_status()
-    models = parse_provider_models(OpenRouterResponse.model_validate_json(response.content).data)
+    with httpx2.Client(timeout=30.0) as client:
+        response = client.get(MODELS_URL)
+        response.raise_for_status()
+        listed: list[OpenRouterModel] = []
+        for model in OpenRouterResponse.model_validate_json(response.content).data:
+            if model.has_fixed_price():
+                response = client.get(f'{MODELS_URL}/{model.id}/endpoints')
+                response.raise_for_status()
+                endpoints = OpenRouterEndpointsResponse.model_validate_json(response.content).data.endpoints
+                model = model.model_copy(update={'pricing': representative_pricing(model, endpoints)})
+            listed.append(model)
+    models = parse_provider_models(listed)
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/openrouter.yml')
     models = [settled(model, provider_yaml) for model in models]
     added, updated = provider_yaml.upsert_models(models, source='OpenRouter', min_count=MIN_MODEL_COUNT)
     print(f'OpenRouter prices updated: {added} added, {updated} updated')
+
+
+def representative_pricing(model: OpenRouterModel, endpoints: list[OpenRouterEndpoint]) -> OpenRouterPricing:
+    """The model author's cheapest endpoint, or the median endpoint by input rate when the author doesn't host it.
+
+    OpenRouter lists each model at its cheapest endpoint, which one cut-rate host can set far below what others charge.
+    Service-tier endpoints such as `flex` and `priority` are opt-in, so they never set the standard price. Regional
+    endpoints such as `mistral/eu` add a surcharge, so the author's base rate is its cheapest endpoint.
+    """
+    standard = [e for e in endpoints if e.service_tier is None and not e.pricing.has_negative_price()]
+    author = model.canonical_slug.split('/', 1)[0]
+    own = [e for e in standard if e.tag.split('/', 1)[0] in {author, map_providers.get(author)}]
+    candidates = sorted(own or standard, key=lambda e: e.pricing.prompt or 0)
+    if not candidates:
+        return model.pricing
+    return candidates[0 if own else (len(candidates) - 1) // 2].pricing
 
 
 def settled(model: ModelInfo, provider_yaml: ProviderYaml) -> ModelInfo:
