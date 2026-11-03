@@ -744,47 +744,70 @@ const run = new (async () => {}).constructor('require', 'process', 'core', scrip
 def test_hourly_importer_failures_alert_slack_once() -> None:
     workflow = read_workflow('update-prices.yml')
     check = workflow['jobs']['importer-failure']
-    assert check['needs'] == 'import'
-    assert check['if'] == "${{ !cancelled() && needs.import.result == 'failure' && github.event_name == 'schedule' }}"
+    assert check['needs'] == ['import', 'pull-request']
+    assert check['if'] == (
+        "${{ !cancelled() && (needs.import.result == 'failure' || needs.pull-request.result == 'failure')"
+        " && github.event_name == 'schedule' }}"
+    )
     assert check['permissions'] == {'actions': 'read'}
     notify = workflow['jobs']['notify-failure']
-    assert notify['if'] == "${{ !cancelled() && needs.importer-failure.outputs.newly-failing == 'true' }}"
+    assert notify['if'] == "${{ !cancelled() && needs.importer-failure.outputs.newly-failing != '' }}"
     assert notify['uses'] == './.github/workflows/price-update-slack.yml'
-    assert notify['with']['message'] == 'A GenAI Prices importer started failing:'
+    assert notify['with']['message'] == (
+        'GenAI Prices jobs started failing (${{ needs.importer-failure.outputs.newly-failing }}):'
+    )
 
 
-@pytest.mark.parametrize(
-    ('previous_run', 'previous_import_conclusions', 'newly_failing'),
-    [
-        ('', '', 'true'),
-        ('41', 'success\nsuccess', 'true'),
-        ('41', 'success\nfailure', 'false'),
-    ],
-)
-def test_importer_failure_alerts_only_after_a_scheduled_run_whose_importers_passed(
-    tmp_path: Path, previous_run: str, previous_import_conclusions: str, newly_failing: str
-) -> None:
+def fake_run_view(tmp_path: Path) -> None:
     fake_gh = tmp_path / 'gh'
     fake_gh.write_text(
         '#!/bin/bash\n'
         'echo "$*" >> "$GH_CALLS"\n'
-        'if [ "$2" = list ]; then printf %s "$PREVIOUS_RUN"; else printf "$PREVIOUS_IMPORTS\\n"; fi\n'
+        'if [ "$2" = list ]; then printf %s "$PREVIOUS_RUN"; exit; fi\n'
+        '[ "$3" = 99 ] && jobs="$CURRENT_JOBS" || jobs="$PREVIOUS_JOBS"\n'
+        'while [ "$1" != --jq ]; do shift; done\n'
+        'jq -r "$2" <<< "$jobs"\n'
     )
     fake_gh.chmod(0o755)
+
+
+def run_jobs(*failing: str) -> str:
+    passing = [{'name': 'import openai', 'conclusion': 'success'}, {'name': 'pull-request', 'conclusion': 'success'}]
+    jobs = [job for job in passing if job['name'] not in failing]
+    jobs += [{'name': name, 'conclusion': 'failure'} for name in [*failing, 'manual-updates']]
+    return json.dumps({'jobs': jobs})
+
+
+@pytest.mark.parametrize(
+    ('previous_run', 'previous_failing', 'current_failing', 'newly_failing'),
+    [
+        ('', [], ['import baseten'], 'import baseten'),
+        ('41', [], ['import baseten'], 'import baseten'),
+        ('41', ['import baseten'], ['import baseten'], ''),
+        ('41', ['import baseten'], ['import baseten', 'import mistral'], 'import mistral'),
+        ('41', ['import baseten'], ['pull-request'], 'pull-request'),
+    ],
+)
+def test_importer_failure_alerts_on_each_job_that_was_passing_in_the_previous_run(
+    tmp_path: Path, previous_run: str, previous_failing: list[str], current_failing: list[str], newly_failing: str
+) -> None:
+    fake_run_view(tmp_path)
     output = tmp_path / 'output'
     calls = tmp_path / 'calls'
     script = read_workflow('update-prices.yml')['jobs']['importer-failure']['steps'][0]['run']
 
     subprocess.run(
-        ['bash', '-e', '-o', 'pipefail', '-c', script],
+        ['bash', '-e', '-c', script],
         env={
             **os.environ,
             'PATH': f'{tmp_path}:{os.environ["PATH"]}',
             'GITHUB_OUTPUT': str(output),
             'GITHUB_REPOSITORY': 'pydantic/genai-prices',
+            'GITHUB_RUN_ID': '99',
             'GH_CALLS': str(calls),
             'PREVIOUS_RUN': previous_run,
-            'PREVIOUS_IMPORTS': previous_import_conclusions,
+            'PREVIOUS_JOBS': run_jobs(*previous_failing),
+            'CURRENT_JOBS': run_jobs(*current_failing),
         },
         check=True,
     )
@@ -801,8 +824,9 @@ def test_importer_failure_lookup_error_fails_instead_of_alerting(tmp_path: Path)
     output = tmp_path / 'output'
     script = read_workflow('update-prices.yml')['jobs']['importer-failure']['steps'][0]['run']
 
+    # GitHub runs a step without an explicit `shell` as `bash -e`, without pipefail.
     result = subprocess.run(
-        ['bash', '-e', '-o', 'pipefail', '-c', script],
+        ['bash', '-e', '-c', script],
         env={
             **os.environ,
             'PATH': f'{tmp_path}:{os.environ["PATH"]}',

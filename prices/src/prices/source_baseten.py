@@ -5,7 +5,6 @@ from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
-from urllib.parse import unquote
 
 import httpx2
 
@@ -15,15 +14,19 @@ from prices.utils import package_dir
 
 # The Markdown export renders this page's model table empty, so the catalog is read from the page's compiled MDX.
 CATALOG_URL = 'https://docs.baseten.co/inference/model-apis/overview'
-PRICING_URL = 'https://www.baseten.co/pricing/'
+PRICING_URL = 'https://www.baseten.co/pricing'
 MIN_MODEL_COUNT = 11
-PRICING_ID_ALIASES = {
-    'deepseek-v4-pro': 'deepseek-ai/DeepSeek-V4-Pro',
-    'deepseek-v4-pro-0813': 'deepseek-ai/DeepSeek-V4-Pro-0813',
-    'glm-4-7': 'zai-org/GLM-4.7',
-    'inkling': 'thinkingmachines/inkling',
-    'inkling-small': 'thinkingmachines/inkling-small',
+# The pricing table names models only by display name; most reduce to the same key as their catalog ID.
+PRICING_NAME_ALIASES = {
+    'Beam': 'reflection/Beam-1.0',
+    'Nemotron 3.5 Super VL': 'nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B',
+    'NVIDIA Nemotron 3 Ultra': 'nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B',
 }
+TOKEN_TABLE = re.compile(
+    r'\\"columns\\":\[\\"Model\\",\\"Input\\",\\"Cache input\\",\\"Output\\"],\\"rows\\":\[(.*?)]]'
+)
+TABLE_ROW = re.compile(r'\[\\"([^"\\]+)\\",\\"([^"\\]+)\\",\\"([^"\\]+)\\",\\"([^"\\]+)\\"')
+PRICE_CELL = re.compile(r'\$\$([0-9]+(?:\.[0-9]+)?)')
 
 
 @dataclass(frozen=True)
@@ -46,32 +49,42 @@ def parse_catalog(page: str) -> list[CatalogModel]:
     return models
 
 
-def parse_pricing_page(page: str) -> dict[str, ModelPrice]:
-    prices: dict[str, ModelPrice] = {}
-    for record in page.split(r'\"__typename\":\"LibraryModelRecord\"')[1:]:
-        model_match = re.search(
-            r'\\\"tryModelApiLink\\\":\\\"https://app\.baseten\.co/model-apis/([^\"\\]+)\\\"', record
-        )
-        input_match = re.search(r'\\\"perfCost\\\":([0-9]+(?:\.[0-9]+)?)', record)
-        output_match = re.search(r'\\\"perfCostOutput\\\":([0-9]+(?:\.[0-9]+)?)', record)
-        if model_match is None or input_match is None or output_match is None:
-            continue
-        pricing_id = unquote(model_match.group(1))
-        model_id = PRICING_ID_ALIASES.get(pricing_id, pricing_id)
-        if model_id in prices:
-            raise RuntimeError(f'Duplicate Baseten pricing model: {model_id}')
-        cache_match = re.search(r'\\\"perfCostCacheInput\\\":([0-9]+(?:\.[0-9]+)?)', record)
-        prices[model_id] = ModelPrice(
-            input_mtok=Decimal(input_match.group(1)),
-            cache_read_mtok=Decimal(cache_match.group(1)) if cache_match else None,
-            output_mtok=Decimal(output_match.group(1)),
-        )
-    return prices
+def parse_pricing_page(page: str) -> list[tuple[str, list[Decimal | None]]]:
+    """Return the token pricing table's rows as display name and input, cached input and output rates."""
+    table = TOKEN_TABLE.search(page)
+    if table is None:
+        raise RuntimeError('Baseten token pricing table was not found')
+    return [(name, [_rate(cell) for cell in cells]) for name, *cells in TABLE_ROW.findall(table.group(1))]
+
+
+def _rate(cell: str) -> Decimal | None:
+    """Parse a `$$1.25` price cell; `—` marks a rate the table does not publish."""
+    if cell == '—':
+        return None
+    if (price := PRICE_CELL.fullmatch(cell)) is None:
+        raise RuntimeError(f'Unexpected Baseten price: {cell}')
+    return Decimal(price.group(1))
+
+
+def _name_key(name: str) -> str:
+    return re.sub(r'[^a-z0-9]', '', name.lower())
 
 
 def parse_models(catalog_page: str, pricing_page: str) -> list[ModelInfo]:
     catalog = parse_catalog(catalog_page)
-    prices = parse_pricing_page(pricing_page)
+    ids = {_name_key(model.id.rsplit('/', 1)[-1]): model.id for model in catalog}
+    prices: dict[str, ModelPrice] = {}
+    for name, rates in parse_pricing_page(pricing_page):
+        model_id = PRICING_NAME_ALIASES.get(name) or ids.get(_name_key(name))
+        if model_id is None or model_id not in ids.values():
+            continue
+        if model_id in prices:
+            raise RuntimeError(f'Duplicate Baseten pricing model: {model_id}')
+        # The updater keeps a curated rate the source omits, so a rate that became free needs a manual edit.
+        if Decimal(0) in rates:
+            raise RuntimeError(f'Baseten lists a $0.00 rate for {model_id}; record the free rate by hand')
+        input_mtok, cache_read_mtok, output_mtok = rates
+        prices[model_id] = ModelPrice(input_mtok=input_mtok, cache_read_mtok=cache_read_mtok, output_mtok=output_mtok)
     # New models often reach the catalog before the pricing page, so price only what both list.
     if unpriced := sorted({model.id for model in catalog} - prices.keys()):
         print(f'Skipping Baseten models without published prices: {unpriced}')

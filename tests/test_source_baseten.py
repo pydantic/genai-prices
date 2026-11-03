@@ -14,14 +14,15 @@ CATALOG_PAGE = (
     'const SupportedModelsTable=()=>{const rows=[{model:`GLM 4.7`,slug:`zai-org/GLM-4.7`,context:200,maxOutput:200},'
     '{model:`OpenAI GPT 120B`,slug:`openai/gpt-oss-120b`,context:128,maxOutput:128}];'
 )
-PRICING_PAGE = (
-    r'\"__typename\":\"LibraryModelRecord\",\"tryModelApiLink\":'
-    r'\"https://app.baseten.co/model-apis/glm-4-7\",\"perfCost\":0.6,'
-    r'\"perfCostOutput\":2.2,\"perfCostCacheInput\":0.12}'
-    r'\"__typename\":\"LibraryModelRecord\",\"tryModelApiLink\":'
-    r'\"https://app.baseten.co/model-apis/openai/gpt-oss-120b\",\"perfCost\":0.1,'
-    r'\"perfCostOutput\":0.5}'
-)
+GLM_ROW = r'[\"GLM-4.7\",\"$$0.60\",\"$$0.12\",\"$$2.20\"]'
+GPT_ROW = r'[\"GPT OSS 120B\",\"$$0.10\",\"—\",\"$$0.50\"]'
+
+
+def pricing_page(*rows: str) -> str:
+    return r'\"columns\":[\"Model\",\"Input\",\"Cache input\",\"Output\"],\"rows\":[' + ','.join(rows) + ']]}]'
+
+
+PRICING_PAGE = pricing_page(GLM_ROW, GPT_ROW)
 
 
 def test_parse_models_joins_catalog_and_pricing() -> None:
@@ -48,29 +49,40 @@ def test_parse_catalog_rejects_duplicate_models() -> None:
         source_baseten.parse_catalog(duplicate)
 
 
-def test_parse_pricing_page_skips_incomplete_records() -> None:
-    marker = r'\"__typename\":\"LibraryModelRecord\"'
-    page = (
-        marker + r',\"tryModelApiLink\":'
-        r'\"https://app.baseten.co/model-apis/zai-org/incomplete\",\"perfCostOutput\":2}'
-        + marker
-        + PRICING_PAGE.rsplit(marker, 1)[-1]
-    )
+def test_parse_models_ignores_rows_outside_the_catalog() -> None:
+    page = pricing_page(GLM_ROW, r'[\"elephant-1\",\"$$0.035\",\"$$0.00\",\"$$0.00\"]')
 
-    assert source_baseten.parse_pricing_page(page) == {
-        'openai/gpt-oss-120b': ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.5'))
-    }
+    assert [model.id for model in source_baseten.parse_models(CATALOG_PAGE, page)] == ['zai-org/GLM-4.7']
 
 
-def test_parse_pricing_page_rejects_duplicate_models() -> None:
+def test_parse_models_rejects_a_free_rate_on_a_catalog_model() -> None:
+    page = pricing_page(GLM_ROW.replace('$$0.12', '$$0.00'))
+
+    with pytest.raises(RuntimeError, match='Baseten lists a \\$0.00 rate for zai-org/GLM-4.7'):
+        source_baseten.parse_models(CATALOG_PAGE, page)
+
+
+@pytest.mark.parametrize(
+    ('page', 'error'),
+    [
+        ('<html></html>', 'Baseten token pricing table was not found'),
+        (pricing_page(GLM_ROW.replace('$$2.20', 'Contact us')), 'Unexpected Baseten price: Contact us'),
+    ],
+)
+def test_parse_pricing_page_rejects_an_unexpected_table(page: str, error: str) -> None:
+    with pytest.raises(RuntimeError, match=error):
+        source_baseten.parse_pricing_page(page)
+
+
+def test_parse_models_rejects_duplicate_models() -> None:
+    page = pricing_page(GLM_ROW, GLM_ROW.replace('GLM-4.7', 'GLM 4.7'))
+
     with pytest.raises(RuntimeError, match='Duplicate Baseten pricing model: zai-org/GLM-4.7'):
-        source_baseten.parse_pricing_page(PRICING_PAGE + PRICING_PAGE)
+        source_baseten.parse_models(CATALOG_PAGE, page)
 
 
 def test_parse_models_skips_catalog_models_without_prices(capsys: pytest.CaptureFixture[str]) -> None:
-    models = source_baseten.parse_models(
-        CATALOG_PAGE, PRICING_PAGE.rsplit(r'\"__typename\":\"LibraryModelRecord\"', 1)[0]
-    )
+    models = source_baseten.parse_models(CATALOG_PAGE, pricing_page(GLM_ROW))
 
     assert [model.id for model in models] == ['zai-org/GLM-4.7']
     assert capsys.readouterr().out == "Skipping Baseten models without published prices: ['openai/gpt-oss-120b']\n"

@@ -48,6 +48,24 @@ def test_fireworks_us_slug_does_not_double_the_router_suffix() -> None:
     assert [model.id for model in models] == ['accounts/fireworks/routers/ultramarine-1-flash-us']
 
 
+def test_fireworks_ultra_fast_row_is_a_router_model() -> None:
+    url = 'https://app.fireworks.ai/models/fireworks/deepseek-v4p1-flash-1017'
+    rows = (
+        f'| [DeepSeek V4.1 Flash 1017]({url}) | \\$0.30 / \\$0.006 / \\$1.20 | — |\n'
+        f'| [DeepSeek V4.1 Flash 1017 Ultra-fast (Preview)]({url}) | \\$2.40 / \\$0.048 / \\$9.60 | — |\n'
+    )
+
+    models = source_fireworks.parse_pricing_markdown(f'{source_fireworks.TABLE_HEADER}\n| - | - | - |\n{rows}')
+
+    assert [(model.id, model.name) for model in models] == [
+        ('accounts/fireworks/models/deepseek-v4p1-flash-1017', 'DeepSeek V4.1 Flash 1017'),
+        (
+            'accounts/fireworks/routers/deepseek-v4p1-flash-1017-ultrafast',
+            'DeepSeek V4.1 Flash 1017 Ultra-fast (Preview)',
+        ),
+    ]
+
+
 @pytest.mark.parametrize(
     ('markdown', 'error'),
     [

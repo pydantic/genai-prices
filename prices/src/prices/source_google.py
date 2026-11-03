@@ -8,11 +8,14 @@ from typing import TypeAlias
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, Tier, TieredPrices
 from prices.update import ProviderYaml
-from prices.utils import get_markdown, markdown_tables, package_dir
+from prices.utils import get_markdown, package_dir
 
-PRICING_URL = 'https://ai.google.dev/gemini-api/docs/pricing.md.txt'
+PRICING_URL = 'https://aistudio.google.com/docs/pricing.md'
 MIN_MODEL_COUNT = 15
 MODEL_IDS = re.compile(r'\[`([\w.-]+)`\]')
+# The italic list of model IDs under each heading, which may wrap across lines.
+MODEL_ID_LIST = re.compile(r'^ *\*(\[`.*?)\*$', re.MULTILINE | re.DOTALL)
+MARKDOC_TABLE = re.compile(r'{% table %}(.*?){% /table %}', re.DOTALL)
 RATE = re.compile(
     r'\$(?P<price>\d+(?:\.\d+)?)'
     r'(?:,? prompts (?P<op><=|>) (?P<threshold>\d+)k(?: tokens)?)?'
@@ -22,7 +25,7 @@ RATE = re.compile(
 )
 SEARCH_RATE = re.compile(r'then \$(\d+(?:\.\d+)?) (?:per|/) 1,000 (?:requests|grounded prompts)')
 NOISE = [
-    re.compile(r'\^[\\*]+\^|\\\*'),
+    re.compile(r'{% sup %}[^{]*{% /sup %}'),
     re.compile(r',? equivalent to .*$', re.IGNORECASE),
     re.compile(r' ?\(\$[\d.]+ per \w+\)'),
     re.compile(r' ?\$[\d.]+ / 1,000,000 tokens per hour \(storage price\)(?: (?:through|starting) \w+ \d+, \d{4}\.)?'),
@@ -55,11 +58,12 @@ def parse_pricing_markdown(markdown: str, today: date | None = None) -> list[Mod
     models: list[ModelInfo] = []
     for section in re.split(r'^## ', markdown, flags=re.MULTILINE)[1:]:
         heading, _, body = section.partition('\n')
-        model_ids = MODEL_IDS.findall(next((line for line in body.splitlines() if line.startswith('*[`')), ''))
-        tables = markdown_tables(body.split('### Standard', 1)[-1])
-        if not model_ids or not tables:
+        heading = re.sub(r'\s*{%.*?%}', '', heading)
+        model_ids = MODEL_IDS.findall(id_list[1]) if (id_list := MODEL_ID_LIST.search(body)) else []
+        table = MARKDOC_TABLE.search(body.split('{% tab title="Standard" %}', 1)[-1])
+        if not model_ids or table is None:
             continue
-        header, rows = tables[0]
+        header, *rows = _markdoc_rows(table[1])
         if len(header) != 3 or 'per 1M tokens' not in header[2]:
             print(f'Google: skipped {heading}, its prices are not per 1M tokens')
             continue
@@ -95,6 +99,23 @@ def get_google_prices() -> None:  # pragma: no cover - thin CLI alias for main
     main()
 
 
+def _markdoc_rows(table: str) -> list[list[str]]:
+    """Return a Markdoc table's rows, header first; a `* ` item starts a cell, and indented lines continue it."""
+    rows: list[list[str]] = []
+    for block in re.split(r'^ *--- *$', table, flags=re.MULTILINE):
+        cells: list[str] = []
+        for line in block.splitlines():
+            line = line.strip().removesuffix('\\\\').strip()
+            if line == '*' or line.startswith('* '):
+                cells.append(line[2:])
+            elif line:
+                cells[-1] += f' {line}'
+        if rows and len(cells) != len(rows[0]):
+            raise ValueError(f'Table row has {len(cells)} cells, header has {len(rows[0])}: {cells}')
+        rows.append(cells)
+    return rows
+
+
 def _prices(cells: dict[str, str], today: date) -> ModelPrice:
     keys: dict[str, Rate] = {}
     for label, cell in cells.items():
@@ -113,7 +134,7 @@ def _prices(cells: dict[str, str], today: date) -> ModelPrice:
 
 
 def _cell_rates(row: str, cell: str, today: date) -> dict[str, Rate]:
-    text = cell.replace('\\<', '<').replace('\\>', '>')
+    text = cell
     for noise in NOISE:
         text = noise.sub('', text)
     text = ' '.join(text.split())

@@ -102,6 +102,19 @@ describe('Provider Matching', () => {
         timestamp: new Date('2026-10-17T00:00:00Z'),
       })?.total_price
     ).toBeCloseTo(2.9799, 10)
+    expect(
+      calcPrice(tokenUsage, 'mistralai/mistral-large-4-0', {
+        providerId: 'openrouter',
+        timestamp: new Date('2026-11-03T00:00:00Z'),
+      })?.total_price
+    ).toBeCloseTo(2.737, 10)
+    expect(
+      calcPrice(tokenUsage, 'mistralai/mistral-large-4-0', {
+        priceContext: { route: 'mistral/eu' },
+        providerId: 'openrouter',
+        timestamp: new Date('2026-11-03T00:00:00Z'),
+      })?.total_price
+    ).toBeCloseTo(3.0107, 10)
   })
 
   describe('matchProvider with modelId', () => {

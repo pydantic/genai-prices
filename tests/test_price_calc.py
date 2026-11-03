@@ -82,6 +82,15 @@ def test_october_model_prices_and_context_metadata():
         genai_request_timestamp=datetime(2026, 10, 17),
     )
     assert eu_price.total_price == Decimal('2.9799')
+    for price_context, total in ((None, '2.737'), ({'route': 'mistral/eu'}, '3.0107')):
+        cut_price = calc_price(
+            Usage(input_tokens=1_000_000, cache_read_tokens=100_000, output_tokens=1_000_000),
+            'mistralai/mistral-large-4-0',
+            provider_id='openrouter',
+            price_context=price_context,
+            genai_request_timestamp=datetime(2026, 11, 3),
+        )
+        assert cut_price.total_price == Decimal(total)
 
     openrouter_meta = calc_price(
         usage, 'meta/muse-wonder-20261012', provider_id='openrouter', genai_request_timestamp=datetime(2026, 10, 17)
