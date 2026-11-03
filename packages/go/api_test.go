@@ -1111,6 +1111,29 @@ func TestOctoberModelPricingAndMetaExtraction(t *testing.T) {
 		}
 	}
 
+	for _, test := range []struct {
+		priceContext map[string]string
+		wantTotal    float64
+	}{{nil, 2.737}, {map[string]string{"route": "mistral/eu"}, 3.0107}} {
+		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Usage: genai_prices.Usage{
+				genai_prices.UsageInputTokens:     1_000_000,
+				genai_prices.UsageCacheReadTokens: 100_000,
+				genai_prices.UsageOutputTokens:    1_000_000,
+			},
+			Model:        "mistralai/mistral-large-4-0",
+			ProviderID:   "openrouter",
+			PriceContext: test.priceContext,
+			Timestamp:    time.Date(2026, 11, 3, 0, 0, 0, 0, time.UTC),
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if math.Abs(calculation.TotalPrice-test.wantTotal) > 1e-9 {
+			t.Errorf("openrouter Mistral Large 4 %v got %g, want %g", test.priceContext, calculation.TotalPrice, test.wantTotal)
+		}
+	}
+
 	for _, fixture := range []struct {
 		apiFlavor string
 		body      string
