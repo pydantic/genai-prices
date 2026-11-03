@@ -744,31 +744,40 @@ const run = new (async () => {}).constructor('require', 'process', 'core', scrip
 def test_hourly_importer_failures_alert_slack_once() -> None:
     workflow = read_workflow('update-prices.yml')
     check = workflow['jobs']['importer-failure']
-    assert check['needs'] == 'import'
-    assert check['if'] == "${{ !cancelled() && needs.import.result == 'failure' && github.event_name == 'schedule' }}"
+    assert check['needs'] == ['import', 'pull-request']
+    assert check['if'] == (
+        "${{ !cancelled() && (needs.import.result == 'failure' || needs.pull-request.result == 'failure')"
+        " && github.event_name == 'schedule' }}"
+    )
     assert check['permissions'] == {'actions': 'read'}
     notify = workflow['jobs']['notify-failure']
-    assert notify['if'] == "${{ !cancelled() && needs.importer-failure.outputs.newly-failing == 'true' }}"
+    assert notify['if'] == "${{ !cancelled() && needs.importer-failure.outputs.newly-failing != '' }}"
     assert notify['uses'] == './.github/workflows/price-update-slack.yml'
-    assert notify['with']['message'] == 'A GenAI Prices importer started failing:'
+    assert notify['with']['message'] == (
+        'GenAI Prices jobs started failing (${{ needs.importer-failure.outputs.newly-failing }}):'
+    )
 
 
 @pytest.mark.parametrize(
-    ('previous_run', 'previous_import_conclusions', 'newly_failing'),
+    ('previous_run', 'previous_failing', 'current_failing', 'newly_failing'),
     [
-        ('', '', 'true'),
-        ('41', 'success\nsuccess', 'true'),
-        ('41', 'success\nfailure', 'false'),
+        ('', '', 'import baseten', 'import baseten'),
+        ('41', '', 'import baseten', 'import baseten'),
+        ('41', 'import baseten', 'import baseten', ''),
+        ('41', 'import baseten', 'import baseten\nimport mistral', 'import mistral'),
+        ('41', 'import baseten', 'pull-request', 'pull-request'),
     ],
 )
-def test_importer_failure_alerts_only_after_a_scheduled_run_whose_importers_passed(
-    tmp_path: Path, previous_run: str, previous_import_conclusions: str, newly_failing: str
+def test_importer_failure_alerts_on_each_job_that_was_passing_in_the_previous_run(
+    tmp_path: Path, previous_run: str, previous_failing: str, current_failing: str, newly_failing: str
 ) -> None:
     fake_gh = tmp_path / 'gh'
     fake_gh.write_text(
         '#!/bin/bash\n'
         'echo "$*" >> "$GH_CALLS"\n'
-        'if [ "$2" = list ]; then printf %s "$PREVIOUS_RUN"; else printf "$PREVIOUS_IMPORTS\\n"; fi\n'
+        'if [ "$2" = list ]; then printf %s "$PREVIOUS_RUN"\n'
+        'elif [ "$3" = 99 ]; then printf "$CURRENT_FAILING\\n"\n'
+        'else printf "$PREVIOUS_FAILING\\n"; fi\n'
     )
     fake_gh.chmod(0o755)
     output = tmp_path / 'output'
@@ -782,9 +791,11 @@ def test_importer_failure_alerts_only_after_a_scheduled_run_whose_importers_pass
             'PATH': f'{tmp_path}:{os.environ["PATH"]}',
             'GITHUB_OUTPUT': str(output),
             'GITHUB_REPOSITORY': 'pydantic/genai-prices',
+            'GITHUB_RUN_ID': '99',
             'GH_CALLS': str(calls),
             'PREVIOUS_RUN': previous_run,
-            'PREVIOUS_IMPORTS': previous_import_conclusions,
+            'PREVIOUS_FAILING': previous_failing,
+            'CURRENT_FAILING': current_failing,
         },
         check=True,
     )

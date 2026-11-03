@@ -146,7 +146,7 @@ jobs:
       - if: steps.apply.outputs.importers != ''
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
       - if: steps.apply.outputs.importers != ''
-        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.0.0
+        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
         with:
           go-version-file: packages/go/go.mod
           cache: false
@@ -333,8 +333,10 @@ jobs:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   importer-failure:
-    needs: import
-    if: ${{ !cancelled() && needs.import.result == 'failure' && github.event_name == 'schedule' }}
+    needs: [import, pull-request]
+    if: >-
+      ${{ !cancelled() && (needs.import.result == 'failure' || needs.pull-request.result == 'failure')
+      && github.event_name == 'schedule' }}
     runs-on: ubuntu-latest
     timeout-minutes: 2
     permissions:
@@ -342,32 +344,32 @@ jobs:
     outputs:
       newly-failing: ${{ steps.previous.outputs.newly-failing }}
     steps:
-      # ponytail: alerts on the first failing run only; a second importer breaking while one is still red stays silent.
       - id: previous
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          failing() {
+            gh run view "$1" --repo "$GITHUB_REPOSITORY" --json jobs --jq '.jobs[]
+              | select(.conclusion == "failure" and (.name | startswith("import ") or . == "pull-request")) | .name' | sort
+          }
           run_id="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow update-prices.yml --branch main --event schedule \
             --status completed --limit 1 --json databaseId --jq '.[0].databaseId')"
-          conclusions=''
+          previous=''
           if [ -n "$run_id" ]; then
             # Assigned on its own so a failed lookup fails the step instead of looking like a new failure.
-            conclusions="$(gh run view "$run_id" --repo "$GITHUB_REPOSITORY" --json jobs \
-              --jq '.jobs[] | select(.name | startswith("import ")) | .conclusion')"
+            previous="$(failing "$run_id")"
           fi
-          if grep -qx failure <<< "$conclusions"; then
-            echo 'newly-failing=false' >> "$GITHUB_OUTPUT"
-          else
-            echo 'newly-failing=true' >> "$GITHUB_OUTPUT"
-          fi
+          current="$(failing "$GITHUB_RUN_ID")"
+          newly="$(comm -23 <(printf '%s\n' "$current" | sed '/^$/d') <(printf '%s\n' "$previous" | sed '/^$/d') | paste -sd ' ' -)"
+          echo "newly-failing=$newly" >> "$GITHUB_OUTPUT"
 
   notify-failure:
     needs: importer-failure
-    if: ${{ !cancelled() && needs.importer-failure.outputs.newly-failing == 'true' }}
+    if: ${{ !cancelled() && needs.importer-failure.outputs.newly-failing != '' }}
     permissions: {}
     uses: ./.github/workflows/price-update-slack.yml
     with:
       pr-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-      message: "A GenAI Prices importer started failing:"
+      message: "GenAI Prices jobs started failing (${{ needs.importer-failure.outputs.newly-failing }}):"
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
