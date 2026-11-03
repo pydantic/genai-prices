@@ -51,6 +51,7 @@ def workflow_env(tmp_path: Path) -> dict[str, str]:
         'GITHUB_REPOSITORY': 'test/repo',
         'GITHUB_WORKSPACE': str(Path(__file__).parents[1]),
         'BRANCH': 'automation/hourly-price-update',
+        'TITLE_SUFFIX': '',
         'GH_TOKEN': 'token',
         'GH_CALLS': str(tmp_path / 'calls'),
         'PREVIOUS_BODY': str(tmp_path / 'previous-body'),
