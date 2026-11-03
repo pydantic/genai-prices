@@ -49,10 +49,17 @@ def test_parse_catalog_rejects_duplicate_models() -> None:
         source_baseten.parse_catalog(duplicate)
 
 
-def test_parse_pricing_page_reads_zero_rates_as_uncharged() -> None:
-    page = pricing_page(r'[\"elephant-1\",\"$$0.035\",\"$$0.00\",\"$$0.00\"]')
+def test_parse_models_ignores_rows_outside_the_catalog() -> None:
+    page = pricing_page(GLM_ROW, r'[\"elephant-1\",\"$$0.035\",\"$$0.00\",\"$$0.00\"]')
 
-    assert source_baseten.parse_pricing_page(page) == [('elephant-1', ModelPrice(input_mtok=Decimal('0.035')))]
+    assert [model.id for model in source_baseten.parse_models(CATALOG_PAGE, page)] == ['zai-org/GLM-4.7']
+
+
+def test_parse_models_rejects_a_free_rate_on_a_catalog_model() -> None:
+    page = pricing_page(GLM_ROW.replace('$$0.12', '$$0.00'))
+
+    with pytest.raises(RuntimeError, match='Baseten lists a \\$0.00 rate for zai-org/GLM-4.7'):
+        source_baseten.parse_models(CATALOG_PAGE, page)
 
 
 @pytest.mark.parametrize(
