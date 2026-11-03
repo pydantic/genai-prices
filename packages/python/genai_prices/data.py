@@ -27930,9 +27930,21 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='mimo-v2.6-pro'),
                 name='MiMo-V2.6-Pro',
                 context_window=1048576,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.348'), cache_read_mtok=Decimal('0.00288'), output_mtok=Decimal('0.696')
-                ),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.348'),
+                            cache_read_mtok=Decimal('0.00288'),
+                            output_mtok=Decimal('0.696'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 3)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.426'), cache_read_mtok=Decimal('0.0036'), output_mtok=Decimal('0.861')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='minimax-m3',
