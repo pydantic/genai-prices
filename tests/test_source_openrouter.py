@@ -1,12 +1,15 @@
 from __future__ import annotations
 
+import json
 from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
 from shutil import copyfile
+from typing import Any
 
 import httpx2
 import pytest
+from cassetter.cassette import RawResponse
 from inline_snapshot import snapshot
 
 from prices import source_openrouter, source_prices, update
@@ -21,6 +24,7 @@ from prices.prices_types import (
     TieredPrices,
 )
 from prices.source_openrouter import (
+    OpenRouterEndpoint,
     OpenRouterModel,
     OpenRouterPricing,
     OpenRouterResponse,
@@ -29,6 +33,24 @@ from prices.source_openrouter import (
 from prices.utils import package_dir
 
 from .fixtures import load_entries, load_payload
+
+
+def keep_endpoint_pricing(response: RawResponse) -> RawResponse:  # pragma: no cover - runs only when recording
+    payload = json.loads(response.body or b'')
+    if not isinstance(payload['data'], dict):
+        return response
+    endpoints = [
+        {key: endpoint[key] for key in OpenRouterEndpoint.model_fields} for endpoint in payload['data']['endpoints']
+    ]
+    response.body = json.dumps({'data': {'endpoints': endpoints}}).encode()
+    response.headers = {'content-type': ['application/json']}
+    return response
+
+
+@pytest.fixture(scope='module')
+def vcr_config() -> dict[str, Any]:
+    return {'before_record_response': keep_endpoint_pricing}
+
 
 # The exact pricing keys OpenRouter added without notice, which `extra='forbid'` turned into 115
 # `extra_forbidden` errors and a fully aborted pull (#532).
@@ -583,6 +605,62 @@ def test_openrouter_provider_models_tier_prompt_length_overrides_and_skip_unrepr
     assert models[1].prices == ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2'))
 
 
+def endpoint(tag: str, prompt: str, service_tier: str | None = None) -> OpenRouterEndpoint:
+    # Each endpoint's output rate is a distinct multiple of its input rate, so a mixed-up rate card shows.
+    completion = str(Decimal(prompt) * 3)
+    pricing = pricing_with_extras({'prompt': prompt, 'completion': completion})
+    return OpenRouterEndpoint(tag=tag, service_tier=service_tier, pricing=pricing)
+
+
+@pytest.mark.parametrize(
+    'model_id,endpoints,expected',
+    [
+        pytest.param(
+            'mistralai/mistral-large-4',
+            [
+                endpoint('wafer', '0.000000006'),
+                endpoint('mistral/flex', '0.0000003', 'flex'),
+                endpoint('mistral/eu', '0.00000077'),
+                endpoint('mistral', '0.0000007'),
+            ],
+            '0.0000007',
+            id='author-cheapest-standard',
+        ),
+        pytest.param(
+            'google/gemini-3.1-flash-lite',
+            [
+                endpoint('deepinfra', '0.0000001'),
+                endpoint('google-vertex/eu', '0.000000275'),
+                endpoint('google-ai-studio', '0.00000025'),
+            ],
+            '0.00000025',
+            id='author-under-another-tag',
+        ),
+        pytest.param(
+            'z-ai/glm-5.2',
+            [
+                endpoint('wafer', '0.000000006'),
+                endpoint('together', '0.0000014'),
+                endpoint('novita', '0.0000006'),
+                endpoint('fireworks', '0.0000015'),
+            ],
+            '0.0000006',
+            id='lower-median-without-author',
+        ),
+        pytest.param(
+            'mistralai/mistral-large-4', [endpoint('mistral', '0.0000007', 'priority')], '0.000001', id='no-standard'
+        ),
+    ],
+)
+def test_openrouter_prices_from_a_representative_endpoint(
+    model_id: str, endpoints: list[OpenRouterEndpoint], expected: str
+) -> None:
+    pricing = source_openrouter.representative_pricing(openrouter_model(model_id), endpoints)
+    fallback = OpenRouterPricing(prompt=Decimal('0.000001'), completion=Decimal('0.000002'))
+    chosen = next((e.pricing for e in endpoints if e.pricing.prompt == Decimal(expected)), fallback)
+    assert pricing == chosen
+
+
 def test_openrouter_batch_routes_take_cache_writes_at_their_input_discount() -> None:
     base = pricing_with_extras(
         {
@@ -792,6 +870,4 @@ def test_update_openrouter_provider_fetches_recorded_models(
 
     source_openrouter.update_openrouter_provider(provider_path)
 
-    assert capsys.readouterr().out == snapshot("""\
-OpenRouter prices updated: 0 added, 420 updated
-""")
+    assert capsys.readouterr().out == snapshot('OpenRouter prices updated: 0 added, 399 updated\n')
