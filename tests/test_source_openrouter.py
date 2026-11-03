@@ -1,12 +1,15 @@
 from __future__ import annotations
 
+import json
 from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
 from shutil import copyfile
+from typing import Any
 
 import httpx2
 import pytest
+from cassetter.cassette import RawResponse
 from inline_snapshot import snapshot
 
 from prices import source_openrouter, source_prices, update
@@ -30,6 +33,24 @@ from prices.source_openrouter import (
 from prices.utils import package_dir
 
 from .fixtures import load_entries, load_payload
+
+
+def keep_endpoint_pricing(response: RawResponse) -> RawResponse:  # pragma: no cover - runs only when recording
+    payload = json.loads(response.body or b'')
+    if not isinstance(payload['data'], dict):
+        return response
+    endpoints = [
+        {key: endpoint[key] for key in OpenRouterEndpoint.model_fields} for endpoint in payload['data']['endpoints']
+    ]
+    response.body = json.dumps({'data': {'endpoints': endpoints}}).encode()
+    response.headers = {'content-type': ['application/json']}
+    return response
+
+
+@pytest.fixture(scope='module')
+def vcr_config() -> dict[str, Any]:
+    return {'before_record_response': keep_endpoint_pricing}
+
 
 # The exact pricing keys OpenRouter added without notice, which `extra='forbid'` turned into 115
 # `extra_forbidden` errors and a fully aborted pull (#532).
