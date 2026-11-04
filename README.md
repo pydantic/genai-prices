@@ -39,7 +39,7 @@ The following providers are currently supported:
 - [Avian](prices/providers/avian.yml) - 24 models
 - [AWS Bedrock](prices/providers/aws.yml) - 106 models
 - [Microsoft Azure](prices/providers/azure.yml) - 23 models
-- [Baseten](prices/providers/baseten.yml) - 21 models
+- [Baseten](prices/providers/baseten.yml) - 22 models
 - [Cerebras](prices/providers/cerebras.yml) - 8 models
 - [Cloudflare Workers AI](prices/providers/cloudflare.yml) - 54 models
 - [Cohere](prices/providers/cohere.yml) - 9 models
@@ -66,16 +66,16 @@ The following providers are currently supported:
 - [Meta](prices/providers/meta.yml) - 6 models
 - [MiniMax](prices/providers/minimax.yml) - 10 models
 - [Mistral](prices/providers/mistral.yml) - 52 models
-- [Modal](prices/providers/modal.yml) - 10 models
+- [Modal](prices/providers/modal.yml) - 11 models
 - [MoonshotAi](prices/providers/moonshotai.yml) - 16 models
-- [Novita](prices/providers/novita.yml) - 112 models
+- [Novita](prices/providers/novita.yml) - 113 models
 - [OpenAI](prices/providers/openai.yml) - 112 models
 - [OpenAI Decisions](prices/providers/openai_decisions.yml) - 1 models
 - [OpenRouter](prices/providers/openrouter.yml) - 903 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 20 models
 - [Perplexity](prices/providers/perplexity.yml) - 23 models
 - [QuickSilver Pro](prices/providers/quicksilverpro.yml) - 74 models
-- [Together AI](prices/providers/together.yml) - 93 models
+- [Together AI](prices/providers/together.yml) - 94 models
 - [TypeSafe](prices/providers/typesafe.yml) - 2 models
 - [Voyage AI](prices/providers/voyageai.yml) - 24 models
 - [X AI](prices/providers/x_ai.yml) - 22 models
