@@ -23578,10 +23578,17 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'tencent/hy4-preview',
-        name: 'Hy4 Preview',
+        id: 'tencent/hy4',
+        name: 'Hy4',
         match: {
-          equals: 'tencent/hy4-preview',
+          or: [
+            {
+              equals: 'tencent/hy4',
+            },
+            {
+              equals: 'tencent/hy4-preview',
+            },
+          ],
         },
         context_window: 1000000,
         prices: {

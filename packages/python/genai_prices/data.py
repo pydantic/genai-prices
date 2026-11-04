@@ -13681,9 +13681,9 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
-                id='tencent/hy4-preview',
-                match=ClauseEquals(equals='tencent/hy4-preview'),
-                name='Hy4 Preview',
+                id='tencent/hy4',
+                match=ClauseOr(or_=[ClauseEquals(equals='tencent/hy4'), ClauseEquals(equals='tencent/hy4-preview')]),
+                name='Hy4',
                 context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.834'), cache_read_mtok=Decimal('0.042'), output_mtok=Decimal('2.501')
