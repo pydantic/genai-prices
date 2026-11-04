@@ -12709,6 +12709,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
+                id='moonshotai/Kimi-K3.1-Pro',
+                match=ClauseEquals(equals='moonshotai/Kimi-K3.1-Pro'),
+                name='Kimi K3.1 Pro',
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
                 id='nvidia/GLM-5.3-Flash-NVFP4',
                 match=ClauseEquals(equals='nvidia/GLM-5.3-Flash-NVFP4'),
                 name='GLM 5.3 Flash NVFP4',
