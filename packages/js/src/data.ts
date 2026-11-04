@@ -23578,10 +23578,17 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'tencent/hy4-preview',
-        name: 'Hy4 Preview',
+        id: 'tencent/hy4',
+        name: 'Hy4',
         match: {
-          equals: 'tencent/hy4-preview',
+          or: [
+            {
+              equals: 'tencent/hy4',
+            },
+            {
+              equals: 'tencent/hy4-preview',
+            },
+          ],
         },
         context_window: 1000000,
         prices: {
@@ -23809,6 +23816,19 @@ export const data: Provider[] = [
           input_mtok: 0.15,
           cache_read_mtok: 0.03,
           output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'zai-org/glm-5.3-flashX',
+        name: 'GLM 5.3 FlashX',
+        match: {
+          equals: 'zai-org/glm-5.3-flashX',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.37,
+          cache_read_mtok: 0.075,
+          output_mtok: 1.25,
         },
       },
     ],
