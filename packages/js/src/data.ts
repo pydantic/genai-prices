@@ -23818,6 +23818,19 @@ export const data: Provider[] = [
           output_mtok: 0.5,
         },
       },
+      {
+        id: 'zai-org/glm-5.3-flashX',
+        name: 'GLM 5.3 FlashX',
+        match: {
+          equals: 'zai-org/glm-5.3-flashX',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.37,
+          cache_read_mtok: 0.075,
+          output_mtok: 1.25,
+        },
+      },
     ],
   },
   {
