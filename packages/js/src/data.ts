@@ -9339,6 +9339,18 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'kimi-k3p1-pro',
+        name: 'Kimi K3.1 Pro',
+        match: {
+          equals: 'accounts/fireworks/models/kimi-k3p1-pro',
+        },
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
+      },
+      {
         id: 'llama-v3p1-8b-instruct',
         name: 'Llama 3.1 8B Instruct',
         description:

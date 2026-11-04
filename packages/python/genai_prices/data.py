@@ -5486,6 +5486,12 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='kimi-k3p1-pro',
+                match=ClauseEquals(equals='accounts/fireworks/models/kimi-k3p1-pro'),
+                name='Kimi K3.1 Pro',
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
                 id='llama-v3p1-8b-instruct',
                 match=ClauseEquals(equals='accounts/fireworks/models/llama-v3p1-8b-instruct'),
                 name='Llama 3.1 8B Instruct',
