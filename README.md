@@ -46,7 +46,7 @@ The following providers are currently supported:
 - [Cursor](prices/providers/cursor.yml) - 8 models
 - [Databricks](prices/providers/databricks.yml) - 20 models
 - [Deepseek](prices/providers/deepseek.yml) - 8 models
-- [Doubleword](prices/providers/doubleword.yml) - 28 models
+- [Doubleword](prices/providers/doubleword.yml) - 29 models
 - [ElevenLabs](prices/providers/elevenlabs.yml) - 2 models
 - [Fireworks](prices/providers/fireworks.yml) - 47 models
 - [GitHub Copilot](prices/providers/github_copilot.yml) - 43 models

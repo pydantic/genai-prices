@@ -8649,6 +8649,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'moonshotai/Kimi-K3.1-Pro',
+        name: 'Kimi K3.1 Pro',
+        match: {
+          equals: 'moonshotai/Kimi-K3.1-Pro',
+        },
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
+      },
+      {
         id: 'moonshotai/kimi-k3',
         name: 'Kimi K3',
         match: {
