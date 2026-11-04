@@ -5619,6 +5619,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-ai/DeepSeek-V4.1-Flash-1017-Fast',
+        name: 'DeepSeek V4.1 Flash 1017 Fast',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4.1-Flash-1017-Fast',
+        },
+        context_window: 1048000,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.014,
+          output_mtok: 2.4,
+        },
+      },
+      {
         id: 'deepseek-ai/DeepSeek-V4.1-Flash-Fast',
         name: 'DeepSeek V4.1 Flash Fast',
         description: "Faster speed tier of DeepSeek V4.1 Flash sharing its base model's weights.",
@@ -50440,6 +50453,19 @@ export const data: Provider[] = [
           input_mtok: 3,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+        },
+      },
+      {
+        id: 'moonshotai/Kimi-K3.1-Pro',
+        name: 'Kimi K3.1 Pro',
+        match: {
+          equals: 'moonshotai/Kimi-K3.1-Pro',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
         },
       },
       {

@@ -3253,6 +3253,15 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='deepseek-ai/DeepSeek-V4.1-Flash-1017-Fast',
+                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash-1017-Fast'),
+                name='DeepSeek V4.1 Flash 1017 Fast',
+                context_window=1048000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.014'), output_mtok=Decimal('2.4')
+                ),
+            ),
+            ModelInfo(
                 id='deepseek-ai/DeepSeek-V4.1-Flash-Fast',
                 match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash-Fast'),
                 name='DeepSeek V4.1 Flash Fast',
@@ -28621,6 +28630,13 @@ providers: list[Provider] = [
                 name='Kimi K3',
                 context_window=1048576,
                 prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='moonshotai/Kimi-K3.1-Pro',
+                match=ClauseEquals(equals='moonshotai/Kimi-K3.1-Pro'),
+                name='Kimi K3.1 Pro',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='nvidia/NVIDIA-Nemotron-3.5-Super-VL',
