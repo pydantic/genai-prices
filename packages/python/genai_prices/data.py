@@ -27950,6 +27950,15 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='hy4',
+                match=ClauseEquals(equals='hy4'),
+                name='Hy4',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.459'), cache_read_mtok=Decimal('0.0231'), output_mtok=Decimal('1.375')
+                ),
+            ),
+            ModelInfo(
                 id='hy4-preview',
                 match=ClauseEquals(equals='hy4-preview'),
                 name='Hy4 Preview',
@@ -28041,9 +28050,21 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='mimo-v2.5'),
                 name='MiMo-V2.5',
                 context_window=1048576,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.112'), cache_read_mtok=Decimal('0.00224'), output_mtok=Decimal('0.224')
-                ),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.112'),
+                            cache_read_mtok=Decimal('0.00224'),
+                            output_mtok=Decimal('0.224'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 5)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.32'), cache_read_mtok=Decimal('0.064'), output_mtok=Decimal('1.6')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='mimo-v2.6-flash',

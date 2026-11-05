@@ -49271,6 +49271,19 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'hy4',
+        name: 'Hy4',
+        match: {
+          equals: 'hy4',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.459,
+          cache_read_mtok: 0.0231,
+          output_mtok: 1.375,
+        },
+      },
+      {
         id: 'hy4-preview',
         name: 'Hy4 Preview',
         match: {
@@ -49411,11 +49424,26 @@ export const data: Provider[] = [
           equals: 'mimo-v2.5',
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 0.112,
-          cache_read_mtok: 0.00224,
-          output_mtok: 0.224,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.112,
+              cache_read_mtok: 0.00224,
+              output_mtok: 0.224,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-05',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.32,
+              cache_read_mtok: 0.064,
+              output_mtok: 1.6,
+            },
+          },
+        ],
       },
       {
         id: 'mimo-v2.6-flash',
