@@ -940,6 +940,10 @@ def test_aws_gpt_5_6_context_boundary(model_ref: str, short_input_rate: Decimal,
         ('us.openai.gpt-6.1-sol', 'regional.openai.gpt-6.1-sol', Decimal('2.2'), Decimal('4.4')),
         ('openai.gpt-6.1-sol', 'regional.openai.gpt-6.1-sol', Decimal('2.2'), Decimal('4.4')),
         ('gpt-6.1-sol', 'regional.openai.gpt-6.1-sol', Decimal('2.2'), Decimal('4.4')),
+        ('global.openai.gpt-6.1-terra', 'global.openai.gpt-6.1-terra', Decimal('1'), Decimal('2')),
+        ('us.openai.gpt-6.1-terra', 'regional.openai.gpt-6.1-terra', Decimal('1.1'), Decimal('2.2')),
+        ('openai.gpt-6.1-terra', 'regional.openai.gpt-6.1-terra', Decimal('1.1'), Decimal('2.2')),
+        ('gpt-6.1-terra', 'regional.openai.gpt-6.1-terra', Decimal('1.1'), Decimal('2.2')),
     ],
 )
 def test_aws_gpt_6_context_boundary(

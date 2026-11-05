@@ -1816,6 +1816,23 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='global.openai.gpt-6.1-terra',
+                match=ClauseContains(contains='global.openai.gpt-6.1-terra'),
+                name='GPT-6.1 Terra (global)',
+                context_window=1050000,
+                price_comments="Launched on Bedrock 2026-10-26. Global cross-Region inference, identical to OpenAI's own list price and 10% below In-Region and Geo. Cache reads are 5% of input and cache writes 1.25x. AWS bills the whole request at long-context rates above 272K input tokens: input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-1-terra.html, https://developers.openai.com/api/docs/models/gpt-6.1-terra",
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('2'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('1.25'), tiers=[Tier(start=272000, price=Decimal('2.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.05'), tiers=[Tier(start=272000, price=Decimal('0.1'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('7.5'))]),
+                ),
+            ),
+            ModelInfo(
                 id='google.gemma-3-12b-it',
                 match=ClauseContains(contains='google.gemma-3-12b-it'),
                 name='Gemma 3 12B IT',
@@ -2830,6 +2847,29 @@ providers: list[Provider] = [
                         base=Decimal('0.11'), tiers=[Tier(start=272000, price=Decimal('0.22'))]
                     ),
                     output_mtok=TieredPrices(base=Decimal('11'), tiers=[Tier(start=272000, price=Decimal('16.5'))]),
+                ),
+            ),
+            ModelInfo(
+                id='regional.openai.gpt-6.1-terra',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='openai.gpt-6.1-terra'),
+                        ClauseStartsWith(starts_with='gpt-6.1-terra'),
+                        ClauseContains(contains='us.openai.gpt-6.1-terra'),
+                    ]
+                ),
+                name='GPT-6.1 Terra (regional)',
+                context_window=1050000,
+                price_comments='In-Region (`bedrock-mantle` in us-east-1) and US Geo (`us.`) inference, 10% above global. AWS offers no `in.` profile for 6.1 Terra. See the global entry for tiering and cache notes. Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-1-terra.html',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('1.1'), tiers=[Tier(start=272000, price=Decimal('2.2'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('1.375'), tiers=[Tier(start=272000, price=Decimal('2.75'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.055'), tiers=[Tier(start=272000, price=Decimal('0.11'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('5.5'), tiers=[Tier(start=272000, price=Decimal('8.25'))]),
                 ),
             ),
             ModelInfo(
