@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import time
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
 from shutil import copyfile
 from typing import Any
 
+import httpx2
 import pytest
 
 from prices import source_azure
@@ -58,3 +60,31 @@ def test_azure_main_fetches_recorded_retail_prices(tmp_path: Path, capsys: pytes
     source_azure.main(provider_path)
 
     assert capsys.readouterr().out == 'Azure prices updated: 0 added, 15 updated\n'
+
+
+@pytest.mark.parametrize(('throttled', 'error'), [(2, None), (3, '429 Too Many Requests')])
+def test_azure_main_retries_throttled_requests(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, throttled: int, error: str | None
+) -> None:
+    provider_path = tmp_path / 'azure.yml'
+    copyfile(package_dir / 'providers/azure.yml', provider_path)
+    responses = [
+        httpx2.Response(429, headers={'Retry-After': '60'}, request=httpx2.Request('GET', source_azure.PRICES_URL))
+    ] * throttled
+    sleeps: list[float] = []
+
+    def get(url: str, params: dict[str, str], **_: object) -> httpx2.Response:
+        if responses:
+            return responses.pop()
+        items = [item for item in _items() if f"meterName eq '{item['meterName']}'" in params['$filter']]
+        return httpx2.Response(200, json={'Items': items}, request=httpx2.Request('GET', url))
+
+    monkeypatch.setattr(httpx2, 'get', get)
+    monkeypatch.setattr(time, 'sleep', sleeps.append)
+
+    if error is None:
+        source_azure.main(provider_path)
+    else:
+        with pytest.raises(httpx2.HTTPStatusError, match=error):
+            source_azure.main(provider_path)
+    assert sleeps == [60, 60]

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
@@ -8,7 +9,7 @@ from shutil import copyfile
 import pytest
 
 from prices import source_typesafe
-from prices.prices_types import ClauseEquals, ClauseOr, ModelPrice
+from prices.prices_types import ClauseEquals, ClauseOr, ClauseRegex, ModelPrice
 from prices.update import ProviderYaml
 from prices.utils import package_dir
 
@@ -98,6 +99,7 @@ models:
     match:
       or:
         - equals: jev-1.14.0
+        - regex: ^(typesafe/)?jev-1\\.14(-\\d{8})?$
         - equals: jev-preview
     prices: {input_mtok: 0.042}
 """
@@ -115,6 +117,7 @@ models:
             {
                 'or': [
                     ClauseEquals(equals='jev-1.14.0'),
+                    ClauseRegex(regex=re.compile(r'^(typesafe/)?jev-1\.14(-\d{8})?$')),
                     ClauseEquals(equals='jev-preview'),
                     ClauseEquals(equals='jev-latest'),
                 ]
@@ -135,13 +138,29 @@ def test_typesafe_main_fetches_recorded_models_page(tmp_path: Path, capsys: pyte
     assert [(model.id, model.match, model.prices, model.prices_checked) for model in provider.models] == [
         (
             'jev-1.13.0',
-            ClauseOr.model_validate({'or': [ClauseEquals(equals='jev-1.13.0'), ClauseEquals(equals='jev-latest')]}),
+            ClauseOr.model_validate(
+                {
+                    'or': [
+                        ClauseEquals(equals='jev-1.13.0'),
+                        ClauseRegex(regex=re.compile(r'^(typesafe/)?jev-1\.13(-\d{8})?$')),
+                        ClauseEquals(equals='jev-latest'),
+                    ]
+                }
+            ),
             ModelPrice(input_mtok=Decimal('0.042')),
             date.today(),
         ),
         (
             'jev-1.14.0',
-            ClauseOr.model_validate({'or': [ClauseEquals(equals='jev-1.14.0'), ClauseEquals(equals='jev-preview')]}),
+            ClauseOr.model_validate(
+                {
+                    'or': [
+                        ClauseEquals(equals='jev-1.14.0'),
+                        ClauseRegex(regex=re.compile(r'^(typesafe/)?jev-1\.14(-\d{8})?$')),
+                        ClauseEquals(equals='jev-preview'),
+                    ]
+                }
+            ),
             ModelPrice(input_mtok=Decimal('0.042')),
             date.today(),
         ),

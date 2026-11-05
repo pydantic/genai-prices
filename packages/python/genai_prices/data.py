@@ -16915,6 +16915,26 @@ providers: list[Provider] = [
                 api_flavor='decisions',
                 model_path='model',
             ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['input_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['output_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='default',
+                model_path='model',
+            ),
         ],
         models=[
             ModelInfo(
@@ -25549,15 +25569,25 @@ providers: list[Provider] = [
             ModelInfo(
                 id='typesafe/jev-1.13',
                 match=ClauseOr(
-                    or_=[
-                        ClauseEquals(equals='typesafe/jev-1.13'),
-                        ClauseEquals(equals='~typesafe/jev-latest'),
-                        ClauseRegex(regex='^typesafe/jev-1\\.13-\\d{8}$'),
-                    ]
+                    or_=[ClauseEquals(equals='typesafe/jev-1.13'), ClauseRegex(regex='^typesafe/jev-1\\.13-\\d{8}$')]
                 ),
                 name='Jev 1.13',
                 context_window=32000,
-                price_comments='Same $0.042 per million input tokens as TypeSafe. Output is free. Decisions responses name a dated id such as typesafe/jev-1.13-20260917. ~typesafe/jev-latest redirects to the current Jev release. https://openrouter.ai/api/v1/models/typesafe/jev-1.13/endpoints',
+                price_comments='Same $0.042 per million input tokens as TypeSafe. Output is free. Decisions responses name a dated id such as typesafe/jev-1.13-20260917. https://openrouter.ai/api/v1/models/typesafe/jev-1.13/endpoints',
+                prices=ModelPrice(input_mtok=Decimal('0.042')),
+            ),
+            ModelInfo(
+                id='typesafe/jev-1.14',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='typesafe/jev-1.14'),
+                        ClauseEquals(equals='~typesafe/jev-latest'),
+                        ClauseRegex(regex='^typesafe/jev-1\\.14-\\d{8}$'),
+                    ]
+                ),
+                name='Jev 1.14',
+                context_window=32000,
+                price_comments='Same $0.042 per million input tokens as TypeSafe. Output is free. System One responses name a dated id such as typesafe/jev-1.14-20261014. ~typesafe/jev-latest redirects to the latest Jev release, Jev 1.14 since October 14, 2026, at the same rate as Jev 1.13. https://openrouter.ai/api/v1/models/typesafe/jev-1.14/endpoints',
                 prices=ModelPrice(input_mtok=Decimal('0.042')),
             ),
             ModelInfo(
@@ -28825,7 +28855,7 @@ providers: list[Provider] = [
         name='TypeSafe',
         api_pattern='https://api\\.typesafe\\.ai',
         pricing_urls=['https://docs.typesafe.ai/models'],
-        price_comments="TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that move with releases; each model's `match` follows the Aliases table on https://docs.typesafe.ai/models, which `make typesafe-get` keeps in sync.",
+        price_comments="TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that move with releases; each model's `match` follows the Aliases table on https://docs.typesafe.ai/models, which `make typesafe-get` keeps in sync. The `regex` clauses match the served ids OpenRouter returns for each version, such as `typesafe/jev-1.14-20261014`, with or without the `typesafe/` prefix, and the importer keeps them.",
         model_match=ClauseStartsWith(starts_with='jev-'),
         provider_match=ClauseContains(contains='typesafe'),
         extractors=[
@@ -28842,7 +28872,9 @@ providers: list[Provider] = [
         models=[
             ModelInfo(
                 id='jev-1.13.0',
-                match=ClauseEquals(equals='jev-1.13.0'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='jev-1.13.0'), ClauseRegex(regex='^(typesafe/)?jev-1\\.13(-\\d{8})?$')]
+                ),
                 name='Jev 1.13.0',
                 context_window=32000,
                 prices=ModelPrice(input_mtok=Decimal('0.042')),
@@ -28852,6 +28884,7 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseEquals(equals='jev-1.14.0'),
+                        ClauseRegex(regex='^(typesafe/)?jev-1\\.14(-\\d{8})?$'),
                         ClauseEquals(equals='jev-preview'),
                         ClauseEquals(equals='jev-latest'),
                     ]

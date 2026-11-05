@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import time
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
@@ -14,6 +15,7 @@ from prices.utils import package_dir
 PRICES_URL = 'https://prices.azure.com/api/retail/prices'
 REGION = 'eastus'
 MIN_MODEL_COUNT = 10
+RATE_LIMIT_RETRIES = 2
 UNIT_SCALES = {'1K': Decimal(1000), '1M': Decimal(1)}
 # OpenAI models use the Global deployment meters, which the YAML's base rates represent; Phi models are serverless.
 METERS: dict[str, dict[str, str]] = {
@@ -110,6 +112,12 @@ def main(provider_path: Path | None = None) -> None:
         }
         while url:
             response = httpx2.get(url, params=params, timeout=30.0)
+            # The API throttles sporadically, below its stated per-minute quota, and answers 429 with Retry-After.
+            for _ in range(RATE_LIMIT_RETRIES):
+                if response.status_code != 429:
+                    break
+                time.sleep(int(response.headers.get('Retry-After', '60')))
+                response = httpx2.get(url, params=params, timeout=30.0)
             response.raise_for_status()
             page = response.json()
             items += page['Items']
