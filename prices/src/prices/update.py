@@ -303,6 +303,8 @@ class ProviderYaml:
                 new_model['prices_checked'] = model.prices_checked
             if description := new_model.get('description'):
                 new_model['description'] = FoldedScalarString(description.strip())
+            for variant in new_model.get('price_variants', []):
+                variant['when'] = flow_map(variant['when'])
             new_models.append(new_model)
 
         existing_models += new_models

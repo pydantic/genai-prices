@@ -46,60 +46,60 @@ class TextTable(NamedTuple):
 
 
 def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
-    """Parse the standard-tier text token rates, skipping the non-standard tabs; non-text units stay curated."""
+    """Parse each model's standard text token rates and its rates on the other tabs; non-text units stay curated."""
     rates: dict[str, ModelPrice] = {}
+    variants: dict[str, list[PriceVariant]] = {}
     for tab, model_column, columns, rows in _text_tables(markdown):
-        if tab in NON_STANDARD_TABS:
-            continue
         for row in rows:
-            parsed = _row_rates(model_column, columns, row)
+            try:
+                parsed = _row_rates(model_column, columns, row)
+            except (RuntimeError, ValidationError):
+                if tab not in NON_STANDARD_TABS:
+                    raise
+                # An unreadable tier row must not hold back the standard rates.
+                print(f'OpenAI: skipped an unreadable {tab} row; update them by hand: {row}')
+                continue
             if parsed is None:
                 continue
             model_id, prices = parsed
-            if rates.setdefault(model_id, prices) != prices:
-                raise RuntimeError(f'OpenAI pricing page lists {model_id} at conflicting standard rates')
+            if tab not in NON_STANDARD_TABS:
+                if rates.setdefault(model_id, prices) != prices:
+                    raise RuntimeError(f'OpenAI pricing page lists {model_id} at conflicting standard rates')
+            # An all-dash row has no rates, and an empty variant would claim the tier costs the standard rate.
+            elif prices != ModelPrice():
+                model_variants = variants.setdefault(model_id, [])
+                for when in NON_STANDARD_TABS[tab]:
+                    listed = next((variant for variant in model_variants if variant.when == when), None)
+                    if listed is None:
+                        model_variants.append(PriceVariant(when=when, prices=prices))
+                    elif listed.prices != prices:
+                        print(
+                            f'OpenAI: kept the first {when} rates of {model_id}, {tab} lists others; update them by hand'
+                        )
     if not rates:
         raise RuntimeError('OpenAI pricing page has no standard text pricing table')
+    for model_id in sorted(variants.keys() - rates.keys()):
+        print(f'OpenAI: skipped the tiers of {model_id}, which has no standard rates; update them by hand')
     return [
         ModelInfo(
             id=model_id,
             match=ClauseEquals(equals=model_id),
             prices=prices,
+            price_variants=variants.get(model_id),
             prices_checked=date.today(),
         )
         for model_id, prices in rates.items()
     ]
 
 
-def parse_price_variants(markdown: str) -> dict[str, list[PriceVariant]]:
-    """Parse each model's text token rates on the non-standard tabs; unreadable rows and tables are logged and skipped."""
-    variants: dict[str, list[PriceVariant]] = {}
-    for tab, model_column, columns, rows in _text_tables(markdown):
-        if tab not in NON_STANDARD_TABS:
-            continue
-        for row in rows:
-            try:
-                parsed = _row_rates(model_column, columns, row)
-            except (RuntimeError, ValidationError):
-                print(f'OpenAI: skipped an unreadable {tab} row; update them by hand: {row}')
-                continue
-            if parsed is None:
-                continue
-            model_id, prices = parsed
-            # An all-dash row has no rates, and an empty variant would claim the tier costs the standard rate.
-            if prices != ModelPrice():
-                variants.setdefault(model_id, []).extend(
-                    PriceVariant(when=when, prices=prices) for when in NON_STANDARD_TABS[tab]
-                )
-    return variants
-
-
 def main(provider_path: Path | None = None) -> None:
     markdown = get_markdown(PRICING_URL)
     models = parse_pricing_markdown(markdown)
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/openai.yml')
+    # A new model is added with its tiers; a recorded model gets only the tiers it doesn't price yet.
     added, updated = provider_yaml.upsert_models(models, source='OpenAI', min_count=MIN_MODEL_COUNT)
-    provider_yaml.add_missing_price_variants(parse_price_variants(markdown), start=date.today(), source='OpenAI')
+    variants = {model.id: model.price_variants for model in models if model.price_variants}
+    provider_yaml.add_missing_price_variants(variants, start=date.today(), source='OpenAI')
     print(f'OpenAI prices updated: {added} added, {updated} updated')
 
 

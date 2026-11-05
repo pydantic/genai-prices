@@ -4,6 +4,7 @@ from datetime import date
 from decimal import Decimal
 from pathlib import Path
 from shutil import copyfile
+from typing import Any, cast
 
 import pytest
 
@@ -43,7 +44,7 @@ Batch
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | gpt-7-pro | $14.00 | $84.00 | - | - | - | - | - | - | - | - |
 | gpt-7-free | Free | - | - | - | - | - | - | - | - | - |
-| gpt-7-unpriced | - | - | - | - | - | - | - | - | - | - |
+| gpt-7 | - | - | - | - | - | - | - | - | - | - |
 
 Fast
 
@@ -91,6 +92,14 @@ def tiered(base: str, price: str) -> TieredPrices:
     return TieredPrices(base=Decimal(base), tiers=[Tier(start=272_000, price=Decimal(price))])
 
 
+def tiers(markdown: str) -> dict[str, list[PriceVariant]]:
+    return {
+        model.id: model.price_variants
+        for model in source_openai.parse_pricing_markdown(markdown)
+        if model.price_variants
+    }
+
+
 def test_openai_parses_standard_text_rates_and_skips_other_tabs_and_units() -> None:
     models = source_openai.parse_pricing_markdown(PRICING_MARKDOWN)
 
@@ -112,7 +121,7 @@ def test_openai_parses_standard_text_rates_and_skips_other_tabs_and_units() -> N
 
 
 def test_openai_parses_each_tab_into_its_request_context() -> None:
-    variants = source_openai.parse_price_variants(PRICING_MARKDOWN)
+    variants = tiers(PRICING_MARKDOWN)
 
     assert [(variant.when, variant.prices.input_mtok) for variant in variants['gpt-7-pro']] == [
         ({'processing': 'batch'}, Decimal(15)),
@@ -126,7 +135,7 @@ def test_openai_parses_each_tab_into_its_request_context() -> None:
 
 def test_openai_parses_the_former_priority_tab_name() -> None:
     assert PRICING_MARKDOWN.count('\nFast\n') == 1
-    variants = source_openai.parse_price_variants(PRICING_MARKDOWN.replace('\nFast\n', '\nPriority\n'))
+    variants = tiers(PRICING_MARKDOWN.replace('\nFast\n', '\nPriority\n'))
 
     assert [(variant.when, variant.prices.input_mtok) for variant in variants['gpt-7-pro']][2:4] == [
         ({'service_tier': 'priority'}, Decimal(60)),
@@ -134,16 +143,53 @@ def test_openai_parses_the_former_priority_tab_name() -> None:
     ]
 
 
+def test_openai_keeps_the_first_rates_a_page_lists_for_a_tier(capsys: pytest.CaptureFixture[str]) -> None:
+    assert PRICING_MARKDOWN.count('\nUltrafast\n') == 1
+    variants = tiers(PRICING_MARKDOWN.replace('\nUltrafast\n', '\nPriority\n'))
+
+    assert [(variant.when, variant.prices.input_mtok) for variant in variants['gpt-7-pro']][2:] == [
+        ({'service_tier': 'fast'}, Decimal(60)),
+        ({'service_tier': 'priority'}, Decimal(60)),
+    ]
+    assert (
+        "kept the first {'service_tier': 'priority'} rates of gpt-7-pro, Priority lists others; update them by hand"
+        in capsys.readouterr().out
+    )
+
+
+def test_openai_reads_a_tier_listed_twice_at_the_same_rates_once(capsys: pytest.CaptureFixture[str]) -> None:
+    row = '| gpt-7-pro | $180.00 | $1080.00 | - | - | - | - | - | - | - | - |\n'
+    assert PRICING_MARKDOWN.count(row) == 1
+
+    assert tiers(PRICING_MARKDOWN.replace(row, row * 2)) == tiers(PRICING_MARKDOWN)
+    assert 'update them by hand' not in capsys.readouterr().out
+
+
+def test_openai_skips_the_tiers_of_a_model_without_standard_rates(capsys: pytest.CaptureFixture[str]) -> None:
+    row = '| gpt-7-pro | $180.00 | $1080.00 | - | - | - | - | - | - | - | - |\n'
+    assert PRICING_MARKDOWN.count(row) == 1
+    markdown = PRICING_MARKDOWN.replace(row, row + row.replace('gpt-7-pro', 'gpt-7-tier-only'))
+
+    assert 'gpt-7-tier-only' not in tiers(markdown)
+    assert (
+        'skipped the tiers of gpt-7-tier-only, which has no standard rates; update them by hand'
+        in capsys.readouterr().out
+    )
+
+
 def test_openai_skips_an_unknown_table_under_a_tier_tab_with_a_manual_note(capsys: pytest.CaptureFixture[str]) -> None:
     markdown = PRICING_MARKDOWN.replace('#### Flex', '#### Regional')
 
-    assert [variant.when for variant in source_openai.parse_price_variants(markdown)['gpt-7-pro']] == [
+    assert [variant.when for variant in tiers(markdown)['gpt-7-pro']] == [
         {'processing': 'batch'},
         {'service_tier': 'fast'},
         {'service_tier': 'priority'},
         {'service_tier': 'ultrafast'},
     ]
-    assert 'skipped the Regional tables under Batch; update them by hand' in capsys.readouterr().out
+    out = capsys.readouterr().out
+    assert 'skipped the Regional tables under Batch; update them by hand' in out
+    # Its tables aren't read as Batch rates either.
+    assert 'lists others' not in out
     assert [m.id for m in source_openai.parse_pricing_markdown(markdown)][:2] == ['gpt-7', 'gpt-7-pro']
 
 
@@ -161,7 +207,7 @@ def test_openai_reports_a_tier_table_with_unknown_columns(capsys: pytest.Capture
         '### Ultrafast pricing data\n\n| Model | Short context audio input',
     )
 
-    variants = source_openai.parse_price_variants(markdown)
+    variants = tiers(markdown)
 
     assert {'service_tier': 'ultrafast'} not in [variant.when for variant in variants['gpt-7-pro']]
     assert 'skipped a Ultrafast table with unknown columns; update them by hand' in capsys.readouterr().out
@@ -170,7 +216,7 @@ def test_openai_reports_a_tier_table_with_unknown_columns(capsys: pytest.Capture
 def test_openai_skips_an_unreadable_variant_row_with_a_manual_note(capsys: pytest.CaptureFixture[str]) -> None:
     markdown = PRICING_MARKDOWN.replace('| $180.00 | $1080.00 |', '| $180.00 / 1M | $1080.00 |')
 
-    variants = source_openai.parse_price_variants(markdown)
+    variants = tiers(markdown)
 
     assert {'service_tier': 'ultrafast'} not in [variant.when for variant in variants['gpt-7-pro']]
     assert 'skipped an unreadable Ultrafast row; update them by hand' in capsys.readouterr().out
@@ -183,9 +229,7 @@ def test_openai_skips_a_malformed_tier_table_but_not_a_malformed_standard_table(
     markdown = PRICING_MARKDOWN.replace('| $180.00 | $1080.00 | - |', '| $180.00 | $1080.00 | - | - |')
 
     assert len(source_openai.parse_pricing_markdown(markdown)) == 4
-    assert {'service_tier': 'ultrafast'} not in [
-        v.when for v in source_openai.parse_price_variants(markdown)['gpt-7-pro']
-    ]
+    assert {'service_tier': 'ultrafast'} not in [v.when for v in tiers(markdown)['gpt-7-pro']]
     assert 'skipped an unreadable Ultrafast table; update them by hand' in capsys.readouterr().out
     with pytest.raises(ValueError, match='Table row has 5 cells'):
         source_openai.parse_pricing_markdown(PRICING_MARKDOWN.replace('| $5.00 | $25.00 |', '| $5.00 | $25.00 | - |'))
@@ -253,8 +297,10 @@ def test_openai_main_adds_new_models_with_their_tiers_once(tmp_path: Path) -> No
         model = reloaded.find_model(model_id)
         assert model is not None and model.price_variants is not None
         [ultrafast] = [v for v in model.price_variants if v.when == {'service_tier': 'ultrafast'}]
-        assert ultrafast.constraint == StartDateConstraint(start_date=date.today())
+        # Like its standard rates, a new model's tiers apply from the start.
+        assert ultrafast.constraint is None
         assert ultrafast.prices.input_mtok == tiered(str(rate), str(rate * 2))
+    assert '      - when: { service_tier: ultrafast }\n' in path.read_text()
 
 
 @pytest.mark.parametrize(
@@ -286,3 +332,23 @@ def test_openai_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pytes
     source_openai.main(provider_path)
 
     assert capsys.readouterr().out == 'OpenAI prices updated: 0 added, 46 updated\n'
+
+
+@pytest.mark.default_cassette('test_openai_main_fetches_recorded_pricing_page.yaml')
+@pytest.mark.vcr()
+def test_openai_main_adds_a_missing_tier_to_a_recorded_model(tmp_path: Path) -> None:
+    path = tmp_path / 'openai.yml'
+    copyfile(package_dir / 'providers/openai.yml', path)
+    provider_yaml = ProviderYaml(path)
+    [sol] = [model for model in provider_yaml.data['models'] if model['id'] == 'gpt-6.1-sol']
+    variants = cast(list[dict[str, Any]], sol['price_variants'])
+    sol['price_variants'] = [v for v in variants if v['when'] != {'service_tier': 'ultrafast'}]
+    provider_yaml.save()
+
+    source_openai.main(path)
+
+    model = ProviderYaml(path).provider.find_model('gpt-6.1-sol')
+    assert model is not None and model.price_variants is not None
+    [ultrafast] = [v for v in model.price_variants if v.when == {'service_tier': 'ultrafast'}]
+    assert ultrafast.constraint == StartDateConstraint(start_date=date.today())
+    assert ultrafast.prices.input_mtok == tiered('12', '24')

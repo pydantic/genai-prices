@@ -149,7 +149,7 @@ models than the importer's `MIN_MODEL_COUNT`.
   priority surcharge are examples, and the provider's cent rounding is allowed for. A variant with no single
   share, such as flat batch rates on tiered standard rates, is logged as `update them by hand`.
 - The OpenAI importer also adds a tier the pricing page lists for a model that doesn't record it yet, dated the day
-  it is first read; a new model's tiers are dated when its proposal is rebuilt for merge. It leaves recorded tiers
+  it is first read; a new model is added with its tiers, undated like its standard rates. It leaves recorded tiers
   alone, so a tier's rate changing without the standard rate is not detected.
 - When updating prices in YAML files, always update the `prices_checked` field to current date
 - Add `price_comments` to explain changes and provide references
