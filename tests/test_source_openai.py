@@ -124,6 +124,16 @@ def test_openai_parses_each_tab_into_its_request_context() -> None:
     assert list(variants) == ['gpt-7-pro']
 
 
+def test_openai_parses_the_former_priority_tab_name() -> None:
+    assert PRICING_MARKDOWN.count('\nFast\n') == 1
+    variants = source_openai.parse_price_variants(PRICING_MARKDOWN.replace('\nFast\n', '\nPriority\n'))
+
+    assert [(variant.when, variant.prices.input_mtok) for variant in variants['gpt-7-pro']][2:4] == [
+        ({'service_tier': 'priority'}, Decimal(60)),
+        ({'service_tier': 'ultrafast'}, Decimal(180)),
+    ]
+
+
 def test_openai_skips_an_unknown_table_under_a_tier_tab_with_a_manual_note(capsys: pytest.CaptureFixture[str]) -> None:
     markdown = PRICING_MARKDOWN.replace('#### Flex', '#### Regional')
 
@@ -193,12 +203,13 @@ def test_openai_adds_only_the_price_variants_a_model_does_not_record(
 
     ProviderYaml(path).add_missing_price_variants(
         {
+            # The alias comes first so the model's own rates must win on rank, not on page order.
+            'gpt-6.1-sol-2026-09-29': [PriceVariant(when={'service_tier': 'new-tier'}, prices=ModelPrice())],
             'gpt-6.1-sol': [
                 PriceVariant(when={'service_tier': 'flex'}, prices=new_tier),
                 PriceVariant(when={'service_tier': 'new-tier'}, prices=new_tier),
             ],
             'not-a-recorded-model': [PriceVariant(when={'service_tier': 'new-tier'}, prices=new_tier)],
-            'gpt-6.1-sol-2026-09-29': [PriceVariant(when={'service_tier': 'new-tier'}, prices=ModelPrice())],
         },
         start=start,
         source='OpenAI',
@@ -214,7 +225,10 @@ def test_openai_adds_only_the_price_variants_a_model_does_not_record(
         ),
     ]
     assert reloaded.find_model('not-a-recorded-model') is None
-    assert 'start_date: 2020-01-02' in path.read_text()
+    text = path.read_text()
+    assert 'start_date: 2020-01-02' in text
+    # The new entry joins the model's other variants without a blank line between them.
+    assert '7.5\n      - when: { service_tier: new-tier }\n' in text
     assert (
         "kept gpt-6.1-sol {'service_tier': 'new-tier'} at its own rates, alias gpt-6.1-sol-2026-09-29 reports others"
         in capsys.readouterr().out
