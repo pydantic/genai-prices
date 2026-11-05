@@ -175,7 +175,9 @@ models than the importer's `MIN_MODEL_COUNT`.
   OpenAI-compatible endpoint goes under `chat`. OpenRouter passes along TypeSafe's System One API, which
   reports usage differently, so that goes under `systemone`. If System One were under OpenRouter's
   `default`, a response sent without a flavor would be read with System One's rules and lose its cached
-  and reasoning token counts.
+  and reasoning token counts. One temporary exception: OpenRouter's `default` still holds a copy of
+  System One, because the gateway asks for `default` today. Don't remove it until the gateway sends
+  `systemone`; the comment above it in `openrouter.yml` says the same.
 
 ### Adding a unit
 
