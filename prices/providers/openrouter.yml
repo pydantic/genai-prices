@@ -43,6 +43,18 @@ extractors:
       - path: output_tokens
         dest: output_tokens
 
+  # System One responses (`POST /api/v1/systemone`, TypeSafe's Jev) share the Decisions usage shape. They use the
+  # default flavor, as the TypeSafe entry's System One extractor does.
+  # https://openrouter.ai/api/v1/models/typesafe/jev-1.14/endpoints
+  - api_flavor: default
+    root: usage
+    model_path: model
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: output_tokens
+        dest: output_tokens
+
 models:
   - id: 01-ai/yi-large
     match:
@@ -9854,14 +9866,30 @@ models:
     match:
       or:
         - equals: typesafe/jev-1.13
-        - equals: "~typesafe/jev-latest"
         - regex: ^typesafe/jev-1\.13-\d{8}$
     context_window: 32000
     prices_checked: 2026-10-07
     price_comments: >-
       Same $0.042 per million input tokens as TypeSafe. Output is free. Decisions responses name a
-      dated id such as typesafe/jev-1.13-20260917. ~typesafe/jev-latest redirects to the current Jev
-      release. https://openrouter.ai/api/v1/models/typesafe/jev-1.13/endpoints
+      dated id such as typesafe/jev-1.13-20260917.
+      https://openrouter.ai/api/v1/models/typesafe/jev-1.13/endpoints
+    prices:
+      input_mtok: 0.042
+
+  - id: typesafe/jev-1.14
+    name: Jev 1.14
+    match:
+      or:
+        - equals: typesafe/jev-1.14
+        - equals: "~typesafe/jev-latest"
+        - regex: ^typesafe/jev-1\.14-\d{8}$
+    context_window: 32000
+    prices_checked: 2026-11-04
+    price_comments: >-
+      Same $0.042 per million input tokens as TypeSafe. Output is free. System One responses name a
+      dated id such as typesafe/jev-1.14-20261014. ~typesafe/jev-latest redirects to the latest Jev
+      release, Jev 1.14 since October 14, 2026, at the same rate as Jev 1.13.
+      https://openrouter.ai/api/v1/models/typesafe/jev-1.14/endpoints
     prices:
       input_mtok: 0.042
 

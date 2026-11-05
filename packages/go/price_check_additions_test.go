@@ -104,6 +104,36 @@ func TestVerifiedPriceCheckAdditions(t *testing.T) {
 	}
 }
 
+func TestTypeSafeJevServedIDs(t *testing.T) {
+	extracted, err := genai_prices.ExtractUsage(genai_prices.ExtractRequest{
+		ProviderID:   "openrouter",
+		ResponseJSON: []byte(`{"model":"typesafe/jev-1.14-20261014","answers":{"is_bug":{"type":"noul","noul":0.96}},"usage":{"cost":0.00001197,"input_tokens":285,"output_tokens":23}}`),
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if extracted.Model != "typesafe/jev-1.14-20261014" || extracted.Usage[genai_prices.UsageInputTokens] != 285 ||
+		extracted.Usage[genai_prices.UsageOutputTokens] != 23 {
+		t.Fatalf("unexpected extracted usage: %#v", extracted)
+	}
+	for providerID, modelID := range map[string]string{"openrouter": "typesafe/jev-1.14", "typesafe": "jev-1.14.0"} {
+		price, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Model: extracted.Model, ProviderID: providerID, Usage: extracted.Usage,
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if price.ModelID != modelID || math.Abs(price.TotalPrice-0.00001197) > 1e-12 {
+			t.Fatalf("%s: unexpected price or model: %+v", providerID, price)
+		}
+		for _, model := range []string{"typesafe/jev-1.140", "typesafe/jev-1.14-2026101", "typesafe/jev-router"} {
+			if _, err := genai_prices.Calculate(genai_prices.PriceRequest{Model: model, ProviderID: providerID}); err == nil {
+				t.Fatalf("%s: %s matched a Jev version", providerID, model)
+			}
+		}
+	}
+}
+
 func TestGrok420PriceCut(t *testing.T) {
 	for _, model := range []string{"grok-4.20", "grok-4.20-multi-agent"} {
 		for day, total := range map[int]float64{29: 12.8, 30: 5.5} {
