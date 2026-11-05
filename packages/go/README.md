@@ -74,7 +74,7 @@ Use the `service_tier` reported in OpenAI's response. A priority request can be 
 Tier variants are specific to their provider. If model lookup falls back to another provider, you receive the
 standard-price estimate; the fallback provider's tier rates are not applied.
 
-OpenAI variants cover `flex`, `priority`, and `fast` where the published rate table supports them.
+OpenAI variants cover the service tiers its pricing page lists for each model, such as `flex`, `priority`, and `fast`.
 `default` selects standard prices on these models. Omit the context for ordinary standard pricing.
 
 If a context matches no variant, you receive the standard-price estimate.

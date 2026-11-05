@@ -72,7 +72,7 @@ You pass `price_context` explicitly to select request-specific prices. Its keys 
 Use the `service_tier` reported in OpenAI's response. The response can report `default` after a priority request
 is downgraded. `auto` is a request setting and does not identify the rate you were charged.
 
-OpenAI variants cover `flex`, `priority`, and `fast` where the published rate table supports them.
+OpenAI variants cover the service tiers its pricing page lists for each model, such as `flex`, `priority`, and `fast`.
 `default` selects standard prices on these models. Omit the context for ordinary standard pricing.
 You can also pass it to `ExtractedUsage.calc_price()`, `ModelInfo.calc_price()`, and `DataSnapshot.calc()`.
 Extraction does not infer a pricing context.
