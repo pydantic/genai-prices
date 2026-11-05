@@ -710,6 +710,8 @@ def test_openrouter_systemone_usage() -> None:
     for extracted_usage in (
         extract_usage(response_data, provider_id='openrouter'),
         extract_usage(response_data, provider_api_url='https://openrouter.ai/api/v1/systemone'),
+        extract_usage(response_data, provider_id='openrouter', api_flavor='systemone'),
+        extract_usage(response_data, provider_api_url='https://openrouter.ai/api/v1/systemone', api_flavor='systemone'),
     ):
         assert extracted_usage.provider.id == 'openrouter'
         assert extracted_usage.model is not None

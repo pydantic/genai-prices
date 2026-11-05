@@ -27898,6 +27898,18 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gpt-6-cyber',
+        match: {
+          equals: 'gpt-6-cyber',
+        },
+        prices: {
+          input_mtok: 20,
+          cache_write_mtok: 25,
+          cache_read_mtok: 2,
+          output_mtok: 100,
+        },
+      },
+      {
         id: 'gpt-6-luna',
         name: 'GPT-6 Luna',
         description: 'Efficient model for focused, high-volume tasks.',
@@ -30163,6 +30175,23 @@ export const data: Provider[] = [
       },
       {
         api_flavor: 'decisions',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'systemone',
         root: 'usage',
         model_path: 'model',
         mappings: [

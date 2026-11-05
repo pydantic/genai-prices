@@ -15797,6 +15797,16 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='gpt-6-cyber',
+                match=ClauseEquals(equals='gpt-6-cyber'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('20'),
+                    cache_write_mtok=Decimal('25'),
+                    cache_read_mtok=Decimal('2'),
+                    output_mtok=Decimal('100'),
+                ),
+            ),
+            ModelInfo(
                 id='gpt-6-luna',
                 match=ClauseOr(
                     or_=[ClauseEquals(equals='gpt-6-luna'), ClauseRegex(regex='^gpt-6-luna-\\d{4}-\\d{2}-\\d{2}$')]
@@ -16918,6 +16928,15 @@ providers: list[Provider] = [
                     UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
                 ],
                 api_flavor='decisions',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='systemone',
                 model_path='model',
             ),
             UsageExtractor(

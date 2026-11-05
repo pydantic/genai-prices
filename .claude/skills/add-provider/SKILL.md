@@ -53,6 +53,10 @@ the model, return the usage with a nullable model so callers can provide the req
 tokens separately. Any extractor that maps `completion_tokens` must also map the provider's reasoning-token breakdown to
 `output_reasoning_tokens`. Test each flavor through the public Python, JavaScript and Go extraction APIs.
 
+A caller that doesn't pass a flavor asks for `default`, so `default`, if the provider has one, reads its own API. Give every other
+API the provider serves, including another company's API it passes along, its own flavor name. See the `api_flavor` bullet in
+`AGENTS.md` for an example.
+
 If an API response does not report usage, leave that flavor unsupported and document the limitation instead of inventing a
 mapping.
 
