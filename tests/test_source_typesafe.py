@@ -99,7 +99,7 @@ models:
     match:
       or:
         - equals: jev-1.14.0
-        - regex: ^typesafe/jev-1\\.14(-\\d{8})?$
+        - regex: ^(typesafe/)?jev-1\\.14(-\\d{8})?$
         - equals: jev-preview
     prices: {input_mtok: 0.042}
 """
@@ -117,7 +117,7 @@ models:
             {
                 'or': [
                     ClauseEquals(equals='jev-1.14.0'),
-                    ClauseRegex(regex=re.compile(r'^typesafe/jev-1\.14(-\d{8})?$')),
+                    ClauseRegex(regex=re.compile(r'^(typesafe/)?jev-1\.14(-\d{8})?$')),
                     ClauseEquals(equals='jev-preview'),
                     ClauseEquals(equals='jev-latest'),
                 ]
@@ -142,7 +142,7 @@ def test_typesafe_main_fetches_recorded_models_page(tmp_path: Path, capsys: pyte
                 {
                     'or': [
                         ClauseEquals(equals='jev-1.13.0'),
-                        ClauseRegex(regex=re.compile(r'^typesafe/jev-1\.13(-\d{8})?$')),
+                        ClauseRegex(regex=re.compile(r'^(typesafe/)?jev-1\.13(-\d{8})?$')),
                         ClauseEquals(equals='jev-latest'),
                     ]
                 }
@@ -156,7 +156,7 @@ def test_typesafe_main_fetches_recorded_models_page(tmp_path: Path, capsys: pyte
                 {
                     'or': [
                         ClauseEquals(equals='jev-1.14.0'),
-                        ClauseRegex(regex=re.compile(r'^typesafe/jev-1\.14(-\d{8})?$')),
+                        ClauseRegex(regex=re.compile(r'^(typesafe/)?jev-1\.14(-\d{8})?$')),
                         ClauseEquals(equals='jev-preview'),
                     ]
                 }

@@ -30114,6 +30114,21 @@ export const data: Provider[] = [
             required: true,
           },
           {
+            path: ['input_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['input_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['output_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
             path: 'output_tokens',
             dest: 'output_tokens',
             required: true,
@@ -50763,7 +50778,7 @@ export const data: Provider[] = [
     pricing_urls: ['https://docs.typesafe.ai/models'],
     api_pattern: 'https://api\\.typesafe\\.ai',
     price_comments:
-      "TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that move with releases; each model's `match` follows the Aliases table on https://docs.typesafe.ai/models, which `make typesafe-get` keeps in sync. The `regex` clauses match the dated ids OpenRouter serves for each version, such as `typesafe/jev-1.14-20261014`, and the importer keeps them.",
+      "TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that move with releases; each model's `match` follows the Aliases table on https://docs.typesafe.ai/models, which `make typesafe-get` keeps in sync. The `regex` clauses match the served ids OpenRouter returns for each version, such as `typesafe/jev-1.14-20261014`, with or without the `typesafe/` prefix, and the importer keeps them.",
     model_match: {
       starts_with: 'jev-',
     },
@@ -50799,7 +50814,7 @@ export const data: Provider[] = [
               equals: 'jev-1.13.0',
             },
             {
-              regex: '^typesafe/jev-1\\.13(-\\d{8})?$',
+              regex: '^(typesafe/)?jev-1\\.13(-\\d{8})?$',
             },
           ],
         },
@@ -50817,7 +50832,7 @@ export const data: Provider[] = [
               equals: 'jev-1.14.0',
             },
             {
-              regex: '^typesafe/jev-1\\.14(-\\d{8})?$',
+              regex: '^(typesafe/)?jev-1\\.14(-\\d{8})?$',
             },
             {
               equals: 'jev-preview',

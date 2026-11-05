@@ -704,7 +704,7 @@ def test_openrouter_systemone_usage() -> None:
     response_data = {
         'model': 'typesafe/jev-1.14-20261014',
         'answers': {'is_bug': {'type': 'noul', 'noul': 0.96}},
-        'usage': {'cost': 0.00001197, 'input_tokens': 285, 'output_tokens': 23},
+        'usage': {'cost': 0.5, 'input_tokens': 285, 'output_tokens': 23},
     }
 
     for extracted_usage in (
@@ -716,6 +716,24 @@ def test_openrouter_systemone_usage() -> None:
         assert extracted_usage.model.id == 'typesafe/jev-1.14'
         assert extracted_usage.usage == Usage(input_tokens=285, output_tokens=23)
         assert extracted_usage.calc_price().total_price == Decimal('0.00001197')
+
+
+def test_openrouter_default_flavor_keeps_responses_details() -> None:
+    response_data = {
+        'model': 'openai/gpt-4o',
+        'usage': {
+            'input_tokens': 1_000,
+            'input_tokens_details': {'cached_tokens': 200},
+            'output_tokens': 100,
+            'output_tokens_details': {'reasoning_tokens': 25},
+        },
+    }
+
+    extracted_usage = extract_usage(response_data, provider_id='openrouter')
+
+    assert extracted_usage.usage == Usage(
+        input_tokens=1_000, cache_read_tokens=200, output_tokens=100, output_reasoning_tokens=25
+    )
 
 
 def test_moonshot_chat_usage_bills_cache_writes() -> None:

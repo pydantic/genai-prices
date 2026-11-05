@@ -5190,10 +5190,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -5248,6 +5244,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -7581,10 +7581,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -7639,6 +7635,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -7720,10 +7720,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -7778,6 +7774,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -26988,10 +26988,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -27046,6 +27042,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -29141,10 +29141,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -29199,6 +29195,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -32003,10 +32003,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -32063,6 +32059,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -32144,10 +32144,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -32204,6 +32200,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -37770,10 +37770,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -37830,6 +37826,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -38594,10 +38594,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -38654,6 +38650,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -39538,10 +39538,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -39598,6 +39594,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -40224,10 +40224,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -40284,6 +40280,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -40385,12 +40385,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "input_price": "0.00804",
-            "output_price": "0.00005",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -40437,6 +40431,12 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "input_price": "0.010046",
+            "output_price": "0.00005",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -40509,12 +40509,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "input_price": "0.00804",
-            "output_price": "0.00005",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -40577,6 +40571,12 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "input_price": "0.0008184",
+            "output_price": "0.00005",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -40669,10 +40669,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -40725,6 +40721,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -40792,10 +40792,6 @@
           },
           {
             "api_flavor": "decisions",
-            "provider_id": "openrouter"
-          },
-          {
-            "api_flavor": "default",
             "provider_id": "openrouter"
           },
           {
@@ -40867,6 +40863,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -41933,10 +41933,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -41993,6 +41989,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -44489,10 +44489,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -44549,6 +44545,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -44630,10 +44630,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -44690,6 +44686,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -46421,10 +46421,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -46481,6 +46477,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -46879,10 +46879,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -46939,6 +46935,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -47152,10 +47152,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -47212,6 +47208,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -58197,10 +58197,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -58257,6 +58253,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -59522,10 +59522,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -59582,6 +59578,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -67231,10 +67231,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -67291,6 +67287,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -67372,10 +67372,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -67432,6 +67428,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -67513,10 +67513,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -67573,6 +67569,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -70748,10 +70748,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -70808,6 +70804,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -71873,10 +71873,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -71933,6 +71929,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -76179,10 +76179,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -76239,6 +76235,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -76320,10 +76320,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -76380,6 +76376,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -78728,10 +78728,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -78788,6 +78784,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -79218,10 +79218,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -79278,6 +79274,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -79711,10 +79711,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -79771,6 +79767,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -79852,10 +79852,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -79912,6 +79908,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -84200,10 +84200,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -84260,6 +84256,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -84341,10 +84341,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -84401,6 +84397,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -86760,10 +86760,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -86820,6 +86816,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -87677,10 +87677,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -87737,6 +87733,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -89478,10 +89478,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -89538,6 +89534,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -96275,10 +96275,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -96335,6 +96331,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -96416,10 +96416,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -96476,6 +96472,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -97477,10 +97477,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -97537,6 +97533,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -97618,10 +97618,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -97678,6 +97674,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -105896,10 +105896,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -105950,6 +105946,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -106171,10 +106171,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -106221,6 +106217,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -106307,10 +106307,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -106357,6 +106353,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -106431,10 +106431,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -106473,6 +106469,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -106589,10 +106589,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -106639,6 +106635,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -115594,10 +115594,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -115652,6 +115648,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -125157,10 +125157,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -125215,6 +125211,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -128458,10 +128458,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -128516,6 +128512,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -128852,10 +128852,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -128910,6 +128906,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -129283,10 +129283,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -129341,6 +129337,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -129949,10 +129949,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -130007,6 +130003,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -130088,10 +130088,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -130148,6 +130144,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -130491,10 +130491,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -130549,6 +130545,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -130630,10 +130630,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -130688,6 +130684,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -130761,10 +130761,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -130819,6 +130815,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -131189,10 +131189,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -131247,6 +131243,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -131328,10 +131328,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -131386,6 +131382,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -132109,10 +132109,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -132167,6 +132163,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -132521,10 +132521,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -132579,6 +132575,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -132687,10 +132687,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -132745,6 +132741,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -132826,10 +132826,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -132884,6 +132880,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -133991,10 +133991,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -134049,6 +134045,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -134399,10 +134399,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -134457,6 +134453,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -134538,10 +134538,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -134596,6 +134592,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -134677,10 +134677,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -134735,6 +134731,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -136007,10 +136007,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -136065,6 +136061,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -136666,10 +136666,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -136724,6 +136720,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -136824,10 +136824,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -136882,6 +136878,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -137510,10 +137510,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -137568,6 +137564,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -137668,10 +137668,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -137726,6 +137722,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -138101,10 +138101,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -138149,6 +138145,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -138390,10 +138390,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -138448,6 +138444,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -138529,10 +138529,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -138587,6 +138583,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -138798,10 +138798,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -138856,6 +138852,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -138937,10 +138937,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -138995,6 +138991,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -139460,10 +139460,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -139532,6 +139528,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -139746,10 +139746,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -139804,6 +139800,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -139877,10 +139877,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -139947,6 +139943,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -140024,10 +140024,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -140084,6 +140080,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -141467,10 +141467,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -141525,6 +141521,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -142291,10 +142291,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -142349,6 +142345,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -142430,10 +142430,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -142488,6 +142484,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -144691,10 +144691,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -144749,6 +144745,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -144830,10 +144830,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -144888,6 +144884,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -145487,10 +145487,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -145545,6 +145541,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -145888,10 +145888,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -145946,6 +145942,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -146027,10 +146027,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -146085,6 +146081,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -175418,10 +175418,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -175476,6 +175472,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -175830,10 +175830,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -175888,6 +175884,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -185442,10 +185442,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -185502,6 +185498,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -185850,10 +185850,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -185910,6 +185906,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -187207,10 +187207,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -187267,6 +187263,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -189207,10 +189207,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -189267,6 +189263,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -192008,10 +192008,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -192068,6 +192064,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -198487,10 +198487,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -198545,6 +198541,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -199232,10 +199232,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -199290,6 +199286,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",
@@ -199398,10 +199398,6 @@
             "provider_id": "openrouter"
           },
           {
-            "api_flavor": "default",
-            "provider_id": "openrouter"
-          },
-          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -199458,6 +199454,10 @@
           {
             "api_flavor": "responses",
             "provider_id": "openai-decisions"
+          },
+          {
+            "api_flavor": "default",
+            "provider_id": "openrouter"
           },
           {
             "api_flavor": "responses",

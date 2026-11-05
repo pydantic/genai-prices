@@ -3296,6 +3296,8 @@ def test_openrouter_gpt_56_sol_cache_write_price():
         ('typesafe', 'typesafe/jev-1.13-20260917', 'jev-1.13.0', 476, Decimal('0.000019992')),
         ('typesafe', 'typesafe/jev-1.14', 'jev-1.14.0', 285, Decimal('0.00001197')),
         ('typesafe', 'typesafe/jev-1.14-20261014', 'jev-1.14.0', 285, Decimal('0.00001197')),
+        ('typesafe', 'jev-1.14', 'jev-1.14.0', 285, Decimal('0.00001197')),
+        ('typesafe', 'jev-1.14-20261014', 'jev-1.14.0', 285, Decimal('0.00001197')),
     ],
 )
 def test_decision_model_input_only_prices(

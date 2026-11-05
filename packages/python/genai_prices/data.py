@@ -16879,6 +16879,17 @@ providers: list[Provider] = [
                 root='usage',
                 mappings=[
                     UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['input_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['output_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
+                    ),
                     UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
                 ],
                 api_flavor='default',
@@ -28804,7 +28815,7 @@ providers: list[Provider] = [
         name='TypeSafe',
         api_pattern='https://api\\.typesafe\\.ai',
         pricing_urls=['https://docs.typesafe.ai/models'],
-        price_comments="TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that move with releases; each model's `match` follows the Aliases table on https://docs.typesafe.ai/models, which `make typesafe-get` keeps in sync. The `regex` clauses match the dated ids OpenRouter serves for each version, such as `typesafe/jev-1.14-20261014`, and the importer keeps them.",
+        price_comments="TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that move with releases; each model's `match` follows the Aliases table on https://docs.typesafe.ai/models, which `make typesafe-get` keeps in sync. The `regex` clauses match the served ids OpenRouter returns for each version, such as `typesafe/jev-1.14-20261014`, with or without the `typesafe/` prefix, and the importer keeps them.",
         model_match=ClauseStartsWith(starts_with='jev-'),
         provider_match=ClauseContains(contains='typesafe'),
         extractors=[
@@ -28822,7 +28833,7 @@ providers: list[Provider] = [
             ModelInfo(
                 id='jev-1.13.0',
                 match=ClauseOr(
-                    or_=[ClauseEquals(equals='jev-1.13.0'), ClauseRegex(regex='^typesafe/jev-1\\.13(-\\d{8})?$')]
+                    or_=[ClauseEquals(equals='jev-1.13.0'), ClauseRegex(regex='^(typesafe/)?jev-1\\.13(-\\d{8})?$')]
                 ),
                 name='Jev 1.13.0',
                 context_window=32000,
@@ -28833,7 +28844,7 @@ providers: list[Provider] = [
                 match=ClauseOr(
                     or_=[
                         ClauseEquals(equals='jev-1.14.0'),
-                        ClauseRegex(regex='^typesafe/jev-1\\.14(-\\d{8})?$'),
+                        ClauseRegex(regex='^(typesafe/)?jev-1\\.14(-\\d{8})?$'),
                         ClauseEquals(equals='jev-preview'),
                         ClauseEquals(equals='jev-latest'),
                     ]

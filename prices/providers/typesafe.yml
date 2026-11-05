@@ -20,8 +20,8 @@ extractors:
 price_comments: >-
   TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that
   move with releases; each model's `match` follows the Aliases table on https://docs.typesafe.ai/models, which
-  `make typesafe-get` keeps in sync. The `regex` clauses match the dated ids OpenRouter serves for each version,
-  such as `typesafe/jev-1.14-20261014`, and the importer keeps them.
+  `make typesafe-get` keeps in sync. The `regex` clauses match the served ids OpenRouter returns for each version,
+  such as `typesafe/jev-1.14-20261014`, with or without the `typesafe/` prefix, and the importer keeps them.
 
 models:
   - id: jev-1.13.0
@@ -29,7 +29,7 @@ models:
     match:
       or:
         - equals: jev-1.13.0
-        - regex: ^typesafe/jev-1\.13(-\d{8})?$
+        - regex: ^(typesafe/)?jev-1\.13(-\d{8})?$
     context_window: 32000
     prices_checked: 2026-10-27
     prices:
@@ -40,7 +40,7 @@ models:
     match:
       or:
         - equals: jev-1.14.0
-        - regex: ^typesafe/jev-1\.14(-\d{8})?$
+        - regex: ^(typesafe/)?jev-1\.14(-\d{8})?$
         - equals: jev-preview
         - equals: jev-latest
     context_window: 32000

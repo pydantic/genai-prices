@@ -107,7 +107,7 @@ func TestVerifiedPriceCheckAdditions(t *testing.T) {
 func TestTypeSafeJevServedIDs(t *testing.T) {
 	extracted, err := genai_prices.ExtractUsage(genai_prices.ExtractRequest{
 		ProviderID:   "openrouter",
-		ResponseJSON: []byte(`{"model":"typesafe/jev-1.14-20261014","answers":{"is_bug":{"type":"noul","noul":0.96}},"usage":{"cost":0.00001197,"input_tokens":285,"output_tokens":23}}`),
+		ResponseJSON: []byte(`{"model":"typesafe/jev-1.14-20261014","answers":{"is_bug":{"type":"noul","noul":0.96}},"usage":{"cost":0.5,"input_tokens":285,"output_tokens":23}}`),
 	})
 	if err != nil {
 		t.Fatal(err)

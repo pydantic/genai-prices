@@ -135,7 +135,7 @@ describe('extractUsage', () => {
       const responseData = {
         answers: { is_bug: { noul: 0.96, type: 'noul' } },
         model: 'typesafe/jev-1.14-20261014',
-        usage: { cost: 0.00001197, input_tokens: 285, output_tokens: 23 },
+        usage: { cost: 0.5, input_tokens: 285, output_tokens: 23 },
       }
 
       const { model, usage } = extractUsage(openrouterProvider, responseData)
