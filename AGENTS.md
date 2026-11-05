@@ -168,6 +168,17 @@ models than the importer's `MIN_MODEL_COUNT`.
   omitting it silently loses the breakdown. `make build` enforces this and names the provider and flavor.
   `openai.yml`'s `chat` extractor is the reference shape to copy for any OpenAI-compatible provider —
   `huggingface_*.yml` and `ovhcloud.yml` are generated copies of it.
+- Each extractor has an `api_flavor` that names the API whose responses it reads. A caller that doesn't
+  pass a flavor asks for `default`; a provider with no `default` extractor, such as OpenAI, raises an
+  error instead. So `default`, when a provider has one, should read the provider's own API, since
+  that's what most callers send. Give every other API the provider serves its own flavor name.
+  Example: Anthropic's own API is Messages, so Messages responses go under `default`, and its
+  OpenAI-compatible endpoint goes under `chat`. OpenRouter passes along TypeSafe's System One API, which
+  reports usage differently, so that goes under `systemone`. If System One were under OpenRouter's
+  `default`, a response sent without a flavor would be read with System One's rules and lose its cached
+  and reasoning token counts. One temporary exception: OpenRouter's `default` still holds a copy of
+  System One, because the gateway asks for `default` today. Don't remove it until the gateway sends
+  `systemone`; the comment above it in `openrouter.yml` says the same.
 
 ### Adding a unit
 
