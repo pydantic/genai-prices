@@ -43,11 +43,21 @@ extractors:
       - path: output_tokens
         dest: output_tokens
 
-  # System One responses (`POST /api/v1/systemone`, TypeSafe's Jev) share the Decisions usage shape. They use the
-  # default flavor, as the TypeSafe entry's System One extractor does.
+  # System One responses (`POST /api/v1/systemone`, TypeSafe's Jev) share the Decisions usage shape.
   # https://openrouter.ai/api/v1/models/typesafe/jev-1.14/endpoints
-  # Default is also the flavor a caller gets without naming one, so the optional detail fields from the Responses
-  # shape are mapped too, as openai.yml's `responses` extractor does, rather than dropped without a warning.
+  - api_flavor: systemone
+    root: usage
+    model_path: model
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: output_tokens
+        dest: output_tokens
+
+  # Transitional: the gateway prices TypeSafe System One calls with the `default` flavor whatever the base URL, so
+  # this copy of `systemone` stays until the gateway asks for `systemone` on OpenRouter. Default is also the flavor
+  # a caller gets without naming one, so the optional Responses detail fields are mapped too, as openai.yml's
+  # `responses` extractor does, rather than dropped without a warning.
   - api_flavor: default
     root: usage
     model_path: model
