@@ -3253,6 +3253,15 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='deepseek-ai/DeepSeek-V4.1-Flash-1017-Fast',
+                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash-1017-Fast'),
+                name='DeepSeek V4.1 Flash 1017 Fast',
+                context_window=1048000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.014'), output_mtok=Decimal('2.4')
+                ),
+            ),
+            ModelInfo(
                 id='deepseek-ai/DeepSeek-V4.1-Flash-Fast',
                 match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash-Fast'),
                 name='DeepSeek V4.1 Flash Fast',
@@ -5030,6 +5039,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.95'), output_mtok=Decimal('4')),
             ),
             ModelInfo(
+                id='moonshotai/Kimi-K3.1-Pro',
+                match=ClauseEquals(equals='moonshotai/Kimi-K3.1-Pro'),
+                name='Kimi K3.1 Pro',
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
                 id='moonshotai/kimi-k3',
                 match=ClauseEquals(equals='moonshotai/kimi-k3'),
                 name='Kimi K3',
@@ -5469,6 +5484,12 @@ providers: list[Provider] = [
                         ),
                     ),
                 ],
+            ),
+            ModelInfo(
+                id='kimi-k3p1-pro',
+                match=ClauseEquals(equals='accounts/fireworks/models/kimi-k3p1-pro'),
+                name='Kimi K3.1 Pro',
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='llama-v3p1-8b-instruct',
@@ -12700,6 +12721,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
+                id='moonshotai/Kimi-K3.1-Pro',
+                match=ClauseEquals(equals='moonshotai/Kimi-K3.1-Pro'),
+                name='Kimi K3.1 Pro',
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
                 id='nvidia/GLM-5.3-Flash-NVFP4',
                 match=ClauseEquals(equals='nvidia/GLM-5.3-Flash-NVFP4'),
                 name='GLM 5.3 Flash NVFP4',
@@ -13681,6 +13708,15 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='tencent/hy4',
+                match=ClauseEquals(equals='tencent/hy4'),
+                name='Hy4',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.417'), cache_read_mtok=Decimal('0.021'), output_mtok=Decimal('1.2505')
+                ),
+            ),
+            ModelInfo(
                 id='tencent/hy4-preview',
                 match=ClauseEquals(equals='tencent/hy4-preview'),
                 name='Hy4 Preview',
@@ -13827,6 +13863,15 @@ providers: list[Provider] = [
                 context_window=1048576,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('0.5')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/glm-5.3-flashX',
+                match=ClauseEquals(equals='zai-org/glm-5.3-flashX'),
+                name='GLM 5.3 FlashX',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.37'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('1.25')
                 ),
             ),
         ],
@@ -28612,6 +28657,13 @@ providers: list[Provider] = [
                 name='Kimi K3',
                 context_window=1048576,
                 prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='moonshotai/Kimi-K3.1-Pro',
+                match=ClauseEquals(equals='moonshotai/Kimi-K3.1-Pro'),
+                name='Kimi K3.1 Pro',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='nvidia/NVIDIA-Nemotron-3.5-Super-VL',
