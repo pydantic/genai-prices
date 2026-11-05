@@ -130,6 +130,31 @@ describe('extractUsage', () => {
       ).toBeCloseTo(0.0001, 10)
     })
 
+    it('should extract OpenRouter System One usage and price the served Jev id', () => {
+      const openrouterProvider: Provider = data.find((provider) => provider.id === 'openrouter')!
+      const responseData = {
+        answers: { is_bug: { noul: 0.96, type: 'noul' } },
+        model: 'typesafe/jev-1.14-20261014',
+        usage: { cost: 0.5, input_tokens: 285, output_tokens: 23 },
+      }
+
+      const { model, usage } = extractUsage(openrouterProvider, responseData)
+
+      expect(model).toBe('typesafe/jev-1.14-20261014')
+      expect(usage).toEqual({ input_tokens: 285, output_tokens: 23 })
+      for (const providerId of ['openrouter', 'typesafe']) {
+        const price = calcPrice(usage, model!, { providerId })
+        expect(price?.model.id).toBe(providerId === 'openrouter' ? 'typesafe/jev-1.14' : 'jev-1.14.0')
+        expect(price?.total_price).toBeCloseTo(0.00001197, 12)
+      }
+    })
+
+    it.each(['typesafe/jev-1.140', 'typesafe/jev-1.14-2026101', 'typesafe/jev-router'])('should not price %s as a Jev version', (model) => {
+      for (const providerId of ['openrouter', 'typesafe']) {
+        expect(calcPrice({ input_tokens: 285 }, model, { providerId })).toBeNull()
+      }
+    })
+
     it('should extract GitHub Copilot chat usage', () => {
       // Recorded from POST https://api.githubcopilot.com/chat/completions on 2026-09-03.
       const responseData = {

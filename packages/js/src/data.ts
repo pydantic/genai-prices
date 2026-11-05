@@ -30103,6 +30103,38 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        api_flavor: 'default',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['input_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['input_tokens_details', 'cache_write_tokens'],
+            dest: 'cache_write_tokens',
+            required: false,
+          },
+          {
+            path: ['output_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
     ],
     models: [
       {
@@ -44954,16 +44986,36 @@ export const data: Provider[] = [
               equals: 'typesafe/jev-1.13',
             },
             {
-              equals: '~typesafe/jev-latest',
-            },
-            {
               regex: '^typesafe/jev-1\\.13-\\d{8}$',
             },
           ],
         },
         context_window: 32000,
         price_comments:
-          'Same $0.042 per million input tokens as TypeSafe. Output is free. Decisions responses name a dated id such as typesafe/jev-1.13-20260917. ~typesafe/jev-latest redirects to the current Jev release. https://openrouter.ai/api/v1/models/typesafe/jev-1.13/endpoints',
+          'Same $0.042 per million input tokens as TypeSafe. Output is free. Decisions responses name a dated id such as typesafe/jev-1.13-20260917. https://openrouter.ai/api/v1/models/typesafe/jev-1.13/endpoints',
+        prices: {
+          input_mtok: 0.042,
+        },
+      },
+      {
+        id: 'typesafe/jev-1.14',
+        name: 'Jev 1.14',
+        match: {
+          or: [
+            {
+              equals: 'typesafe/jev-1.14',
+            },
+            {
+              equals: '~typesafe/jev-latest',
+            },
+            {
+              regex: '^typesafe/jev-1\\.14-\\d{8}$',
+            },
+          ],
+        },
+        context_window: 32000,
+        price_comments:
+          'Same $0.042 per million input tokens as TypeSafe. Output is free. System One responses name a dated id such as typesafe/jev-1.14-20261014. ~typesafe/jev-latest redirects to the latest Jev release, Jev 1.14 since October 14, 2026, at the same rate as Jev 1.13. https://openrouter.ai/api/v1/models/typesafe/jev-1.14/endpoints',
         prices: {
           input_mtok: 0.042,
         },
@@ -50726,7 +50778,7 @@ export const data: Provider[] = [
     pricing_urls: ['https://docs.typesafe.ai/models'],
     api_pattern: 'https://api\\.typesafe\\.ai',
     price_comments:
-      "TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that move with releases; each model's `match` follows the Aliases table on https://docs.typesafe.ai/models, which `make typesafe-get` keeps in sync.",
+      "TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that move with releases; each model's `match` follows the Aliases table on https://docs.typesafe.ai/models, which `make typesafe-get` keeps in sync. The `regex` clauses match the served ids OpenRouter returns for each version, such as `typesafe/jev-1.14-20261014`, with or without the `typesafe/` prefix, and the importer keeps them.",
     model_match: {
       starts_with: 'jev-',
     },
@@ -50757,7 +50809,14 @@ export const data: Provider[] = [
         id: 'jev-1.13.0',
         name: 'Jev 1.13.0',
         match: {
-          equals: 'jev-1.13.0',
+          or: [
+            {
+              equals: 'jev-1.13.0',
+            },
+            {
+              regex: '^(typesafe/)?jev-1\\.13(-\\d{8})?$',
+            },
+          ],
         },
         context_window: 32000,
         prices: {
@@ -50771,6 +50830,9 @@ export const data: Provider[] = [
           or: [
             {
               equals: 'jev-1.14.0',
+            },
+            {
+              regex: '^(typesafe/)?jev-1\\.14(-\\d{8})?$',
             },
             {
               equals: 'jev-preview',
