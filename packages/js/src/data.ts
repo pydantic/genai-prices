@@ -23630,14 +23630,20 @@ export const data: Provider[] = [
         id: 'tencent/hy4',
         name: 'Hy4',
         match: {
-          or: [
-            {
-              equals: 'tencent/hy4',
-            },
-            {
-              equals: 'tencent/hy4-preview',
-            },
-          ],
+          equals: 'tencent/hy4',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.417,
+          cache_read_mtok: 0.021,
+          output_mtok: 1.2505,
+        },
+      },
+      {
+        id: 'tencent/hy4-preview',
+        name: 'Hy4 Preview',
+        match: {
+          equals: 'tencent/hy4-preview',
         },
         context_window: 1000000,
         prices: {
