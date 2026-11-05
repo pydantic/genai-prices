@@ -138,10 +138,11 @@ describe('extractUsage', () => {
         usage: { cost: 0.5, input_tokens: 285, output_tokens: 23 },
       }
 
-      const { model, usage } = extractUsage(openrouterProvider, responseData)
+      const { model, usage } = extractUsage(openrouterProvider, responseData, 'systemone')
 
       expect(model).toBe('typesafe/jev-1.14-20261014')
       expect(usage).toEqual({ input_tokens: 285, output_tokens: 23 })
+      expect(extractUsage(openrouterProvider, responseData)).toEqual({ model, usage })
       for (const providerId of ['openrouter', 'typesafe']) {
         const price = calcPrice(usage, model!, { providerId })
         expect(price?.model.id).toBe(providerId === 'openrouter' ? 'typesafe/jev-1.14' : 'jev-1.14.0')

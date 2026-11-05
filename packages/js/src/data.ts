@@ -30104,6 +30104,23 @@ export const data: Provider[] = [
         ],
       },
       {
+        api_flavor: 'systemone',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
         api_flavor: 'default',
         root: 'usage',
         model_path: 'model',

@@ -102,6 +102,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -241,6 +245,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -374,6 +382,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -512,6 +524,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -644,6 +660,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -782,6 +802,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -914,6 +938,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -1051,6 +1079,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -1182,6 +1214,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -1320,6 +1356,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -1452,6 +1492,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -1589,6 +1633,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -1720,6 +1768,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -1857,6 +1909,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -1988,6 +2044,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -2125,6 +2185,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -2256,6 +2320,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -2394,6 +2462,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -2526,6 +2598,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -2664,6 +2740,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -2795,6 +2875,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -2932,6 +3016,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -3066,6 +3154,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -3197,6 +3289,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -3335,6 +3431,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -3466,6 +3566,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -3603,6 +3707,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -3734,6 +3842,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -3871,6 +3983,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -4002,6 +4118,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -4139,6 +4259,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -4271,6 +4395,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -5187,6 +5315,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -6684,6 +6816,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -7581,6 +7717,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -7717,6 +7857,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -18657,6 +18801,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -18788,6 +18936,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -18940,6 +19092,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -19084,6 +19240,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -19217,6 +19377,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -19436,6 +19600,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -19569,6 +19737,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -19706,6 +19878,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -19840,6 +20016,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -19971,6 +20151,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -20109,6 +20293,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -20243,6 +20431,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -20409,6 +20601,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -20545,6 +20741,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -20676,6 +20876,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -20826,6 +21030,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -20973,6 +21181,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -21105,6 +21317,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -21244,6 +21460,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -21375,6 +21595,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -21510,6 +21734,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -21649,6 +21877,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -21798,6 +22030,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -21929,6 +22165,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -22066,6 +22306,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -22197,6 +22441,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -22334,6 +22582,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -22463,6 +22715,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -22601,6 +22857,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -22735,6 +22995,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -22877,6 +23141,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -23013,6 +23281,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -23164,6 +23436,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -23304,6 +23580,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -23435,6 +23715,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -23572,6 +23856,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -23703,6 +23991,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -23840,6 +24132,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -23971,6 +24267,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -24108,6 +24408,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -24239,6 +24543,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -24376,6 +24684,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -24510,6 +24822,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -24641,6 +24957,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -24807,6 +25127,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -24954,6 +25278,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -25148,6 +25476,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -25303,6 +25635,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -25440,6 +25776,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -25571,6 +25911,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -25719,6 +26063,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -25911,6 +26259,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -26057,6 +26409,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -26192,6 +26548,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -26359,6 +26719,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -26496,6 +26860,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -26627,6 +26995,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -26764,6 +27136,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -26898,6 +27274,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -26985,6 +27365,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -27171,6 +27555,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -27316,6 +27704,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -27467,6 +27859,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -27615,6 +28011,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -27750,6 +28150,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -27882,6 +28286,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -28033,6 +28441,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -28165,6 +28577,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -28303,6 +28719,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -28438,6 +28858,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -28633,6 +29057,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -28771,6 +29199,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -28915,6 +29347,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -29051,6 +29487,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -29138,6 +29578,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -29846,6 +30290,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -31199,6 +31647,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -31330,6 +31782,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -32003,6 +32459,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -32141,6 +32601,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -32725,6 +33189,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -32854,6 +33322,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -33550,6 +34022,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -37770,6 +38246,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -37955,6 +38435,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -38089,6 +38573,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -38220,6 +38708,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -38591,6 +39083,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -39142,6 +39638,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -39535,6 +40035,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -40224,6 +40728,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -40385,6 +40893,12 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "input_price": "0.00804",
+            "output_price": "0.00005",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -40504,6 +41018,12 @@
           },
           {
             "api_flavor": "decisions",
+            "input_price": "0.00804",
+            "output_price": "0.00005",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "input_price": "0.00804",
             "output_price": "0.00005",
             "provider_id": "openrouter"
@@ -40669,6 +41189,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -40792,6 +41316,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -41843,6 +42371,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -41930,6 +42462,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -42116,6 +42652,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -43580,6 +44120,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -43712,6 +44256,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -44489,6 +45037,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -44627,6 +45179,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -46199,6 +46755,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -46331,6 +46891,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -46418,6 +46982,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -46789,6 +47357,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -46876,6 +47448,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -47062,6 +47638,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -47149,6 +47729,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -48774,6 +49358,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -48909,6 +49497,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -49041,6 +49633,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -50229,6 +50825,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -50361,6 +50961,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -51100,6 +51704,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -51231,6 +51839,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -53975,6 +54587,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -54519,6 +55135,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -54650,6 +55270,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -54814,6 +55438,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -55480,6 +56108,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -55612,6 +56244,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -55750,6 +56386,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -55882,6 +56522,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -56826,6 +57470,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -56957,6 +57605,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -58107,6 +58759,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -58194,6 +58850,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -59522,6 +60182,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -60129,6 +60793,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -60260,6 +60928,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -60661,6 +61333,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -60792,6 +61468,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -60988,6 +61668,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -61120,6 +61804,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -61395,6 +62083,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -64195,6 +64887,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -64380,6 +65076,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -64512,6 +65212,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -64650,6 +65354,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -64782,6 +65490,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -67231,6 +67943,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -67372,6 +68088,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -67510,6 +68230,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -69592,6 +70316,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -70658,6 +71386,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -70745,6 +71477,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -71783,6 +72519,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -71870,6 +72610,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -76179,6 +76923,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -76317,6 +77065,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -77820,6 +78572,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -78236,6 +78992,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -78368,6 +79128,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -78506,6 +79270,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -78638,6 +79406,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -78725,6 +79497,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -79128,6 +79904,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -79215,6 +79995,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -79487,6 +80271,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -79621,6 +80409,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -79708,6 +80500,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -79849,6 +80645,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -80554,6 +81354,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -80686,6 +81490,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -80824,6 +81632,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -80953,6 +81765,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -81558,6 +82374,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -81737,6 +82557,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -83826,6 +84650,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -83958,6 +84786,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -84200,6 +85032,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -84338,6 +85174,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -85572,6 +86412,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -85704,6 +86548,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -86670,6 +87518,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -86757,6 +87609,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -87587,6 +88443,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -87674,6 +88534,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -87942,6 +88806,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -88077,6 +88945,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -88209,6 +89081,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -89256,6 +90132,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -89388,6 +90268,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -89475,6 +90359,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -91619,6 +92507,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -91751,6 +92643,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -92152,6 +93048,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -96275,6 +97175,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -96413,6 +97317,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -96764,6 +97672,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -97152,6 +98064,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -97477,6 +98393,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -97615,6 +98535,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -99313,6 +100237,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -105424,6 +106352,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -105548,6 +106480,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -105678,6 +106614,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -105805,6 +106745,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -105893,6 +106837,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -106068,6 +107016,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -106168,6 +107120,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -106307,6 +107263,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -106428,6 +107388,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -106586,6 +107550,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -108635,6 +109603,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -109340,6 +110312,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -115594,6 +116570,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -120535,6 +121515,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -123310,6 +124294,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -123999,6 +124987,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -125154,6 +126146,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -128458,6 +129454,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -128852,6 +129852,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -129060,6 +130064,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -129192,6 +130200,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -129280,6 +130292,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -129464,6 +130480,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -129593,6 +130613,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -129728,6 +130752,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -129859,6 +130887,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -129946,6 +130978,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -130085,6 +131121,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -130271,6 +131311,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -130401,6 +131445,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -130488,6 +131536,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -130630,6 +131682,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -130758,6 +131814,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -130967,6 +132027,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -131099,6 +132163,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -131186,6 +132254,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -131325,6 +132397,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -131509,6 +132585,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -131641,6 +132721,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -131761,6 +132845,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -131892,6 +132980,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -132027,6 +133119,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -132106,6 +133202,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -132317,6 +133417,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -132440,6 +133544,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -132518,6 +133626,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -132687,6 +133799,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -132823,6 +133939,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -133007,6 +134127,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -133139,6 +134263,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -133259,6 +134387,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -133393,6 +134525,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -133513,6 +134649,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -133647,6 +134787,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -133767,6 +134911,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -133901,6 +135049,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -133988,6 +135140,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -134172,6 +135328,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -134307,6 +135467,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -134396,6 +135560,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -134538,6 +135706,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -134674,6 +135846,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -134858,6 +136034,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -134987,6 +136167,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -135122,6 +136306,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -135249,6 +136437,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -135384,6 +136576,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -135513,6 +136709,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -135648,6 +136848,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -135777,6 +136981,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -135915,6 +137123,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -136004,6 +137216,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -136188,6 +137404,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -136317,6 +137537,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -136452,6 +137676,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -136584,6 +137812,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -136663,6 +137895,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -136821,6 +138057,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -137032,6 +138272,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -137161,6 +138405,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -137296,6 +138544,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -137428,6 +138680,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -137507,6 +138763,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -137665,6 +138925,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -137876,6 +139140,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -138008,6 +139276,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -138098,6 +139370,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -138298,6 +139574,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -138387,6 +139667,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -138526,6 +139810,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -138708,6 +139996,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -138795,6 +140087,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -138934,6 +140230,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -139116,6 +140416,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -139243,6 +140547,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -139378,6 +140686,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -139457,6 +140769,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -139654,6 +140970,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -139743,6 +141063,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -139874,6 +141198,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -140021,6 +141349,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -140207,6 +141539,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -140339,6 +141675,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -140459,6 +141799,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -140590,6 +141934,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -140725,6 +142073,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -140854,6 +142206,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -140989,6 +142345,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -141118,6 +142478,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -141253,6 +142617,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -141385,6 +142753,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -141464,6 +142836,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -141675,6 +143051,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -141802,6 +143182,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -141937,6 +143321,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -142066,6 +143454,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -142201,6 +143593,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -142288,6 +143684,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -142427,6 +143827,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -142611,6 +144015,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -142740,6 +144148,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -142875,6 +144287,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -143007,6 +144423,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -143134,6 +144554,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -143269,6 +144693,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -143398,6 +144826,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -143533,6 +144965,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -143665,6 +145101,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -143805,6 +145245,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -143938,6 +145382,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -144075,6 +145523,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -144201,6 +145653,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -144336,6 +145792,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -144465,6 +145925,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -144601,6 +146065,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -144688,6 +146156,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -144827,6 +146299,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -145011,6 +146487,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -145143,6 +146623,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -145263,6 +146747,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -145397,6 +146885,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -145484,6 +146976,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -145666,6 +147162,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -145798,6 +147298,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -145885,6 +147389,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -146024,6 +147532,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -146204,6 +147716,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -154338,6 +155854,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -167226,6 +168746,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -175418,6 +176942,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "decisions",
             "provider_id": "perplexity"
           },
@@ -175827,6 +177355,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -179972,6 +181504,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -180104,6 +181640,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -180233,6 +181773,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -180445,6 +181989,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -180577,6 +182125,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -180715,6 +182267,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -180847,6 +182403,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -180976,6 +182536,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -181114,6 +182678,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -181246,6 +182814,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -181384,6 +182956,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -181519,6 +183095,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -181651,6 +183231,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -181792,6 +183376,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -181943,6 +183531,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -182179,6 +183771,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -182311,6 +183907,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -182440,6 +184040,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -182578,6 +184182,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -182710,6 +184318,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -185091,6 +186703,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -185218,6 +186834,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -185351,6 +186971,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -185439,6 +187063,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -185626,6 +187254,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -185759,6 +187391,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -185847,6 +187483,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -186034,6 +187674,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -186166,6 +187810,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -186306,6 +187954,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -186440,6 +188092,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -186569,6 +188225,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -186707,6 +188367,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -186839,6 +188503,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -186981,6 +188649,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -187116,6 +188788,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -187204,6 +188880,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -187391,6 +189071,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -187521,6 +189205,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -187656,6 +189344,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -187788,6 +189480,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -187917,6 +189613,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -188435,6 +190135,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -188569,6 +190273,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -188707,6 +190415,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -188837,6 +190549,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -188972,6 +190688,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -189112,6 +190832,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -189204,6 +190928,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -189395,6 +191123,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -189536,6 +191268,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -189670,6 +191406,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -189808,6 +191548,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -189938,6 +191682,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -190076,6 +191824,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -190208,6 +191960,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -190346,6 +192102,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -190478,6 +192238,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -190616,6 +192380,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -190748,6 +192516,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -190886,6 +192658,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -191018,6 +192794,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -191156,6 +192936,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -191291,6 +193075,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -191423,6 +193211,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -191786,6 +193578,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -191918,6 +193714,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -192005,6 +193805,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -192191,6 +193995,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -192318,6 +194126,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -193390,6 +195202,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -193534,6 +195350,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -193684,6 +195504,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -193828,6 +195652,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -195102,6 +196930,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -195249,6 +197081,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -195393,6 +197229,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -195543,6 +197383,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -195690,6 +197534,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -195834,6 +197682,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -197120,6 +198972,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -197308,6 +199164,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -197479,6 +199339,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -197647,6 +199511,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -197838,6 +199706,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -198026,6 +199898,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -198194,6 +200070,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -198368,6 +200248,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -198484,6 +200368,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -198675,6 +200563,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -198816,6 +200708,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -198954,6 +200850,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -199150,6 +201050,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -199229,6 +201133,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -199395,6 +201303,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -199585,6 +201497,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
@@ -205383,6 +207299,10 @@
             "provider_id": "openrouter"
           },
           {
+            "api_flavor": "systemone",
+            "provider_id": "openrouter"
+          },
+          {
             "api_flavor": "default",
             "provider_id": "openrouter"
           },
@@ -205513,6 +207433,10 @@
           },
           {
             "api_flavor": "decisions",
+            "provider_id": "openrouter"
+          },
+          {
+            "api_flavor": "systemone",
             "provider_id": "openrouter"
           },
           {
