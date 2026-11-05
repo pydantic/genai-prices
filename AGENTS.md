@@ -169,7 +169,8 @@ models than the importer's `MIN_MODEL_COUNT`.
   `openai.yml`'s `chat` extractor is the reference shape to copy for any OpenAI-compatible provider —
   `huggingface_*.yml` and `ovhcloud.yml` are generated copies of it.
 - Each extractor has an `api_flavor` that names the API whose responses it reads. A caller that doesn't
-  pass a flavor gets the `default` extractor. So `default` should read the provider's own API, since
+  pass a flavor asks for `default`; a provider with no `default` extractor, such as OpenAI, raises an
+  error instead. So `default`, when a provider has one, should read the provider's own API, since
   that's what most callers send. Give every other API the provider serves its own flavor name.
   Example: Anthropic's own API is Messages, so Messages responses go under `default`, and its
   OpenAI-compatible endpoint goes under `chat`. OpenRouter passes along TypeSafe's System One API, which
