@@ -85,7 +85,7 @@ You list explicit per-unit rates because a discount may apply to tokens without 
 Keep dated entries when rates change, and place newer variant entries before older ones.
 Use a verified effective date. If you only know today's rates, state the historical coverage limit in `price_comments`
 and constrain those rates to the verification date. Earlier requests then receive the standard-price estimate instead of an unverified tier rate.
-The OpenAI importer applies this date when it adds a newly listed tier, without a comment.
+The OpenAI importer applies this date when it adds a newly listed tier, without a `price_comments` note: the start date records the day it first read the tier from the OpenAI pricing page.
 When standard prices change, verify every variant independently. Its listed rates are absolute; omitted keys inherit standard prices for that date.
 Prepend dated entries for changed tier rates, and cite a source for tiers whose rates stayed unchanged.
 Test each affected context before and after the date boundary in all three packages.

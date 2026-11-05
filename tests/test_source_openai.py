@@ -124,11 +124,37 @@ def test_openai_parses_each_tab_into_its_request_context() -> None:
     assert list(variants) == ['gpt-7-pro']
 
 
-def test_openai_unknown_subheading_stays_in_its_tab() -> None:
+def test_openai_skips_an_unknown_table_under_a_tier_tab_with_a_manual_note(capsys: pytest.CaptureFixture[str]) -> None:
     markdown = PRICING_MARKDOWN.replace('#### Flex', '#### Regional')
 
-    assert source_openai.parse_price_variants(markdown)['gpt-7-pro'][1].when == {'processing': 'batch'}
+    assert [variant.when for variant in source_openai.parse_price_variants(markdown)['gpt-7-pro']] == [
+        {'processing': 'batch'},
+        {'service_tier': 'fast'},
+        {'service_tier': 'priority'},
+        {'service_tier': 'ultrafast'},
+    ]
+    assert 'skipped the Regional tables under Batch; update them by hand' in capsys.readouterr().out
     assert [m.id for m in source_openai.parse_pricing_markdown(markdown)][:2] == ['gpt-7', 'gpt-7-pro']
+
+
+def test_openai_unknown_subheading_under_the_standard_tab_keeps_standard_rates() -> None:
+    markdown = PRICING_MARKDOWN.replace(
+        '### Standard pricing data\n', '### Standard pricing data\n\n#### Text tokens\n', 1
+    )
+
+    assert source_openai.parse_pricing_markdown(markdown) == source_openai.parse_pricing_markdown(PRICING_MARKDOWN)
+
+
+def test_openai_reports_a_tier_table_with_unknown_columns(capsys: pytest.CaptureFixture[str]) -> None:
+    markdown = PRICING_MARKDOWN.replace(
+        '### Ultrafast pricing data\n\n| Model | Short context input',
+        '### Ultrafast pricing data\n\n| Model | Short context audio input',
+    )
+
+    variants = source_openai.parse_price_variants(markdown)
+
+    assert {'service_tier': 'ultrafast'} not in [variant.when for variant in variants['gpt-7-pro']]
+    assert 'skipped a Ultrafast table with unknown columns; update them by hand' in capsys.readouterr().out
 
 
 def test_openai_skips_an_unreadable_variant_row_with_a_manual_note(capsys: pytest.CaptureFixture[str]) -> None:
@@ -155,7 +181,9 @@ def test_openai_skips_a_malformed_tier_table_but_not_a_malformed_standard_table(
         source_openai.parse_pricing_markdown(PRICING_MARKDOWN.replace('| $5.00 | $25.00 |', '| $5.00 | $25.00 | - |'))
 
 
-def test_openai_adds_only_the_price_variants_a_model_does_not_record(tmp_path: Path) -> None:
+def test_openai_adds_only_the_price_variants_a_model_does_not_record(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     path = tmp_path / 'openai.yml'
     copyfile(package_dir / 'providers/openai.yml', path)
     new_tier = ModelPrice(input_mtok=tiered('12', '24'), output_mtok=tiered('60', '90'))
@@ -173,6 +201,7 @@ def test_openai_adds_only_the_price_variants_a_model_does_not_record(tmp_path: P
             'gpt-6.1-sol-2026-09-29': [PriceVariant(when={'service_tier': 'new-tier'}, prices=ModelPrice())],
         },
         start=start,
+        source='OpenAI',
     )
 
     reloaded = ProviderYaml(path).provider
@@ -186,6 +215,10 @@ def test_openai_adds_only_the_price_variants_a_model_does_not_record(tmp_path: P
     ]
     assert reloaded.find_model('not-a-recorded-model') is None
     assert 'start_date: 2020-01-02' in path.read_text()
+    assert (
+        "kept gpt-6.1-sol {'service_tier': 'new-tier'} at its own rates, alias gpt-6.1-sol-2026-09-29 reports others"
+        in capsys.readouterr().out
+    )
 
 
 @pytest.mark.default_cassette('test_openai_main_fetches_recorded_pricing_page.yaml')

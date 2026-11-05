@@ -254,7 +254,7 @@ class ProviderYaml:
         for index, entry in sorted(changes, key=lambda change: change[0], reverse=True):
             yaml_variants.insert(index, entry)  # pyright: ignore[reportUnknownMemberType]
 
-    def add_missing_price_variants(self, variants: dict[str, list[PriceVariant]], *, start: date) -> None:
+    def add_missing_price_variants(self, variants: dict[str, list[PriceVariant]], *, start: date, source: str) -> None:
         """Add each variant whose request context its model doesn't price yet, dated `start`; others stay curated."""
         self.provider = Provider.model_validate(self.data)
         matches = [
@@ -265,12 +265,18 @@ class ProviderYaml:
         # A model's own id outranks an alias, and each record gets at most one entry per context.
         matches.sort(key=lambda match: match[0] != match[1].id)
         recorded = {record.id: [variant.when for variant in record.price_variants or []] for _, record, _ in matches}
-        for _, record, model_variants in matches:
+        added: dict[str, list[PriceVariant]] = {}
+        for model_id, record, model_variants in matches:
             yaml_model = self._get_model(record.id)
             for variant in model_variants:
                 if variant.when in recorded[record.id]:
+                    if any(a.when == variant.when and a.prices != variant.prices for a in added.get(record.id, [])):
+                        print(
+                            f'{source}: kept {record.id} {variant.when} at its own rates, alias {model_id} reports others'
+                        )
                     continue
                 recorded[record.id].append(variant.when)
+                added.setdefault(record.id, []).append(variant)
                 entry = CommentedMap(
                     when=flow_map(variant.when),
                     constraint=flow_map({'start_date': start}),

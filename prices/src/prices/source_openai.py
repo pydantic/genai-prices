@@ -99,7 +99,7 @@ def main(provider_path: Path | None = None) -> None:
     models = parse_pricing_markdown(markdown)
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/openai.yml')
     added, updated = provider_yaml.upsert_models(models, source='OpenAI', min_count=MIN_MODEL_COUNT)
-    provider_yaml.add_missing_price_variants(parse_price_variants(markdown), start=date.today())
+    provider_yaml.add_missing_price_variants(parse_price_variants(markdown), start=date.today(), source='OpenAI')
     print(f'OpenAI prices updated: {added} added, {updated} updated')
 
 
@@ -118,6 +118,10 @@ def _text_tables(markdown: str) -> list[TextTable]:
             tab = next((line.strip() for line in reversed(before.splitlines()) if line.strip()), '')
         elif (subheading := heading.removeprefix('####').strip()) in NON_STANDARD_TABS:
             tab = subheading
+        elif tab in NON_STANDARD_TABS:
+            # An unknown table under a tier tab could price another context, so it isn't read as that tier.
+            print(f'OpenAI: skipped the {subheading} tables under {tab}; update them by hand')
+            continue
         try:
             section_tables = markdown_tables(section)
         except ValueError as error:
@@ -127,8 +131,13 @@ def _text_tables(markdown: str) -> list[TextTable]:
             print(f'OpenAI: skipped an unreadable {tab} table; update them by hand: {error}')
             continue
         for header, rows in section_tables:
-            if 'Model' in header[:2] and (columns := _columns(header[header.index('Model') + 1 :])):
+            if 'Model' not in header[:2]:
+                continue
+            names = header[header.index('Model') + 1 :]
+            if columns := _columns(names):
                 tables.append(TextTable(tab, header.index('Model'), columns, rows))
+            elif any(name.startswith(('Short context ', 'Long context ')) for name in names):
+                print(f'OpenAI: skipped a {tab or "Standard"} table with unknown columns; update them by hand: {names}')
     return tables
 
 
