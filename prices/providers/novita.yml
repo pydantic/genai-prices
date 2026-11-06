@@ -390,7 +390,7 @@ models:
     prices:
       input_mtok: 0.02
       output_mtok: 0.02
-    prices_checked: 2026-11-06
+    prices_checked: 2026-10-27
 
   - id: meta-llama/llama-3.2-3b-instruct
     match:
