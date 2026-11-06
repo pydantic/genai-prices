@@ -18,6 +18,7 @@ from .prices_types import (
     ClauseOr,
     ModelInfo,
     ModelPrice,
+    PriceVariant,
     Provider,
     StartDateConstraint,
     TieredPrices,
@@ -253,6 +254,37 @@ class ProviderYaml:
         for index, entry in sorted(changes, key=lambda change: change[0], reverse=True):
             yaml_variants.insert(index, entry)  # pyright: ignore[reportUnknownMemberType]
 
+    def add_missing_price_variants(self, variants: dict[str, list[PriceVariant]], *, start: date, source: str) -> None:
+        """Add each variant whose request context its model doesn't price yet, dated `start`; others stay curated."""
+        self.provider = Provider.model_validate(self.data)
+        matches = [
+            (model_id, record, model_variants)
+            for model_id, model_variants in variants.items()
+            if (record := self.provider.find_model(model_id))
+        ]
+        # A model's own id outranks an alias, and each record gets at most one entry per context.
+        matches.sort(key=lambda match: match[0] != match[1].id)
+        recorded = {record.id: [variant.when for variant in record.price_variants or []] for _, record, _ in matches}
+        added: dict[str, list[PriceVariant]] = {}
+        for model_id, record, model_variants in matches:
+            yaml_model = self._get_model(record.id)
+            for variant in model_variants:
+                if variant.when in recorded[record.id]:
+                    if any(a.when == variant.when and a.prices != variant.prices for a in added.get(record.id, [])):
+                        print(
+                            f'{source}: kept {record.id} {variant.when} at its own rates, alias {model_id} reports others'
+                        )
+                    continue
+                recorded[record.id].append(variant.when)
+                added.setdefault(record.id, []).append(variant)
+                entry = CommentedMap(
+                    when=flow_map(variant.when),
+                    constraint=flow_map({'start_date': start}),
+                    prices=variant.prices.model_dump(by_alias=True, mode='json', exclude_none=True),
+                )
+                yaml_model.setdefault('price_variants', CommentedSeq()).append(entry)  # pyright: ignore[reportUnknownMemberType]
+        self.save()
+
     def _get_model(self, model_id: str) -> CommentedMap:
         for model in self.data['models']:
             if model['id'] == model_id:
@@ -271,10 +303,14 @@ class ProviderYaml:
                 new_model['prices_checked'] = model.prices_checked
             if description := new_model.get('description'):
                 new_model['description'] = FoldedScalarString(description.strip())
+            for variant in new_model.get('price_variants', []):
+                variant['when'] = flow_map(variant['when'])
             new_models.append(new_model)
 
         existing_models += new_models
         self.data['models'] = existing_models
+        # They're in `data` now; a later save must not append them again.
+        self._extra_prices = []
 
         self.path.write_text(get_provider_yaml_string(self.data))
 
@@ -312,7 +348,7 @@ def get_provider_yaml_string(data: ProviderYamlDict) -> str:
     # ruamel leaves a trailing space where it wraps a long scalar
     yaml_data = re.sub(r'[ \t]+\n', '\n', yaml_data)
     # ruamel keeps a model's trailing blank line on the price entry that used to end it
-    yaml_data = re.sub(r'\n\n( +- constraint:)', r'\n\1', yaml_data)
+    yaml_data = re.sub(r'\n\n( +- (?:constraint|when):)', r'\n\1', yaml_data)
     # match prettier, so an unchanged file round-trips byte for byte
     yaml_data = re.sub(r"(?<=[-:{,] )'([^'\"\\\n]*)'(?=$| ?[,}])", r'"\1"', yaml_data, flags=re.MULTILINE)
     return re.sub(r'^( *(?:- )?[\w-]+: )\{([^{} \n][^{}\n]*)\}$', r'\1{ \2 }', yaml_data, flags=re.MULTILINE)
