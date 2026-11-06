@@ -112,7 +112,7 @@ function main(): never {
     const timestamp = values.timestamp ? new Date(values.timestamp) : undefined
     let hadError = false
     for (const modelArg of models) {
-      let providerId: string | undefined
+      let providerId: string | undefined = values.provider
       let modelId = modelArg
       if (modelId.includes(':')) {
         ;[providerId, modelId] = modelId.split(':', 2) as [string, string]
