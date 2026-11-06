@@ -50693,6 +50693,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'ricursive-ai/Ripple-65B-Preview',
+        name: 'Ripple 65B Preview',
+        match: {
+          equals: 'ricursive-ai/Ripple-65B-Preview',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.6,
+        },
+      },
+      {
         id: 'snorkelai/Snorkel-Mistral-PairRM-DPO',
         match: {
           equals: 'snorkelai/Snorkel-Mistral-PairRM-DPO',

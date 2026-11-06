@@ -28782,6 +28782,13 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='ricursive-ai/Ripple-65B-Preview',
+                match=ClauseEquals(equals='ricursive-ai/Ripple-65B-Preview'),
+                name='Ripple 65B Preview',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.6')),
+            ),
+            ModelInfo(
                 id='snorkelai/Snorkel-Mistral-PairRM-DPO',
                 match=ClauseEquals(equals='snorkelai/Snorkel-Mistral-PairRM-DPO'),
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.2')),
