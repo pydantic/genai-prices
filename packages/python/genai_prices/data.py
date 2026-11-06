@@ -27572,9 +27572,21 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='deepseek-v4.1-flash'),
                 name='DeepSeek V4.1 Flash',
                 context_window=1048576,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.125'), cache_read_mtok=Decimal('0.0125'), output_mtok=Decimal('0.55')
-                ),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.125'), cache_read_mtok=Decimal('0.0125'), output_mtok=Decimal('0.55')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 6)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.0558'),
+                            cache_read_mtok=Decimal('0.0011'),
+                            output_mtok=Decimal('0.2231'),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='deepseek-v4.1-flash-1017',
@@ -27725,6 +27737,10 @@ providers: list[Provider] = [
                         prices=ModelPrice(
                             input_mtok=Decimal('0.07'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('0.05')
                         ),
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 6)),
+                        prices=ModelPrice(input_mtok=Decimal('0.0284'), output_mtok=Decimal('0.0923')),
                     ),
                 ],
             ),
