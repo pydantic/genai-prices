@@ -87,6 +87,9 @@ def test_aws_splits_in_region_and_global_rates_per_model() -> None:
                 ('Gemma 3 4B', 'USE1-google.gemma-3-4b-it-mantle-output-tokens-standard', '1K tokens', '0.00008'),
                 ('Gemma 3 4B', 'USE1-Gemma-3-4B-IT-output-tokens-batch', '1K tokens', '0.00004'),
                 ('Kimi K3', 'USE1-moonshotai.kimi-k3-mantle-input-tokens-standard', '1K tokens', '0.0033'),
+                ('Kimi K3', 'USE1-moonshotai.kimi-k3-mantle-input-tokens-global-standard', '1K tokens', '0.003'),
+                ('Kimi K3', 'USE1-moonshotai.kimi-k3-mantle-input-tokens-global-flex', '1K tokens', '0.0015'),
+                ('GLM 5', 'USE1-zai.glm-5-mantle-input-tokens-standard', '1K tokens', '0.001'),
             ],
             [
                 ('Claude Opus 4.1', 'USE1-MP:USE1_InputTokenCount_Global-Units', '1M tokens', '15'),
@@ -106,6 +109,8 @@ def test_aws_splits_in_region_and_global_rates_per_model() -> None:
         model('global.amazon.nova-2-lite-v1:0', input_mtok='0.3'),
         model('amazon.nova-sonic-v1:0', input_audio_mtok='3.4', output_audio_mtok='13.6', output_mtok='0.24'),
         model('google.gemma-3-4b-it', output_mtok='0.08'),
+        model('moonshotai.kimi-k3', input_mtok='3.3'),
+        model('global.moonshotai.kimi-k3', input_mtok='3'),
         model('global.anthropic.claude-haiku-4-5-20251001-v1:0', cache_write_1h_mtok='2'),
         model('anthropic.claude-haiku-4-5-20251001-v1:0', cache_write_mtok='1.375', cache_read_mtok='0.11'),
         model('anthropic.claude-haiku-5-5', input_mtok='0.11'),
