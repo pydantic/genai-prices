@@ -481,12 +481,15 @@ models:
   - id: global.moonshotai.kimi-k3
     name: Kimi K3 (global)
     match:
-      equals: global.moonshotai.kimi-k3
+      or:
+        - equals: global.moonshotai.kimi-k3
+        - ends_with: /global.moonshotai.kimi-k3
     context_window: 1000000
     prices_checked: 2026-11-07
     price_comments: >-
       Launched on Bedrock 2026-09-18. Global cross-Region inference, 10% below the US and India Geo profiles. Cache
-      writes use the 30-minute TTL. Matched exactly, so that it doesn't also match Kimi K3.1. Refs:
+      writes use the 30-minute TTL. Matched as the exact ID or the end of an inference profile ARN, so that it doesn't
+      also match Kimi K3.1. Refs:
       https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-moonshot-ai-kimi-k3.html,
       https://aws.amazon.com/bedrock/pricing/, AWS price list API (AmazonBedrock offer, us-east-1)
     prices:
@@ -1716,14 +1719,16 @@ models:
       or:
         - equals: us.moonshotai.kimi-k3
         - equals: in.moonshotai.kimi-k3
+        - ends_with: /us.moonshotai.kimi-k3
+        - ends_with: /in.moonshotai.kimi-k3
         - equals: moonshotai.kimi-k3
     context_window: 1000000
     prices_checked: 2026-11-07
     price_comments: >-
       US Geo (`us.`) and India Geo (`in.`) cross-Region inference, 10% above global. Kimi K3 has no In-Region
       inference, but the AWS price list API bills this rate under the model's own ID (`moonshotai.kimi-k3-mantle-*`
-      usage types), so the bare `moonshotai.kimi-k3` is matched too. Matched exactly, so that it doesn't also match
-      Kimi K3.1. Cache writes use the 30-minute TTL.
+      usage types), so the bare `moonshotai.kimi-k3` is matched too. Matched as the exact ID or the end of an inference
+      profile ARN, so that it doesn't also match Kimi K3.1. Cache writes use the 30-minute TTL.
       Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-moonshot-ai-kimi-k3.html
     prices:
       input_mtok: 3.3

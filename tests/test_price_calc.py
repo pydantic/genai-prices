@@ -961,15 +961,21 @@ def test_aws_gpt_6_context_boundary(
 @pytest.mark.parametrize(
     ('model_ref', 'model_id', 'expected_prices'),
     [
-        (
-            'global.moonshotai.kimi-k3',
-            'global.moonshotai.kimi-k3',
-            ModelPrice(
-                input_mtok=Decimal('3'),
-                cache_write_mtok=Decimal('3.75'),
-                cache_read_mtok=Decimal('0.3'),
-                output_mtok=Decimal('15'),
-            ),
+        *(
+            (
+                model_ref,
+                'global.moonshotai.kimi-k3',
+                ModelPrice(
+                    input_mtok=Decimal('3'),
+                    cache_write_mtok=Decimal('3.75'),
+                    cache_read_mtok=Decimal('0.3'),
+                    output_mtok=Decimal('15'),
+                ),
+            )
+            for model_ref in (
+                'global.moonshotai.kimi-k3',
+                'arn:aws:bedrock:us-east-1:123456789012:inference-profile/global.moonshotai.kimi-k3',
+            )
         ),
         *(
             (
@@ -982,17 +988,28 @@ def test_aws_gpt_6_context_boundary(
                     output_mtok=Decimal('16.5'),
                 ),
             )
-            for model_ref in ('us.moonshotai.kimi-k3', 'in.moonshotai.kimi-k3', 'moonshotai.kimi-k3')
+            for model_ref in (
+                'us.moonshotai.kimi-k3',
+                'in.moonshotai.kimi-k3',
+                'moonshotai.kimi-k3',
+                'arn:aws:bedrock:ap-south-1:123456789012:inference-profile/in.moonshotai.kimi-k3',
+            )
         ),
-        (
-            'global.moonshotai.kimi-k3.1',
-            'global.moonshotai.kimi-k3.1',
-            ModelPrice(
-                input_mtok=Decimal('4'),
-                cache_write_mtok=Decimal('5'),
-                cache_read_mtok=Decimal('0.2'),
-                output_mtok=Decimal('20'),
-            ),
+        *(
+            (
+                model_ref,
+                'global.moonshotai.kimi-k3.1',
+                ModelPrice(
+                    input_mtok=Decimal('4'),
+                    cache_write_mtok=Decimal('5'),
+                    cache_read_mtok=Decimal('0.2'),
+                    output_mtok=Decimal('20'),
+                ),
+            )
+            for model_ref in (
+                'global.moonshotai.kimi-k3.1',
+                'arn:aws:bedrock:us-east-1:123456789012:inference-profile/global.moonshotai.kimi-k3.1',
+            )
         ),
         *(
             (

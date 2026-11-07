@@ -1691,10 +1691,15 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='global.moonshotai.kimi-k3',
-                match=ClauseEquals(equals='global.moonshotai.kimi-k3'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='global.moonshotai.kimi-k3'),
+                        ClauseEndsWith(ends_with='/global.moonshotai.kimi-k3'),
+                    ]
+                ),
                 name='Kimi K3 (global)',
                 context_window=1000000,
-                price_comments="Launched on Bedrock 2026-09-18. Global cross-Region inference, 10% below the US and India Geo profiles. Cache writes use the 30-minute TTL. Matched exactly, so that it doesn't also match Kimi K3.1. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-moonshot-ai-kimi-k3.html, https://aws.amazon.com/bedrock/pricing/, AWS price list API (AmazonBedrock offer, us-east-1)",
+                price_comments="Launched on Bedrock 2026-09-18. Global cross-Region inference, 10% below the US and India Geo profiles. Cache writes use the 30-minute TTL. Matched as the exact ID or the end of an inference profile ARN, so that it doesn't also match Kimi K3.1. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-moonshot-ai-kimi-k3.html, https://aws.amazon.com/bedrock/pricing/, AWS price list API (AmazonBedrock offer, us-east-1)",
                 prices=ModelPrice(
                     input_mtok=Decimal('3'),
                     cache_write_mtok=Decimal('3.75'),
@@ -2642,12 +2647,14 @@ providers: list[Provider] = [
                     or_=[
                         ClauseEquals(equals='us.moonshotai.kimi-k3'),
                         ClauseEquals(equals='in.moonshotai.kimi-k3'),
+                        ClauseEndsWith(ends_with='/us.moonshotai.kimi-k3'),
+                        ClauseEndsWith(ends_with='/in.moonshotai.kimi-k3'),
                         ClauseEquals(equals='moonshotai.kimi-k3'),
                     ]
                 ),
                 name='Kimi K3 (regional)',
                 context_window=1000000,
-                price_comments="US Geo (`us.`) and India Geo (`in.`) cross-Region inference, 10% above global. Kimi K3 has no In-Region inference, but the AWS price list API bills this rate under the model's own ID (`moonshotai.kimi-k3-mantle-*` usage types), so the bare `moonshotai.kimi-k3` is matched too. Matched exactly, so that it doesn't also match Kimi K3.1. Cache writes use the 30-minute TTL. Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-moonshot-ai-kimi-k3.html",
+                price_comments="US Geo (`us.`) and India Geo (`in.`) cross-Region inference, 10% above global. Kimi K3 has no In-Region inference, but the AWS price list API bills this rate under the model's own ID (`moonshotai.kimi-k3-mantle-*` usage types), so the bare `moonshotai.kimi-k3` is matched too. Matched as the exact ID or the end of an inference profile ARN, so that it doesn't also match Kimi K3.1. Cache writes use the 30-minute TTL. Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-moonshot-ai-kimi-k3.html",
                 prices=ModelPrice(
                     input_mtok=Decimal('3.3'),
                     cache_write_mtok=Decimal('4.125'),
