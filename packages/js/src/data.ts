@@ -2603,6 +2603,45 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'global.moonshotai.kimi-k3',
+        name: 'Kimi K3 (global)',
+        match: {
+          or: [
+            {
+              equals: 'global.moonshotai.kimi-k3',
+            },
+            {
+              ends_with: '/global.moonshotai.kimi-k3',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          "Launched on Bedrock 2026-09-18. Global cross-Region inference, 10% below the US and India Geo profiles. Cache writes use the 30-minute TTL. Matched as the exact ID or the end of an inference profile ARN, so that it doesn't also match Kimi K3.1. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-moonshot-ai-kimi-k3.html, https://aws.amazon.com/bedrock/pricing/, AWS price list API (AmazonBedrock offer, us-east-1)",
+        prices: {
+          input_mtok: 3,
+          cache_write_mtok: 3.75,
+          cache_read_mtok: 0.3,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'global.moonshotai.kimi-k3.1',
+        name: 'Kimi K3.1 Pro Highspeed (global)',
+        match: {
+          contains: 'global.moonshotai.kimi-k3.1',
+        },
+        context_window: 1000000,
+        price_comments:
+          'Launched on Bedrock 2026-11-04 as Kimi K3.1 Pro - Highspeed, under the model ID `moonshotai.kimi-k3.1`. Global cross-Region inference, 10% below the US and India Geo profiles. Cache writes use the 30-minute TTL. Not yet in the AWS price list API. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-moonshot-ai-kimi-k3-1-highspeed.html, https://aws.amazon.com/bedrock/pricing/',
+        prices: {
+          input_mtok: 4,
+          cache_write_mtok: 5,
+          cache_read_mtok: 0.2,
+          output_mtok: 20,
+        },
+      },
+      {
         id: 'global.openai.gpt-5.6-luna',
         name: 'GPT-5.6 Luna (global)',
         match: {
@@ -4381,6 +4420,61 @@ export const data: Provider[] = [
           cache_read_mtok: 0.22,
           output_mtok: 11,
           cache_write_1h_mtok: 4.4,
+        },
+      },
+      {
+        id: 'regional.moonshotai.kimi-k3',
+        name: 'Kimi K3 (regional)',
+        match: {
+          or: [
+            {
+              equals: 'us.moonshotai.kimi-k3',
+            },
+            {
+              equals: 'in.moonshotai.kimi-k3',
+            },
+            {
+              ends_with: '/us.moonshotai.kimi-k3',
+            },
+            {
+              ends_with: '/in.moonshotai.kimi-k3',
+            },
+            {
+              equals: 'moonshotai.kimi-k3',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          "US Geo (`us.`) and India Geo (`in.`) cross-Region inference, 10% above global. Kimi K3 has no In-Region inference, but the AWS price list API bills this rate under the model's own ID (`moonshotai.kimi-k3-mantle-*` usage types), so the bare `moonshotai.kimi-k3` is matched too. Matched as the exact ID or the end of an inference profile ARN, so that it doesn't also match Kimi K3.1. Cache writes use the 30-minute TTL. Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-moonshot-ai-kimi-k3.html",
+        prices: {
+          input_mtok: 3.3,
+          cache_write_mtok: 4.125,
+          cache_read_mtok: 0.33,
+          output_mtok: 16.5,
+        },
+      },
+      {
+        id: 'regional.moonshotai.kimi-k3.1',
+        name: 'Kimi K3.1 Pro Highspeed (regional)',
+        match: {
+          or: [
+            {
+              contains: 'us.moonshotai.kimi-k3.1',
+            },
+            {
+              contains: 'in.moonshotai.kimi-k3.1',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'US Geo (`us.`) and India Geo (`in.`) cross-Region inference, 10% above global. Kimi K3.1 is available through cross-Region inference only, so `moonshotai.kimi-k3.1` itself is not matched. Cache writes use the 30-minute TTL. Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-moonshot-ai-kimi-k3-1-highspeed.html',
+        prices: {
+          input_mtok: 4.4,
+          cache_write_mtok: 5.5,
+          cache_read_mtok: 0.22,
+          output_mtok: 22,
         },
       },
       {
