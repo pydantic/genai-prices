@@ -958,6 +958,83 @@ def test_aws_gpt_6_context_boundary(
         assert price.input_price == rate * tokens / 1_000_000
 
 
+@pytest.mark.parametrize(
+    ('model_ref', 'model_id', 'expected_prices'),
+    [
+        *(
+            (
+                model_ref,
+                'global.moonshotai.kimi-k3',
+                ModelPrice(
+                    input_mtok=Decimal('3'),
+                    cache_write_mtok=Decimal('3.75'),
+                    cache_read_mtok=Decimal('0.3'),
+                    output_mtok=Decimal('15'),
+                ),
+            )
+            for model_ref in (
+                'global.moonshotai.kimi-k3',
+                'arn:aws:bedrock:us-east-1:123456789012:inference-profile/global.moonshotai.kimi-k3',
+            )
+        ),
+        *(
+            (
+                model_ref,
+                'regional.moonshotai.kimi-k3',
+                ModelPrice(
+                    input_mtok=Decimal('3.3'),
+                    cache_write_mtok=Decimal('4.125'),
+                    cache_read_mtok=Decimal('0.33'),
+                    output_mtok=Decimal('16.5'),
+                ),
+            )
+            for model_ref in (
+                'us.moonshotai.kimi-k3',
+                'in.moonshotai.kimi-k3',
+                'moonshotai.kimi-k3',
+                'arn:aws:bedrock:ap-south-1:123456789012:inference-profile/in.moonshotai.kimi-k3',
+            )
+        ),
+        *(
+            (
+                model_ref,
+                'global.moonshotai.kimi-k3.1',
+                ModelPrice(
+                    input_mtok=Decimal('4'),
+                    cache_write_mtok=Decimal('5'),
+                    cache_read_mtok=Decimal('0.2'),
+                    output_mtok=Decimal('20'),
+                ),
+            )
+            for model_ref in (
+                'global.moonshotai.kimi-k3.1',
+                'arn:aws:bedrock:us-east-1:123456789012:inference-profile/global.moonshotai.kimi-k3.1',
+            )
+        ),
+        *(
+            (
+                model_ref,
+                'regional.moonshotai.kimi-k3.1',
+                ModelPrice(
+                    input_mtok=Decimal('4.4'),
+                    cache_write_mtok=Decimal('5.5'),
+                    cache_read_mtok=Decimal('0.22'),
+                    output_mtok=Decimal('22'),
+                ),
+            )
+            for model_ref in ('us.moonshotai.kimi-k3.1', 'in.moonshotai.kimi-k3.1')
+        ),
+    ],
+)
+def test_aws_kimi_k3(model_ref: str, model_id: str, expected_prices: ModelPrice) -> None:
+    """Kimi K3 and K3.1 are cross-Region only: `global.` is the global profile, `us.` and `in.` are the Geo profiles."""
+    price = calc_price(Usage(input_tokens=1_000_000), model_ref=model_ref, provider_id='aws')
+
+    assert price.model.id == model_id
+    assert price.model.context_window == 1_000_000
+    assert price.model_price == expected_prices
+
+
 def test_aws_titan_embed_text_v2_price() -> None:
     price = calc_price(
         Usage(input_tokens=1_000_000),
