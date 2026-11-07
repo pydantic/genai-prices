@@ -1063,7 +1063,7 @@ def test_aws_gpt_6_context_boundary(
     ],
 )
 def test_aws_cross_region_only_models(model_ref: str, model_id: str, expected_prices: ModelPrice) -> None:
-    """Kimi K3, K3.1 and GLM 5.3 are cross-Region only: `global.` is the global profile, `us.` and `in.` are Geo."""
+    """Kimi K3, K3.1 and GLM 5.3 are cross-Region only, with `global.` and `us.` profiles; only Kimi also has `in.`."""
     price = calc_price(Usage(input_tokens=1_000_000), model_ref=model_ref, provider_id='aws')
 
     assert price.model.id == model_id
