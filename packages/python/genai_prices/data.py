@@ -1847,6 +1847,38 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='global.openai.gpt-6.1-terra',
+                match=ClauseContains(contains='global.openai.gpt-6.1-terra'),
+                name='GPT-6.1 Terra (global)',
+                context_window=1050000,
+                price_comments="Launched on Bedrock 2026-10-26. Global cross-Region inference, identical to OpenAI's own list price and 10% below In-Region and Geo. Cache reads are 5% of input and cache writes 1.25x. AWS bills the whole request at long-context rates above 272K input tokens: input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-1-terra.html, https://developers.openai.com/api/docs/models/gpt-6.1-terra",
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('2'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('1.25'), tiers=[Tier(start=272000, price=Decimal('2.5'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.05'), tiers=[Tier(start=272000, price=Decimal('0.1'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('7.5'))]),
+                ),
+            ),
+            ModelInfo(
+                id='global.zai.glm-5.3',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='global.zai.glm-5.3'), ClauseEndsWith(ends_with='/global.zai.glm-5.3')]
+                ),
+                name='GLM 5.3 (global)',
+                context_window=1000000,
+                price_comments='Launched on Bedrock 2026-10-05. Global cross-Region inference, 10% below the US Geo profile. Cache writes use the 30-minute TTL. Matched as the exact ID or the end of an inference profile ARN. Refs: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-zai-glm-5-3.html, https://aws.amazon.com/bedrock/pricing/',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.68'),
+                    cache_write_mtok=Decimal('2.1'),
+                    cache_read_mtok=Decimal('0.312'),
+                    output_mtok=Decimal('5.28'),
+                ),
+            ),
+            ModelInfo(
                 id='google.gemma-3-12b-it',
                 match=ClauseContains(contains='google.gemma-3-12b-it'),
                 name='Gemma 3 12B IT',
@@ -2900,6 +2932,44 @@ providers: list[Provider] = [
                         base=Decimal('0.11'), tiers=[Tier(start=272000, price=Decimal('0.22'))]
                     ),
                     output_mtok=TieredPrices(base=Decimal('11'), tiers=[Tier(start=272000, price=Decimal('16.5'))]),
+                ),
+            ),
+            ModelInfo(
+                id='regional.openai.gpt-6.1-terra',
+                match=ClauseOr(
+                    or_=[
+                        ClauseStartsWith(starts_with='openai.gpt-6.1-terra'),
+                        ClauseStartsWith(starts_with='gpt-6.1-terra'),
+                        ClauseContains(contains='us.openai.gpt-6.1-terra'),
+                    ]
+                ),
+                name='GPT-6.1 Terra (regional)',
+                context_window=1050000,
+                price_comments='In-Region (`bedrock-mantle` in us-east-1) and US Geo (`us.`) inference, 10% above global. AWS offers no `in.` profile for 6.1 Terra. See the global entry for tiering and cache notes. Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-1-terra.html',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('1.1'), tiers=[Tier(start=272000, price=Decimal('2.2'))]),
+                    cache_write_mtok=TieredPrices(
+                        base=Decimal('1.375'), tiers=[Tier(start=272000, price=Decimal('2.75'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.055'), tiers=[Tier(start=272000, price=Decimal('0.11'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('5.5'), tiers=[Tier(start=272000, price=Decimal('8.25'))]),
+                ),
+            ),
+            ModelInfo(
+                id='regional.zai.glm-5.3',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='us.zai.glm-5.3'), ClauseEndsWith(ends_with='/us.zai.glm-5.3')]
+                ),
+                name='GLM 5.3 (regional)',
+                context_window=1000000,
+                price_comments='US Geo (`us.`) cross-Region inference, 10% above global. GLM 5.3 is available through cross-Region inference only and AWS offers no other Geo profile, so neither `zai.glm-5.3` nor an `in.`, `eu.` or `apac.` ID is matched. Cache writes use the 30-minute TTL. Matched as the exact ID or the end of an inference profile ARN. Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-zai-glm-5-3.html',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.848'),
+                    cache_write_mtok=Decimal('2.31'),
+                    cache_read_mtok=Decimal('0.3432'),
+                    output_mtok=Decimal('5.808'),
                 ),
             ),
             ModelInfo(

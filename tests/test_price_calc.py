@@ -940,6 +940,10 @@ def test_aws_gpt_5_6_context_boundary(model_ref: str, short_input_rate: Decimal,
         ('us.openai.gpt-6.1-sol', 'regional.openai.gpt-6.1-sol', Decimal('2.2'), Decimal('4.4')),
         ('openai.gpt-6.1-sol', 'regional.openai.gpt-6.1-sol', Decimal('2.2'), Decimal('4.4')),
         ('gpt-6.1-sol', 'regional.openai.gpt-6.1-sol', Decimal('2.2'), Decimal('4.4')),
+        ('global.openai.gpt-6.1-terra', 'global.openai.gpt-6.1-terra', Decimal('1'), Decimal('2')),
+        ('us.openai.gpt-6.1-terra', 'regional.openai.gpt-6.1-terra', Decimal('1.1'), Decimal('2.2')),
+        ('openai.gpt-6.1-terra', 'regional.openai.gpt-6.1-terra', Decimal('1.1'), Decimal('2.2')),
+        ('gpt-6.1-terra', 'regional.openai.gpt-6.1-terra', Decimal('1.1'), Decimal('2.2')),
     ],
 )
 def test_aws_gpt_6_context_boundary(
@@ -1024,10 +1028,42 @@ def test_aws_gpt_6_context_boundary(
             )
             for model_ref in ('us.moonshotai.kimi-k3.1', 'in.moonshotai.kimi-k3.1')
         ),
+        *(
+            (
+                model_ref,
+                'global.zai.glm-5.3',
+                ModelPrice(
+                    input_mtok=Decimal('1.68'),
+                    cache_write_mtok=Decimal('2.1'),
+                    cache_read_mtok=Decimal('0.312'),
+                    output_mtok=Decimal('5.28'),
+                ),
+            )
+            for model_ref in (
+                'global.zai.glm-5.3',
+                'arn:aws:bedrock:us-east-1:123456789012:inference-profile/global.zai.glm-5.3',
+            )
+        ),
+        *(
+            (
+                model_ref,
+                'regional.zai.glm-5.3',
+                ModelPrice(
+                    input_mtok=Decimal('1.848'),
+                    cache_write_mtok=Decimal('2.31'),
+                    cache_read_mtok=Decimal('0.3432'),
+                    output_mtok=Decimal('5.808'),
+                ),
+            )
+            for model_ref in (
+                'us.zai.glm-5.3',
+                'arn:aws:bedrock:us-east-1:123456789012:inference-profile/us.zai.glm-5.3',
+            )
+        ),
     ],
 )
-def test_aws_kimi_k3(model_ref: str, model_id: str, expected_prices: ModelPrice) -> None:
-    """Kimi K3 and K3.1 are cross-Region only: `global.` is the global profile, `us.` and `in.` are the Geo profiles."""
+def test_aws_cross_region_only_models(model_ref: str, model_id: str, expected_prices: ModelPrice) -> None:
+    """Kimi K3, K3.1 and GLM 5.3 are cross-Region only: `global.` is the global profile, `us.` and `in.` are Geo."""
     price = calc_price(Usage(input_tokens=1_000_000), model_ref=model_ref, provider_id='aws')
 
     assert price.model.id == model_id
