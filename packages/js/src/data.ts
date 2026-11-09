@@ -353,6 +353,46 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'claude-fable-5-2',
+        name: 'Claude Fable 5.2',
+        description: 'For demanding reasoning and long-horizon agentic work',
+        match: {
+          or: [
+            {
+              equals: 'claude-fable-5-2',
+            },
+            {
+              regex: '^claude-fable-5-2-\\d{8}$',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Released 2026-11-09. Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1 and Mythos 5.1. Fast mode ($16 input / $80 output per MTok) and the 1.1x US-only inference_geo multiplier are not modelled. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ref: https://platform.claude.com/docs/en/models/fable-5-2/overview Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+        prices: {
+          input_mtok: 8,
+          cache_write_mtok: 10,
+          cache_read_mtok: 0.2,
+          output_mtok: 40,
+          cache_write_1h_mtok: 16,
+          web_searches_kcount: 10,
+        },
+        price_variants: [
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: 4,
+              cache_write_mtok: 5,
+              cache_read_mtok: 0.1,
+              output_mtok: 20,
+              cache_write_1h_mtok: 8,
+            },
+          },
+        ],
+      },
+      {
         id: 'claude-haiku-4-5',
         name: 'Claude Haiku 4.5',
         description: 'Fastest and most intelligent Haiku model',
@@ -534,6 +574,46 @@ export const data: Provider[] = [
             constraint: {
               start_date: '2026-10-14',
               type: 'start_date',
+            },
+          },
+        ],
+      },
+      {
+        id: 'claude-mythos-5-2',
+        name: 'Claude Mythos 5.2',
+        description: "Claude Fable 5.2 for organizations verified through Anthropic's verification programs",
+        match: {
+          or: [
+            {
+              equals: 'claude-mythos-5-2',
+            },
+            {
+              regex: '^claude-mythos-5-2-\\d{8}$',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          "Released 2026-11-09. Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1 and Mythos 5.1. Same specifications and pricing as Claude Fable 5.2; limited availability, so Anthropic's price importer skips it. Fast mode ($16 input / $80 output per MTok) and the 1.1x US-only inference_geo multiplier are not modelled. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ref: https://platform.claude.com/docs/en/models/mythos-5-2/overview Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing",
+        prices: {
+          input_mtok: 8,
+          cache_write_mtok: 10,
+          cache_read_mtok: 0.2,
+          output_mtok: 40,
+          cache_write_1h_mtok: 16,
+          web_searches_kcount: 10,
+        },
+        price_variants: [
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: 4,
+              cache_write_mtok: 5,
+              cache_read_mtok: 0.1,
+              output_mtok: 20,
+              cache_write_1h_mtok: 8,
             },
           },
         ],

@@ -739,6 +739,36 @@ def test_claude_fable_5_1_cache_read_rate(provider_id: str, model_ref: str, cach
 
 
 @pytest.mark.parametrize(
+    ('model_ref', 'model_id', 'processing', 'expected_price'),
+    [
+        ('claude-fable-5-2', 'claude-fable-5-2', None, '48.2'),
+        ('claude-fable-5-2-20261109', 'claude-fable-5-2', None, '48.2'),
+        ('claude-fable-5-2', 'claude-fable-5-2', 'batch', '24.1'),
+        ('claude-mythos-5-2', 'claude-mythos-5-2', None, '48.2'),
+        ('claude-mythos-5-2-20261109', 'claude-mythos-5-2', None, '48.2'),
+        ('claude-mythos-5-2', 'claude-mythos-5-2', 'batch', '24.1'),
+    ],
+)
+def test_claude_fable_mythos_5_2_prices(
+    model_ref: str, model_id: str, processing: str | None, expected_price: str
+) -> None:
+    """$8 input, $0.20 cache read (0.025x) and $40 output per MTok; batch is 50% off.
+
+    The 5.2 records must not fall back to Fable 5.1's $10 / $0.25 / $50 rates.
+    """
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='anthropic',
+        genai_request_timestamp=datetime(2026, 11, 9),
+        price_context={'processing': processing} if processing else None,
+    )
+
+    assert price.model.id == model_id
+    assert price.total_price == Decimal(expected_price)
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'model_id', 'expected'),
     [
         ('us.anthropic.claude-fable-5', 'regional.anthropic.claude-fable-5-v1:0', '80.85'),

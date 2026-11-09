@@ -248,6 +248,36 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='claude-fable-5-2',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='claude-fable-5-2'), ClauseRegex(regex='^claude-fable-5-2-\\d{8}$')]
+                ),
+                name='Claude Fable 5.2',
+                description='For demanding reasoning and long-horizon agentic work',
+                context_window=1000000,
+                price_comments='Released 2026-11-09. Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1 and Mythos 5.1. Fast mode ($16 input / $80 output per MTok) and the 1.1x US-only inference_geo multiplier are not modelled. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ref: https://platform.claude.com/docs/en/models/fable-5-2/overview Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('8'),
+                    cache_write_mtok=Decimal('10'),
+                    cache_read_mtok=Decimal('0.2'),
+                    output_mtok=Decimal('40'),
+                    cache_write_1h_mtok=Decimal('16'),
+                    web_searches_kcount=Decimal('10'),
+                ),
+                price_variants=[
+                    PriceVariant(
+                        when={'processing': 'batch'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('4'),
+                            cache_write_mtok=Decimal('5'),
+                            cache_read_mtok=Decimal('0.1'),
+                            output_mtok=Decimal('20'),
+                            cache_write_1h_mtok=Decimal('8'),
+                        ),
+                    )
+                ],
+            ),
+            ModelInfo(
                 id='claude-haiku-4-5',
                 match=ClauseOr(
                     or_=[
@@ -334,6 +364,36 @@ providers: list[Provider] = [
                             ),
                         ),
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
+                    )
+                ],
+            ),
+            ModelInfo(
+                id='claude-mythos-5-2',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='claude-mythos-5-2'), ClauseRegex(regex='^claude-mythos-5-2-\\d{8}$')]
+                ),
+                name='Claude Mythos 5.2',
+                description="Claude Fable 5.2 for organizations verified through Anthropic's verification programs",
+                context_window=1000000,
+                price_comments="Released 2026-11-09. Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1 and Mythos 5.1. Same specifications and pricing as Claude Fable 5.2; limited availability, so Anthropic's price importer skips it. Fast mode ($16 input / $80 output per MTok) and the 1.1x US-only inference_geo multiplier are not modelled. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ref: https://platform.claude.com/docs/en/models/mythos-5-2/overview Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing",
+                prices=ModelPrice(
+                    input_mtok=Decimal('8'),
+                    cache_write_mtok=Decimal('10'),
+                    cache_read_mtok=Decimal('0.2'),
+                    output_mtok=Decimal('40'),
+                    cache_write_1h_mtok=Decimal('16'),
+                    web_searches_kcount=Decimal('10'),
+                ),
+                price_variants=[
+                    PriceVariant(
+                        when={'processing': 'batch'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('4'),
+                            cache_write_mtok=Decimal('5'),
+                            cache_read_mtok=Decimal('0.1'),
+                            output_mtok=Decimal('20'),
+                            cache_write_1h_mtok=Decimal('8'),
+                        ),
                     )
                 ],
             ),

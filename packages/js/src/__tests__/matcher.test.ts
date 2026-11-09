@@ -571,6 +571,25 @@ describe('Claude Fable 5 vs 5.1', () => {
     expect(calcPrice(usage, modelRef, { providerId, timestamp: new Date('2026-10-17T00:00:00Z') })!.total_price).toBeCloseTo(expected, 10)
   })
 
+  // Fable 5.2 and Mythos 5.2: $8 input, $0.20 cache read (0.025x) and $40 output per MTok; batch is 50% off.
+  it.each([
+    ['claude-fable-5-2', 'claude-fable-5-2', undefined, 48.2],
+    ['claude-fable-5-2-20261109', 'claude-fable-5-2', undefined, 48.2],
+    ['claude-fable-5-2', 'claude-fable-5-2', 'batch', 24.1],
+    ['claude-mythos-5-2', 'claude-mythos-5-2', undefined, 48.2],
+    ['claude-mythos-5-2-20261109', 'claude-mythos-5-2', undefined, 48.2],
+    ['claude-mythos-5-2', 'claude-mythos-5-2', 'batch', 24.1],
+  ] as const)('prices anthropic %s as %s (%s)', (modelRef, modelId, processing, expected) => {
+    const result = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000 }, modelRef, {
+      priceContext: processing ? { processing } : undefined,
+      providerId: 'anthropic',
+      timestamp: new Date('2026-11-09T00:00:00Z'),
+    })
+
+    expect(result!.model.id).toBe(modelId)
+    expect(result!.total_price).toBeCloseTo(expected, 10)
+  })
+
   // Bedrock's Fable inference profile ids carry no `-v1:0` suffix; geographic ones take the regional rate.
   it.each([
     ['us.anthropic.claude-fable-5', 'regional.anthropic.claude-fable-5-v1:0', 80.85],
