@@ -6729,6 +6729,12 @@
             "output_price": "0.00966",
             "provider_id": "anthropic",
             "total_price": "0.052087"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.032427",
+            "output_price": "0.00966",
+            "provider_id": "google"
           }
         ],
         "usage": {
@@ -6776,12 +6782,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "github-copilot"
-          },
-          {
-            "api_flavor": "anthropic",
-            "input_price": "0.032427",
-            "output_price": "0.00966",
-            "provider_id": "google"
           },
           {
             "api_flavor": "responses",
@@ -20943,6 +20943,12 @@
             "output_price": "0.01782",
             "provider_id": "anthropic",
             "total_price": "2.526628"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "2.408808",
+            "output_price": "0.01782",
+            "provider_id": "google"
           }
         ],
         "usage": {
@@ -20990,12 +20996,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "github-copilot"
-          },
-          {
-            "api_flavor": "anthropic",
-            "input_price": "2.408808",
-            "output_price": "0.01782",
-            "provider_id": "google"
           },
           {
             "api_flavor": "responses",
@@ -21094,6 +21094,12 @@
             "output_price": "0.0280125",
             "provider_id": "anthropic",
             "total_price": "3.0453065"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "2.967294",
+            "output_price": "0.0280125",
+            "provider_id": "google"
           }
         ],
         "usage": {
@@ -21141,12 +21147,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "github-copilot"
-          },
-          {
-            "api_flavor": "anthropic",
-            "input_price": "2.967294",
-            "output_price": "0.0280125",
-            "provider_id": "google"
           },
           {
             "api_flavor": "responses",
@@ -27620,6 +27620,12 @@
             "output_price": "0.0078",
             "provider_id": "anthropic",
             "total_price": "0.044752"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.026952",
+            "output_price": "0.0078",
+            "provider_id": "google"
           }
         ],
         "usage": {
@@ -27667,12 +27673,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "github-copilot"
-          },
-          {
-            "api_flavor": "anthropic",
-            "input_price": "0.026952",
-            "output_price": "0.0078",
-            "provider_id": "google"
           },
           {
             "api_flavor": "responses",
@@ -27772,6 +27772,12 @@
             "output_price": "0.00816",
             "provider_id": "anthropic",
             "total_price": "0.077737"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.059577",
+            "output_price": "0.00816",
+            "provider_id": "google"
           }
         ],
         "usage": {
@@ -27819,12 +27825,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "github-copilot"
-          },
-          {
-            "api_flavor": "anthropic",
-            "input_price": "0.059577",
-            "output_price": "0.00816",
-            "provider_id": "google"
           },
           {
             "api_flavor": "responses",
@@ -28354,6 +28354,12 @@
             "output_price": "0.002475",
             "provider_id": "anthropic",
             "total_price": "0.060724"
+          },
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.048249",
+            "output_price": "0.002475",
+            "provider_id": "google"
           }
         ],
         "usage": {
@@ -28401,12 +28407,6 @@
           {
             "api_flavor": "responses",
             "provider_id": "github-copilot"
-          },
-          {
-            "api_flavor": "anthropic",
-            "input_price": "0.048249",
-            "output_price": "0.002475",
-            "provider_id": "google"
           },
           {
             "api_flavor": "responses",
@@ -201012,12 +201012,6 @@
             "provider_id": "github-copilot"
           },
           {
-            "api_flavor": "anthropic",
-            "input_price": "0.023232",
-            "output_price": "0.005295",
-            "provider_id": "google"
-          },
-          {
             "api_flavor": "responses",
             "provider_id": "meta"
           },
@@ -201081,6 +201075,21 @@
         "usage": {
           "input_tokens": 7744,
           "output_tokens": 353
+        }
+      },
+      {
+        "extractors": [
+          {
+            "api_flavor": "anthropic",
+            "input_price": "0.023232",
+            "output_price": "0.005295",
+            "provider_id": "google"
+          }
+        ],
+        "usage": {
+          "input_tokens": 7744,
+          "output_tokens": 353,
+          "web_searches": 1
         }
       }
     ],
