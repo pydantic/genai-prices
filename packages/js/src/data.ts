@@ -539,6 +539,46 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'claude-mythos-5-2',
+        name: 'Claude Mythos 5.2',
+        description: "Claude Fable 5.2 for organizations verified through Anthropic's verification programs",
+        match: {
+          or: [
+            {
+              equals: 'claude-mythos-5-2',
+            },
+            {
+              regex: '^claude-mythos-5-2-\\d{8}$',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Same model and pricing as Claude Fable 5.2, with limited availability. The Anthropic price importer skips limited-availability rows, so it does not update this entry. Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.2, Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ref: https://platform.claude.com/docs/en/models/mythos-5-2/overview Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+        prices: {
+          input_mtok: 8,
+          cache_write_mtok: 10,
+          cache_read_mtok: 0.2,
+          output_mtok: 40,
+          cache_write_1h_mtok: 16,
+          web_searches_kcount: 10,
+        },
+        price_variants: [
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: 4,
+              cache_write_mtok: 5,
+              cache_read_mtok: 0.1,
+              output_mtok: 20,
+              cache_write_1h_mtok: 8,
+            },
+          },
+        ],
+      },
+      {
         id: 'claude-opus-4-0',
         name: 'Claude Opus 4',
         description: 'Most intelligent model for complex tasks',
@@ -2309,6 +2349,29 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'global.anthropic.claude-fable-5-2',
+        match: {
+          or: [
+            {
+              ends_with: 'global.anthropic.claude-fable-5-2',
+            },
+            {
+              contains: 'global.anthropic.claude-fable-5-2-v1',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Global endpoint (no premium). Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Fable 5.2 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json) Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock',
+        prices: {
+          input_mtok: 8,
+          cache_write_mtok: 10,
+          cache_read_mtok: 0.2,
+          output_mtok: 40,
+          cache_write_1h_mtok: 16,
+        },
+      },
+      {
         id: 'global.anthropic.claude-fable-5-v1:0',
         match: {
           or: [
@@ -2406,6 +2469,29 @@ export const data: Provider[] = [
               },
             ],
           },
+        },
+      },
+      {
+        id: 'global.anthropic.claude-mythos-5-2',
+        match: {
+          or: [
+            {
+              ends_with: 'global.anthropic.claude-mythos-5-2',
+            },
+            {
+              contains: 'global.anthropic.claude-mythos-5-2-v1',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Global endpoint (no premium). Same pricing as Claude Fable 5.2, with limited availability. Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Mythos 5.2 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json) Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock',
+        prices: {
+          input_mtok: 8,
+          cache_write_mtok: 10,
+          cache_read_mtok: 0.2,
+          output_mtok: 40,
+          cache_write_1h_mtok: 16,
         },
       },
       {
@@ -3700,6 +3786,47 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'regional.anthropic.claude-fable-5-2',
+        match: {
+          or: [
+            {
+              equals: 'anthropic.claude-fable-5-2',
+            },
+            {
+              equals: 'claude-fable-5-2',
+            },
+            {
+              starts_with: 'anthropic.claude-fable-5-2-v1',
+            },
+            {
+              starts_with: 'claude-fable-5-2-v1',
+            },
+            {
+              equals: 'us.anthropic.claude-fable-5-2',
+            },
+            {
+              equals: 'eu.anthropic.claude-fable-5-2',
+            },
+            {
+              contains: 'us.anthropic.claude-fable-5-2-v1',
+            },
+            {
+              contains: 'eu.anthropic.claude-fable-5-2-v1',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Regional endpoints and US/EU inference profiles carry a 10% premium over the global endpoint. The AWS price list has regional rates in US, Canada and EU regions only, none in AU or JP. Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Fable 5.2 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)',
+        prices: {
+          input_mtok: 8.8,
+          cache_write_mtok: 11,
+          cache_read_mtok: 0.22,
+          output_mtok: 44,
+          cache_write_1h_mtok: 17.6,
+        },
+      },
+      {
         id: 'regional.anthropic.claude-fable-5-v1:0',
         match: {
           or: [
@@ -3895,6 +4022,47 @@ export const data: Provider[] = [
               },
             ],
           },
+        },
+      },
+      {
+        id: 'regional.anthropic.claude-mythos-5-2',
+        match: {
+          or: [
+            {
+              equals: 'anthropic.claude-mythos-5-2',
+            },
+            {
+              equals: 'claude-mythos-5-2',
+            },
+            {
+              starts_with: 'anthropic.claude-mythos-5-2-v1',
+            },
+            {
+              starts_with: 'claude-mythos-5-2-v1',
+            },
+            {
+              equals: 'us.anthropic.claude-mythos-5-2',
+            },
+            {
+              equals: 'eu.anthropic.claude-mythos-5-2',
+            },
+            {
+              contains: 'us.anthropic.claude-mythos-5-2-v1',
+            },
+            {
+              contains: 'eu.anthropic.claude-mythos-5-2-v1',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Regional endpoints and US/EU inference profiles carry a 10% premium over the global endpoint. The AWS price list has regional rates in US, Canada and EU regions only, none in AU or JP. Same pricing as Claude Fable 5.2, with limited availability. Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1. Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Mythos 5.2 (Amazon Bedrock Edition)" (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)',
+        prices: {
+          input_mtok: 8.8,
+          cache_write_mtok: 11,
+          cache_read_mtok: 0.22,
+          output_mtok: 44,
+          cache_write_1h_mtok: 17.6,
         },
       },
       {
@@ -11703,6 +11871,44 @@ export const data: Provider[] = [
           output_mtok: 50,
           cache_write_1h_mtok: 20,
         },
+      },
+      {
+        id: 'claude-fable-5-2',
+        match: {
+          or: [
+            {
+              ends_with: 'claude-fable-5-2',
+            },
+            {
+              contains: 'claude-fable-5-2@',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          'Flat pricing across full 1M context window. Global endpoint; multi-region endpoints add a 10% premium. Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1. Batch rates, including batch cache writes and hits, are 50% of standard. Web search is $10 per 1,000 searches. Ref: https://cloud.google.com/model-garden/partner-models/pricing Web search ref: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/web-search#supported-models Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/google-managed',
+        prices: {
+          input_mtok: 8,
+          cache_write_mtok: 10,
+          cache_read_mtok: 0.2,
+          output_mtok: 40,
+          cache_write_1h_mtok: 16,
+          web_searches_kcount: 10,
+        },
+        price_variants: [
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: 4,
+              cache_write_mtok: 5,
+              cache_read_mtok: 0.1,
+              output_mtok: 20,
+              cache_write_1h_mtok: 8,
+            },
+          },
+        ],
       },
       {
         id: 'claude-haiku-4-5',

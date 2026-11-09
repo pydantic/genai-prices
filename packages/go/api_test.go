@@ -466,6 +466,47 @@ func TestClaudeFable51DoesNotUseFable5Prices(t *testing.T) {
 	}
 }
 
+// 5.2: $8 input, $0.20 cache read (0.025x) and $40 output per MTok; Bedrock regional endpoints add 10%.
+func TestClaude52Prices(t *testing.T) {
+	tests := []struct {
+		providerID string
+		model      string
+		wantModel  string
+		want       float64
+	}{
+		{"anthropic", "claude-mythos-5-2", "claude-mythos-5-2", 48.2},
+		{"anthropic", "claude-mythos-5-2-20261109", "claude-mythos-5-2", 48.2},
+		{"google", "claude-fable-5-2", "claude-fable-5-2", 48.2},
+		{"google", "claude-fable-5-2@20261109", "claude-fable-5-2", 48.2},
+		{"aws", "global.anthropic.claude-fable-5-2", "global.anthropic.claude-fable-5-2", 48.2},
+		{"aws", "global.anthropic.claude-mythos-5-2", "global.anthropic.claude-mythos-5-2", 48.2},
+		{"aws", "us.anthropic.claude-fable-5-2", "regional.anthropic.claude-fable-5-2", 53.02},
+		{"aws", "eu.anthropic.claude-mythos-5-2", "regional.anthropic.claude-mythos-5-2", 53.02},
+	}
+	usage := genai_prices.Usage{
+		genai_prices.UsageInputTokens:     2_000_000,
+		genai_prices.UsageCacheReadTokens: 1_000_000,
+		genai_prices.UsageOutputTokens:    1_000_000,
+	}
+	for _, test := range tests {
+		t.Run(test.providerID+"/"+test.model, func(t *testing.T) {
+			result, err := genai_prices.Calculate(genai_prices.PriceRequest{
+				Timestamp: time.Date(2026, 11, 9, 0, 0, 0, 0, time.UTC),
+				Usage:     usage, Model: test.model, ProviderID: test.providerID,
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if result.ModelID != test.wantModel {
+				t.Fatalf("got model %q, want %q", result.ModelID, test.wantModel)
+			}
+			if math.Abs(result.TotalPrice-test.want) > 1e-9 {
+				t.Fatalf("got %g, want %g", result.TotalPrice, test.want)
+			}
+		})
+	}
+}
+
 // Bedrock's Fable inference profile ids carry no `-v1:0` suffix; geographic ones take the regional rate.
 func TestAWSClaudeFableInferenceProfileIDs(t *testing.T) {
 	tests := []struct {
