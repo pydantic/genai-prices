@@ -655,8 +655,12 @@ describe('Claude Fable 5.2', () => {
       timestamp,
     })
 
+    const openrouterBatch = calcPrice(batchUsage, 'anthropic/claude-fable-5.2:batch', { providerId: 'openrouter', timestamp })
+
     expect(standard!.total_price).toBeCloseTo(40.2, 10)
     expect(batch!.total_price).toBeCloseTo(20.1, 10)
+    expect(openrouterBatch!.model.id).toBe('anthropic/claude-fable-5.2:batch')
+    expect(openrouterBatch!.total_price).toBeCloseTo(20.1, 10)
   })
 
   it.each([

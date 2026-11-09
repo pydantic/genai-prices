@@ -466,7 +466,7 @@ models:
     context_window: 1000000
     prices_checked: 2026-11-09
     price_comments: >-
-      Flat pricing across full 1M context window. Global endpoint; multi-region endpoints add a 10% premium.
+      Flat pricing across full 1M context window. Global endpoint; regional and multi-region endpoints add a 10% premium.
       Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1.
       Rates are Anthropic's first-party global rates: Google's pricing page renders its Claude table
       client-side and did not yield Fable 5.2 rows on 2026-11-09.

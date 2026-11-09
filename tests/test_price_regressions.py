@@ -872,8 +872,14 @@ def test_anthropic_claude_fable_5_2_batch() -> None:
         price_context={'processing': 'batch'},
     )
 
+    openrouter_batch = calc_price(
+        usage, 'anthropic/claude-fable-5.2:batch', provider_id='openrouter', genai_request_timestamp=timestamp
+    )
+
     assert standard.total_price == Decimal('40.2')
     assert batch.total_price == Decimal('20.1')
+    assert openrouter_batch.model.id == 'anthropic/claude-fable-5.2:batch'
+    assert openrouter_batch.total_price == Decimal('20.1')
 
 
 @pytest.mark.parametrize(('day', 'expected'), [(8, '0.25'), (9, '0.2')])

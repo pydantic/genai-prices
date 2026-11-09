@@ -11834,7 +11834,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          "Flat pricing across full 1M context window. Global endpoint; multi-region endpoints add a 10% premium. Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1. Rates are Anthropic's first-party global rates: Google's pricing page renders its Claude table client-side and did not yield Fable 5.2 rows on 2026-11-09. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/google-managed",
+          "Flat pricing across full 1M context window. Global endpoint; regional and multi-region endpoints add a 10% premium. Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1. Rates are Anthropic's first-party global rates: Google's pricing page renders its Claude table client-side and did not yield Fable 5.2 rows on 2026-11-09. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/google-managed",
         prices: {
           input_mtok: 8,
           cache_write_mtok: 10,

@@ -572,6 +572,7 @@ func TestClaudeFable52(t *testing.T) {
 		{"aws", "anthropic.claude-fable-5-2", "regional.anthropic.claude-fable-5-2", fullUsage, nil, nov9, 64.02},
 		{"anthropic", "claude-fable-5-2", "claude-fable-5-2", batchUsage, nil, nov9, 40.2},
 		{"anthropic", "claude-fable-5-2", "claude-fable-5-2", batchUsage, batch, nov9, 20.1},
+		{"openrouter", "anthropic/claude-fable-5.2:batch", "anthropic/claude-fable-5.2:batch", batchUsage, nil, nov9, 20.1},
 		{"openrouter", "~anthropic/claude-fable-latest", "~anthropic/claude-fable-latest", cacheUsage, nil, nov9.AddDate(0, 0, -1), 0.25},
 		{"openrouter", "~anthropic/claude-fable-latest", "~anthropic/claude-fable-latest", cacheUsage, nil, nov9, 0.2},
 	}
