@@ -590,14 +590,11 @@ describe('Claude Fable 5 vs 5.1', () => {
     expect(result!.total_price).toBeCloseTo(expected, 10)
   })
 
-  // Google's global endpoint follows Anthropic's list price for Fable 5.2 and Mythos 5.2.
+  // Google's global endpoint follows Anthropic's list price for Fable 5.2.
   it.each([
     ['claude-fable-5-2', 'claude-fable-5-2'],
     ['claude-fable-5-2@20261109', 'claude-fable-5-2'],
     ['publishers/anthropic/models/claude-fable-5-2', 'claude-fable-5-2'],
-    ['claude-mythos-5-2', 'claude-mythos-5-2'],
-    ['claude-mythos-5-2@20261109', 'claude-mythos-5-2'],
-    ['publishers/anthropic/models/claude-mythos-5-2', 'claude-mythos-5-2'],
   ])('prices google %s as %s', (modelRef, modelId) => {
     const result = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000 }, modelRef, {
       providerId: 'google',
@@ -612,8 +609,6 @@ describe('Claude Fable 5 vs 5.1', () => {
   it.each([
     ['claude-fable-5-2', undefined, 48.22],
     ['claude-fable-5-2', 'batch', 24.12],
-    ['claude-mythos-5-2', undefined, 48.22],
-    ['claude-mythos-5-2', 'batch', 24.12],
   ] as const)('prices google %s with web search (%s)', (modelRef, processing, expected) => {
     const result = calcPrice(
       { cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000, web_searches: 2 },

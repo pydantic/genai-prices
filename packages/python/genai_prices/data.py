@@ -6765,6 +6765,9 @@ providers: list[Provider] = [
                         required=False,
                     ),
                     UsageExtractorMapping(path='cache_read_input_tokens', dest='cache_read_tokens', required=False),
+                    UsageExtractorMapping(
+                        path=['server_tool_use', 'web_search_requests'], dest='web_searches', required=False
+                    ),
                     UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
                 ],
                 api_flavor='anthropic',
@@ -6988,34 +6991,6 @@ providers: list[Provider] = [
                         base=Decimal('0.2'), tiers=[Tier(start=100000, price=Decimal('1'))]
                     ),
                 ),
-            ),
-            ModelInfo(
-                id='claude-mythos-5-2',
-                match=ClauseOr(
-                    or_=[ClauseEndsWith(ends_with='claude-mythos-5-2'), ClauseContains(contains='claude-mythos-5-2@')]
-                ),
-                context_window=1000000,
-                price_comments="Google Cloud's partner model pricing page does not list Claude Mythos 5.2; Anthropic documents it as the same model as Claude Fable 5.2 with the same pricing, so these rates mirror the Fable 5.2 global endpoint entry, including batch (50% of standard) and web search ($10 per 1,000 searches). Limited availability (verified organizations only). Ref: https://cloud.google.com/model-garden/partner-models/pricing Anthropic ref: https://platform.claude.com/docs/en/models/mythos-5-2/overview Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/google-managed#api-model-ids",
-                prices=ModelPrice(
-                    input_mtok=Decimal('8'),
-                    cache_write_mtok=Decimal('10'),
-                    cache_read_mtok=Decimal('0.2'),
-                    output_mtok=Decimal('40'),
-                    cache_write_1h_mtok=Decimal('16'),
-                    web_searches_kcount=Decimal('10'),
-                ),
-                price_variants=[
-                    PriceVariant(
-                        when={'processing': 'batch'},
-                        prices=ModelPrice(
-                            input_mtok=Decimal('4'),
-                            cache_write_mtok=Decimal('5'),
-                            cache_read_mtok=Decimal('0.1'),
-                            output_mtok=Decimal('20'),
-                            cache_write_1h_mtok=Decimal('8'),
-                        ),
-                    )
-                ],
             ),
             ModelInfo(
                 id='claude-opus-4-5',

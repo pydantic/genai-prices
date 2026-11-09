@@ -160,6 +160,22 @@ def test_baseten_messages_usage() -> None:
     assert extracted.calc_price().total_price == Decimal('0.0000314')
 
 
+def test_google_anthropic_usage_counts_web_searches() -> None:
+    response_data = {
+        'model': 'claude-fable-5-2',
+        'usage': {
+            'input_tokens': 1_000_000,
+            'output_tokens': 100_000,
+            'server_tool_use': {'web_search_requests': 3},
+        },
+    }
+
+    extracted = extract_usage(response_data, provider_id='google', api_flavor='anthropic')
+
+    assert extracted.usage == Usage(input_tokens=1_000_000, output_tokens=100_000, web_searches=3)
+    assert extracted.calc_price(genai_request_timestamp=datetime(2026, 11, 9)).total_price == Decimal('12.03')
+
+
 # The Databricks bodies follow the documented usage fields; no recorded response is public.
 # https://docs.databricks.com/aws/en/machine-learning/foundation-model-apis/api-reference#usage
 @pytest.mark.parametrize('api_flavor', ['default', 'chat'])

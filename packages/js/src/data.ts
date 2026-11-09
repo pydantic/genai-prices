@@ -11694,6 +11694,11 @@ export const data: Provider[] = [
             required: false,
           },
           {
+            path: ['server_tool_use', 'web_search_requests'],
+            dest: 'web_searches',
+            required: false,
+          },
+          {
             path: 'output_tokens',
             dest: 'output_tokens',
             required: true,
@@ -12041,44 +12046,6 @@ export const data: Provider[] = [
             ],
           },
         },
-      },
-      {
-        id: 'claude-mythos-5-2',
-        match: {
-          or: [
-            {
-              ends_with: 'claude-mythos-5-2',
-            },
-            {
-              contains: 'claude-mythos-5-2@',
-            },
-          ],
-        },
-        context_window: 1000000,
-        price_comments:
-          "Google Cloud's partner model pricing page does not list Claude Mythos 5.2; Anthropic documents it as the same model as Claude Fable 5.2 with the same pricing, so these rates mirror the Fable 5.2 global endpoint entry, including batch (50% of standard) and web search ($10 per 1,000 searches). Limited availability (verified organizations only). Ref: https://cloud.google.com/model-garden/partner-models/pricing Anthropic ref: https://platform.claude.com/docs/en/models/mythos-5-2/overview Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/google-managed#api-model-ids",
-        prices: {
-          input_mtok: 8,
-          cache_write_mtok: 10,
-          cache_read_mtok: 0.2,
-          output_mtok: 40,
-          cache_write_1h_mtok: 16,
-          web_searches_kcount: 10,
-        },
-        price_variants: [
-          {
-            when: {
-              processing: 'batch',
-            },
-            prices: {
-              input_mtok: 4,
-              cache_write_mtok: 5,
-              cache_read_mtok: 0.1,
-              output_mtok: 20,
-              cache_write_1h_mtok: 8,
-            },
-          },
-        ],
       },
       {
         id: 'claude-opus-4-5',
