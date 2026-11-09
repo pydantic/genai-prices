@@ -343,7 +343,7 @@ providers: list[Provider] = [
                     or_=[ClauseEquals(equals='claude-mythos-5-2'), ClauseRegex(regex='^claude-mythos-5-2-\\d{8}$')]
                 ),
                 name='Claude Mythos 5.2',
-                description="Claude Fable 5.2 for organizations verified through Anthropic's verification programs",
+                description="Same model as Claude Fable 5.2, for organizations verified through Anthropic's verification programs",
                 context_window=1000000,
                 price_comments='Same model and pricing as Claude Fable 5.2, with limited availability. The Anthropic price importer skips limited-availability rows, so it does not update this entry. Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.2, Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ref: https://platform.claude.com/docs/en/models/mythos-5-2/overview Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
                 prices=ModelPrice(

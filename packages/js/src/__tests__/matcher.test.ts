@@ -578,6 +578,8 @@ describe('Claude Fable 5 vs 5.1', () => {
     ['google', 'claude-fable-5-2', 'claude-fable-5-2', 48.2],
     ['google', 'claude-fable-5-2@20261109', 'claude-fable-5-2', 48.2],
     ['google', 'publishers/anthropic/models/claude-fable-5-2', 'claude-fable-5-2', 48.2],
+    // No Vertex AI entry: google falls back to the anthropic record.
+    ['google', 'claude-mythos-5-2', 'claude-mythos-5-2', 48.2],
     ['aws', 'global.anthropic.claude-fable-5-2', 'global.anthropic.claude-fable-5-2', 48.2],
     ['aws', 'global.anthropic.claude-mythos-5-2', 'global.anthropic.claude-mythos-5-2', 48.2],
     ['aws', 'anthropic.claude-fable-5-2', 'regional.anthropic.claude-fable-5-2', 53.02],

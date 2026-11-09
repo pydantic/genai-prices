@@ -541,7 +541,7 @@ export const data: Provider[] = [
       {
         id: 'claude-mythos-5-2',
         name: 'Claude Mythos 5.2',
-        description: "Claude Fable 5.2 for organizations verified through Anthropic's verification programs",
+        description: "Same model as Claude Fable 5.2, for organizations verified through Anthropic's verification programs",
         match: {
           or: [
             {

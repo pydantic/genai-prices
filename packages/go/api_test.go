@@ -478,6 +478,8 @@ func TestClaude52Prices(t *testing.T) {
 		{"anthropic", "claude-mythos-5-2-20261109", "claude-mythos-5-2", 48.2},
 		{"google", "claude-fable-5-2", "claude-fable-5-2", 48.2},
 		{"google", "claude-fable-5-2@20261109", "claude-fable-5-2", 48.2},
+		// No Vertex AI entry: google falls back to the anthropic record.
+		{"google", "claude-mythos-5-2", "claude-mythos-5-2", 48.2},
 		{"aws", "global.anthropic.claude-fable-5-2", "global.anthropic.claude-fable-5-2", 48.2},
 		{"aws", "global.anthropic.claude-mythos-5-2", "global.anthropic.claude-mythos-5-2", 48.2},
 		{"aws", "us.anthropic.claude-fable-5-2", "regional.anthropic.claude-fable-5-2", 53.02},
@@ -499,6 +501,41 @@ func TestClaude52Prices(t *testing.T) {
 			}
 			if result.ModelID != test.wantModel {
 				t.Fatalf("got model %q, want %q", result.ModelID, test.wantModel)
+			}
+			if math.Abs(result.TotalPrice-test.want) > 1e-9 {
+				t.Fatalf("got %g, want %g", result.TotalPrice, test.want)
+			}
+		})
+	}
+}
+
+// 5.2 batch is 50% of standard, cache rates included; web search stays at $10 per 1,000 searches.
+func TestClaude52BatchAndWebSearch(t *testing.T) {
+	tests := []struct {
+		providerID   string
+		model        string
+		priceContext map[string]string
+		want         float64
+	}{
+		{"anthropic", "claude-mythos-5-2", nil, 48.22},
+		{"anthropic", "claude-mythos-5-2", map[string]string{"processing": "batch"}, 24.12},
+		{"google", "claude-fable-5-2", nil, 48.22},
+		{"google", "claude-fable-5-2", map[string]string{"processing": "batch"}, 24.12},
+	}
+	usage := genai_prices.Usage{
+		genai_prices.UsageInputTokens:     2_000_000,
+		genai_prices.UsageCacheReadTokens: 1_000_000,
+		genai_prices.UsageOutputTokens:    1_000_000,
+		genai_prices.UsageWebSearches:     2,
+	}
+	for _, test := range tests {
+		t.Run(test.providerID+"/"+test.model+"/"+test.priceContext["processing"], func(t *testing.T) {
+			result, err := genai_prices.Calculate(genai_prices.PriceRequest{
+				Timestamp: time.Date(2026, 11, 9, 0, 0, 0, 0, time.UTC),
+				Usage:     usage, Model: test.model, ProviderID: test.providerID, PriceContext: test.priceContext,
+			})
+			if err != nil {
+				t.Fatal(err)
 			}
 			if math.Abs(result.TotalPrice-test.want) > 1e-9 {
 				t.Fatalf("got %g, want %g", result.TotalPrice, test.want)
