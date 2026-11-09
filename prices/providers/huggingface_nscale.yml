@@ -216,7 +216,7 @@ models:
     prices:
       input_mtok: 0.2
       output_mtok: 2.5
-    prices_checked: 2026-11-03
+    prices_checked: 2026-11-09
 
   - id: Qwen/Qwen3.8-Flash-Next-FP8
     name: Qwen3.8-Flash-Next-FP8
@@ -228,7 +228,7 @@ models:
     prices:
       input_mtok: 0.15
       output_mtok: 0.47
-    prices_checked: 2026-11-03
+    prices_checked: 2026-11-09
 
   - id: deepseek-ai/DeepSeek-R1-Distill-Llama-70B
     name: DeepSeek-R1-Distill-Llama-70B
@@ -368,4 +368,4 @@ models:
     prices:
       input_mtok: 1.4
       output_mtok: 4.4
-    prices_checked: 2026-11-03
+    prices_checked: 2026-11-09
