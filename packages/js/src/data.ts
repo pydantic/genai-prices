@@ -5865,6 +5865,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-ai/DeepSeek-V4.1-Flash-1017-Fast',
+        name: 'DeepSeek V4.1 Flash 1017 Fast',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4.1-Flash-1017-Fast',
+        },
+        context_window: 1048000,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.014,
+          output_mtok: 2.4,
+        },
+      },
+      {
         id: 'deepseek-ai/DeepSeek-V4.1-Flash-Fast',
         name: 'DeepSeek V4.1 Flash Fast',
         description: "Faster speed tier of DeepSeek V4.1 Flash sharing its base model's weights.",
@@ -8882,6 +8895,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'moonshotai/Kimi-K3.1-Pro',
+        name: 'Kimi K3.1 Pro',
+        match: {
+          equals: 'moonshotai/Kimi-K3.1-Pro',
+        },
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
+      },
+      {
         id: 'moonshotai/kimi-k3',
         name: 'Kimi K3',
         match: {
@@ -9558,6 +9583,18 @@ export const data: Provider[] = [
             },
           },
         ],
+      },
+      {
+        id: 'kimi-k3p1-pro',
+        name: 'Kimi K3.1 Pro',
+        match: {
+          equals: 'accounts/fireworks/models/kimi-k3p1-pro',
+        },
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
       },
       {
         id: 'llama-v3p1-8b-instruct',
@@ -22207,6 +22244,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'moonshotai/Kimi-K3.1-Pro',
+        name: 'Kimi K3.1 Pro',
+        match: {
+          equals: 'moonshotai/Kimi-K3.1-Pro',
+        },
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
+      },
+      {
         id: 'nvidia/GLM-5.3-Flash-NVFP4',
         name: 'GLM 5.3 Flash NVFP4',
         match: {
@@ -23824,6 +23873,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'tencent/hy4',
+        name: 'Hy4',
+        match: {
+          equals: 'tencent/hy4',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.417,
+          cache_read_mtok: 0.021,
+          output_mtok: 1.2505,
+        },
+      },
+      {
         id: 'tencent/hy4-preview',
         name: 'Hy4 Preview',
         match: {
@@ -24055,6 +24117,19 @@ export const data: Provider[] = [
           input_mtok: 0.15,
           cache_read_mtok: 0.03,
           output_mtok: 0.5,
+        },
+      },
+      {
+        id: 'zai-org/glm-5.3-flashX',
+        name: 'GLM 5.3 FlashX',
+        match: {
+          equals: 'zai-org/glm-5.3-flashX',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.37,
+          cache_read_mtok: 0.075,
+          output_mtok: 1.25,
         },
       },
     ],
@@ -28067,6 +28142,18 @@ export const data: Provider[] = [
             },
           },
         ],
+      },
+      {
+        id: 'gpt-6-cyber',
+        match: {
+          equals: 'gpt-6-cyber',
+        },
+        prices: {
+          input_mtok: 20,
+          cache_write_mtok: 25,
+          cache_read_mtok: 2,
+          output_mtok: 100,
+        },
       },
       {
         id: 'gpt-6-luna',
@@ -48732,11 +48819,26 @@ export const data: Provider[] = [
           equals: 'deepseek-v4.1-flash',
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 0.125,
-          cache_read_mtok: 0.0125,
-          output_mtok: 0.55,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.125,
+              cache_read_mtok: 0.0125,
+              output_mtok: 0.55,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-06',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.0558,
+              cache_read_mtok: 0.0011,
+              output_mtok: 0.2231,
+            },
+          },
+        ],
       },
       {
         id: 'deepseek-v4.1-flash-1017',
@@ -48971,6 +49073,16 @@ export const data: Provider[] = [
               input_mtok: 0.07,
               cache_read_mtok: 0.03,
               output_mtok: 0.05,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-06',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.0284,
+              output_mtok: 0.0923,
             },
           },
         ],
@@ -49430,6 +49542,19 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'hy4',
+        name: 'Hy4',
+        match: {
+          equals: 'hy4',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.459,
+          cache_read_mtok: 0.0231,
+          output_mtok: 1.375,
+        },
+      },
+      {
         id: 'hy4-preview',
         name: 'Hy4 Preview',
         match: {
@@ -49570,11 +49695,26 @@ export const data: Provider[] = [
           equals: 'mimo-v2.5',
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 0.112,
-          cache_read_mtok: 0.00224,
-          output_mtok: 0.224,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.112,
+              cache_read_mtok: 0.00224,
+              output_mtok: 0.224,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-05',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.32,
+              cache_read_mtok: 0.064,
+              output_mtok: 1.6,
+            },
+          },
+        ],
       },
       {
         id: 'mimo-v2.6-flash',
@@ -50738,6 +50878,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'moonshotai/Kimi-K3.1-Pro',
+        name: 'Kimi K3.1 Pro',
+        match: {
+          equals: 'moonshotai/Kimi-K3.1-Pro',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
+      },
+      {
         id: 'nvidia/NVIDIA-Nemotron-3.5-Super-VL',
         name: 'NVIDIA Nemotron 3.5 Super VL',
         match: {
@@ -50783,6 +50936,18 @@ export const data: Provider[] = [
           input_mtok: 0.4,
           cache_read_mtok: 0.04,
           output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'ricursive-ai/Ripple-65B-Preview',
+        name: 'Ripple 65B Preview',
+        match: {
+          equals: 'ricursive-ai/Ripple-65B-Preview',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 0.6,
         },
       },
       {
