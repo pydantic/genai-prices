@@ -776,6 +776,7 @@ def test_claude_fable_mythos_5_2_prices(
         'publishers/anthropic/models/claude-fable-5-2',
         'claude-mythos-5-2',
         'claude-mythos-5-2@20261109',
+        'publishers/anthropic/models/claude-mythos-5-2',
     ],
 )
 def test_google_claude_fable_mythos_5_2_prices(model_ref: str) -> None:
