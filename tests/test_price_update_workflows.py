@@ -748,7 +748,8 @@ def test_hourly_importer_failures_alert_slack_once() -> None:
     }
     check = workflow['jobs']['importer-failure']
     assert check['if'] == (
-        "${{ github.event.workflow_run.event == 'schedule' && github.event.workflow_run.conclusion == 'failure' }}"
+        "${{ github.event.workflow_run.event == 'schedule'"
+        ' && contains(fromJSON(\'["failure", "startup_failure"]\'), github.event.workflow_run.conclusion) }}'
     )
     assert check['permissions'] == {'actions': 'read'}
     notify = workflow['jobs']['notify-failure']
@@ -803,8 +804,7 @@ def test_importer_failure_alerts_on_each_job_that_was_passing_in_the_previous_ru
     output = tmp_path / 'output'
     calls = tmp_path / 'calls'
     script = read_workflow('update-prices-failure.yml')['jobs']['importer-failure']['steps'][0]['run']
-    # The watched run has completed, so the lookup lists it ahead of the run it compares against.
-    runs = [{'databaseId': 99}] + ([{'databaseId': int(previous_run)}] if previous_run else [])
+    runs = [{'databaseId': int(previous_run)}] if previous_run else []
 
     subprocess.run(
         ['bash', '-e', '-c', script],
@@ -814,6 +814,7 @@ def test_importer_failure_alerts_on_each_job_that_was_passing_in_the_previous_ru
             'GITHUB_OUTPUT': str(output),
             'GITHUB_REPOSITORY': 'pydantic/genai-prices',
             'RUN_ID': '99',
+            'CREATED_AT': '2026-11-09T18:21:27Z',
             'GH_CALLS': str(calls),
             'RUNS': json.dumps(runs),
             'PREVIOUS_JOBS': previous_jobs,
@@ -823,7 +824,7 @@ def test_importer_failure_alerts_on_each_job_that_was_passing_in_the_previous_ru
     )
 
     assert output.read_text() == f'newly-failing={newly_failing}\n'
-    assert '--event schedule --status completed --limit 10' in calls.read_text()
+    assert '--event schedule --status completed --created <2026-11-09T18:21:27Z --limit 1' in calls.read_text()
     assert ('run view 41 ' in calls.read_text()) == bool(previous_run)
 
 

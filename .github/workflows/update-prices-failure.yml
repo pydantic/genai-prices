@@ -11,7 +11,9 @@ permissions: {}
 
 jobs:
   importer-failure:
-    if: ${{ github.event.workflow_run.event == 'schedule' && github.event.workflow_run.conclusion == 'failure' }}
+    if: >-
+      ${{ github.event.workflow_run.event == 'schedule'
+      && contains(fromJSON('["failure", "startup_failure"]'), github.event.workflow_run.conclusion) }}
     runs-on: ubuntu-latest
     timeout-minutes: 2
     permissions:
@@ -23,6 +25,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           RUN_ID: ${{ github.event.workflow_run.id }}
+          CREATED_AT: ${{ github.event.workflow_run.created_at }}
         run: |
           set -o pipefail
           failing() {
@@ -31,7 +34,7 @@ jobs:
               (if any(.jobs[]; .name | startswith("import ")) then empty else "import: no job started" end)' | sort
           }
           run_id="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow update-prices.yml --branch main --event schedule \
-            --status completed --limit 10 --json databaseId --jq "map(select(.databaseId < $RUN_ID)) | .[0].databaseId // empty")"
+            --status completed --created "<$CREATED_AT" --limit 1 --json databaseId --jq '.[0].databaseId // empty')"
           previous=''
           if [ -n "$run_id" ]; then
             # Assigned on its own so a failed lookup fails the step instead of looking like a new failure.

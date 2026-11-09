@@ -54,7 +54,7 @@ def page(family: str) -> str:
 """
 
 
-@pytest.mark.parametrize('table', [TABLE, SWAPPED_TABLE])
+@pytest.mark.parametrize('table', [TABLE, SWAPPED_TABLE], ids=['standard-first', 'contributor-first'])
 def test_meta_parses_standard_and_contributor_models_with_web_search(table: str) -> None:
     family = f"""\
 ### Muse Spark
