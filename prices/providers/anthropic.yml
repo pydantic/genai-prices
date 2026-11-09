@@ -210,7 +210,7 @@ models:
         - equals: claude-fable-5
         - regex: ^claude-fable-5-\d{8}$
     context_window: 1000000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-11-09
     price_comments: >-
       Flat pricing across full 1M context window (no tiered pricing).
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
@@ -240,7 +240,7 @@ models:
         - equals: claude-fable-5-1
         - regex: ^claude-fable-5-1-\d{8}$
     context_window: 1000000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-11-09
     price_comments: >-
       Flat pricing across full 1M context window (no tiered pricing).
       Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1.
@@ -271,7 +271,6 @@ models:
         - equals: claude-fable-5-2
         - regex: ^claude-fable-5-2-\d{8}$
     context_window: 1000000
-    prices_checked: 2026-11-09
     price_comments: >-
       Flat pricing across full 1M context window (no tiered pricing).
       Cache hits are 0.025x base input (not the usual 0.1x), as on Mythos 5.2, Fable 5.1 and Mythos 5.1.
@@ -280,10 +279,10 @@ models:
       Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
     prices:
       input_mtok: 8
-      cache_read_mtok: 0.20
       cache_write_mtok: 10
-      cache_write_1h_mtok: 16
+      cache_read_mtok: 0.2
       output_mtok: 40
+      cache_write_1h_mtok: 16
       web_searches_kcount: 10
     price_variants:
       - when: { processing: batch }
@@ -293,6 +292,7 @@ models:
           cache_write_mtok: 5
           cache_write_1h_mtok: 8
           output_mtok: 20
+    prices_checked: 2026-11-09
 
   - id: claude-haiku-4-5
     name: Claude Haiku 4.5
@@ -304,7 +304,7 @@ models:
         - starts_with: claude-4-5-haiku
         - starts_with: claude-4.5-haiku
     context_window: 200000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-11-09
     price_comments: >-
       One-hour cache writes cost 2x the base input price.
       Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
@@ -337,7 +337,7 @@ models:
         - starts_with: claude-5-5-haiku
         - starts_with: claude-5.5-haiku
     context_window: 1000000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-11-09
     price_comments: >-
       Priced by prompt length: every token in a request whose prompt exceeds 100,000 tokens is billed
       at the higher rate (5x). Cache reads are the standard 0.1x of base input.
@@ -461,7 +461,7 @@ models:
         - equals: claude-opus-4
         - equals: claude-opus-4-20250514
     context_window: 200000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-11-09
     price_comments: >-
       One-hour cache writes cost 2x the base input price.
       Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
@@ -482,7 +482,7 @@ models:
         - starts_with: claude-opus-4.1
     context_window: 200000
     collapse: true
-    prices_checked: 2026-10-19
+    prices_checked: 2026-11-09
     price_comments: >-
       One-hour cache writes cost 2x the base input price.
       Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
@@ -504,7 +504,7 @@ models:
         - starts_with: claude-4-5-opus
         - starts_with: claude-4.5-opus
     context_window: 200000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-11-09
     price_comments: >-
       One-hour cache writes cost 2x the base input price.
       Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
@@ -535,7 +535,7 @@ models:
         - starts_with: claude-4-6-opus
         - starts_with: claude-4.6-opus
     context_window: 1000000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-11-09
     price_comments: >-
       One-hour cache writes cost 2x the base input price.
       The 1M context window is generally available.
@@ -599,7 +599,7 @@ models:
         - starts_with: claude-4-7-opus
         - starts_with: claude-4.7-opus
     context_window: 1000000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-11-09
     price_comments: >-
       Flat pricing across full 1M context window (no tiered pricing).
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
@@ -631,7 +631,7 @@ models:
         - starts_with: claude-4-8-opus
         - starts_with: claude-4.8-opus
     context_window: 1000000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-11-09
     price_comments: >-
       Flat pricing across full 1M context window (no tiered pricing).
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
@@ -666,7 +666,7 @@ models:
         - starts_with: claude-5-opus
         - starts_with: claude-5.0-opus
     context_window: 1000000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-11-09
     price_comments: >-
       Flat pricing across full 1M context window (no tiered pricing).
       Refs: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
@@ -700,7 +700,7 @@ models:
         - starts_with: claude-5-5-opus
         - starts_with: claude-5.5-opus
     context_window: 1000000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-11-09
     price_comments: >-
       Flat pricing across full 1M context window (no tiered pricing).
       Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5.
@@ -734,7 +734,7 @@ models:
         - equals: claude-sonnet-4
         - starts_with: claude-4-sonnet
     context_window: 200000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-11-09
     price_comments: >-
       One-hour cache writes cost 2x the base input price.
       Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
@@ -754,7 +754,7 @@ models:
         - starts_with: claude-sonnet-4-5
         - starts_with: claude-sonnet-4.5
     context_window: 200000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-11-09
     price_comments: >-
       One-hour cache writes cost 2x the base input price.
       The 1M context beta was retired on 2026-04-30; requests over 200k now error.
@@ -826,7 +826,7 @@ models:
         - starts_with: claude-sonnet-4-6
         - starts_with: claude-sonnet-4.6
     context_window: 1000000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-11-09
     price_comments: >-
       One-hour cache writes cost 2x the base input price.
       Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
@@ -890,7 +890,7 @@ models:
         - starts_with: claude-5-sonnet
         - starts_with: claude-5.0-sonnet
     context_window: 1000000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-11-09
     price_comments: >-
       Flat pricing across the full 1M context window (no tiered pricing). Anthropic made the introductory
       $2/$10 per MTok rates permanent and cancelled the previously scheduled 2026-09-01 increase.
@@ -925,7 +925,7 @@ models:
         - starts_with: claude-5-5-sonnet
         - starts_with: claude-5.5-sonnet
     context_window: 1000000
-    prices_checked: 2026-10-19
+    prices_checked: 2026-11-09
     price_comments: >-
       Flat pricing across the full 1M context window (no tiered pricing).
       Cache hits are 0.05x base input (not the usual 0.1x), as on Opus 5.5.
