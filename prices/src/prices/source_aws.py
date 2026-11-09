@@ -84,6 +84,7 @@ MODEL_IDS: dict[str, dict[str, tuple[str, str | None]]] = {
             for name, model_id in {
                 'Claude Fable 5': 'anthropic.claude-fable-5-v1:0',
                 'Claude Fable 5.1': 'anthropic.claude-fable-5-1-v1:0',
+                'Claude Fable 5.2': 'anthropic.claude-fable-5-2',
                 'Claude Haiku 4.5': 'anthropic.claude-haiku-4-5-20251001-v1:0',
                 'Claude Haiku 5.5': 'anthropic.claude-haiku-5-5',
                 'Claude Opus 4.5': 'anthropic.claude-opus-4-5-v1:0',

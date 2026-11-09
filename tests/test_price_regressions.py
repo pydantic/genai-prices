@@ -805,6 +805,89 @@ def test_openrouter_claude_fable_latest_still_points_at_fable_5() -> None:
     assert price.total_price == Decimal('1')
 
 
+@pytest.mark.parametrize(
+    ('provider_id', 'model_ref', 'model_id', 'cache_read_mtok'),
+    [
+        ('anthropic', 'claude-fable-5-2', 'claude-fable-5-2', '0.2'),
+        ('anthropic', 'claude-fable-5-2-20261109', 'claude-fable-5-2', '0.2'),
+        ('google', 'claude-fable-5-2', 'claude-fable-5-2', '0.2'),
+        ('google', 'claude-fable-5-2@20261109', 'claude-fable-5-2', '0.2'),
+        ('aws', 'global.anthropic.claude-fable-5-2-v1:0', 'global.anthropic.claude-fable-5-2', '0.2'),
+        ('aws', 'us.anthropic.claude-fable-5-2-v1:0', 'regional.anthropic.claude-fable-5-2', '0.22'),
+        ('openrouter', 'anthropic/claude-fable-5.2', 'anthropic/claude-fable-5.2', '0.2'),
+        ('openrouter', 'anthropic/claude-fable-5.2-20261109', 'anthropic/claude-fable-5.2', '0.2'),
+    ],
+)
+def test_claude_fable_5_2_resolves_to_its_own_record(
+    provider_id: str, model_ref: str, model_id: str, cache_read_mtok: str
+) -> None:
+    """Fable 5 and 5.1 match by prefix too, so a loose clause would price Fable 5.2 at their rates."""
+    price = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id=provider_id,
+        genai_request_timestamp=datetime(2026, 11, 9, tzinfo=UTC),
+    )
+
+    assert price.model.id == model_id
+    assert price.total_price == Decimal(cache_read_mtok)
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'model_id', 'expected'),
+    [
+        ('global.anthropic.claude-fable-5-2', 'global.anthropic.claude-fable-5-2', '58.2'),
+        ('global.anthropic.claude-fable-5-2-v1:0', 'global.anthropic.claude-fable-5-2', '58.2'),
+        ('us.anthropic.claude-fable-5-2', 'regional.anthropic.claude-fable-5-2', '64.02'),
+        ('eu.anthropic.claude-fable-5-2', 'regional.anthropic.claude-fable-5-2', '64.02'),
+        ('jp.anthropic.claude-fable-5-2', 'regional.anthropic.claude-fable-5-2', '64.02'),
+        ('au.anthropic.claude-fable-5-2-v1:0', 'regional.anthropic.claude-fable-5-2', '64.02'),
+        ('anthropic.claude-fable-5-2', 'regional.anthropic.claude-fable-5-2', '64.02'),
+    ],
+)
+def test_aws_claude_fable_5_2_inference_profile_ids(model_ref: str, model_id: str, expected: str) -> None:
+    price = calc_price(
+        Usage(
+            input_tokens=3_000_000, cache_read_tokens=1_000_000, cache_write_tokens=1_000_000, output_tokens=1_000_000
+        ),
+        model_ref=model_ref,
+        provider_id='aws',
+        genai_request_timestamp=datetime(2026, 11, 9, tzinfo=UTC),
+    )
+
+    assert price.model.id == model_id
+    assert price.total_price == Decimal(expected)
+
+
+def test_anthropic_claude_fable_5_2_batch() -> None:
+    usage = Usage(input_tokens=1_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000)
+    timestamp = datetime(2026, 11, 9, tzinfo=UTC)
+
+    standard = calc_price(usage, 'claude-fable-5-2', provider_id='anthropic', genai_request_timestamp=timestamp)
+    batch = calc_price(
+        usage,
+        'claude-fable-5-2',
+        provider_id='anthropic',
+        genai_request_timestamp=timestamp,
+        price_context={'processing': 'batch'},
+    )
+
+    assert standard.total_price == Decimal('40.2')
+    assert batch.total_price == Decimal('20.1')
+
+
+@pytest.mark.parametrize(('day', 'expected'), [(8, '0.25'), (9, '0.2')])
+def test_openrouter_claude_fable_latest_moves_to_fable_5_2(day: int, expected: str) -> None:
+    price = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=1_000_000),
+        model_ref='~anthropic/claude-fable-latest',
+        provider_id='openrouter',
+        genai_request_timestamp=datetime(2026, 11, day, tzinfo=UTC),
+    )
+
+    assert price.total_price == Decimal(expected)
+
+
 _OPUS_5_5_REFS = [
     ('anthropic', 'claude-opus-5', 'claude-opus-5-5'),
     ('anthropic', 'claude-opus-5-20260901', 'claude-opus-5-5-20260922'),

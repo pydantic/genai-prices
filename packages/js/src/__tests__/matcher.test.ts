@@ -606,6 +606,69 @@ describe('Claude Fable 5 vs 5.1', () => {
   })
 })
 
+describe('Claude Fable 5.2', () => {
+  // Fable 5 and 5.1 match by prefix too, so a loose clause would price Fable 5.2 at their rates.
+  const usage = { cache_read_tokens: 1_000_000, input_tokens: 1_000_000 }
+  const timestamp = new Date('2026-11-09T00:00:00Z')
+
+  it.each([
+    ['anthropic', 'claude-fable-5-2', 'claude-fable-5-2', 0.2],
+    ['anthropic', 'claude-fable-5-2-20261109', 'claude-fable-5-2', 0.2],
+    ['google', 'claude-fable-5-2', 'claude-fable-5-2', 0.2],
+    ['google', 'claude-fable-5-2@20261109', 'claude-fable-5-2', 0.2],
+    ['aws', 'global.anthropic.claude-fable-5-2-v1:0', 'global.anthropic.claude-fable-5-2', 0.2],
+    ['aws', 'us.anthropic.claude-fable-5-2-v1:0', 'regional.anthropic.claude-fable-5-2', 0.22],
+    ['openrouter', 'anthropic/claude-fable-5.2', 'anthropic/claude-fable-5.2', 0.2],
+    ['openrouter', 'anthropic/claude-fable-5.2-20261109', 'anthropic/claude-fable-5.2', 0.2],
+  ])('resolves %s %s to %s', (providerId, modelRef, modelId, expected) => {
+    const price = calcPrice(usage, modelRef, { providerId, timestamp })
+
+    expect(price!.model.id).toBe(modelId)
+    expect(price!.total_price).toBeCloseTo(expected, 10)
+  })
+
+  it.each([
+    ['global.anthropic.claude-fable-5-2', 'global.anthropic.claude-fable-5-2', 58.2],
+    ['global.anthropic.claude-fable-5-2-v1:0', 'global.anthropic.claude-fable-5-2', 58.2],
+    ['us.anthropic.claude-fable-5-2', 'regional.anthropic.claude-fable-5-2', 64.02],
+    ['eu.anthropic.claude-fable-5-2', 'regional.anthropic.claude-fable-5-2', 64.02],
+    ['jp.anthropic.claude-fable-5-2', 'regional.anthropic.claude-fable-5-2', 64.02],
+    ['au.anthropic.claude-fable-5-2-v1:0', 'regional.anthropic.claude-fable-5-2', 64.02],
+    ['anthropic.claude-fable-5-2', 'regional.anthropic.claude-fable-5-2', 64.02],
+  ])('prices the AWS id %s as %s', (modelRef, modelId, expected) => {
+    const price = calcPrice(
+      { cache_read_tokens: 1_000_000, cache_write_tokens: 1_000_000, input_tokens: 3_000_000, output_tokens: 1_000_000 },
+      modelRef,
+      { providerId: 'aws', timestamp }
+    )
+
+    expect(price!.model.id).toBe(modelId)
+    expect(price!.total_price).toBeCloseTo(expected, 10)
+  })
+
+  it('applies the Anthropic batch variant', () => {
+    const batchUsage = { ...usage, output_tokens: 1_000_000 }
+    const standard = calcPrice(batchUsage, 'claude-fable-5-2', { providerId: 'anthropic', timestamp })
+    const batch = calcPrice(batchUsage, 'claude-fable-5-2', {
+      priceContext: { processing: 'batch' },
+      providerId: 'anthropic',
+      timestamp,
+    })
+
+    expect(standard!.total_price).toBeCloseTo(40.2, 10)
+    expect(batch!.total_price).toBeCloseTo(20.1, 10)
+  })
+
+  it.each([
+    ['2026-11-08T00:00:00Z', 0.25],
+    ['2026-11-09T00:00:00Z', 0.2],
+  ])('moves the OpenRouter family-level alias to Fable 5.2 (%s)', (date, expected) => {
+    const price = calcPrice(usage, '~anthropic/claude-fable-latest', { providerId: 'openrouter', timestamp: new Date(date) })
+
+    expect(price!.total_price).toBeCloseTo(expected, 10)
+  })
+})
+
 describe('Claude Opus 5 vs 5.5', () => {
   // Opus 5.5 caches reads at 0.05x of a $4 base input; Opus 5 at 0.1x of $5. The Opus 5 records
   // matched by prefix, so `claude-opus-5-5` silently resolved to Opus 5 and was priced 2.5x too

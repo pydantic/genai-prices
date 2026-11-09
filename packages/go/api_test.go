@@ -529,6 +529,71 @@ func TestOpenRouterClaudeFableLatestStillPointsAtFable5(t *testing.T) {
 	}
 }
 
+// Fable 5 and 5.1 match by prefix too, so a loose clause would price Fable 5.2 at their rates.
+func TestClaudeFable52(t *testing.T) {
+	nov9 := time.Date(2026, 11, 9, 0, 0, 0, 0, time.UTC)
+	cacheUsage := genai_prices.Usage{
+		genai_prices.UsageInputTokens:     1_000_000,
+		genai_prices.UsageCacheReadTokens: 1_000_000,
+	}
+	fullUsage := genai_prices.Usage{
+		genai_prices.UsageInputTokens:      3_000_000,
+		genai_prices.UsageCacheReadTokens:  1_000_000,
+		genai_prices.UsageCacheWriteTokens: 1_000_000,
+		genai_prices.UsageOutputTokens:     1_000_000,
+	}
+	batchUsage := genai_prices.Usage{
+		genai_prices.UsageInputTokens:     1_000_000,
+		genai_prices.UsageCacheReadTokens: 1_000_000,
+		genai_prices.UsageOutputTokens:    1_000_000,
+	}
+	batch := map[string]string{"processing": "batch"}
+	tests := []struct {
+		providerID, model, modelID string
+		usage                      genai_prices.Usage
+		context                    map[string]string
+		timestamp                  time.Time
+		wantTotal                  float64
+	}{
+		{"anthropic", "claude-fable-5-2", "claude-fable-5-2", cacheUsage, nil, nov9, 0.2},
+		{"anthropic", "claude-fable-5-2-20261109", "claude-fable-5-2", cacheUsage, nil, nov9, 0.2},
+		{"google", "claude-fable-5-2", "claude-fable-5-2", cacheUsage, nil, nov9, 0.2},
+		{"google", "claude-fable-5-2@20261109", "claude-fable-5-2", cacheUsage, nil, nov9, 0.2},
+		{"aws", "global.anthropic.claude-fable-5-2-v1:0", "global.anthropic.claude-fable-5-2", cacheUsage, nil, nov9, 0.2},
+		{"aws", "us.anthropic.claude-fable-5-2-v1:0", "regional.anthropic.claude-fable-5-2", cacheUsage, nil, nov9, 0.22},
+		{"openrouter", "anthropic/claude-fable-5.2", "anthropic/claude-fable-5.2", cacheUsage, nil, nov9, 0.2},
+		{"openrouter", "anthropic/claude-fable-5.2-20261109", "anthropic/claude-fable-5.2", cacheUsage, nil, nov9, 0.2},
+		{"aws", "global.anthropic.claude-fable-5-2", "global.anthropic.claude-fable-5-2", fullUsage, nil, nov9, 58.2},
+		{"aws", "global.anthropic.claude-fable-5-2-v1:0", "global.anthropic.claude-fable-5-2", fullUsage, nil, nov9, 58.2},
+		{"aws", "us.anthropic.claude-fable-5-2", "regional.anthropic.claude-fable-5-2", fullUsage, nil, nov9, 64.02},
+		{"aws", "eu.anthropic.claude-fable-5-2", "regional.anthropic.claude-fable-5-2", fullUsage, nil, nov9, 64.02},
+		{"aws", "jp.anthropic.claude-fable-5-2", "regional.anthropic.claude-fable-5-2", fullUsage, nil, nov9, 64.02},
+		{"aws", "au.anthropic.claude-fable-5-2-v1:0", "regional.anthropic.claude-fable-5-2", fullUsage, nil, nov9, 64.02},
+		{"aws", "anthropic.claude-fable-5-2", "regional.anthropic.claude-fable-5-2", fullUsage, nil, nov9, 64.02},
+		{"anthropic", "claude-fable-5-2", "claude-fable-5-2", batchUsage, nil, nov9, 40.2},
+		{"anthropic", "claude-fable-5-2", "claude-fable-5-2", batchUsage, batch, nov9, 20.1},
+		{"openrouter", "~anthropic/claude-fable-latest", "~anthropic/claude-fable-latest", cacheUsage, nil, nov9.AddDate(0, 0, -1), 0.25},
+		{"openrouter", "~anthropic/claude-fable-latest", "~anthropic/claude-fable-latest", cacheUsage, nil, nov9, 0.2},
+	}
+	for _, test := range tests {
+		t.Run(test.providerID+"/"+test.model, func(t *testing.T) {
+			calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+				Usage: test.usage, Model: test.model, ProviderID: test.providerID,
+				Timestamp: test.timestamp, PriceContext: test.context,
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if calculation.ModelID != test.modelID {
+				t.Fatalf("got model %q, want %q", calculation.ModelID, test.modelID)
+			}
+			if math.Abs(calculation.TotalPrice-test.wantTotal) > 1e-9 {
+				t.Fatalf("got total %g, want %g", calculation.TotalPrice, test.wantTotal)
+			}
+		})
+	}
+}
+
 // Opus 5.5 caches reads at 0.05x of a $4 base input; Opus 5 at 0.1x of $5. The Opus 5 records
 // matched by prefix, so `claude-opus-5-5` silently resolved to Opus 5 and was priced 2.5x too
 // high on cache reads instead of failing.
