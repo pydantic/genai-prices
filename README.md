@@ -34,10 +34,10 @@ The following providers are currently supported:
 
 [comment]: <> (providers-start)
 
-- [Anthropic](prices/providers/anthropic.yml) - 28 models
+- [Anthropic](prices/providers/anthropic.yml) - 29 models
 - [Arcee](prices/providers/arcee.yml) - 11 models
 - [Avian](prices/providers/avian.yml) - 24 models
-- [AWS Bedrock](prices/providers/aws.yml) - 114 models
+- [AWS Bedrock](prices/providers/aws.yml) - 118 models
 - [Microsoft Azure](prices/providers/azure.yml) - 23 models
 - [Baseten](prices/providers/baseten.yml) - 22 models
 - [Cerebras](prices/providers/cerebras.yml) - 8 models
@@ -50,7 +50,7 @@ The following providers are currently supported:
 - [ElevenLabs](prices/providers/elevenlabs.yml) - 2 models
 - [Fireworks](prices/providers/fireworks.yml) - 48 models
 - [GitHub Copilot](prices/providers/github_copilot.yml) - 43 models
-- [Google](prices/providers/google.yml) - 69 models
+- [Google](prices/providers/google.yml) - 70 models
 - [Groq](prices/providers/groq.yml) - 37 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 3 models
 - [HuggingFace (fireworks-ai)](prices/providers/huggingface_fireworks-ai.yml) - 6 models

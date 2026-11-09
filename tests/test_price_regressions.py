@@ -739,6 +739,64 @@ def test_claude_fable_5_1_cache_read_rate(provider_id: str, model_ref: str, cach
 
 
 @pytest.mark.parametrize(
+    ('provider_id', 'model_ref', 'model_id', 'expected'),
+    [
+        ('anthropic', 'claude-fable-5-2', 'claude-fable-5-2', '48.2'),
+        ('anthropic', 'claude-fable-5-2-20261109', 'claude-fable-5-2', '48.2'),
+        ('anthropic', 'claude-mythos-5-2', 'claude-mythos-5-2', '48.2'),
+        ('anthropic', 'claude-mythos-5-2-20261109', 'claude-mythos-5-2', '48.2'),
+        ('google', 'claude-fable-5-2', 'claude-fable-5-2', '48.2'),
+        ('google', 'claude-fable-5-2@20261109', 'claude-fable-5-2', '48.2'),
+        ('google', 'publishers/anthropic/models/claude-fable-5-2', 'claude-fable-5-2', '48.2'),
+        # No Vertex AI entry: google falls back to the anthropic record.
+        ('google', 'claude-mythos-5-2', 'claude-mythos-5-2', '48.2'),
+        ('aws', 'global.anthropic.claude-fable-5-2', 'global.anthropic.claude-fable-5-2', '48.2'),
+        ('aws', 'global.anthropic.claude-mythos-5-2', 'global.anthropic.claude-mythos-5-2', '48.2'),
+        ('aws', 'anthropic.claude-fable-5-2', 'regional.anthropic.claude-fable-5-2', '53.02'),
+        ('aws', 'us.anthropic.claude-fable-5-2', 'regional.anthropic.claude-fable-5-2', '53.02'),
+        ('aws', 'eu.anthropic.claude-fable-5-2', 'regional.anthropic.claude-fable-5-2', '53.02'),
+        ('aws', 'anthropic.claude-mythos-5-2', 'regional.anthropic.claude-mythos-5-2', '53.02'),
+        ('aws', 'us.anthropic.claude-mythos-5-2', 'regional.anthropic.claude-mythos-5-2', '53.02'),
+        ('aws', 'eu.anthropic.claude-mythos-5-2', 'regional.anthropic.claude-mythos-5-2', '53.02'),
+    ],
+)
+def test_claude_5_2_prices(provider_id: str, model_ref: str, model_id: str, expected: str) -> None:
+    """$8 input, $0.20 cache read (0.025x) and $40 output per MTok; Bedrock regional endpoints add 10%.
+
+    The 5.2 records must not fall back to Fable 5.1's $10 / $0.25 / $50 rates.
+    """
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id=provider_id,
+        genai_request_timestamp=datetime(2026, 11, 9),
+    )
+
+    assert price.model.id == model_id
+    assert price.total_price == Decimal(expected)
+
+
+@pytest.mark.parametrize(
+    ('provider_id', 'model_ref'),
+    [('anthropic', 'claude-fable-5-2'), ('anthropic', 'claude-mythos-5-2'), ('google', 'claude-fable-5-2')],
+)
+@pytest.mark.parametrize(('processing', 'expected'), [(None, '48.22'), ('batch', '24.12')])
+def test_claude_5_2_batch_and_web_search(
+    provider_id: str, model_ref: str, processing: str | None, expected: str
+) -> None:
+    """Batch is 50% of standard, cache rates included; web search stays at $10 per 1,000 searches."""
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000, web_searches=2),
+        model_ref=model_ref,
+        provider_id=provider_id,
+        genai_request_timestamp=datetime(2026, 11, 9),
+        price_context={'processing': processing} if processing else None,
+    )
+
+    assert price.total_price == Decimal(expected)
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'model_id', 'expected'),
     [
         ('us.anthropic.claude-fable-5', 'regional.anthropic.claude-fable-5-v1:0', '80.85'),
