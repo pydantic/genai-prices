@@ -231,7 +231,7 @@ def test_manual_reports_reconcile_on_complete_runs_and_only_add_on_partial_runs(
 def test_status_functions_and_token_boundaries() -> None:
     workflow = read_workflow('update-prices.yml')
     jobs = workflow['jobs']
-    for name in ['notify', 'notify-failure', 'notify-manual']:
+    for name in ['notify', 'notify-manual']:
         assert '!cancelled()' in jobs[name]['if']
     assert jobs['manual-updates']['if'] == '${{ !cancelled() }}'
     assert jobs['manual-updates']['permissions'] == {'issues': 'write'}

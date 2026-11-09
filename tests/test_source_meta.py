@@ -17,6 +17,21 @@ TABLE = """\
 | Input        | $1.25                         | $0.10                            |
 | Output       | $4.25                         | $0.20                            |
 """
+# Meta has published the mode columns in both orders.
+SWAPPED_TABLE = """\
+| Usage        | Contributor mode (per 1M tokens) | Standard mode (per 1M tokens) |
+| :----------- | :------------------------------- | :---------------------------- |
+| Cached input | $0.002                           | $0.15                         |
+| Input        | $0.10                            | $1.25                         |
+| Output       | $0.20                            | $4.25                         |
+"""
+LONG_CONTEXT_TABLE = """\
+| Usage        | Up to 200K input tokens (per 1M tokens) | Over 200K input tokens (per 1M tokens) |
+| :----------- | :-------------------------------------- | :------------------------------------- |
+| Cached input | $0.004                                  | $0.012                                 |
+| Input        | $0.10                                   | $0.30                                  |
+| Output       | $0.50                                   | $1.50                                  |
+"""
 
 
 def page(family: str) -> str:
@@ -39,13 +54,14 @@ def page(family: str) -> str:
 """
 
 
-def test_meta_parses_standard_and_contributor_models_with_web_search() -> None:
+@pytest.mark.parametrize('table', [TABLE, SWAPPED_TABLE], ids=['standard-first', 'contributor-first'])
+def test_meta_parses_standard_and_contributor_models_with_web_search(table: str) -> None:
     family = f"""\
 ### Muse Spark
 
 Models: `muse-spark-1.3` in Standard mode; `muse-spark-1.3-contributor` in Contributor mode.
 
-{TABLE}"""
+{table}"""
     models = source_meta.parse_pricing_markdown(page(family))
 
     assert [model.id for model in models] == ['muse-spark-1.3', 'muse-spark-1.3-contributor']
@@ -56,6 +72,22 @@ Models: `muse-spark-1.3` in Standard mode; `muse-spark-1.3-contributor` in Contr
         {'input_mtok': '0.10', 'cache_read_mtok': '0.002', 'output_mtok': '0.20', 'web_searches_kcount': '2.50'}
     )
     assert models[1].prices_checked == date.today()
+
+
+def test_meta_parses_long_context_tiers() -> None:
+    models = source_meta.parse_pricing_markdown(
+        page(f'### Muse Ember\n\nModel: `muse-ember-1.0`, in Standard mode only.\n\n{LONG_CONTEXT_TABLE}')
+    )
+
+    assert [model.id for model in models] == ['muse-ember-1.0']
+    assert models[0].prices == ModelPrice.model_validate(
+        {
+            'input_mtok': {'base': '0.10', 'tiers': [{'start': 200_000, 'price': '0.30'}]},
+            'cache_read_mtok': {'base': '0.004', 'tiers': [{'start': 200_000, 'price': '0.012'}]},
+            'output_mtok': {'base': '0.50', 'tiers': [{'start': 200_000, 'price': '1.50'}]},
+            'web_searches_kcount': '2.50',
+        }
+    )
 
 
 @pytest.mark.parametrize(
@@ -76,6 +108,10 @@ Models: `muse-spark-1.3` in Standard mode; `muse-spark-1.3-contributor` in Contr
         (
             page(f'### Muse Spark\n\nModel: `muse-spark-1.3-contributor`.\n\n{TABLE.replace("$0.002", "Free")}'),
             'Unexpected Meta price for muse-spark-1.3-contributor: Free',
+        ),
+        (
+            page(f'### Muse Ember\n\nModel: `muse-ember-1.0-contributor`.\n\n{LONG_CONTEXT_TABLE}'),
+            'Meta lists no Contributor mode long-context prices for muse-ember-1.0-contributor',
         ),
     ],
 )
