@@ -474,6 +474,8 @@ func TestClaude52Prices(t *testing.T) {
 		wantModel  string
 		want       float64
 	}{
+		{"anthropic", "claude-fable-5-2", "claude-fable-5-2", 48.2},
+		{"anthropic", "claude-fable-5-2-20261109", "claude-fable-5-2", 48.2},
 		{"anthropic", "claude-mythos-5-2", "claude-mythos-5-2", 48.2},
 		{"anthropic", "claude-mythos-5-2-20261109", "claude-mythos-5-2", 48.2},
 		{"google", "claude-fable-5-2", "claude-fable-5-2", 48.2},
@@ -517,6 +519,8 @@ func TestClaude52BatchAndWebSearch(t *testing.T) {
 		priceContext map[string]string
 		want         float64
 	}{
+		{"anthropic", "claude-fable-5-2", nil, 48.22},
+		{"anthropic", "claude-fable-5-2", map[string]string{"processing": "batch"}, 24.12},
 		{"anthropic", "claude-mythos-5-2", nil, 48.22},
 		{"anthropic", "claude-mythos-5-2", map[string]string{"processing": "batch"}, 24.12},
 		{"google", "claude-fable-5-2", nil, 48.22},

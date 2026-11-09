@@ -238,6 +238,7 @@ models:
       output_mtok: 50
 
   - id: global.anthropic.claude-fable-5-2
+    canonical_model: anthropic/claude-fable-5-2
     prices_checked: 2026-11-09
     price_comments: >-
       Global endpoint (no premium). Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1.
@@ -248,7 +249,6 @@ models:
       or:
         - ends_with: global.anthropic.claude-fable-5-2
         - contains: global.anthropic.claude-fable-5-2-v1
-    context_window: 1000000
     prices:
       input_mtok: 8
       cache_write_mtok: 10
@@ -1387,6 +1387,7 @@ models:
       output_mtok: 55
 
   - id: regional.anthropic.claude-fable-5-2
+    canonical_model: anthropic/claude-fable-5-2
     prices_checked: 2026-11-09
     price_comments: >-
       Regional endpoints and US/EU inference profiles carry a 10% premium over the global endpoint. The AWS
@@ -1404,7 +1405,6 @@ models:
         - equals: eu.anthropic.claude-fable-5-2
         - contains: us.anthropic.claude-fable-5-2-v1
         - contains: eu.anthropic.claude-fable-5-2-v1
-    context_window: 1000000
     prices:
       input_mtok: 8.8
       cache_write_mtok: 11

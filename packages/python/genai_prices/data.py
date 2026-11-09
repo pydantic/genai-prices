@@ -248,6 +248,36 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='claude-fable-5-2',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='claude-fable-5-2'), ClauseRegex(regex='^claude-fable-5-2-\\d{8}$')]
+                ),
+                name='Claude Fable 5.2',
+                description='For demanding reasoning and long-horizon agentic work',
+                context_window=1000000,
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.025x base input (not the usual 0.1x), as on Mythos 5.2, Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ref: https://platform.claude.com/docs/en/models/fable-5-2/overview Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+                prices=ModelPrice(
+                    input_mtok=Decimal('8'),
+                    cache_write_mtok=Decimal('10'),
+                    cache_read_mtok=Decimal('0.2'),
+                    output_mtok=Decimal('40'),
+                    cache_write_1h_mtok=Decimal('16'),
+                    web_searches_kcount=Decimal('10'),
+                ),
+                price_variants=[
+                    PriceVariant(
+                        when={'processing': 'batch'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('4'),
+                            cache_write_mtok=Decimal('5'),
+                            cache_read_mtok=Decimal('0.1'),
+                            output_mtok=Decimal('20'),
+                            cache_write_1h_mtok=Decimal('8'),
+                        ),
+                    )
+                ],
+            ),
+            ModelInfo(
                 id='claude-haiku-4-5',
                 match=ClauseOr(
                     or_=[

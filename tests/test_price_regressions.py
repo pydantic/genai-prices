@@ -741,6 +741,8 @@ def test_claude_fable_5_1_cache_read_rate(provider_id: str, model_ref: str, cach
 @pytest.mark.parametrize(
     ('provider_id', 'model_ref', 'model_id', 'expected'),
     [
+        ('anthropic', 'claude-fable-5-2', 'claude-fable-5-2', '48.2'),
+        ('anthropic', 'claude-fable-5-2-20261109', 'claude-fable-5-2', '48.2'),
         ('anthropic', 'claude-mythos-5-2', 'claude-mythos-5-2', '48.2'),
         ('anthropic', 'claude-mythos-5-2-20261109', 'claude-mythos-5-2', '48.2'),
         ('google', 'claude-fable-5-2', 'claude-fable-5-2', '48.2'),
@@ -775,7 +777,8 @@ def test_claude_5_2_prices(provider_id: str, model_ref: str, model_id: str, expe
 
 
 @pytest.mark.parametrize(
-    ('provider_id', 'model_ref'), [('anthropic', 'claude-mythos-5-2'), ('google', 'claude-fable-5-2')]
+    ('provider_id', 'model_ref'),
+    [('anthropic', 'claude-fable-5-2'), ('anthropic', 'claude-mythos-5-2'), ('google', 'claude-fable-5-2')],
 )
 @pytest.mark.parametrize(('processing', 'expected'), [(None, '48.22'), ('batch', '24.12')])
 def test_claude_5_2_batch_and_web_search(
