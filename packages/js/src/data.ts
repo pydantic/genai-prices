@@ -11785,6 +11785,29 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'claude-fable-5-2',
+        match: {
+          or: [
+            {
+              ends_with: 'claude-fable-5-2',
+            },
+            {
+              contains: 'claude-fable-5-2@',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          "Global endpoint pricing, flat across the full 1M context window. Multi-region endpoints carry a 10% premium. Google's pricing page renders client-side and could not be read when this entry was added; the rates follow Anthropic's list price, as every other Claude entry in this file does. Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1 and Mythos 5.1. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/google-managed#api-model-ids",
+        prices: {
+          input_mtok: 8,
+          cache_write_mtok: 10,
+          cache_read_mtok: 0.2,
+          output_mtok: 40,
+          cache_write_1h_mtok: 16,
+        },
+      },
+      {
         id: 'claude-haiku-4-5',
         match: {
           or: [
@@ -11874,6 +11897,29 @@ export const data: Provider[] = [
               },
             ],
           },
+        },
+      },
+      {
+        id: 'claude-mythos-5-2',
+        match: {
+          or: [
+            {
+              ends_with: 'claude-mythos-5-2',
+            },
+            {
+              contains: 'claude-mythos-5-2@',
+            },
+          ],
+        },
+        context_window: 1000000,
+        price_comments:
+          "Global endpoint pricing, flat across the full 1M context window. Multi-region endpoints carry a 10% premium. Google's pricing page renders client-side and could not be read when this entry was added; the rates follow Anthropic's list price, as every other Claude entry in this file does. Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1 and Mythos 5.1. Same pricing as Claude Fable 5.2; limited availability (verified organizations only). Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/google-managed#api-model-ids",
+        prices: {
+          input_mtok: 8,
+          cache_write_mtok: 10,
+          cache_read_mtok: 0.2,
+          output_mtok: 40,
+          cache_write_1h_mtok: 16,
         },
       },
       {

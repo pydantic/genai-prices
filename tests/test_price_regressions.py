@@ -769,6 +769,29 @@ def test_claude_fable_mythos_5_2_prices(
 
 
 @pytest.mark.parametrize(
+    'model_ref',
+    [
+        'claude-fable-5-2',
+        'claude-fable-5-2@20261109',
+        'publishers/anthropic/models/claude-fable-5-2',
+        'claude-mythos-5-2',
+        'claude-mythos-5-2@20261109',
+    ],
+)
+def test_google_claude_fable_mythos_5_2_prices(model_ref: str) -> None:
+    """Google's global endpoint follows Anthropic's list price: $8 input, $0.20 cache read, $40 output."""
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='google',
+        genai_request_timestamp=datetime(2026, 11, 9),
+    )
+
+    assert price.model.id == model_ref.rsplit('/', 1)[-1].split('@')[0]
+    assert price.total_price == Decimal('48.2')
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'model_id', 'expected'),
     [
         ('us.anthropic.claude-fable-5', 'regional.anthropic.claude-fable-5-v1:0', '80.85'),
