@@ -792,6 +792,31 @@ def test_google_claude_fable_mythos_5_2_prices(model_ref: str) -> None:
 
 
 @pytest.mark.parametrize(
+    ('model_ref', 'model_id', 'expected_price'),
+    [
+        ('global.anthropic.claude-fable-5-2', 'global.anthropic.claude-fable-5-2', '48.2'),
+        ('global.anthropic.claude-mythos-5-2', 'global.anthropic.claude-mythos-5-2', '48.2'),
+        ('anthropic.claude-fable-5-2', 'regional.anthropic.claude-fable-5-2', '53.02'),
+        ('us.anthropic.claude-fable-5-2', 'regional.anthropic.claude-fable-5-2', '53.02'),
+        ('eu.anthropic.claude-fable-5-2', 'regional.anthropic.claude-fable-5-2', '53.02'),
+        ('anthropic.claude-mythos-5-2', 'regional.anthropic.claude-mythos-5-2', '53.02'),
+        ('us.anthropic.claude-mythos-5-2', 'regional.anthropic.claude-mythos-5-2', '53.02'),
+    ],
+)
+def test_aws_claude_fable_mythos_5_2_prices(model_ref: str, model_id: str, expected_price: str) -> None:
+    """Bedrock global matches the list price; regional endpoints and US/EU profiles add 10%."""
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='aws',
+        genai_request_timestamp=datetime(2026, 11, 9),
+    )
+
+    assert price.model.id == model_id
+    assert price.total_price == Decimal(expected_price)
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'model_id', 'expected'),
     [
         ('us.anthropic.claude-fable-5', 'regional.anthropic.claude-fable-5-v1:0', '80.85'),
