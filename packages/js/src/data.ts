@@ -353,6 +353,19 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'claude-fable-5-2',
+        match: {
+          equals: 'claude-fable-5-2',
+        },
+        prices: {
+          input_mtok: 8,
+          cache_write_mtok: 10,
+          cache_read_mtok: 0.2,
+          output_mtok: 40,
+          cache_write_1h_mtok: 16,
+        },
+      },
+      {
         id: 'claude-haiku-4-5',
         name: 'Claude Haiku 4.5',
         description: 'Fastest and most intelligent Haiku model',
