@@ -742,20 +742,23 @@ const run = new (async () => {}).constructor('require', 'process', 'core', scrip
 
 
 def test_hourly_importer_failures_alert_slack_once() -> None:
-    workflow = read_workflow('update-prices.yml')
+    workflow = read_workflow('update-prices-failure.yml')
+    assert workflow['on'] == {
+        'workflow_run': {'workflows': ['Update prices'], 'types': ['completed'], 'branches': ['main']}
+    }
     check = workflow['jobs']['importer-failure']
-    assert check['needs'] == ['import', 'pull-request']
     assert check['if'] == (
-        "${{ !cancelled() && (needs.import.result == 'failure' || needs.pull-request.result == 'failure')"
-        " && github.event_name == 'schedule' }}"
+        "${{ github.event.workflow_run.event == 'schedule' && github.event.workflow_run.conclusion == 'failure' }}"
     )
     assert check['permissions'] == {'actions': 'read'}
     notify = workflow['jobs']['notify-failure']
-    assert notify['if'] == "${{ !cancelled() && needs.importer-failure.outputs.newly-failing != '' }}"
+    assert notify['if'] == "${{ needs.importer-failure.outputs.newly-failing != '' }}"
     assert notify['uses'] == './.github/workflows/price-update-slack.yml'
-    assert notify['with']['message'] == (
-        'GenAI Prices jobs started failing (${{ needs.importer-failure.outputs.newly-failing }}):'
-    )
+    assert notify['with'] == {
+        'pr-url': '${{ github.event.workflow_run.html_url }}',
+        'message': 'GenAI Prices jobs started failing (${{ needs.importer-failure.outputs.newly-failing }}):',
+    }
+    assert not {'importer-failure', 'notify-failure'} & read_workflow('update-prices.yml')['jobs'].keys()
 
 
 def fake_run_view(tmp_path: Path) -> None:
@@ -763,10 +766,9 @@ def fake_run_view(tmp_path: Path) -> None:
     fake_gh.write_text(
         '#!/bin/bash\n'
         'echo "$*" >> "$GH_CALLS"\n'
-        'if [ "$2" = list ]; then printf %s "$PREVIOUS_RUN"; exit; fi\n'
-        '[ "$3" = 99 ] && jobs="$CURRENT_JOBS" || jobs="$PREVIOUS_JOBS"\n'
+        'if [ "$2" = list ]; then json="$RUNS"; elif [ "$3" = 99 ]; then json="$CURRENT_JOBS"; else json="$PREVIOUS_JOBS"; fi\n'
         'while [ "$1" != --jq ]; do shift; done\n'
-        'jq -r "$2" <<< "$jobs"\n'
+        'jq -r "$2" <<< "$json"\n'
     )
     fake_gh.chmod(0o755)
 
@@ -778,23 +780,31 @@ def run_jobs(*failing: str) -> str:
     return json.dumps({'jobs': jobs})
 
 
+# GitHub can drop a run's import matrix entirely, leaving only the jobs that depend on it.
+NO_IMPORT_JOBS = json.dumps({'jobs': [{'name': 'pull-request', 'conclusion': 'success'}]})
+
+
 @pytest.mark.parametrize(
-    ('previous_run', 'previous_failing', 'current_failing', 'newly_failing'),
+    ('previous_run', 'previous_jobs', 'current_jobs', 'newly_failing'),
     [
-        ('', [], ['import baseten'], 'import baseten'),
-        ('41', [], ['import baseten'], 'import baseten'),
-        ('41', ['import baseten'], ['import baseten'], ''),
-        ('41', ['import baseten'], ['import baseten', 'import mistral'], 'import mistral'),
-        ('41', ['import baseten'], ['pull-request'], 'pull-request'),
+        ('', run_jobs(), run_jobs('import baseten'), 'import baseten'),
+        ('41', run_jobs(), run_jobs('import baseten'), 'import baseten'),
+        ('41', run_jobs('import baseten'), run_jobs('import baseten'), ''),
+        ('41', run_jobs('import baseten'), run_jobs('import baseten', 'import mistral'), 'import mistral'),
+        ('41', run_jobs('import baseten'), run_jobs('pull-request'), 'pull-request'),
+        ('41', run_jobs('import baseten'), NO_IMPORT_JOBS, 'import: no job started'),
+        ('41', NO_IMPORT_JOBS, NO_IMPORT_JOBS, ''),
     ],
 )
 def test_importer_failure_alerts_on_each_job_that_was_passing_in_the_previous_run(
-    tmp_path: Path, previous_run: str, previous_failing: list[str], current_failing: list[str], newly_failing: str
+    tmp_path: Path, previous_run: str, previous_jobs: str, current_jobs: str, newly_failing: str
 ) -> None:
     fake_run_view(tmp_path)
     output = tmp_path / 'output'
     calls = tmp_path / 'calls'
-    script = read_workflow('update-prices.yml')['jobs']['importer-failure']['steps'][0]['run']
+    script = read_workflow('update-prices-failure.yml')['jobs']['importer-failure']['steps'][0]['run']
+    # The watched run has completed, so the lookup lists it ahead of the run it compares against.
+    runs = [{'databaseId': 99}] + ([{'databaseId': int(previous_run)}] if previous_run else [])
 
     subprocess.run(
         ['bash', '-e', '-c', script],
@@ -803,17 +813,17 @@ def test_importer_failure_alerts_on_each_job_that_was_passing_in_the_previous_ru
             'PATH': f'{tmp_path}:{os.environ["PATH"]}',
             'GITHUB_OUTPUT': str(output),
             'GITHUB_REPOSITORY': 'pydantic/genai-prices',
-            'GITHUB_RUN_ID': '99',
+            'RUN_ID': '99',
             'GH_CALLS': str(calls),
-            'PREVIOUS_RUN': previous_run,
-            'PREVIOUS_JOBS': run_jobs(*previous_failing),
-            'CURRENT_JOBS': run_jobs(*current_failing),
+            'RUNS': json.dumps(runs),
+            'PREVIOUS_JOBS': previous_jobs,
+            'CURRENT_JOBS': current_jobs,
         },
         check=True,
     )
 
     assert output.read_text() == f'newly-failing={newly_failing}\n'
-    assert '--event schedule --status completed --limit 1' in calls.read_text()
+    assert '--event schedule --status completed --limit 10' in calls.read_text()
     assert ('run view 41 ' in calls.read_text()) == bool(previous_run)
 
 
@@ -822,7 +832,7 @@ def test_importer_failure_lookup_error_fails_instead_of_alerting(tmp_path: Path)
     fake_gh.write_text('#!/bin/bash\nif [ "$2" = list ]; then printf 41; else exit 1; fi\n')
     fake_gh.chmod(0o755)
     output = tmp_path / 'output'
-    script = read_workflow('update-prices.yml')['jobs']['importer-failure']['steps'][0]['run']
+    script = read_workflow('update-prices-failure.yml')['jobs']['importer-failure']['steps'][0]['run']
 
     # GitHub runs a step without an explicit `shell` as `bash -e`, without pipefail.
     result = subprocess.run(

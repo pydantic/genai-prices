@@ -1,0 +1,53 @@
+name: Update prices failure alert
+
+# Watches from outside the run, so it still alerts when GitHub never starts the run's import jobs.
+on:
+  workflow_run: # zizmor: ignore[dangerous-triggers] -- Reads run metadata only and never checks out code.
+    workflows: [Update prices]
+    types: [completed]
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  importer-failure:
+    if: ${{ github.event.workflow_run.event == 'schedule' && github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      actions: read
+    outputs:
+      newly-failing: ${{ steps.previous.outputs.newly-failing }}
+    steps:
+      - id: previous
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          set -o pipefail
+          failing() {
+            gh run view "$1" --repo "$GITHUB_REPOSITORY" --json jobs --jq '(.jobs[]
+              | select(.conclusion == "failure" and (.name | startswith("import ") or . == "pull-request")) | .name),
+              (if any(.jobs[]; .name | startswith("import ")) then empty else "import: no job started" end)' | sort
+          }
+          run_id="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow update-prices.yml --branch main --event schedule \
+            --status completed --limit 10 --json databaseId --jq "map(select(.databaseId < $RUN_ID)) | .[0].databaseId // empty")"
+          previous=''
+          if [ -n "$run_id" ]; then
+            # Assigned on its own so a failed lookup fails the step instead of looking like a new failure.
+            previous="$(failing "$run_id")"
+          fi
+          current="$(failing "$RUN_ID")"
+          newly="$(comm -23 <(printf '%s\n' "$current" | sed '/^$/d') <(printf '%s\n' "$previous" | sed '/^$/d') | paste -sd ' ' -)"
+          echo "newly-failing=$newly" >> "$GITHUB_OUTPUT"
+
+  notify-failure:
+    needs: importer-failure
+    if: ${{ needs.importer-failure.outputs.newly-failing != '' }}
+    permissions: {}
+    uses: ./.github/workflows/price-update-slack.yml
+    with:
+      pr-url: ${{ github.event.workflow_run.html_url }}
+      message: "GenAI Prices jobs started failing (${{ needs.importer-failure.outputs.newly-failing }}):"
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
