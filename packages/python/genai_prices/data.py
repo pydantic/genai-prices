@@ -6926,14 +6926,27 @@ providers: list[Provider] = [
                     or_=[ClauseEndsWith(ends_with='claude-fable-5-2'), ClauseContains(contains='claude-fable-5-2@')]
                 ),
                 context_window=1000000,
-                price_comments="Global endpoint pricing, flat across the full 1M context window. Multi-region endpoints carry a 10% premium. Google's pricing page renders client-side and could not be read when this entry was added; the rates follow Anthropic's list price, as every other Claude entry in this file does. Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1 and Mythos 5.1. Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/google-managed#api-model-ids",
+                price_comments="Global endpoint rates from Google Cloud's partner model pricing page, flat across the full 1M context window. Multi-region endpoints carry a 10% premium. Batch is 50% of standard, including cache writes and cache hits. Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1 and Mythos 5.1. Web search is $10 per 1,000 searches. Ref: https://cloud.google.com/model-garden/partner-models/pricing Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/google-managed#api-model-ids",
                 prices=ModelPrice(
                     input_mtok=Decimal('8'),
                     cache_write_mtok=Decimal('10'),
                     cache_read_mtok=Decimal('0.2'),
                     output_mtok=Decimal('40'),
                     cache_write_1h_mtok=Decimal('16'),
+                    web_searches_kcount=Decimal('10'),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'processing': 'batch'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('4'),
+                            cache_write_mtok=Decimal('5'),
+                            cache_read_mtok=Decimal('0.1'),
+                            output_mtok=Decimal('20'),
+                            cache_write_1h_mtok=Decimal('8'),
+                        ),
+                    )
+                ],
             ),
             ModelInfo(
                 id='claude-haiku-4-5',
@@ -6982,14 +6995,27 @@ providers: list[Provider] = [
                     or_=[ClauseEndsWith(ends_with='claude-mythos-5-2'), ClauseContains(contains='claude-mythos-5-2@')]
                 ),
                 context_window=1000000,
-                price_comments="Global endpoint pricing, flat across the full 1M context window. Multi-region endpoints carry a 10% premium. Google's pricing page renders client-side and could not be read when this entry was added; the rates follow Anthropic's list price, as every other Claude entry in this file does. Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1 and Mythos 5.1. Same pricing as Claude Fable 5.2; limited availability (verified organizations only). Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/google-managed#api-model-ids",
+                price_comments="Google Cloud's partner model pricing page does not list Claude Mythos 5.2; Anthropic documents it as the same model as Claude Fable 5.2 with the same pricing, so these rates mirror the Fable 5.2 global endpoint entry, including batch (50% of standard) and web search ($10 per 1,000 searches). Limited availability (verified organizations only). Ref: https://cloud.google.com/model-garden/partner-models/pricing Anthropic ref: https://platform.claude.com/docs/en/models/mythos-5-2/overview Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/google-managed#api-model-ids",
                 prices=ModelPrice(
                     input_mtok=Decimal('8'),
                     cache_write_mtok=Decimal('10'),
                     cache_read_mtok=Decimal('0.2'),
                     output_mtok=Decimal('40'),
                     cache_write_1h_mtok=Decimal('16'),
+                    web_searches_kcount=Decimal('10'),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'processing': 'batch'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('4'),
+                            cache_write_mtok=Decimal('5'),
+                            cache_read_mtok=Decimal('0.1'),
+                            output_mtok=Decimal('20'),
+                            cache_write_1h_mtok=Decimal('8'),
+                        ),
+                    )
+                ],
             ),
             ModelInfo(
                 id='claude-opus-4-5',

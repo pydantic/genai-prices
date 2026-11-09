@@ -792,6 +792,23 @@ def test_google_claude_fable_mythos_5_2_prices(model_ref: str) -> None:
     assert price.total_price == Decimal('48.2')
 
 
+@pytest.mark.parametrize('model_ref', ['claude-fable-5-2', 'claude-mythos-5-2'])
+@pytest.mark.parametrize(('processing', 'expected_price'), [(None, '48.22'), ('batch', '24.12')])
+def test_google_claude_fable_mythos_5_2_batch_and_web_search(
+    model_ref: str, processing: str | None, expected_price: str
+) -> None:
+    """Google's batch rates are 50% of standard; web search stays at $10 per 1,000 searches."""
+    price = calc_price(
+        Usage(input_tokens=2_000_000, cache_read_tokens=1_000_000, output_tokens=1_000_000, web_searches=2),
+        model_ref=model_ref,
+        provider_id='google',
+        genai_request_timestamp=datetime(2026, 11, 9),
+        price_context={'processing': processing} if processing else None,
+    )
+
+    assert price.total_price == Decimal(expected_price)
+
+
 @pytest.mark.parametrize(
     ('model_ref', 'model_id', 'expected_price'),
     [
@@ -802,6 +819,7 @@ def test_google_claude_fable_mythos_5_2_prices(model_ref: str) -> None:
         ('eu.anthropic.claude-fable-5-2', 'regional.anthropic.claude-fable-5-2', '53.02'),
         ('anthropic.claude-mythos-5-2', 'regional.anthropic.claude-mythos-5-2', '53.02'),
         ('us.anthropic.claude-mythos-5-2', 'regional.anthropic.claude-mythos-5-2', '53.02'),
+        ('eu.anthropic.claude-mythos-5-2', 'regional.anthropic.claude-mythos-5-2', '53.02'),
     ],
 )
 def test_aws_claude_fable_mythos_5_2_prices(model_ref: str, model_id: str, expected_price: str) -> None:

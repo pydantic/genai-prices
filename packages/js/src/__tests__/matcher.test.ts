@@ -608,6 +608,26 @@ describe('Claude Fable 5 vs 5.1', () => {
     expect(result!.total_price).toBeCloseTo(48.2, 10)
   })
 
+  // Google's batch rates are 50% of standard; web search stays at $10 per 1,000 searches.
+  it.each([
+    ['claude-fable-5-2', undefined, 48.22],
+    ['claude-fable-5-2', 'batch', 24.12],
+    ['claude-mythos-5-2', undefined, 48.22],
+    ['claude-mythos-5-2', 'batch', 24.12],
+  ] as const)('prices google %s with web search (%s)', (modelRef, processing, expected) => {
+    const result = calcPrice(
+      { cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000, web_searches: 2 },
+      modelRef,
+      {
+        priceContext: processing ? { processing } : undefined,
+        providerId: 'google',
+        timestamp: new Date('2026-11-09T00:00:00Z'),
+      }
+    )
+
+    expect(result!.total_price).toBeCloseTo(expected, 10)
+  })
+
   // Bedrock global matches the list price; regional endpoints and US/EU profiles add 10%.
   it.each([
     ['global.anthropic.claude-fable-5-2', 'global.anthropic.claude-fable-5-2', 48.2],
@@ -617,6 +637,7 @@ describe('Claude Fable 5 vs 5.1', () => {
     ['eu.anthropic.claude-fable-5-2', 'regional.anthropic.claude-fable-5-2', 53.02],
     ['anthropic.claude-mythos-5-2', 'regional.anthropic.claude-mythos-5-2', 53.02],
     ['us.anthropic.claude-mythos-5-2', 'regional.anthropic.claude-mythos-5-2', 53.02],
+    ['eu.anthropic.claude-mythos-5-2', 'regional.anthropic.claude-mythos-5-2', 53.02],
   ] as const)('prices aws %s as %s', (modelRef, modelId, expected) => {
     const result = calcPrice({ cache_read_tokens: 1_000_000, input_tokens: 2_000_000, output_tokens: 1_000_000 }, modelRef, {
       providerId: 'aws',
