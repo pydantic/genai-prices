@@ -118,9 +118,8 @@ You pass the `speed` that Anthropic reports in the response's `usage.speed`: `("
 rates, and `("speed", "standard")` the standard ones. Extraction does not read it, so you pass it yourself.
 
 Fast mode rates are bundled for Claude Fable 5.2, Mythos 5.2, Opus 5.5, Opus 5 and Opus 4.8 on the `anthropic`
-provider, and the prompt caching multipliers apply on top of them. Each rate applies from the model's launch, when
-Anthropic's pricing page first listed it. Google publishes no fast mode rate for Claude on Vertex AI, so the `google`
-provider returns the standard-price estimate.
+provider, and the prompt caching multipliers apply on top of them. Each rate applies from the model's launch. Google
+publishes no fast mode rate for Claude on Vertex AI, so the `google` provider returns the standard-price estimate.
 
 ## Perplexity web search
 
