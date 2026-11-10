@@ -368,7 +368,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.025x base input (not the usual 0.1x), as on Mythos 5.2, Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ref: https://platform.claude.com/docs/en/models/fable-5-2/overview Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+          'Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.025x base input (not the usual 0.1x), as on Mythos 5.2, Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ref: https://platform.claude.com/docs/en/models/fable-5-2/overview Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing Fast mode (`speed: fast`) is $16 input / $80 output across the full context window, and the prompt caching multipliers apply on top. Fast mode refs: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing',
         prices: {
           input_mtok: 8,
           cache_write_mtok: 10,
@@ -388,6 +388,18 @@ export const data: Provider[] = [
               cache_read_mtok: 0.1,
               output_mtok: 20,
               cache_write_1h_mtok: 8,
+            },
+          },
+          {
+            when: {
+              speed: 'fast',
+            },
+            prices: {
+              input_mtok: 16,
+              cache_write_mtok: 20,
+              cache_read_mtok: 0.4,
+              output_mtok: 80,
+              cache_write_1h_mtok: 32,
             },
           },
         ],
@@ -594,7 +606,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Same model and pricing as Claude Fable 5.2, with limited availability. The Anthropic price importer skips limited-availability rows, so it does not update this entry. Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.2, Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ref: https://platform.claude.com/docs/en/models/mythos-5-2/overview Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+          'Same model and pricing as Claude Fable 5.2, with limited availability. The Anthropic price importer skips limited-availability rows, so it does not update this entry. Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.2, Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ref: https://platform.claude.com/docs/en/models/mythos-5-2/overview Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing Fast mode (`speed: fast`) is $16 input / $80 output across the full context window, and the prompt caching multipliers apply on top. Fast mode refs: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing',
         prices: {
           input_mtok: 8,
           cache_write_mtok: 10,
@@ -614,6 +626,18 @@ export const data: Provider[] = [
               cache_read_mtok: 0.1,
               output_mtok: 20,
               cache_write_1h_mtok: 8,
+            },
+          },
+          {
+            when: {
+              speed: 'fast',
+            },
+            prices: {
+              input_mtok: 16,
+              cache_write_mtok: 20,
+              cache_read_mtok: 0.4,
+              output_mtok: 80,
+              cache_write_1h_mtok: 32,
             },
           },
         ],
@@ -906,7 +930,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing Fast mode (`speed: fast`, research preview) is $10 input / $50 output across the full context window, and the prompt caching multipliers apply on top. Anthropic removes fast mode from Opus 4.8 on 2026-11-30. Fast mode refs: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing',
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
@@ -930,6 +954,18 @@ export const data: Provider[] = [
             constraint: {
               start_date: '2026-10-14',
               type: 'start_date',
+            },
+          },
+          {
+            when: {
+              speed: 'fast',
+            },
+            prices: {
+              input_mtok: 10,
+              cache_write_mtok: 12.5,
+              cache_read_mtok: 1,
+              output_mtok: 50,
+              cache_write_1h_mtok: 20,
             },
           },
         ],
@@ -965,7 +1001,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window (no tiered pricing). Refs: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing and https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+          'Flat pricing across full 1M context window (no tiered pricing). Refs: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing and https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing Fast mode (`speed: fast`, research preview) is $10 input / $50 output across the full context window, and the prompt caching multipliers apply on top. Fast mode refs: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing',
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
@@ -989,6 +1025,18 @@ export const data: Provider[] = [
             constraint: {
               start_date: '2026-10-14',
               type: 'start_date',
+            },
+          },
+          {
+            when: {
+              speed: 'fast',
+            },
+            prices: {
+              input_mtok: 10,
+              cache_write_mtok: 12.5,
+              cache_read_mtok: 1,
+              output_mtok: 50,
+              cache_write_1h_mtok: 20,
             },
           },
         ],
@@ -1018,7 +1066,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+          'Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing Fast mode (`speed: fast`) is $8 input / $40 output across the full context window, and the prompt caching multipliers apply on top. Fast mode refs: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing',
         prices: {
           input_mtok: 4,
           cache_write_mtok: 5,
@@ -1042,6 +1090,18 @@ export const data: Provider[] = [
             constraint: {
               start_date: '2026-10-14',
               type: 'start_date',
+            },
+          },
+          {
+            when: {
+              speed: 'fast',
+            },
+            prices: {
+              input_mtok: 8,
+              cache_write_mtok: 10,
+              cache_read_mtok: 0.4,
+              output_mtok: 40,
+              cache_write_1h_mtok: 16,
             },
           },
         ],
