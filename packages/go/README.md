@@ -118,6 +118,45 @@ requests, not a tier: OpenAI batch results report `service_tier: "default"`.
 Batch rates are bundled for Anthropic, OpenAI, Google, Mistral, Groq and xAI, verified from October 14, 2026.
 A model the provider does not serve in batch returns the standard-price estimate.
 
+## Anthropic fast mode
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+
+	"github.com/pydantic/genai-prices/packages/go"
+)
+
+func main() {
+	price, err := genai_prices.Calculate(genai_prices.PriceRequest{
+		Usage: genai_prices.Usage{
+			genai_prices.UsageInputTokens: 1_000_000,
+			genai_prices.UsageOutputTokens: 1_000_000,
+		},
+		Model: "claude-fable-5-2",
+		ProviderID: "anthropic",
+		Timestamp: time.Date(2026, 11, 10, 0, 0, 0, 0, time.UTC),
+		PriceContext: map[string]string{"speed": "fast"},
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(price.TotalPrice) // 96
+}
+```
+
+You pass the `speed` that Anthropic reports in the response's `usage.speed`: `{"speed": "fast"}` selects the fast mode
+rates, and `{"speed": "standard"}` the standard ones. Extraction does not read it, so you pass it yourself.
+
+Fast mode rates are bundled for Claude Fable 5.2, Mythos 5.2, Opus 5.5, Opus 5 and Opus 4.8 on the `anthropic`
+provider, and the prompt caching multipliers apply on top of them. Earlier fast mode history is not modeled: the
+Opus rates start on June 11 (Opus 4.8), August 5 (Opus 5) and September 28, 2026 (Opus 5.5), the dates of the
+earliest archived Anthropic pages that list them. Google publishes no fast mode rate for Claude on Vertex AI, so the
+`google` provider returns the standard-price estimate.
+
 ## Perplexity web search
 
 For `perplexity/sonar`, pass the search type used in the Perplexity request:

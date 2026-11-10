@@ -618,6 +618,41 @@ describe('Claude Fable 5 vs 5.1', () => {
     expect(result!.total_price).toBeCloseTo(expected, 10)
   })
 
+  // Fast mode doubles input and output, and the cache multipliers apply to the fast rates. Web search stays at
+  // $10 per 1,000 searches, and `speed: standard` selects the standard rates.
+  it.each([
+    ['anthropic', 'claude-fable-5-2', '2026-11-09', 74.22, 148.42],
+    ['anthropic', 'claude-mythos-5-2', '2026-11-09', 74.22, 148.42],
+    // Each older model's fast rate starts at the first archived page that lists it.
+    ['anthropic', 'claude-opus-5-5', '2026-09-27', 37.22, 37.22],
+    ['anthropic', 'claude-opus-5-5', '2026-09-28', 37.22, 74.42],
+    ['anthropic', 'claude-opus-5', '2026-08-04', 46.77, 46.77],
+    ['anthropic', 'claude-opus-5', '2026-08-05', 46.77, 93.52],
+    ['anthropic', 'claude-opus-4-8', '2026-06-10', 46.77, 46.77],
+    ['anthropic', 'claude-opus-4-8', '2026-06-11', 46.77, 93.52],
+    // Google publishes no fast mode rate for Claude on Vertex AI.
+    ['google', 'claude-fable-5-2', '2026-11-09', 74.22, 74.22],
+  ] as const)('prices %s %s fast mode on %s', (providerId, modelRef, day, expectedStandard, expectedFast) => {
+    const usage = {
+      cache_read_tokens: 1_000_000,
+      cache_write_1h_tokens: 1_000_000,
+      cache_write_tokens: 2_000_000,
+      input_tokens: 4_000_000,
+      output_tokens: 1_000_000,
+      web_searches: 2,
+    }
+    const total = (speed?: string) =>
+      calcPrice(usage, modelRef, {
+        priceContext: speed ? { speed } : undefined,
+        providerId,
+        timestamp: new Date(`${day}T00:00:00Z`),
+      })!.total_price
+
+    expect(total()).toBeCloseTo(expectedStandard, 10)
+    expect(total('standard')).toBeCloseTo(expectedStandard, 10)
+    expect(total('fast')).toBeCloseTo(expectedFast, 10)
+  })
+
   // Bedrock's Fable inference profile ids carry no `-v1:0` suffix; geographic ones take the regional rate.
   it.each([
     ['us.anthropic.claude-fable-5', 'regional.anthropic.claude-fable-5-v1:0', 80.85],

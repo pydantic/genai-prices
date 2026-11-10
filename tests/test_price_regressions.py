@@ -797,6 +797,51 @@ def test_claude_5_2_batch_and_web_search(
 
 
 @pytest.mark.parametrize(
+    ('provider_id', 'model_ref', 'day', 'expected_standard', 'expected_fast'),
+    [
+        ('anthropic', 'claude-fable-5-2', date(2026, 11, 9), '74.22', '148.42'),
+        ('anthropic', 'claude-mythos-5-2', date(2026, 11, 9), '74.22', '148.42'),
+        # Each older model's fast rate starts at the first archived page that lists it.
+        ('anthropic', 'claude-opus-5-5', date(2026, 9, 27), '37.22', '37.22'),
+        ('anthropic', 'claude-opus-5-5', date(2026, 9, 28), '37.22', '74.42'),
+        ('anthropic', 'claude-opus-5', date(2026, 8, 4), '46.77', '46.77'),
+        ('anthropic', 'claude-opus-5', date(2026, 8, 5), '46.77', '93.52'),
+        ('anthropic', 'claude-opus-4-8', date(2026, 6, 10), '46.77', '46.77'),
+        ('anthropic', 'claude-opus-4-8', date(2026, 6, 11), '46.77', '93.52'),
+        # Google publishes no fast mode rate for Claude on Vertex AI.
+        ('google', 'claude-fable-5-2', date(2026, 11, 9), '74.22', '74.22'),
+    ],
+)
+def test_claude_fast_mode(
+    provider_id: str, model_ref: str, day: date, expected_standard: str, expected_fast: str
+) -> None:
+    """Fast mode doubles input and output, and the cache multipliers apply to the fast rates.
+
+    Web search stays at $10 per 1,000 searches. `speed: standard` selects the standard rates.
+    """
+    usage = Usage(
+        input_tokens=4_000_000,
+        cache_read_tokens=1_000_000,
+        cache_write_tokens=2_000_000,
+        cache_write_1h_tokens=1_000_000,
+        output_tokens=1_000_000,
+        web_searches=2,
+    )
+
+    def total(speed: str | None) -> Decimal:
+        return calc_price(
+            usage,
+            model_ref=model_ref,
+            provider_id=provider_id,
+            genai_request_timestamp=datetime(day.year, day.month, day.day, tzinfo=UTC),
+            price_context={'speed': speed} if speed else None,
+        ).total_price
+
+    assert total(None) == total('standard') == Decimal(expected_standard)
+    assert total('fast') == Decimal(expected_fast)
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'model_id', 'expected'),
     [
         ('us.anthropic.claude-fable-5', 'regional.anthropic.claude-fable-5-v1:0', '80.85'),
