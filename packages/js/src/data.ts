@@ -20463,6 +20463,42 @@ export const data: Provider[] = [
     ],
     models: [
       {
+        id: 'muse-ember-1.0',
+        match: {
+          equals: 'muse-ember-1.0',
+        },
+        prices: {
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.3,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.004,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.012,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 1.5,
+              },
+            ],
+          },
+          web_searches_kcount: 2.5,
+        },
+      },
+      {
         id: 'muse-spark-1.1',
         name: 'Muse Spark 1.1',
         match: {

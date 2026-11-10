@@ -11878,6 +11878,18 @@ providers: list[Provider] = [
         ],
         models=[
             ModelInfo(
+                id='muse-ember-1.0',
+                match=ClauseEquals(equals='muse-ember-1.0'),
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=200000, price=Decimal('0.3'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.004'), tiers=[Tier(start=200000, price=Decimal('0.012'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1.5'))]),
+                    web_searches_kcount=Decimal('2.5'),
+                ),
+            ),
+            ModelInfo(
                 id='muse-spark-1.1',
                 match=ClauseEquals(equals='muse-spark-1.1'),
                 name='Muse Spark 1.1',

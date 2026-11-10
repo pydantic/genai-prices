@@ -63,7 +63,7 @@ The following providers are currently supported:
 - [HuggingFace (publicai)](prices/providers/huggingface_publicai.yml) - 13 models
 - [HuggingFace (sambanova)](prices/providers/huggingface_sambanova.yml) - 8 models
 - [HuggingFace (together)](prices/providers/huggingface_together.yml) - 36 models
-- [Meta](prices/providers/meta.yml) - 6 models
+- [Meta](prices/providers/meta.yml) - 7 models
 - [MiniMax](prices/providers/minimax.yml) - 10 models
 - [Mistral](prices/providers/mistral.yml) - 52 models
 - [Modal](prices/providers/modal.yml) - 11 models
