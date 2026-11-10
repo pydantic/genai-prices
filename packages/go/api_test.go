@@ -558,24 +558,22 @@ func TestClaudeFastMode(t *testing.T) {
 		wantStandard float64
 		wantFast     float64
 	}{
-		{"anthropic", "claude-fable-5-2", time.Date(2026, 11, 9, 0, 0, 0, 0, time.UTC), 74.22, 148.42},
-		{"anthropic", "claude-mythos-5-2", time.Date(2026, 11, 9, 0, 0, 0, 0, time.UTC), 74.22, 148.42},
-		// Each older model's fast rate starts at the first archived page that lists it.
-		{"anthropic", "claude-opus-5-5", time.Date(2026, 9, 27, 0, 0, 0, 0, time.UTC), 37.22, 37.22},
-		{"anthropic", "claude-opus-5-5", time.Date(2026, 9, 28, 0, 0, 0, 0, time.UTC), 37.22, 74.42},
-		{"anthropic", "claude-opus-5", time.Date(2026, 8, 4, 0, 0, 0, 0, time.UTC), 46.77, 46.77},
-		{"anthropic", "claude-opus-5", time.Date(2026, 8, 5, 0, 0, 0, 0, time.UTC), 46.77, 93.52},
-		{"anthropic", "claude-opus-4-8", time.Date(2026, 6, 10, 0, 0, 0, 0, time.UTC), 46.77, 46.77},
-		{"anthropic", "claude-opus-4-8", time.Date(2026, 6, 11, 0, 0, 0, 0, time.UTC), 46.77, 93.52},
+		// Each fast rate applies from the model's launch day.
+		{"anthropic", "claude-fable-5-2", time.Date(2026, 11, 9, 0, 0, 0, 0, time.UTC), 114.22, 228.42},
+		{"anthropic", "claude-mythos-5-2", time.Date(2026, 11, 9, 0, 0, 0, 0, time.UTC), 114.22, 228.42},
+		{"anthropic", "claude-opus-5-5", time.Date(2026, 9, 22, 0, 0, 0, 0, time.UTC), 57.22, 114.42},
+		{"anthropic", "claude-opus-5", time.Date(2026, 7, 24, 0, 0, 0, 0, time.UTC), 71.77, 143.52},
+		{"anthropic", "claude-opus-4-8", time.Date(2026, 5, 28, 0, 0, 0, 0, time.UTC), 71.77, 143.52},
 		// Google publishes no fast mode rate for Claude on Vertex AI.
-		{"google", "claude-fable-5-2", time.Date(2026, 11, 9, 0, 0, 0, 0, time.UTC), 74.22, 74.22},
+		{"google", "claude-fable-5-2", time.Date(2026, 11, 9, 0, 0, 0, 0, time.UTC), 114.22, 114.22},
 	}
+	// 4M uncached input, 3M 5m writes, 2M 1h writes, 1M reads: a distinct count per rate, so swapped rates fail.
 	usage := genai_prices.Usage{
-		genai_prices.UsageInputTokens:        4_000_000,
+		genai_prices.UsageInputTokens:        10_000_000,
 		genai_prices.UsageCacheReadTokens:    1_000_000,
-		genai_prices.UsageCacheWriteTokens:   2_000_000,
-		genai_prices.UsageCacheWrite1HTokens: 1_000_000,
-		genai_prices.UsageOutputTokens:       1_000_000,
+		genai_prices.UsageCacheWriteTokens:   5_000_000,
+		genai_prices.UsageCacheWrite1HTokens: 2_000_000,
+		genai_prices.UsageOutputTokens:       500_000,
 		genai_prices.UsageWebSearches:        2,
 	}
 	for _, test := range tests {

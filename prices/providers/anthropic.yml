@@ -661,8 +661,7 @@ models:
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
       Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
       Fast mode (`speed: fast`, research preview) is $10 input / $50 output across the full context window, and the
-      prompt caching multipliers apply on top. Fast mode history before 2026-06-11 is not modeled. Anthropic removes
-      fast mode from Opus 4.8 on 2026-11-30. Fast mode refs:
+      prompt caching multipliers apply on top. Anthropic removes fast mode from Opus 4.8 on 2026-11-30. Fast mode refs:
       https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing
       and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing
     prices:
@@ -682,9 +681,8 @@ models:
           cache_write_1h_mtok: 5
           output_mtok: 12.50
       - when: { speed: fast }
-        # Earliest archived pricing page listing this rate:
-        # https://web.archive.org/web/20260611170300/https://platform.claude.com/docs/en/about-claude/pricing.md
-        constraint: { start_date: 2026-06-11 }
+        # Listed on the launch day (2026-05-28):
+        # https://web.archive.org/web/20260528171922/https://platform.claude.com/docs/en/about-claude/pricing
         prices:
           input_mtok: 10
           cache_read_mtok: 1
@@ -712,7 +710,7 @@ models:
       and https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool
       Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
       Fast mode (`speed: fast`, research preview) is $10 input / $50 output across the full context window, and the
-      prompt caching multipliers apply on top. Fast mode history before 2026-08-05 is not modeled. Fast mode refs:
+      prompt caching multipliers apply on top. Fast mode refs:
       https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing
       and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing
     prices:
@@ -732,9 +730,8 @@ models:
           cache_write_1h_mtok: 5
           output_mtok: 12.50
       - when: { speed: fast }
-        # Earliest archived fast mode page listing this rate:
-        # https://web.archive.org/web/20260805104522/https://platform.claude.com/docs/en/build-with-claude/fast-mode
-        constraint: { start_date: 2026-08-05 }
+        # Listed on the launch day (2026-07-24):
+        # https://web.archive.org/web/20260724234604/https://platform.claude.com/docs/en/about-claude/pricing
         prices:
           input_mtok: 10
           cache_read_mtok: 1
@@ -760,7 +757,7 @@ models:
       Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
       Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
       Fast mode (`speed: fast`) is $8 input / $40 output across the full context window, and the prompt caching
-      multipliers apply on top. Fast mode history before 2026-09-28 is not modeled. Fast mode refs:
+      multipliers apply on top. Fast mode refs:
       https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing
       and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing
     prices:
@@ -780,9 +777,8 @@ models:
           cache_write_1h_mtok: 4
           output_mtok: 10
       - when: { speed: fast }
-        # Earliest archived fast mode page listing this rate:
-        # https://web.archive.org/web/20260928093021/https://platform.claude.com/docs/en/build-with-claude/fast-mode
-        constraint: { start_date: 2026-09-28 }
+        # Listed on the launch day (2026-09-22; archived 2026-09-23 05:19 UTC):
+        # https://web.archive.org/web/20260923051915/https://platform.claude.com/docs/en/about-claude/pricing
         prices:
           input_mtok: 8
           cache_read_mtok: 0.40

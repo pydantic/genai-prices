@@ -799,17 +799,14 @@ def test_claude_5_2_batch_and_web_search(
 @pytest.mark.parametrize(
     ('provider_id', 'model_ref', 'day', 'expected_standard', 'expected_fast'),
     [
-        ('anthropic', 'claude-fable-5-2', date(2026, 11, 9), '74.22', '148.42'),
-        ('anthropic', 'claude-mythos-5-2', date(2026, 11, 9), '74.22', '148.42'),
-        # Each older model's fast rate starts at the first archived page that lists it.
-        ('anthropic', 'claude-opus-5-5', date(2026, 9, 27), '37.22', '37.22'),
-        ('anthropic', 'claude-opus-5-5', date(2026, 9, 28), '37.22', '74.42'),
-        ('anthropic', 'claude-opus-5', date(2026, 8, 4), '46.77', '46.77'),
-        ('anthropic', 'claude-opus-5', date(2026, 8, 5), '46.77', '93.52'),
-        ('anthropic', 'claude-opus-4-8', date(2026, 6, 10), '46.77', '46.77'),
-        ('anthropic', 'claude-opus-4-8', date(2026, 6, 11), '46.77', '93.52'),
+        # Each fast rate applies from the model's launch day.
+        ('anthropic', 'claude-fable-5-2', date(2026, 11, 9), '114.22', '228.42'),
+        ('anthropic', 'claude-mythos-5-2', date(2026, 11, 9), '114.22', '228.42'),
+        ('anthropic', 'claude-opus-5-5', date(2026, 9, 22), '57.22', '114.42'),
+        ('anthropic', 'claude-opus-5', date(2026, 7, 24), '71.77', '143.52'),
+        ('anthropic', 'claude-opus-4-8', date(2026, 5, 28), '71.77', '143.52'),
         # Google publishes no fast mode rate for Claude on Vertex AI.
-        ('google', 'claude-fable-5-2', date(2026, 11, 9), '74.22', '74.22'),
+        ('google', 'claude-fable-5-2', date(2026, 11, 9), '114.22', '114.22'),
     ],
 )
 def test_claude_fast_mode(
@@ -819,12 +816,13 @@ def test_claude_fast_mode(
 
     Web search stays at $10 per 1,000 searches. `speed: standard` selects the standard rates.
     """
+    # 4M uncached input, 3M 5m writes, 2M 1h writes, 1M reads: a distinct count per rate, so swapped rates fail.
     usage = Usage(
-        input_tokens=4_000_000,
+        input_tokens=10_000_000,
         cache_read_tokens=1_000_000,
-        cache_write_tokens=2_000_000,
-        cache_write_1h_tokens=1_000_000,
-        output_tokens=1_000_000,
+        cache_write_tokens=5_000_000,
+        cache_write_1h_tokens=2_000_000,
+        output_tokens=500_000,
         web_searches=2,
     )
 
