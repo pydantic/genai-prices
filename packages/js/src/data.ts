@@ -5731,6 +5731,7 @@ export const data: Provider[] = [
           equals: 'microsoft-decision-1',
         },
         context_window: 32768,
+        price_comments: 'https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/microsoft/',
         prices: {
           input_mtok: 0.042,
         },

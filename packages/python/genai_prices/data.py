@@ -3367,6 +3367,7 @@ providers: list[Provider] = [
                 name='Microsoft Decision 1',
                 description='Microsoft-Decision-1 is a post-trained Qwen3.5-9B model for fast, low-cost decision tasks, sold on Microsoft Foundry.',
                 context_window=32768,
+                price_comments='https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/microsoft/',
                 prices=ModelPrice(input_mtok=Decimal('0.042')),
             ),
             ModelInfo(
