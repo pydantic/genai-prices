@@ -38,7 +38,7 @@ The following providers are currently supported:
 - [Arcee](prices/providers/arcee.yml) - 11 models
 - [Avian](prices/providers/avian.yml) - 24 models
 - [AWS Bedrock](prices/providers/aws.yml) - 118 models
-- [Microsoft Azure](prices/providers/azure.yml) - 23 models
+- [Microsoft Azure](prices/providers/azure.yml) - 24 models
 - [Baseten](prices/providers/baseten.yml) - 22 models
 - [Cerebras](prices/providers/cerebras.yml) - 8 models
 - [Cloudflare Workers AI](prices/providers/cloudflare.yml) - 54 models
@@ -71,7 +71,7 @@ The following providers are currently supported:
 - [Novita](prices/providers/novita.yml) - 114 models
 - [OpenAI](prices/providers/openai.yml) - 113 models
 - [OpenAI Decisions](prices/providers/openai_decisions.yml) - 1 models
-- [OpenRouter](prices/providers/openrouter.yml) - 923 models
+- [OpenRouter](prices/providers/openrouter.yml) - 924 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 20 models
 - [Perplexity](prices/providers/perplexity.yml) - 23 models
 - [QuickSilver Pro](prices/providers/quicksilverpro.yml) - 75 models

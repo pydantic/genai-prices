@@ -3362,6 +3362,14 @@ providers: list[Provider] = [
                 prices=ModelPrice(),
             ),
             ModelInfo(
+                id='microsoft-decision-1',
+                match=ClauseEquals(equals='microsoft-decision-1'),
+                name='Microsoft Decision 1',
+                description='Microsoft-Decision-1 is a post-trained Qwen3.5-9B model for fast, low-cost decision tasks, sold on Microsoft Foundry.',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.042')),
+            ),
+            ModelInfo(
                 id='o1',
                 match=ClauseOr(or_=[ClauseEquals(equals='o1'), ClauseEquals(equals='o1-2024-12-17')]),
                 context_window=200000,
@@ -21414,6 +21422,14 @@ providers: list[Provider] = [
                     output_mtok=Decimal('20'),
                     web_searches_kcount=Decimal('2.5'),
                 ),
+            ),
+            ModelInfo(
+                id='microsoft/microsoft-decision-1',
+                match=ClauseEquals(equals='microsoft/microsoft-decision-1'),
+                name='Microsoft Decision 1',
+                context_window=32768,
+                price_comments='https://openrouter.ai/api/v1/models/microsoft/microsoft-decision-1/endpoints - output tokens are free.',
+                prices=ModelPrice(input_mtok=Decimal('0.042')),
             ),
             ModelInfo(
                 id='microsoft/phi-3-medium-128k-instruct',
