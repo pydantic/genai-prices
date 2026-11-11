@@ -191,6 +191,8 @@ models:
       equals: microsoft-decision-1
     context_window: 32768
     prices_checked: 2026-11-11
+    price_comments: >-
+      https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/microsoft/
     prices:
       input_mtok: 0.042
 
