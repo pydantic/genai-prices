@@ -1648,6 +1648,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'moonshotai/kimi-k3.1-pro',
+        name: 'moonshotai/kimi-k3.1-pro',
+        match: {
+          equals: 'moonshotai/kimi-k3.1-pro',
+        },
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
+      },
+      {
         id: 'thinkingmachines/inkling-small',
         name: 'Inkling Small',
         match: {
@@ -20566,6 +20578,42 @@ export const data: Provider[] = [
     ],
     models: [
       {
+        id: 'muse-ember-1.0',
+        match: {
+          equals: 'muse-ember-1.0',
+        },
+        prices: {
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.3,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.004,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.012,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 1.5,
+              },
+            ],
+          },
+          web_searches_kcount: 2.5,
+        },
+      },
+      {
         id: 'muse-spark-1.1',
         name: 'Muse Spark 1.1',
         match: {
@@ -23604,10 +23652,24 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: {
-          input_mtok: 1,
-          output_mtok: 1,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 1,
+              output_mtok: 1,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-12',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1,
+              output_mtok: 2,
+            },
+          },
+        ],
       },
       {
         id: 'minimax/minimax-m2.5',
@@ -27211,6 +27273,17 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gpt-5.5-cyber-preview',
+        match: {
+          equals: 'gpt-5.5-cyber-preview',
+        },
+        prices: {
+          input_mtok: 12.5,
+          cache_read_mtok: 1.25,
+          output_mtok: 75,
+        },
+      },
+      {
         id: 'gpt-5.5-pro',
         name: 'GPT-5.5 Pro',
         description: 'Version of GPT-5.5 that produces smarter and more precise responses.',
@@ -28495,16 +28568,67 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gpt-6-astra-law',
+        match: {
+          equals: 'gpt-6-astra-law',
+        },
+        prices: {
+          input_mtok: 10,
+          cache_read_mtok: 1,
+          output_mtok: 50,
+        },
+      },
+      {
         id: 'gpt-6-cyber',
         match: {
           equals: 'gpt-6-cyber',
         },
-        prices: {
-          input_mtok: 20,
-          cache_write_mtok: 25,
-          cache_read_mtok: 2,
-          output_mtok: 100,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 20,
+              cache_write_mtok: 25,
+              cache_read_mtok: 2,
+              output_mtok: 100,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-12',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 20,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 40,
+                  },
+                ],
+              },
+              cache_write_mtok: 25,
+              cache_read_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 100,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 150,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'gpt-6-luna',
@@ -49379,6 +49503,20 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'claude-fable-5-2',
+        name: 'Claude Fable 5.2',
+        match: {
+          equals: 'claude-fable-5-2',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.05,
+          output_mtok: 10,
+        },
+      },
+      {
         id: 'claude-haiku-4-5',
         name: 'Claude Haiku 4.5',
         match: {
@@ -49704,6 +49842,17 @@ export const data: Provider[] = [
               output_mtok: 0.2231,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-11-12',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.154,
+              cache_read_mtok: 0.0046,
+              output_mtok: 0.462,
+            },
+          },
         ],
       },
       {
@@ -49851,6 +50000,19 @@ export const data: Provider[] = [
         name: 'Gemini 4 Argon',
         match: {
           equals: 'gemini-4-argon',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.1,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'gemini-4-carbon',
+        name: 'Gemini 4 Carbon',
+        match: {
+          equals: 'gemini-4-carbon',
         },
         context_window: 1048576,
         prices: {
@@ -50933,6 +51095,20 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'qwen4-max-preview',
+        name: 'Qwen4-Max Preview',
+        match: {
+          equals: 'qwen4-max-preview',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.25,
+          output_mtok: 6,
+        },
+      },
+      {
         id: 'step-5-preview',
         name: 'Step 5 Preview',
         match: {
@@ -51398,6 +51574,19 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.8,
           output_mtok: 0.8,
+        },
+      },
+      {
+        id: 'elorian-labs/glimpse-1.0',
+        name: 'Glimpse 1.0',
+        match: {
+          equals: 'elorian-labs/glimpse-1.0',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.06,
+          output_mtok: 3,
         },
       },
       {
