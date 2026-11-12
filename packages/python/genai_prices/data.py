@@ -27908,6 +27908,11 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.01')),
             ),
             ModelInfo(
+                id='pplx-decider-flash-v1.3',
+                match=ClauseEquals(equals='pplx-decider-flash-v1.3'),
+                prices=ModelPrice(input_mtok=Decimal('0.01')),
+            ),
+            ModelInfo(
                 id='pplx-decider-v1-27b',
                 match=ClauseEquals(equals='pplx-decider-v1-27b'),
                 name='Decider V1 27B',
@@ -27934,6 +27939,11 @@ providers: list[Provider] = [
                 ),
                 name='Decider V1.2',
                 price_comments='Decisions API: output tokens are free and there is no per-request fee. `pplx-decider-latest` selects this model. https://docs.perplexity.ai/docs/decisions/quickstart',
+                prices=ModelPrice(input_mtok=Decimal('0.02')),
+            ),
+            ModelInfo(
+                id='pplx-decider-v1.3',
+                match=ClauseEquals(equals='pplx-decider-v1.3'),
                 prices=ModelPrice(input_mtok=Decimal('0.02')),
             ),
             ModelInfo(
@@ -29604,6 +29614,13 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.17'), output_mtok=Decimal('4.05')
                 ),
+            ),
+            ModelInfo(
+                id='thinkingmachines/Inkling-2-Small',
+                match=ClauseEquals(equals='thinkingmachines/Inkling-2-Small'),
+                name='Inkling 2 Small',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
                 id='together/Tev1-4B-experimental',

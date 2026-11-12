@@ -657,6 +657,17 @@ models:
       output_mtok: 4.05
     prices_checked: 2026-10-23
 
+  - id: thinkingmachines/Inkling-2-Small
+    name: Inkling 2 Small
+    match:
+      equals: thinkingmachines/Inkling-2-Small
+    context_window: 1048576
+    prices:
+      input_mtok: 0.3
+      cache_read_mtok: 0.03
+      output_mtok: 1
+    prices_checked: 2026-11-12
+
   - id: together/Tev1-4B-experimental
     name: Tev1 4B Experimental
     match:

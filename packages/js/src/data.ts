@@ -49166,6 +49166,15 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'pplx-decider-flash-v1.3',
+        match: {
+          equals: 'pplx-decider-flash-v1.3',
+        },
+        prices: {
+          input_mtok: 0.01,
+        },
+      },
+      {
         id: 'pplx-decider-v1-27b',
         name: 'Decider V1 27B',
         match: {
@@ -49209,6 +49218,15 @@ export const data: Provider[] = [
         },
         price_comments:
           'Decisions API: output tokens are free and there is no per-request fee. `pplx-decider-latest` selects this model. https://docs.perplexity.ai/docs/decisions/quickstart',
+        prices: {
+          input_mtok: 0.02,
+        },
+      },
+      {
+        id: 'pplx-decider-v1.3',
+        match: {
+          equals: 'pplx-decider-v1.3',
+        },
         prices: {
           input_mtok: 0.02,
         },
@@ -52056,6 +52074,19 @@ export const data: Provider[] = [
           input_mtok: 1,
           cache_read_mtok: 0.17,
           output_mtok: 4.05,
+        },
+      },
+      {
+        id: 'thinkingmachines/Inkling-2-Small',
+        name: 'Inkling 2 Small',
+        match: {
+          equals: 'thinkingmachines/Inkling-2-Small',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.03,
+          output_mtok: 1,
         },
       },
       {
