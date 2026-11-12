@@ -5723,6 +5723,20 @@ export const data: Provider[] = [
         prices: {},
       },
       {
+        id: 'microsoft-decision-1',
+        name: 'Microsoft Decision 1',
+        description:
+          'Microsoft-Decision-1 is a post-trained Qwen3.5-9B model for fast, low-cost decision tasks, sold on Microsoft Foundry.',
+        match: {
+          equals: 'microsoft-decision-1',
+        },
+        context_window: 32768,
+        price_comments: 'https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/microsoft/',
+        prices: {
+          input_mtok: 0.042,
+        },
+      },
+      {
         id: 'o1',
         match: {
           or: [
@@ -37367,6 +37381,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.2,
           output_mtok: 20,
           web_searches_kcount: 2.5,
+        },
+      },
+      {
+        id: 'microsoft/microsoft-decision-1',
+        name: 'Microsoft Decision 1',
+        match: {
+          equals: 'microsoft/microsoft-decision-1',
+        },
+        context_window: 32768,
+        price_comments: 'https://openrouter.ai/api/v1/models/microsoft/microsoft-decision-1/endpoints - output tokens are free.',
+        prices: {
+          input_mtok: 0.042,
         },
       },
       {

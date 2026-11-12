@@ -183,6 +183,19 @@ models:
     context_window: 163840
     prices: {}
 
+  - id: microsoft-decision-1
+    name: Microsoft Decision 1
+    description: >-
+      Microsoft-Decision-1 is a post-trained Qwen3.5-9B model for fast, low-cost decision tasks, sold on Microsoft Foundry.
+    match:
+      equals: microsoft-decision-1
+    context_window: 32768
+    prices_checked: 2026-11-11
+    price_comments: >-
+      https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/microsoft/
+    prices:
+      input_mtok: 0.042
+
   # Azure documents the same limits as OpenAI for these o-series models.
   # Keep o1 and o1-preview separate: the table lists 200,000 vs 128,000 input token limits.
   # https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure?pivots=azure-openai
