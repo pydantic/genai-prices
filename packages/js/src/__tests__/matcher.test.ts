@@ -618,6 +618,39 @@ describe('Claude Fable 5 vs 5.1', () => {
     expect(result!.total_price).toBeCloseTo(expected, 10)
   })
 
+  // Fast mode doubles input and output, and the cache multipliers apply to the fast rates. Web search stays at
+  // $10 per 1,000 searches, and `speed: standard` selects the standard rates.
+  it.each([
+    // Each fast rate applies from the model's launch day.
+    ['anthropic', 'claude-fable-5-2', '2026-11-09', 114.22, 228.42],
+    ['anthropic', 'claude-mythos-5-2', '2026-11-09', 114.22, 228.42],
+    ['anthropic', 'claude-opus-5-5', '2026-09-22', 57.22, 114.42],
+    ['anthropic', 'claude-opus-5', '2026-07-24', 71.77, 143.52],
+    ['anthropic', 'claude-opus-4-8', '2026-05-28', 71.77, 143.52],
+    // Google publishes no fast mode rate for Claude on Vertex AI.
+    ['google', 'claude-fable-5-2', '2026-11-09', 114.22, 114.22],
+  ] as const)('prices %s %s fast mode on %s', (providerId, modelRef, day, expectedStandard, expectedFast) => {
+    // 4M uncached input, 3M 5m writes, 2M 1h writes, 1M reads: a distinct count per rate, so swapped rates fail.
+    const usage = {
+      cache_read_tokens: 1_000_000,
+      cache_write_1h_tokens: 2_000_000,
+      cache_write_tokens: 5_000_000,
+      input_tokens: 10_000_000,
+      output_tokens: 500_000,
+      web_searches: 2,
+    }
+    const total = (speed?: string) =>
+      calcPrice(usage, modelRef, {
+        priceContext: speed ? { speed } : undefined,
+        providerId,
+        timestamp: new Date(`${day}T00:00:00Z`),
+      })!.total_price
+
+    expect(total()).toBeCloseTo(expectedStandard, 10)
+    expect(total('standard')).toBeCloseTo(expectedStandard, 10)
+    expect(total('fast')).toBeCloseTo(expectedFast, 10)
+  })
+
   // Bedrock's Fable inference profile ids carry no `-v1:0` suffix; geographic ones take the regional rate.
   it.each([
     ['us.anthropic.claude-fable-5', 'regional.anthropic.claude-fable-5-v1:0', 80.85],

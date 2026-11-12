@@ -797,6 +797,49 @@ def test_claude_5_2_batch_and_web_search(
 
 
 @pytest.mark.parametrize(
+    ('provider_id', 'model_ref', 'day', 'expected_standard', 'expected_fast'),
+    [
+        # Each fast rate applies from the model's launch day.
+        ('anthropic', 'claude-fable-5-2', date(2026, 11, 9), '114.22', '228.42'),
+        ('anthropic', 'claude-mythos-5-2', date(2026, 11, 9), '114.22', '228.42'),
+        ('anthropic', 'claude-opus-5-5', date(2026, 9, 22), '57.22', '114.42'),
+        ('anthropic', 'claude-opus-5', date(2026, 7, 24), '71.77', '143.52'),
+        ('anthropic', 'claude-opus-4-8', date(2026, 5, 28), '71.77', '143.52'),
+        # Google publishes no fast mode rate for Claude on Vertex AI.
+        ('google', 'claude-fable-5-2', date(2026, 11, 9), '114.22', '114.22'),
+    ],
+)
+def test_claude_fast_mode(
+    provider_id: str, model_ref: str, day: date, expected_standard: str, expected_fast: str
+) -> None:
+    """Fast mode doubles input and output, and the cache multipliers apply to the fast rates.
+
+    Web search stays at $10 per 1,000 searches. `speed: standard` selects the standard rates.
+    """
+    # 4M uncached input, 3M 5m writes, 2M 1h writes, 1M reads: a distinct count per rate, so swapped rates fail.
+    usage = Usage(
+        input_tokens=10_000_000,
+        cache_read_tokens=1_000_000,
+        cache_write_tokens=5_000_000,
+        cache_write_1h_tokens=2_000_000,
+        output_tokens=500_000,
+        web_searches=2,
+    )
+
+    def total(speed: str | None) -> Decimal:
+        return calc_price(
+            usage,
+            model_ref=model_ref,
+            provider_id=provider_id,
+            genai_request_timestamp=datetime(day.year, day.month, day.day, tzinfo=UTC),
+            price_context={'speed': speed} if speed else None,
+        ).total_price
+
+    assert total(None) == total('standard') == Decimal(expected_standard)
+    assert total('fast') == Decimal(expected_fast)
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'model_id', 'expected'),
     [
         ('us.anthropic.claude-fable-5', 'regional.anthropic.claude-fable-5-v1:0', '80.85'),

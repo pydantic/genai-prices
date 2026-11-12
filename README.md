@@ -35,10 +35,10 @@ The following providers are currently supported:
 [comment]: <> (providers-start)
 
 - [Anthropic](prices/providers/anthropic.yml) - 29 models
-- [Arcee](prices/providers/arcee.yml) - 11 models
+- [Arcee](prices/providers/arcee.yml) - 12 models
 - [Avian](prices/providers/avian.yml) - 24 models
 - [AWS Bedrock](prices/providers/aws.yml) - 118 models
-- [Microsoft Azure](prices/providers/azure.yml) - 23 models
+- [Microsoft Azure](prices/providers/azure.yml) - 24 models
 - [Baseten](prices/providers/baseten.yml) - 22 models
 - [Cerebras](prices/providers/cerebras.yml) - 8 models
 - [Cloudflare Workers AI](prices/providers/cloudflare.yml) - 54 models
@@ -49,7 +49,7 @@ The following providers are currently supported:
 - [Doubleword](prices/providers/doubleword.yml) - 29 models
 - [ElevenLabs](prices/providers/elevenlabs.yml) - 2 models
 - [Fireworks](prices/providers/fireworks.yml) - 48 models
-- [GitHub Copilot](prices/providers/github_copilot.yml) - 43 models
+- [GitHub Copilot](prices/providers/github_copilot.yml) - 45 models
 - [Google](prices/providers/google.yml) - 70 models
 - [Groq](prices/providers/groq.yml) - 37 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 3 models
@@ -69,12 +69,12 @@ The following providers are currently supported:
 - [Modal](prices/providers/modal.yml) - 11 models
 - [MoonshotAi](prices/providers/moonshotai.yml) - 16 models
 - [Novita](prices/providers/novita.yml) - 114 models
-- [OpenAI](prices/providers/openai.yml) - 113 models
+- [OpenAI](prices/providers/openai.yml) - 115 models
 - [OpenAI Decisions](prices/providers/openai_decisions.yml) - 1 models
-- [OpenRouter](prices/providers/openrouter.yml) - 923 models
+- [OpenRouter](prices/providers/openrouter.yml) - 924 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 20 models
 - [Perplexity](prices/providers/perplexity.yml) - 23 models
-- [QuickSilver Pro](prices/providers/quicksilverpro.yml) - 75 models
+- [QuickSilver Pro](prices/providers/quicksilverpro.yml) - 78 models
 - [Together AI](prices/providers/together.yml) - 95 models
 - [TypeSafe](prices/providers/typesafe.yml) - 2 models
 - [Voyage AI](prices/providers/voyageai.yml) - 24 models

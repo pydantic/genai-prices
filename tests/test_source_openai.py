@@ -57,6 +57,10 @@ Standard
 | --- | --- | --- | --- | --- |
 | Embedding | text-embedding-9 | $0.02 | - | - |
 | Moderation | omni-moderation-latest | Free | - | - |
+| Cyber | gpt-cyber (short context) | $20.00 | $2.00 | $100.00 |
+| Cyber | gpt-cyber (long context) | $40.00 | $4.00 | - |
+| Cyber | gpt-cyber-preview (short context) | $12.50 | $1.25 | $75.00 |
+| Cyber | gpt-cyber-preview (long context) | - | - | - |
 """
 
 
@@ -69,7 +73,7 @@ def test_openai_parses_standard_text_rates_and_skips_other_tabs_and_units() -> N
 
     assert [(m.id, m.match, m.prices_checked) for m in models] == [
         (model_id, ClauseEquals(equals=model_id), date.today())
-        for model_id in ('gpt-7', 'gpt-7-pro', 'gpt-bio', 'text-embedding-9')
+        for model_id in ('gpt-7', 'gpt-7-pro', 'gpt-bio', 'text-embedding-9', 'gpt-cyber', 'gpt-cyber-preview')
     ]
     assert [m.prices for m in models] == [
         ModelPrice(
@@ -81,6 +85,9 @@ def test_openai_parses_standard_text_rates_and_skips_other_tabs_and_units() -> N
         ModelPrice(input_mtok=Decimal(30), output_mtok=Decimal(180)),
         ModelPrice(input_mtok=Decimal(5), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal(25)),
         ModelPrice(input_mtok=Decimal('0.02')),
+        # A long context row's blank output rate leaves the short context rate untiered.
+        ModelPrice(input_mtok=tiered('20', '40'), cache_read_mtok=tiered('2', '4'), output_mtok=Decimal(100)),
+        ModelPrice(input_mtok=Decimal('12.5'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal(75)),
     ]
 
 
@@ -97,6 +104,18 @@ def test_openai_parses_standard_text_rates_and_skips_other_tabs_and_units() -> N
                 '| gpt-7-pro | $30.00 | $180.00 | - |\n', '| gpt-7-pro | $31.00 | $180.00 | - |\n'
             ),
             'lists gpt-7-pro at conflicting standard rates',
+        ),
+        (
+            PRICING_MARKDOWN.replace('gpt-cyber-preview (long context) | - |', 'gpt-orphan (long context) | $1.00 |'),
+            'long context row has rates without a short context rate',
+        ),
+        (
+            PRICING_MARKDOWN + '| Cyber | gpt-7 (long context) | $9.00 | - | - |\n',
+            'long context row repeats a tiered rate for input_mtok',
+        ),
+        (
+            PRICING_MARKDOWN + '| Cyber | gpt-cyber (long context) | $41.00 | $4.00 | - |\n',
+            'lists gpt-cyber at conflicting long context rates',
         ),
     ],
 )

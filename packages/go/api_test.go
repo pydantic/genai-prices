@@ -548,6 +548,59 @@ func TestClaude52BatchAndWebSearch(t *testing.T) {
 	}
 }
 
+// Fast mode doubles input and output, and the cache multipliers apply to the fast rates. Web search stays at
+// $10 per 1,000 searches, and `speed: standard` selects the standard rates.
+func TestClaudeFastMode(t *testing.T) {
+	tests := []struct {
+		providerID   string
+		model        string
+		day          time.Time
+		wantStandard float64
+		wantFast     float64
+	}{
+		// Each fast rate applies from the model's launch day.
+		{"anthropic", "claude-fable-5-2", time.Date(2026, 11, 9, 0, 0, 0, 0, time.UTC), 114.22, 228.42},
+		{"anthropic", "claude-mythos-5-2", time.Date(2026, 11, 9, 0, 0, 0, 0, time.UTC), 114.22, 228.42},
+		{"anthropic", "claude-opus-5-5", time.Date(2026, 9, 22, 0, 0, 0, 0, time.UTC), 57.22, 114.42},
+		{"anthropic", "claude-opus-5", time.Date(2026, 7, 24, 0, 0, 0, 0, time.UTC), 71.77, 143.52},
+		{"anthropic", "claude-opus-4-8", time.Date(2026, 5, 28, 0, 0, 0, 0, time.UTC), 71.77, 143.52},
+		// Google publishes no fast mode rate for Claude on Vertex AI.
+		{"google", "claude-fable-5-2", time.Date(2026, 11, 9, 0, 0, 0, 0, time.UTC), 114.22, 114.22},
+	}
+	// 4M uncached input, 3M 5m writes, 2M 1h writes, 1M reads: a distinct count per rate, so swapped rates fail.
+	usage := genai_prices.Usage{
+		genai_prices.UsageInputTokens:        10_000_000,
+		genai_prices.UsageCacheReadTokens:    1_000_000,
+		genai_prices.UsageCacheWriteTokens:   5_000_000,
+		genai_prices.UsageCacheWrite1HTokens: 2_000_000,
+		genai_prices.UsageOutputTokens:       500_000,
+		genai_prices.UsageWebSearches:        2,
+	}
+	for _, test := range tests {
+		t.Run(test.providerID+"/"+test.model+"/"+test.day.Format(time.DateOnly), func(t *testing.T) {
+			for _, check := range []struct {
+				priceContext map[string]string
+				want         float64
+			}{
+				{nil, test.wantStandard},
+				{map[string]string{"speed": "standard"}, test.wantStandard},
+				{map[string]string{"speed": "fast"}, test.wantFast},
+			} {
+				result, err := genai_prices.Calculate(genai_prices.PriceRequest{
+					Timestamp: test.day, Usage: usage, Model: test.model, ProviderID: test.providerID,
+					PriceContext: check.priceContext,
+				})
+				if err != nil {
+					t.Fatal(err)
+				}
+				if math.Abs(result.TotalPrice-check.want) > 1e-9 {
+					t.Fatalf("context %v: got %g, want %g", check.priceContext, result.TotalPrice, check.want)
+				}
+			}
+		})
+	}
+}
+
 // Bedrock's Fable inference profile ids carry no `-v1:0` suffix; geographic ones take the regional rate.
 func TestAWSClaudeFableInferenceProfileIDs(t *testing.T) {
 	tests := []struct {

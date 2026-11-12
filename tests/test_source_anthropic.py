@@ -8,8 +8,11 @@ from shutil import copyfile
 import pytest
 
 from prices import source_anthropic
-from prices.prices_types import ModelPrice, Tier, TieredPrices
+from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, PriceVariant, Tier, TieredPrices
+from prices.update import ProviderYaml
 from prices.utils import package_dir
+
+FAST_MODE_MODELS = ('claude-fable-5-2', 'claude-mythos-5-2', 'claude-opus-5-5', 'claude-opus-5', 'claude-opus-4-8')
 
 PRICING_MARKDOWN = """\
 ## Model pricing
@@ -94,6 +97,40 @@ def test_anthropic_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: py
     provider_path = tmp_path / 'anthropic.yml'
     copyfile(package_dir / 'providers/anthropic.yml', provider_path)
 
+    fast_variants_before = _fast_variants(provider_path)
+
     source_anthropic.main(provider_path)
 
     assert capsys.readouterr().out == 'Anthropic prices updated: 0 added, 18 updated\n'
+    assert set(fast_variants_before) == set(FAST_MODE_MODELS)
+    assert _fast_variants(provider_path) == fast_variants_before
+
+
+def test_anthropic_standard_rate_change_dates_a_matching_fast_mode_rate(tmp_path: Path) -> None:
+    provider_path = tmp_path / 'anthropic.yml'
+    copyfile(package_dir / 'providers/anthropic.yml', provider_path)
+    [current_fast] = _fast_variants(provider_path)['claude-fable-5-2']
+    rates = {'input_mtok': 6, 'cache_write_mtok': 7.5, 'cache_write_1h_mtok': 12, 'cache_read_mtok': 0.15}
+    model = ModelInfo(
+        id='claude-fable-5-2',
+        match=ClauseEquals(equals='claude-fable-5-2'),
+        prices=ModelPrice.model_validate(rates | {'output_mtok': 30}),
+        prices_checked=date(2026, 12, 1),
+    )
+
+    ProviderYaml(provider_path).upsert_models([model], source='Anthropic', min_count=1)
+
+    dated_fast, kept_fast = _fast_variants(provider_path)['claude-fable-5-2']
+    assert kept_fast == current_fast
+    assert dated_fast.constraint is not None and dated_fast.constraint.model_dump() == {'start_date': date(2026, 12, 1)}
+    assert dated_fast.prices == ModelPrice.model_validate(
+        {'input_mtok': 12, 'cache_write_mtok': 15, 'cache_write_1h_mtok': 24, 'cache_read_mtok': 0.3, 'output_mtok': 60}
+    )
+
+
+def _fast_variants(provider_path: Path) -> dict[str, list[PriceVariant]]:
+    return {
+        model.id: fast
+        for model in ProviderYaml(provider_path).provider.models
+        if (fast := [variant for variant in model.price_variants or () if variant.when == {'speed': 'fast'}])
+    }

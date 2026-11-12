@@ -255,7 +255,7 @@ providers: list[Provider] = [
                 name='Claude Fable 5.2',
                 description='For demanding reasoning and long-horizon agentic work',
                 context_window=1000000,
-                price_comments='Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.025x base input (not the usual 0.1x), as on Mythos 5.2, Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ref: https://platform.claude.com/docs/en/models/fable-5-2/overview Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.025x base input (not the usual 0.1x), as on Mythos 5.2, Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ref: https://platform.claude.com/docs/en/models/fable-5-2/overview Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing Fast mode (`speed: fast`) is $16 input / $80 output across the full context window, and the prompt caching multipliers apply on top. Fast mode refs: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('8'),
                     cache_write_mtok=Decimal('10'),
@@ -274,7 +274,17 @@ providers: list[Provider] = [
                             output_mtok=Decimal('20'),
                             cache_write_1h_mtok=Decimal('8'),
                         ),
-                    )
+                    ),
+                    PriceVariant(
+                        when={'speed': 'fast'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('16'),
+                            cache_write_mtok=Decimal('20'),
+                            cache_read_mtok=Decimal('0.4'),
+                            output_mtok=Decimal('80'),
+                            cache_write_1h_mtok=Decimal('32'),
+                        ),
+                    ),
                 ],
             ),
             ModelInfo(
@@ -375,7 +385,7 @@ providers: list[Provider] = [
                 name='Claude Mythos 5.2',
                 description="Same model as Claude Fable 5.2, for organizations verified through Anthropic's verification programs",
                 context_window=1000000,
-                price_comments='Same model and pricing as Claude Fable 5.2, with limited availability. The Anthropic price importer skips limited-availability rows, so it does not update this entry. Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.2, Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ref: https://platform.claude.com/docs/en/models/mythos-5-2/overview Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+                price_comments='Same model and pricing as Claude Fable 5.2, with limited availability. The Anthropic price importer skips limited-availability rows, so it does not update this entry. Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.2, Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ref: https://platform.claude.com/docs/en/models/mythos-5-2/overview Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing Fast mode (`speed: fast`) is $16 input / $80 output across the full context window, and the prompt caching multipliers apply on top. Fast mode refs: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('8'),
                     cache_write_mtok=Decimal('10'),
@@ -394,7 +404,17 @@ providers: list[Provider] = [
                             output_mtok=Decimal('20'),
                             cache_write_1h_mtok=Decimal('8'),
                         ),
-                    )
+                    ),
+                    PriceVariant(
+                        when={'speed': 'fast'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('16'),
+                            cache_write_mtok=Decimal('20'),
+                            cache_read_mtok=Decimal('0.4'),
+                            output_mtok=Decimal('80'),
+                            cache_write_1h_mtok=Decimal('32'),
+                        ),
+                    ),
                 ],
             ),
             ModelInfo(
@@ -585,7 +605,7 @@ providers: list[Provider] = [
                 name='Claude Opus 4.8',
                 description='Our most capable model for complex reasoning and agentic coding',
                 context_window=1000000,
-                price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing Fast mode (`speed: fast`, research preview) is $10 input / $50 output across the full context window, and the prompt caching multipliers apply on top. Anthropic removes fast mode from Opus 4.8 on 2026-11-30. Fast mode refs: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
@@ -605,7 +625,17 @@ providers: list[Provider] = [
                             cache_write_1h_mtok=Decimal('5'),
                         ),
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
-                    )
+                    ),
+                    PriceVariant(
+                        when={'speed': 'fast'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('10'),
+                            cache_write_mtok=Decimal('12.5'),
+                            cache_read_mtok=Decimal('1'),
+                            output_mtok=Decimal('50'),
+                            cache_write_1h_mtok=Decimal('20'),
+                        ),
+                    ),
                 ],
             ),
             ModelInfo(
@@ -624,7 +654,7 @@ providers: list[Provider] = [
                 name='Claude Opus 5',
                 description='For complex agentic coding and enterprise work',
                 context_window=1000000,
-                price_comments='Flat pricing across full 1M context window (no tiered pricing). Refs: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing and https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Refs: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing and https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing Fast mode (`speed: fast`, research preview) is $10 input / $50 output across the full context window, and the prompt caching multipliers apply on top. Fast mode refs: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('5'),
                     cache_write_mtok=Decimal('6.25'),
@@ -644,7 +674,17 @@ providers: list[Provider] = [
                             cache_write_1h_mtok=Decimal('5'),
                         ),
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
-                    )
+                    ),
+                    PriceVariant(
+                        when={'speed': 'fast'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('10'),
+                            cache_write_mtok=Decimal('12.5'),
+                            cache_read_mtok=Decimal('1'),
+                            output_mtok=Decimal('50'),
+                            cache_write_1h_mtok=Decimal('20'),
+                        ),
+                    ),
                 ],
             ),
             ModelInfo(
@@ -661,7 +701,7 @@ providers: list[Provider] = [
                 name='Claude Opus 5.5',
                 description='For long-running agentic coding and knowledge work',
                 context_window=1000000,
-                price_comments='Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+                price_comments='Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing Fast mode (`speed: fast`) is $8 input / $40 output across the full context window, and the prompt caching multipliers apply on top. Fast mode refs: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing',
                 prices=ModelPrice(
                     input_mtok=Decimal('4'),
                     cache_write_mtok=Decimal('5'),
@@ -681,7 +721,17 @@ providers: list[Provider] = [
                             cache_write_1h_mtok=Decimal('4'),
                         ),
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
-                    )
+                    ),
+                    PriceVariant(
+                        when={'speed': 'fast'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('8'),
+                            cache_write_mtok=Decimal('10'),
+                            cache_read_mtok=Decimal('0.4'),
+                            output_mtok=Decimal('40'),
+                            cache_write_1h_mtok=Decimal('16'),
+                        ),
+                    ),
                 ],
             ),
             ModelInfo(
@@ -997,6 +1047,12 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='moonshotai/kimi-k3'),
                 name='Kimi K3',
                 prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k3.1-pro',
+                match=ClauseEquals(equals='moonshotai/kimi-k3.1-pro'),
+                name='moonshotai/kimi-k3.1-pro',
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
                 id='thinkingmachines/inkling-small',
@@ -3310,6 +3366,15 @@ providers: list[Provider] = [
                 description="MAI-DS-R1 is a post-trained variant of DeepSeek-R1 developed by the Microsoft AI team to improve the model's responsiveness on previously blocked topics while enhancing its safety profile. Built on top of DeepSeek-R1's reasoning foundation, it integrates 110k examples from the Tulu-3 SFT dataset and 350k internally curated multilingual safety-alignment samples. The model retains strong reasoning, coding, and problem-solving capabilities, while unblocking a wide range of prompts previously restricted in R1.",
                 context_window=163840,
                 prices=ModelPrice(),
+            ),
+            ModelInfo(
+                id='microsoft-decision-1',
+                match=ClauseEquals(equals='microsoft-decision-1'),
+                name='Microsoft Decision 1',
+                description='Microsoft-Decision-1 is a post-trained Qwen3.5-9B model for fast, low-cost decision tasks, sold on Microsoft Foundry.',
+                context_window=32768,
+                price_comments='https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/microsoft/',
+                prices=ModelPrice(input_mtok=Decimal('0.042')),
             ),
             ModelInfo(
                 id='o1',
@@ -5979,6 +6044,18 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='claude-fable-5.2',
+                match=ClauseEquals(equals='claude-fable-5.2'),
+                name='Claude Fable 5.2',
+                price_comments="Rates from https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing. The page doesn't list a context window for this model.",
+                prices=ModelPrice(
+                    input_mtok=Decimal('8'),
+                    cache_write_mtok=Decimal('10'),
+                    cache_read_mtok=Decimal('0.2'),
+                    output_mtok=Decimal('40'),
+                ),
+            ),
+            ModelInfo(
                 id='claude-haiku-4.5',
                 match=ClauseEquals(equals='claude-haiku-4.5'),
                 name='Claude Haiku 4.5',
@@ -6154,6 +6231,13 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='gemini-4-argon'),
                 name='Gemini 4 Argon',
                 price_comments='Promotional rates published at https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing, stated to run until December 1, 2026; the page does not publish the post-promotion Copilot rates, so none are scheduled here. Copilot does not charge for cache writes on the Gemini models.',
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
+                id='gemini-4-carbon',
+                match=ClauseEquals(equals='gemini-4-carbon'),
+                name='Gemini 4 Carbon',
+                price_comments="Promotional rates published at https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing, stated to run until December 1, 2026. From December 1, 2026 the page lists $4.00 input, $0.20 cached input and $20.00 output per 1M tokens. That rate isn't scheduled here because the importer compares the page with the last price entry, so a future-dated entry would be overridden; the importer will date it when the page changes. Copilot does not charge for cache writes on the Gemini models.",
                 prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
@@ -13676,7 +13760,15 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='ming image 0.1 design',
-                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1')),
+                prices=[
+                    ConditionalPrice(
+                        constraint=None, prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1'))
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 12)),
+                        prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='minimax/minimax-m2.5',
@@ -15628,6 +15720,13 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='gpt-5.5-cyber-preview',
+                match=ClauseEquals(equals='gpt-5.5-cyber-preview'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('12.5'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('75')
+                ),
+            ),
+            ModelInfo(
                 id='gpt-5.5-pro',
                 match=ClauseOr(
                     or_=[
@@ -16123,14 +16222,38 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='gpt-6-astra-law',
+                match=ClauseEquals(equals='gpt-6-astra-law'),
+                prices=ModelPrice(input_mtok=Decimal('10'), cache_read_mtok=Decimal('1'), output_mtok=Decimal('50')),
+            ),
+            ModelInfo(
                 id='gpt-6-cyber',
                 match=ClauseEquals(equals='gpt-6-cyber'),
-                prices=ModelPrice(
-                    input_mtok=Decimal('20'),
-                    cache_write_mtok=Decimal('25'),
-                    cache_read_mtok=Decimal('2'),
-                    output_mtok=Decimal('100'),
-                ),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('20'),
+                            cache_write_mtok=Decimal('25'),
+                            cache_read_mtok=Decimal('2'),
+                            output_mtok=Decimal('100'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 12)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('20'), tiers=[Tier(start=272000, price=Decimal('40'))]
+                            ),
+                            cache_write_mtok=Decimal('25'),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('100'), tiers=[Tier(start=272000, price=Decimal('150'))]
+                            ),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gpt-6-luna',
@@ -21376,6 +21499,14 @@ providers: list[Provider] = [
                     output_mtok=Decimal('20'),
                     web_searches_kcount=Decimal('2.5'),
                 ),
+            ),
+            ModelInfo(
+                id='microsoft/microsoft-decision-1',
+                match=ClauseEquals(equals='microsoft/microsoft-decision-1'),
+                name='Microsoft Decision 1',
+                context_window=32768,
+                price_comments='https://openrouter.ai/api/v1/models/microsoft/microsoft-decision-1/endpoints - output tokens are free.',
+                prices=ModelPrice(input_mtok=Decimal('0.042')),
             ),
             ModelInfo(
                 id='microsoft/phi-3-medium-128k-instruct',
@@ -27991,6 +28122,18 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='claude-fable-5-2',
+                match=ClauseEquals(equals='claude-fable-5-2'),
+                name='Claude Fable 5.2',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2'),
+                    cache_write_mtok=Decimal('2.5'),
+                    cache_read_mtok=Decimal('0.05'),
+                    output_mtok=Decimal('10'),
+                ),
+            ),
+            ModelInfo(
                 id='claude-haiku-4-5',
                 match=ClauseEquals(equals='claude-haiku-4-5'),
                 name='Claude Haiku 4.5',
@@ -28198,6 +28341,12 @@ providers: list[Provider] = [
                             output_mtok=Decimal('0.2231'),
                         ),
                     ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 12)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.154'), cache_read_mtok=Decimal('0.0046'), output_mtok=Decimal('0.462')
+                        ),
+                    ),
                 ],
             ),
             ModelInfo(
@@ -28292,6 +28441,13 @@ providers: list[Provider] = [
                 id='gemini-4-argon',
                 match=ClauseEquals(equals='gemini-4-argon'),
                 name='Gemini 4 Argon',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
+                id='gemini-4-carbon',
+                match=ClauseEquals(equals='gemini-4-carbon'),
+                name='Gemini 4 Carbon',
                 context_window=1048576,
                 prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('10')),
             ),
@@ -28937,6 +29093,18 @@ providers: list[Provider] = [
                 context_window=1048576,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.016'), output_mtok=Decimal('0.47')
+                ),
+            ),
+            ModelInfo(
+                id='qwen4-max-preview',
+                match=ClauseEquals(equals='qwen4-max-preview'),
+                name='Qwen4-Max Preview',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2'),
+                    cache_write_mtok=Decimal('2.5'),
+                    cache_read_mtok=Decimal('0.25'),
+                    output_mtok=Decimal('6'),
                 ),
             ),
             ModelInfo(

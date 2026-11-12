@@ -368,7 +368,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.025x base input (not the usual 0.1x), as on Mythos 5.2, Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ref: https://platform.claude.com/docs/en/models/fable-5-2/overview Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+          'Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.025x base input (not the usual 0.1x), as on Mythos 5.2, Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ref: https://platform.claude.com/docs/en/models/fable-5-2/overview Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing Fast mode (`speed: fast`) is $16 input / $80 output across the full context window, and the prompt caching multipliers apply on top. Fast mode refs: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing',
         prices: {
           input_mtok: 8,
           cache_write_mtok: 10,
@@ -388,6 +388,18 @@ export const data: Provider[] = [
               cache_read_mtok: 0.1,
               output_mtok: 20,
               cache_write_1h_mtok: 8,
+            },
+          },
+          {
+            when: {
+              speed: 'fast',
+            },
+            prices: {
+              input_mtok: 16,
+              cache_write_mtok: 20,
+              cache_read_mtok: 0.4,
+              output_mtok: 80,
+              cache_write_1h_mtok: 32,
             },
           },
         ],
@@ -594,7 +606,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Same model and pricing as Claude Fable 5.2, with limited availability. The Anthropic price importer skips limited-availability rows, so it does not update this entry. Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.2, Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ref: https://platform.claude.com/docs/en/models/mythos-5-2/overview Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+          'Same model and pricing as Claude Fable 5.2, with limited availability. The Anthropic price importer skips limited-availability rows, so it does not update this entry. Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.2, Fable 5.1 and Mythos 5.1. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Model ref: https://platform.claude.com/docs/en/models/mythos-5-2/overview Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing Fast mode (`speed: fast`) is $16 input / $80 output across the full context window, and the prompt caching multipliers apply on top. Fast mode refs: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing',
         prices: {
           input_mtok: 8,
           cache_write_mtok: 10,
@@ -614,6 +626,18 @@ export const data: Provider[] = [
               cache_read_mtok: 0.1,
               output_mtok: 20,
               cache_write_1h_mtok: 8,
+            },
+          },
+          {
+            when: {
+              speed: 'fast',
+            },
+            prices: {
+              input_mtok: 16,
+              cache_write_mtok: 20,
+              cache_read_mtok: 0.4,
+              output_mtok: 80,
+              cache_write_1h_mtok: 32,
             },
           },
         ],
@@ -906,7 +930,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+          'Flat pricing across full 1M context window (no tiered pricing). Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing Fast mode (`speed: fast`, research preview) is $10 input / $50 output across the full context window, and the prompt caching multipliers apply on top. Anthropic removes fast mode from Opus 4.8 on 2026-11-30. Fast mode refs: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing',
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
@@ -930,6 +954,18 @@ export const data: Provider[] = [
             constraint: {
               start_date: '2026-10-14',
               type: 'start_date',
+            },
+          },
+          {
+            when: {
+              speed: 'fast',
+            },
+            prices: {
+              input_mtok: 10,
+              cache_write_mtok: 12.5,
+              cache_read_mtok: 1,
+              output_mtok: 50,
+              cache_write_1h_mtok: 20,
             },
           },
         ],
@@ -965,7 +1001,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window (no tiered pricing). Refs: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing and https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+          'Flat pricing across full 1M context window (no tiered pricing). Refs: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing and https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing Fast mode (`speed: fast`, research preview) is $10 input / $50 output across the full context window, and the prompt caching multipliers apply on top. Fast mode refs: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing',
         prices: {
           input_mtok: 5,
           cache_write_mtok: 6.25,
@@ -989,6 +1025,18 @@ export const data: Provider[] = [
             constraint: {
               start_date: '2026-10-14',
               type: 'start_date',
+            },
+          },
+          {
+            when: {
+              speed: 'fast',
+            },
+            prices: {
+              input_mtok: 10,
+              cache_write_mtok: 12.5,
+              cache_read_mtok: 1,
+              output_mtok: 50,
+              cache_write_1h_mtok: 20,
             },
           },
         ],
@@ -1018,7 +1066,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing',
+          'Flat pricing across full 1M context window (no tiered pricing). Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5. Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing Fast mode (`speed: fast`) is $8 input / $40 output across the full context window, and the prompt caching multipliers apply on top. Fast mode refs: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing',
         prices: {
           input_mtok: 4,
           cache_write_mtok: 5,
@@ -1042,6 +1090,18 @@ export const data: Provider[] = [
             constraint: {
               start_date: '2026-10-14',
               type: 'start_date',
+            },
+          },
+          {
+            when: {
+              speed: 'fast',
+            },
+            prices: {
+              input_mtok: 8,
+              cache_write_mtok: 10,
+              cache_read_mtok: 0.4,
+              output_mtok: 40,
+              cache_write_1h_mtok: 16,
             },
           },
         ],
@@ -1585,6 +1645,18 @@ export const data: Provider[] = [
           input_mtok: 3,
           cache_read_mtok: 0.3,
           output_mtok: 15,
+        },
+      },
+      {
+        id: 'moonshotai/kimi-k3.1-pro',
+        name: 'moonshotai/kimi-k3.1-pro',
+        match: {
+          equals: 'moonshotai/kimi-k3.1-pro',
+        },
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
         },
       },
       {
@@ -5661,6 +5733,20 @@ export const data: Provider[] = [
         },
         context_window: 163840,
         prices: {},
+      },
+      {
+        id: 'microsoft-decision-1',
+        name: 'Microsoft Decision 1',
+        description:
+          'Microsoft-Decision-1 is a post-trained Qwen3.5-9B model for fast, low-cost decision tasks, sold on Microsoft Foundry.',
+        match: {
+          equals: 'microsoft-decision-1',
+        },
+        context_window: 32768,
+        price_comments: 'https://azure.microsoft.com/en-us/pricing/details/ai-foundry-models/microsoft/',
+        prices: {
+          input_mtok: 0.042,
+        },
       },
       {
         id: 'o1',
@@ -10115,6 +10201,21 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'claude-fable-5.2',
+        name: 'Claude Fable 5.2',
+        match: {
+          equals: 'claude-fable-5.2',
+        },
+        price_comments:
+          "Rates from https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing. The page doesn't list a context window for this model.",
+        prices: {
+          input_mtok: 8,
+          cache_write_mtok: 10,
+          cache_read_mtok: 0.2,
+          output_mtok: 40,
+        },
+      },
+      {
         id: 'claude-haiku-4.5',
         name: 'Claude Haiku 4.5',
         match: {
@@ -10362,6 +10463,20 @@ export const data: Provider[] = [
         },
         price_comments:
           'Promotional rates published at https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing, stated to run until December 1, 2026; the page does not publish the post-promotion Copilot rates, so none are scheduled here. Copilot does not charge for cache writes on the Gemini models.',
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.1,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'gemini-4-carbon',
+        name: 'Gemini 4 Carbon',
+        match: {
+          equals: 'gemini-4-carbon',
+        },
+        price_comments:
+          "Promotional rates published at https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing, stated to run until December 1, 2026. From December 1, 2026 the page lists $4.00 input, $0.20 cached input and $20.00 output per 1M tokens. That rate isn't scheduled here because the importer compares the page with the last price entry, so a future-dated entry would be overridden; the importer will date it when the page changes. Copilot does not charge for cache writes on the Gemini models.",
         prices: {
           input_mtok: 2,
           cache_read_mtok: 0.1,
@@ -23537,10 +23652,24 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: {
-          input_mtok: 1,
-          output_mtok: 1,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 1,
+              output_mtok: 1,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-12',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1,
+              output_mtok: 2,
+            },
+          },
+        ],
       },
       {
         id: 'minimax/minimax-m2.5',
@@ -27144,6 +27273,17 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gpt-5.5-cyber-preview',
+        match: {
+          equals: 'gpt-5.5-cyber-preview',
+        },
+        prices: {
+          input_mtok: 12.5,
+          cache_read_mtok: 1.25,
+          output_mtok: 75,
+        },
+      },
+      {
         id: 'gpt-5.5-pro',
         name: 'GPT-5.5 Pro',
         description: 'Version of GPT-5.5 that produces smarter and more precise responses.',
@@ -28428,16 +28568,67 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gpt-6-astra-law',
+        match: {
+          equals: 'gpt-6-astra-law',
+        },
+        prices: {
+          input_mtok: 10,
+          cache_read_mtok: 1,
+          output_mtok: 50,
+        },
+      },
+      {
         id: 'gpt-6-cyber',
         match: {
           equals: 'gpt-6-cyber',
         },
-        prices: {
-          input_mtok: 20,
-          cache_write_mtok: 25,
-          cache_read_mtok: 2,
-          output_mtok: 100,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 20,
+              cache_write_mtok: 25,
+              cache_read_mtok: 2,
+              output_mtok: 100,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-12',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 20,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 40,
+                  },
+                ],
+              },
+              cache_write_mtok: 25,
+              cache_read_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 100,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 150,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'gpt-6-luna',
@@ -37314,6 +37505,18 @@ export const data: Provider[] = [
           cache_read_mtok: 0.2,
           output_mtok: 20,
           web_searches_kcount: 2.5,
+        },
+      },
+      {
+        id: 'microsoft/microsoft-decision-1',
+        name: 'Microsoft Decision 1',
+        match: {
+          equals: 'microsoft/microsoft-decision-1',
+        },
+        context_window: 32768,
+        price_comments: 'https://openrouter.ai/api/v1/models/microsoft/microsoft-decision-1/endpoints - output tokens are free.',
+        prices: {
+          input_mtok: 0.042,
         },
       },
       {
@@ -49300,6 +49503,20 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'claude-fable-5-2',
+        name: 'Claude Fable 5.2',
+        match: {
+          equals: 'claude-fable-5-2',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.05,
+          output_mtok: 10,
+        },
+      },
+      {
         id: 'claude-haiku-4-5',
         name: 'Claude Haiku 4.5',
         match: {
@@ -49625,6 +49842,17 @@ export const data: Provider[] = [
               output_mtok: 0.2231,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-11-12',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.154,
+              cache_read_mtok: 0.0046,
+              output_mtok: 0.462,
+            },
+          },
         ],
       },
       {
@@ -49772,6 +50000,19 @@ export const data: Provider[] = [
         name: 'Gemini 4 Argon',
         match: {
           equals: 'gemini-4-argon',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.1,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'gemini-4-carbon',
+        name: 'Gemini 4 Carbon',
+        match: {
+          equals: 'gemini-4-carbon',
         },
         context_window: 1048576,
         prices: {
@@ -50851,6 +51092,20 @@ export const data: Provider[] = [
           input_mtok: 0.15,
           cache_read_mtok: 0.016,
           output_mtok: 0.47,
+        },
+      },
+      {
+        id: 'qwen4-max-preview',
+        name: 'Qwen4-Max Preview',
+        match: {
+          equals: 'qwen4-max-preview',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.25,
+          output_mtok: 6,
         },
       },
       {
