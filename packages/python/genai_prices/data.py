@@ -4131,6 +4131,12 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='@cf/google/embeddinggemma-2',
+                match=ClauseEquals(equals='@cf/google/embeddinggemma-2'),
+                name='embeddinggemma-2',
+                prices=ModelPrice(input_mtok=Decimal('0.0017')),
+            ),
+            ModelInfo(
                 id='@cf/google/gemma-3-12b-it',
                 match=ClauseEquals(equals='@cf/google/gemma-3-12b-it'),
                 name='Gemma 3 12B IT',
