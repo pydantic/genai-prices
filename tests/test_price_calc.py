@@ -1208,7 +1208,12 @@ def test_gemini_4_argon_introductory_price_expiry(
 
 @pytest.mark.parametrize(
     'context,totals',
-    [({}, ('11.81', '23.62')), ({'processing': 'batch'}, ('5.905', '11.81'))],
+    [
+        ({}, ('11.81', '23.62')),
+        ({'processing': 'batch'}, ('5.905', '11.81')),
+        ({'service_tier': 'flex'}, ('5.905', '11.81')),
+        ({'service_tier': 'priority'}, ('21.258', '42.516')),
+    ],
 )
 @pytest.mark.parametrize(
     'request_timestamp,period',
@@ -1217,7 +1222,7 @@ def test_gemini_4_argon_introductory_price_expiry(
 def test_gemini_4_carbon_introductory_price_expiry(
     context: PriceContext, totals: tuple[str, str], request_timestamp: datetime, period: int
 ) -> None:
-    """Introductory rates run through 2026-11-30 and double on 2026-12-01, for standard and batch alike."""
+    """Introductory rates run through 2026-11-30 and double on 2026-12-01, in every tier."""
     price = calc_price(
         Usage(input_tokens=1_000_000, cache_read_tokens=100_000, output_tokens=1_000_000),
         model_ref='gemini-4-carbon',

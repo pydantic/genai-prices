@@ -8121,7 +8121,7 @@ providers: list[Provider] = [
                 name='Gemini 4 Carbon',
                 description="Google's most capable reasoning model, built for complex software engineering, mathematical and scientific problem solving, long-running autonomous agents, and output of up to 1M tokens.",
                 context_window=1048576,
-                price_comments='See https://aistudio.google.com/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount, Priority tier is 1.8x. Introductory rates apply through 2026-11-30. No prompt-size tiers or separate audio input rate are documented. Implicit caching only. Batch halves input, output and context caching, at both the introductory and the 2026-12-01 rates.',
+                price_comments='See https://aistudio.google.com/docs/pricing. Introductory rates apply through 2026-11-30. Batch and Flex halve input, output and context caching; Priority is 1.8x standard, at both the introductory and the 2026-12-01 rates. No prompt-size tiers or separate audio input rate are documented. Implicit caching only.',
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
@@ -8155,6 +8155,32 @@ providers: list[Provider] = [
                             input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('5')
                         ),
                     ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('10')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 12, 1)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('5')
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('7.2'), cache_read_mtok=Decimal('0.36'), output_mtok=Decimal('36')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 12, 1)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('3.6'), cache_read_mtok=Decimal('0.18'), output_mtok=Decimal('18')
+                        ),
+                    ),
                 ],
             ),
             ModelInfo(
@@ -8165,7 +8191,7 @@ providers: list[Provider] = [
                 name='Gemini 4 Hydrogen',
                 description='Brings cutting-edge intelligence to everyone, with speed and efficiency for everyday coding and agentic workflows.',
                 context_window=1048576,
-                price_comments='See https://aistudio.google.com/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount, Priority tier is 1.8x. The free tier and the invite-only Contributor tier are not modelled. No prompt-size tiers or separate audio input rate are documented. Implicit caching only.',
+                price_comments='See https://aistudio.google.com/docs/pricing. Batch and Flex halve input, output and context caching; Priority is 1.8x standard. The free tier and the invite-only Contributor tier are not modelled. No prompt-size tiers or separate audio input rate are documented. Implicit caching only.',
                 prices=ModelPrice(
                     input_mtok=Decimal('1.5'),
                     cache_read_mtok=Decimal('0.075'),
@@ -8178,7 +8204,19 @@ providers: list[Provider] = [
                         prices=ModelPrice(
                             input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.0375'), output_mtok=Decimal('3.75')
                         ),
-                    )
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.0375'), output_mtok=Decimal('3.75')
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2.7'), cache_read_mtok=Decimal('0.135'), output_mtok=Decimal('13.5')
+                        ),
+                    ),
                 ],
             ),
             ModelInfo(
