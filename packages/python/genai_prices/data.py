@@ -6029,6 +6029,18 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='claude-fable-5.2',
+                match=ClauseEquals(equals='claude-fable-5.2'),
+                name='Claude Fable 5.2',
+                price_comments="Rates from https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing. The page doesn't list a context window for this model.",
+                prices=ModelPrice(
+                    input_mtok=Decimal('8'),
+                    cache_write_mtok=Decimal('10'),
+                    cache_read_mtok=Decimal('0.2'),
+                    output_mtok=Decimal('40'),
+                ),
+            ),
+            ModelInfo(
                 id='claude-haiku-4.5',
                 match=ClauseEquals(equals='claude-haiku-4.5'),
                 name='Claude Haiku 4.5',
@@ -6204,6 +6216,13 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='gemini-4-argon'),
                 name='Gemini 4 Argon',
                 price_comments='Promotional rates published at https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing, stated to run until December 1, 2026; the page does not publish the post-promotion Copilot rates, so none are scheduled here. Copilot does not charge for cache writes on the Gemini models.',
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
+                id='gemini-4-carbon',
+                match=ClauseEquals(equals='gemini-4-carbon'),
+                name='Gemini 4 Carbon',
+                price_comments="Promotional rates published at https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing, stated to run until December 1, 2026. From December 1, 2026 the page lists $4.00 input, $0.20 cached input and $20.00 output per 1M tokens. That rate isn't scheduled here because the importer compares the page with the last price entry, so a future-dated entry would be overridden; the importer will date it when the page changes. Copilot does not charge for cache writes on the Gemini models.",
                 prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
