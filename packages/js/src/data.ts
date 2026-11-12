@@ -7418,6 +7418,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: '@cf/thinkingmachines/inkling-2-small',
+        name: 'inkling-2-small',
+        match: {
+          equals: '@cf/thinkingmachines/inkling-2-small',
+        },
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.1,
+          output_mtok: 1,
+        },
+      },
+      {
         id: '@cf/zai-org/glm-4.7-flash',
         name: 'GLM 4.7 Flash',
         match: {

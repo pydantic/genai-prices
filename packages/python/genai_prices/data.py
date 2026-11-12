@@ -4364,6 +4364,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.66'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
+                id='@cf/thinkingmachines/inkling-2-small',
+                match=ClauseEquals(equals='@cf/thinkingmachines/inkling-2-small'),
+                name='inkling-2-small',
+                prices=ModelPrice(input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('1')),
+            ),
+            ModelInfo(
                 id='@cf/zai-org/glm-4.7-flash',
                 match=ClauseEquals(equals='@cf/zai-org/glm-4.7-flash'),
                 name='GLM 4.7 Flash',
