@@ -6871,6 +6871,15 @@ providers: list[Provider] = [
                 api_flavor='chat',
                 model_path='model',
             ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='total_input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='total_output_tokens', dest='output_tokens', required=False),
+                ],
+                api_flavor='decisions',
+                model_path='model',
+            ),
         ],
         fallback_model_providers=['anthropic'],
         models=[
@@ -8105,6 +8114,81 @@ providers: list[Provider] = [
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
                     ),
                 ],
+            ),
+            ModelInfo(
+                id='gemini-4-carbon',
+                match=ClauseOr(or_=[ClauseEquals(equals='gemini-4-carbon'), ClauseRegex(regex='^gemini-4-carbon-\\d')]),
+                name='Gemini 4 Carbon',
+                description="Google's most capable reasoning model, built for complex software engineering, mathematical and scientific problem solving, long-running autonomous agents, and output of up to 1M tokens.",
+                context_window=1048576,
+                price_comments='See https://aistudio.google.com/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount, Priority tier is 1.8x. Introductory rates apply through 2026-11-30. No prompt-size tiers or separate audio input rate are documented. Implicit caching only. Batch halves input, output and context caching, at both the introductory and the 2026-12-01 rates.',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2'),
+                            cache_read_mtok=Decimal('0.1'),
+                            output_mtok=Decimal('10'),
+                            web_searches_kcount=Decimal('14'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 12, 1)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('4'),
+                            cache_read_mtok=Decimal('0.2'),
+                            output_mtok=Decimal('20'),
+                            web_searches_kcount=Decimal('14'),
+                        ),
+                    ),
+                ],
+                price_variants=[
+                    PriceVariant(
+                        when={'processing': 'batch'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('10')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 12, 1)),
+                    ),
+                    PriceVariant(
+                        when={'processing': 'batch'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('5')
+                        ),
+                    ),
+                ],
+            ),
+            ModelInfo(
+                id='gemini-4-hydrogen',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='gemini-4-hydrogen'), ClauseRegex(regex='^gemini-4-hydrogen-\\d')]
+                ),
+                name='Gemini 4 Hydrogen',
+                description='Brings cutting-edge intelligence to everyone, with speed and efficiency for everyday coding and agentic workflows.',
+                context_window=1048576,
+                price_comments='See https://aistudio.google.com/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount, Priority tier is 1.8x. The free tier and the invite-only Contributor tier are not modelled. No prompt-size tiers or separate audio input rate are documented. Implicit caching only.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.5'),
+                    cache_read_mtok=Decimal('0.075'),
+                    output_mtok=Decimal('7.5'),
+                    web_searches_kcount=Decimal('14'),
+                ),
+                price_variants=[
+                    PriceVariant(
+                        when={'processing': 'batch'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.0375'), output_mtok=Decimal('3.75')
+                        ),
+                    )
+                ],
+            ),
+            ModelInfo(
+                id='gemini-decision-1',
+                match=ClauseEquals(equals='gemini-decision-1'),
+                name='Gemini Decision 1',
+                description='Returns calibrated outcome probabilities for up to 1,000 yes/no, choice or score questions per request through the Decisions API, with zero output tokens.',
+                context_window=262144,
+                price_comments="See https://aistudio.google.com/docs/pricing. Input only: each request bills its shared input once plus each question's own tokens, and generates zero output tokens. Batch, Flex, Priority and context caching are not supported. The free tier is not modelled.",
+                prices=ModelPrice(input_mtok=Decimal('0.1')),
             ),
             ModelInfo(
                 id='gemini-embedding-001',

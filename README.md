@@ -50,7 +50,7 @@ The following providers are currently supported:
 - [ElevenLabs](prices/providers/elevenlabs.yml) - 2 models
 - [Fireworks](prices/providers/fireworks.yml) - 48 models
 - [GitHub Copilot](prices/providers/github_copilot.yml) - 45 models
-- [Google](prices/providers/google.yml) - 70 models
+- [Google](prices/providers/google.yml) - 73 models
 - [Groq](prices/providers/groq.yml) - 37 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 3 models
 - [HuggingFace (fireworks-ai)](prices/providers/huggingface_fireworks-ai.yml) - 6 models
