@@ -51577,6 +51577,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'elorian-labs/glimpse-1.0',
+        name: 'Glimpse 1.0',
+        match: {
+          equals: 'elorian-labs/glimpse-1.0',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.06,
+          output_mtok: 3,
+        },
+      },
+      {
         id: 'garage-bAInd/Platypus2-70B-instruct',
         match: {
           equals: 'garage-bAInd/Platypus2-70B-instruct',

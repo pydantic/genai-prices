@@ -29355,6 +29355,13 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.8'), output_mtok=Decimal('0.8')),
             ),
             ModelInfo(
+                id='elorian-labs/glimpse-1.0',
+                match=ClauseEquals(equals='elorian-labs/glimpse-1.0'),
+                name='Glimpse 1.0',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.06'), output_mtok=Decimal('3')),
+            ),
+            ModelInfo(
                 id='garage-bAInd/Platypus2-70B-instruct',
                 match=ClauseEquals(equals='garage-bAInd/Platypus2-70B-instruct'),
                 prices=ModelPrice(input_mtok=Decimal('0.9'), output_mtok=Decimal('0.9')),
