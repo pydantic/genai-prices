@@ -14,7 +14,7 @@ from prices.utils import package_dir
 
 # The Markdown export renders this page's model table empty, so the catalog is read from the page's compiled MDX.
 CATALOG_URL = 'https://docs.baseten.co/inference/model-apis/overview'
-PRICING_URL = 'https://www.baseten.co/pricing'
+PRICING_URL = 'https://www.baseten.co/pricing/'
 MIN_MODEL_COUNT = 11
 # The pricing table names models only by display name; most reduce to the same key as their catalog ID.
 PRICING_NAME_ALIASES = {
