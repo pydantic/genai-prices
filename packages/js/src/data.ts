@@ -11840,6 +11840,23 @@ export const data: Provider[] = [
           },
         ],
       },
+      {
+        api_flavor: 'decisions',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'total_input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'total_output_tokens',
+            dest: 'output_tokens',
+            required: false,
+          },
+        ],
+      },
     ],
     fallback_model_providers: ['anthropic'],
     models: [
@@ -13943,6 +13960,192 @@ export const data: Provider[] = [
             },
           },
         ],
+      },
+      {
+        id: 'gemini-4-carbon',
+        name: 'Gemini 4 Carbon',
+        description:
+          "Google's most capable reasoning model, built for complex software engineering, mathematical and scientific problem solving, long-running autonomous agents, and output of up to 1M tokens.",
+        match: {
+          or: [
+            {
+              equals: 'gemini-4-carbon',
+            },
+            {
+              regex: '^gemini-4-carbon-\\d',
+            },
+          ],
+        },
+        context_window: 1048576,
+        price_comments:
+          'See https://aistudio.google.com/docs/pricing. Introductory rates apply through 2026-11-30. Batch and Flex halve input, output and context caching; Priority is 1.8x standard, at both the introductory and the 2026-12-01 rates. No prompt-size tiers or separate audio input rate are documented. Implicit caching only.',
+        prices: [
+          {
+            prices: {
+              input_mtok: 2,
+              cache_read_mtok: 0.1,
+              output_mtok: 10,
+              web_searches_kcount: 14,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-12-01',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 4,
+              cache_read_mtok: 0.2,
+              output_mtok: 20,
+              web_searches_kcount: 14,
+            },
+          },
+        ],
+        price_variants: [
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: 2,
+              cache_read_mtok: 0.1,
+              output_mtok: 10,
+            },
+            constraint: {
+              start_date: '2026-12-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: 1,
+              cache_read_mtok: 0.05,
+              output_mtok: 5,
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 2,
+              cache_read_mtok: 0.1,
+              output_mtok: 10,
+            },
+            constraint: {
+              start_date: '2026-12-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 1,
+              cache_read_mtok: 0.05,
+              output_mtok: 5,
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 7.2,
+              cache_read_mtok: 0.36,
+              output_mtok: 36,
+            },
+            constraint: {
+              start_date: '2026-12-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 3.6,
+              cache_read_mtok: 0.18,
+              output_mtok: 18,
+            },
+          },
+        ],
+      },
+      {
+        id: 'gemini-4-hydrogen',
+        name: 'Gemini 4 Hydrogen',
+        description: 'Brings cutting-edge intelligence to everyone, with speed and efficiency for everyday coding and agentic workflows.',
+        match: {
+          or: [
+            {
+              equals: 'gemini-4-hydrogen',
+            },
+            {
+              regex: '^gemini-4-hydrogen-\\d',
+            },
+          ],
+        },
+        context_window: 1048576,
+        price_comments:
+          'See https://aistudio.google.com/docs/pricing. Batch and Flex halve input, output and context caching; Priority is 1.8x standard. The free tier and the invite-only Contributor tier are not modelled. No prompt-size tiers or separate audio input rate are documented. Implicit caching only.',
+        prices: {
+          input_mtok: 1.5,
+          cache_read_mtok: 0.075,
+          output_mtok: 7.5,
+          web_searches_kcount: 14,
+        },
+        price_variants: [
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: 0.75,
+              cache_read_mtok: 0.0375,
+              output_mtok: 3.75,
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.75,
+              cache_read_mtok: 0.0375,
+              output_mtok: 3.75,
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 2.7,
+              cache_read_mtok: 0.135,
+              output_mtok: 13.5,
+            },
+          },
+        ],
+      },
+      {
+        id: 'gemini-decision-1',
+        name: 'Gemini Decision 1',
+        description:
+          'Returns calibrated outcome probabilities for up to 1,000 yes/no, choice or score questions per request through the Decisions API, with zero output tokens.',
+        match: {
+          equals: 'gemini-decision-1',
+        },
+        context_window: 262144,
+        price_comments:
+          "See https://aistudio.google.com/docs/pricing. Input only: each request bills its shared input once plus each question's own tokens, and generates zero output tokens. Batch, Flex, Priority and context caching are not supported. The free tier is not modelled.",
+        prices: {
+          input_mtok: 0.1,
+        },
       },
       {
         id: 'gemini-embedding-001',

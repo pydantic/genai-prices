@@ -659,6 +659,26 @@ def test_perplexity_decisions_usage() -> None:
     assert extracted_usage.calc_price().total_price == Decimal('0.00000734')
 
 
+def test_google_decisions_usage() -> None:
+    # https://aistudio.google.com/docs/decisions-api - the response carries no model, so the caller passes it.
+    response_data = {
+        'answers': {'is_damaged': {'type': 'noul', 'noul': 0.99, 'confidence': 0.99}},
+        'usage': {
+            'total_input_tokens': 324,
+            'input_tokens_by_modality': [{'modality': 'text', 'tokens': 324}],
+            'total_output_tokens': 0,
+            'total_tokens': 324,
+        },
+    }
+
+    extracted_usage = extract_usage(response_data, provider_id='google', api_flavor='decisions')
+
+    assert extracted_usage.model is None
+    assert extracted_usage.usage == Usage(input_tokens=324, output_tokens=0)
+    price = calc_price(extracted_usage.usage, 'gemini-decision-1', provider_id='google')
+    assert price.total_price == Decimal('0.0000324')
+
+
 def test_perplexity_agent_api_usage() -> None:
     response_data = {
         'model': 'perplexity/sonar',

@@ -21,6 +21,7 @@ from genai_prices.types import (
     ModelInfo,
     ModelPrice,
     PriceCalculation,
+    PriceContext,
     Provider,
     StartDateConstraint,
     Tier,
@@ -1203,6 +1204,36 @@ def test_gemini_4_argon_introductory_price_expiry(
     assert price.model_price == expected_prices
     assert price.model.context_window == 1_048_576
     assert price.total_price == expected_total
+
+
+@pytest.mark.parametrize(
+    'context,totals',
+    [
+        ({}, ('11.81', '23.62')),
+        ({'processing': 'batch'}, ('5.905', '11.81')),
+        ({'service_tier': 'flex'}, ('5.905', '11.81')),
+        ({'service_tier': 'priority'}, ('21.258', '42.516')),
+    ],
+)
+@pytest.mark.parametrize(
+    'request_timestamp,period',
+    [(datetime(2026, 11, 30, 23, 59, tzinfo=UTC), 0), (datetime(2026, 12, 1, tzinfo=UTC), 1)],
+)
+def test_gemini_4_carbon_introductory_price_expiry(
+    context: PriceContext, totals: tuple[str, str], request_timestamp: datetime, period: int
+) -> None:
+    """Introductory rates run through 2026-11-30 and double on 2026-12-01, in every tier."""
+    price = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=100_000, output_tokens=1_000_000),
+        model_ref='gemini-4-carbon',
+        provider_id='google',
+        price_context=context,
+        genai_request_timestamp=request_timestamp,
+    )
+
+    assert price.model.id == 'gemini-4-carbon'
+    assert price.model.context_window == 1_048_576
+    assert price.total_price == Decimal(totals[period])
 
 
 def test_sync_success_with_url():
