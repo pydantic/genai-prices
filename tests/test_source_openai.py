@@ -113,6 +113,10 @@ def test_openai_parses_standard_text_rates_and_skips_other_tabs_and_units() -> N
             PRICING_MARKDOWN + '| Cyber | gpt-7 (long context) | $9.00 | - | - |\n',
             'long context row repeats a tiered rate for input_mtok',
         ),
+        (
+            PRICING_MARKDOWN + '| Cyber | gpt-cyber (long context) | $41.00 | $4.00 | - |\n',
+            'lists gpt-cyber at conflicting long context rates',
+        ),
     ],
 )
 def test_openai_rejects_an_unexpected_pricing_page(markdown: str, error: str) -> None:

@@ -39,7 +39,9 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
             if not (match := MODEL_CELL.fullmatch(model_cell)):
                 raise RuntimeError(f'Unexpected OpenAI pricing row: {row}')
             if match['context'] == 'long':
-                long_context_rows[match['id']] = (_prices(columns, cells, row), row)
+                long = _prices(columns, cells, row)
+                if long_context_rows.setdefault(match['id'], (long, row))[0] != long:
+                    raise RuntimeError(f'OpenAI pricing page lists {match["id"]} at conflicting long context rates')
                 continue
             prices = ModelPrice.model_validate(_prices(columns, cells, row))
             if rates.setdefault(match['id'], prices) != prices:
