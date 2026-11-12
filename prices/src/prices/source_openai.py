@@ -23,22 +23,32 @@ COLUMN_KEYS: dict[str, str | None] = {
 NON_STANDARD_TABS = {'Batch', 'Flex', 'Fast', 'Ultrafast', 'Priority'}
 # Long context starts above 272K input tokens; the engines select a tier when the count is greater than `start`.
 LONG_CONTEXT_START = 272_000
-MODEL_CELL = re.compile(r'(?P<id>[\w.-]+)(?: \(<272K context length\))?')
+# The specialized-models table lists a model's short and long context rates on separate rows.
+MODEL_CELL = re.compile(r'(?P<id>[\w.-]+)(?: \(<272K context length\)| \((?P<context>short|long) context\))?')
 
 
 def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     """Parse the standard-tier text token rates; batch, flex and fast tabs and non-text units stay curated."""
     rates: dict[str, ModelPrice] = {}
+    long_context_rows: dict[str, tuple[dict[str, Decimal | TieredPrices], list[str]]] = {}
     for model_column, columns, rows in _standard_tables(markdown):
         for row in rows:
             model_cell, cells = row[model_column], row[model_column + 1 :]
             if cells[0] == 'Free':
                 continue
-            prices = ModelPrice.model_validate(_prices(columns, cells, row))
             if not (match := MODEL_CELL.fullmatch(model_cell)):
                 raise RuntimeError(f'Unexpected OpenAI pricing row: {row}')
+            if match['context'] == 'long':
+                long = _prices(columns, cells, row)
+                if long_context_rows.setdefault(match['id'], (long, row))[0] != long:
+                    raise RuntimeError(f'OpenAI pricing page lists {match["id"]} at conflicting long context rates')
+                continue
+            prices = ModelPrice.model_validate(_prices(columns, cells, row))
             if rates.setdefault(match['id'], prices) != prices:
                 raise RuntimeError(f'OpenAI pricing page lists {match["id"]} at conflicting standard rates')
+    for model_id, (long, row) in long_context_rows.items():
+        if long:
+            rates[model_id] = _with_long_context(rates.get(model_id), long, row)
     if not rates:
         raise RuntimeError('OpenAI pricing page has no standard text pricing table')
     return [
@@ -103,6 +113,21 @@ def _prices(
         key: TieredPrices(base=base, tiers=[Tier(start=LONG_CONTEXT_START, price=long[key])]) if long else base
         for key, base in short.items()
     }
+
+
+def _with_long_context(short: ModelPrice | None, long: dict[str, Decimal | TieredPrices], row: list[str]) -> ModelPrice:
+    """Tier a model's short context rates with the rates from its separate long context row.
+
+    A rate the long context row leaves blank, such as a cache write the page doesn't publish, keeps its base rate.
+    """
+    base = short.model_dump(exclude_none=True) if short else {}
+    if missing := long.keys() - base.keys():
+        raise RuntimeError(f'OpenAI long context row has rates without a short context rate ({sorted(missing)}): {row}')
+    for key, price in long.items():
+        if not isinstance(base[key], Decimal) or not isinstance(price, Decimal):
+            raise RuntimeError(f'OpenAI long context row repeats a tiered rate for {key}: {row}')
+        base[key] = TieredPrices(base=base[key], tiers=[Tier(start=LONG_CONTEXT_START, price=price)])
+    return ModelPrice.model_validate(base)
 
 
 def _dollars(cell: str, row: list[str]) -> Decimal | None:

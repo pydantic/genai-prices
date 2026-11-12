@@ -1127,7 +1127,7 @@ interactions:
   recorded_at: 2026-11-03T17:46:59.209114+00:00
 - request:
     method: GET
-    uri: https://www.baseten.co/pricing
+    uri: https://www.baseten.co/pricing/
     headers:
       accept:
       - "*/*"
