@@ -13165,6 +13165,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('1.2'), cache_read_mtok=Decimal('0.27'), output_mtok=Decimal('5')),
             ),
             ModelInfo(
+                id='thinkingmachines/inkling-2-small',
+                match=ClauseEquals(equals='thinkingmachines/inkling-2-small'),
+                name='Inkling 2 Small',
+                prices=ModelPrice(input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('1')),
+            ),
+            ModelInfo(
                 id='zai-org/GLM-5.3',
                 match=ClauseEquals(equals='zai-org/GLM-5.3'),
                 name='GLM 5.3',
