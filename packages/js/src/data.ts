@@ -22703,6 +22703,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'thinkingmachines/inkling-2-small',
+        name: 'Inkling 2 Small',
+        match: {
+          equals: 'thinkingmachines/inkling-2-small',
+        },
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.03,
+          output_mtok: 1,
+        },
+      },
+      {
         id: 'zai-org/GLM-5.3',
         name: 'GLM 5.3',
         match: {
