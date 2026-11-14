@@ -11,7 +11,7 @@ providers: list[Provider] = [
     Provider(
         id='anthropic',
         name='Anthropic',
-        api_pattern='https://api\\.anthropic\\.com',
+        api_pattern='https://(api\\.anthropic\\.com|claude\\.googleapis\\.com)(?:[:/]|$)',
         pricing_urls=['https://www.anthropic.com/pricing#api'],
         price_comments="Message Batches API usage is charged at 50% of the standard rates. Prompt caching multipliers stack with the batch discount, so batch cache writes and cache reads are also 50% of standard; on Claude Haiku 5.5 the over-100k-token prompt tier is halved too. Web search ($10 per 1,000 searches) has no published batch rate, so it stays at the standard price. Batch variants cover the active models listed in Anthropic's batch price table as of 2026-10-14; earlier batch history is not modelled. Retired models are skipped. Refs: https://platform.claude.com/docs/en/build-with-claude/batch-processing#pricing, https://platform.claude.com/docs/en/about-claude/pricing#batch-processing",
         model_match=ClauseContains(contains='claude'),
@@ -6570,7 +6570,7 @@ providers: list[Provider] = [
     Provider(
         id='google',
         name='Google',
-        api_pattern='https://(.*\\.)?googleapis\\.com',
+        api_pattern='https://(?!claude\\.)(.*\\.)?googleapis\\.com(?:[:/]|$)',
         pricing_urls=[
             'https://ai.google.dev/gemini-api/docs/pricing',
             'https://cloud.google.com/vertex-ai/generative-ai/pricing',

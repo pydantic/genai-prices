@@ -432,6 +432,71 @@ def test_arcee_provider_inference() -> None:
 
 
 @pytest.mark.parametrize(
+    'provider_api_url',
+    [
+        'https://claude.googleapis.com/v1/projects/p/locations/global/messages',
+        'https://claude.googleapis.com/v1/projects/p/locations/global/workspaces/w/invoke',
+    ],
+)
+def test_anthropic_managed_claude_on_google_cloud(provider_api_url: str) -> None:
+    """claude.googleapis.com is Anthropic-managed, so Anthropic's rates apply there, not Vertex's."""
+    price = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref='claude-opus-5-5',
+        provider_api_url=provider_api_url,
+        price_context={'speed': 'fast'},
+    )
+    assert price.provider.id == 'anthropic'
+    assert price.total_price == Decimal('48')
+
+
+@pytest.mark.parametrize(
+    'provider_api_url',
+    [
+        'https://claude.googleapis.com.example.net/v1/messages',
+        'https://claude.googleapis.comx/v1/messages',
+        'https://api.anthropic.com.example.net/v1/messages',
+        'https://googleapis.com.example.net/v1/messages',
+    ],
+)
+def test_provider_api_url_requires_the_real_host(provider_api_url: str) -> None:
+    """The patterns are prefix matches (re.match), so a look-alike host must not select a provider."""
+    with pytest.raises(LookupError):
+        calc_price(Usage(input_tokens=1), 'claude-opus-5-5', provider_api_url=provider_api_url)
+
+
+@pytest.mark.parametrize(
+    'provider_api_url',
+    [
+        'https://claude.googleapis.com',
+        'https://claude.googleapis.com:443/v1/messages',
+        'https://api.anthropic.com/v1/messages',
+        'https://api.anthropic.com:443/v1/messages',
+    ],
+)
+def test_provider_api_url_accepts_the_real_host(provider_api_url: str) -> None:
+    """The host boundary must still accept the bare host and the port form."""
+    price = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref='claude-opus-5-5',
+        provider_api_url=provider_api_url,
+        price_context={'speed': 'fast'},
+    )
+    assert price.provider.id == 'anthropic'
+    assert price.total_price == Decimal('48')
+
+
+def test_vertex_ai_claude_still_uses_google_provider() -> None:
+    """Excluding claude.googleapis.com must not move Vertex AI's Claude entries off the google provider."""
+    price = calc_price(
+        Usage(input_tokens=1_000_000),
+        model_ref='claude-3-5-sonnet',
+        provider_api_url='https://us-central1-aiplatform.googleapis.com/v1/projects/p/locations/us-central1/publishers/anthropic/models/claude-3-5-sonnet:rawPredict',
+    )
+    assert price.provider.id == 'google'
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'expected_total_price'),
     [
         ('databricks-kimi-k3', Decimal('18.3')),
@@ -485,6 +550,26 @@ def test_databricks_api_url(provider_api_url: str) -> None:
 def test_databricks_api_url_rejects_other_hosts_and_paths(provider_api_url: str) -> None:
     with pytest.raises(LookupError, match='Unable to find provider provider_api_url='):
         calc_price(Usage(input_tokens=1), model_ref='databricks-gpt-oss-120b', provider_api_url=provider_api_url)
+
+
+@pytest.mark.parametrize(
+    ('speed', 'expected_total_price'),
+    [
+        (None, Decimal('0.48')),
+        ('fast', Decimal('0.96')),
+    ],
+)
+def test_anthropic_managed_fast_mode_on_google_cloud(speed: str | None, expected_total_price: Decimal) -> None:
+    """The Anthropic-managed endpoint applies fast mode and stays on the anthropic provider (#935)."""
+    price_context = {} if speed is None else {'speed': speed}
+    price = calc_price(
+        Usage(input_tokens=10_000, output_tokens=10_000),
+        model_ref='claude-fable-5-2',
+        provider_api_url='https://claude.googleapis.com/v1/projects/p/locations/global/messages',
+        price_context=price_context,
+    )
+    assert price.provider.id == 'anthropic'
+    assert price.total_price == expected_total_price
 
 
 def test_databricks_provider_inference() -> None:
