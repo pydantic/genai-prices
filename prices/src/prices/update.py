@@ -264,12 +264,15 @@ class ProviderYaml:
         if self._removed_models:
             existing_models = [m for m in existing_models if m['id'] not in self._removed_models]
 
-        new_models: list[dict[str, Any]] = []
+        new_models: list[CommentedMap] = []
         for model in self._extra_prices:
-            new_model = model.model_dump(by_alias=True, mode='json', exclude_none=True)
+            new_model = cast(
+                CommentedMap,
+                _as_commented(model.model_dump(by_alias=True, mode='json', exclude_none=True)),
+            )
             if model.prices_checked is not None:
                 new_model['prices_checked'] = model.prices_checked
-            if description := new_model.get('description'):
+            if description := model.description:
                 new_model['description'] = FoldedScalarString(description.strip())
             new_models.append(new_model)
 
@@ -277,6 +280,17 @@ class ProviderYaml:
         self.data['models'] = existing_models
 
         self.path.write_text(get_provider_yaml_string(self.data))
+        self._extra_prices.clear()
+        self._removed_models.clear()
+
+
+def _as_commented(value: Any) -> Any:
+    """Keep new records editable without importing JSON's flow style and quote choices."""
+    if isinstance(value, dict):
+        return CommentedMap({key: _as_commented(child) for key, child in cast(dict[str, Any], value).items()})
+    if isinstance(value, list):
+        return CommentedSeq([_as_commented(child) for child in cast(list[Any], value)])
+    return value
 
 
 def flow_map(values: dict[str, Any]) -> CommentedMap:
