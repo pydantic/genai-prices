@@ -306,15 +306,19 @@ def _parse_cli(args_list: Sequence[str] | None) -> CLIRoot:
 def calc_prices(args: CalcCLI, *, plain: bool) -> int:
     from .data import providers
 
-    usage = Usage(
-        input_tokens=args.input_tokens,
-        cache_write_tokens=args.cache_write_tokens,
-        cache_read_tokens=args.cache_read_tokens,
-        output_tokens=args.output_tokens,
-        input_audio_tokens=args.input_audio_tokens,
-        cache_audio_read_tokens=args.cache_audio_read_tokens,
-        output_audio_tokens=args.output_audio_tokens,
-    )
+    try:
+        usage = Usage(
+            input_tokens=args.input_tokens,
+            cache_write_tokens=args.cache_write_tokens,
+            cache_read_tokens=args.cache_read_tokens,
+            output_tokens=args.output_tokens,
+            input_audio_tokens=args.input_audio_tokens,
+            cache_audio_read_tokens=args.cache_audio_read_tokens,
+            output_audio_tokens=args.output_audio_tokens,
+        )
+    except ValueError as exc:
+        print(f'Error: {exc}', file=sys.stderr)
+        return 1
     console = Console(soft_wrap=True)
     err_console = Console(stderr=True, soft_wrap=True)
     use_color = not args.no_color
@@ -337,17 +341,20 @@ def calc_prices(args: CalcCLI, *, plain: bool) -> int:
                 provider_id=provider_id,
                 genai_request_timestamp=args.timestamp,
             )
-        except LookupError as exc:
+        except (LookupError, ValueError) as exc:
             had_error = True
-            _render_calc_error(
-                err_console,
-                message=str(exc),
-                model_ref=model,
-                provider_id=provider_id,
-                providers=providers,
-                plain=plain,
-                use_color=use_color,
-            )
+            if isinstance(exc, ValueError):
+                print(f'Error: {exc}', file=sys.stderr)
+            else:
+                _render_calc_error(
+                    err_console,
+                    message=str(exc),
+                    model_ref=model,
+                    provider_id=provider_id,
+                    providers=providers,
+                    plain=plain,
+                    use_color=use_color,
+                )
             if not args.keep_going:
                 if not plain:
                     if args.table:
