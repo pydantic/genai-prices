@@ -5,7 +5,7 @@ pricing_urls:
   - https://www.anthropic.com/pricing#api
 # API.anthropic.com is the first-party API; claude.googleapis.com is the Anthropic-managed Claude API on
 # Google Cloud, which Anthropic runs and meters (Vertex AI, which Google prices, stays on google.yml).
-api_pattern: 'https://(api\.anthropic\.com|claude\.googleapis\.com)'
+api_pattern: 'https://(api\.anthropic\.com|claude\.googleapis\.com)(?:[:/]|$)'
 price_comments: >-
   Message Batches API usage is charged at 50% of the standard rates. Prompt caching multipliers stack with
   the batch discount, so batch cache writes and cache reads are also 50% of standard; on Claude Haiku 5.5 the

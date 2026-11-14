@@ -450,6 +450,42 @@ def test_anthropic_managed_claude_on_google_cloud(provider_api_url: str) -> None
     assert price.total_price == Decimal('48')
 
 
+@pytest.mark.parametrize(
+    'provider_api_url',
+    [
+        'https://claude.googleapis.com.example.net/v1/messages',
+        'https://claude.googleapis.comx/v1/messages',
+        'https://api.anthropic.com.example.net/v1/messages',
+        'https://googleapis.com.example.net/v1/messages',
+    ],
+)
+def test_provider_api_url_requires_the_real_host(provider_api_url: str) -> None:
+    """The patterns are prefix matches (re.match), so a look-alike host must not select a provider."""
+    with pytest.raises(LookupError):
+        calc_price(Usage(input_tokens=1), 'claude-opus-5-5', provider_api_url=provider_api_url)
+
+
+@pytest.mark.parametrize(
+    'provider_api_url',
+    [
+        'https://claude.googleapis.com',
+        'https://claude.googleapis.com:443/v1/messages',
+        'https://api.anthropic.com/v1/messages',
+        'https://api.anthropic.com:443/v1/messages',
+    ],
+)
+def test_provider_api_url_accepts_the_real_host(provider_api_url: str) -> None:
+    """The host boundary must still accept the bare host and the port form."""
+    price = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref='claude-opus-5-5',
+        provider_api_url=provider_api_url,
+        price_context={'speed': 'fast'},
+    )
+    assert price.provider.id == 'anthropic'
+    assert price.total_price == Decimal('48')
+
+
 def test_vertex_ai_claude_still_uses_google_provider() -> None:
     """Excluding claude.googleapis.com must not move Vertex AI's Claude entries off the google provider."""
     price = calc_price(
