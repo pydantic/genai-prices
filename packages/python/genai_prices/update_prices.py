@@ -181,19 +181,26 @@ class _SharedUpdater:
         self.ref_count += 1
 
         if self.thread is None:
+            previous_outcome = self.outcome
+            previous_ready = self.ready.is_set()
             self.thread = threading.Thread(target=self._run, daemon=True, name='genai_prices:update')
             try:
                 self.thread.start()
+                # Only a successful acquisition replaces the outcome existing owners are waiting for.
+                self.outcome = None
+                self.ready.clear()
             except BaseException:
                 # Thread.start() can fail after the OS thread launched; it exits on its own once
                 # it sees it is not the current thread.
                 self.thread = None
                 self.fetcher = previous
                 self.ref_count -= 1
+                self.outcome = previous_outcome
+                if previous_ready:
+                    self.ready.set()
+                else:
+                    self.ready.clear()
                 raise
-            # Only a successful launch replaces the outcome existing owners are waiting for.
-            self.outcome = None
-            self.ready.clear()
 
     def release(self) -> None:
         """Count one instance out; the thread exits on its own once none are left. Caller holds `lock`."""

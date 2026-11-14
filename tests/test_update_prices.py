@@ -612,6 +612,46 @@ def test_failed_replacement_launch_preserves_existing_waiter_outcome(monkeypatch
         replacement.stop()
 
 
+@pytest.mark.parametrize('existing_owner', [False, True])
+def test_interrupted_outcome_reset_rolls_back_acquisition(
+    monkeypatch: pytest.MonkeyPatch, existing_owner: bool
+) -> None:
+    monkeypatch.setattr(update_prices_module, '_shared_updater', update_prices_module._SharedUpdater())
+
+    class CrashingUpdatePrices(UpdatePrices):
+        def fetch(self) -> data_snapshot.DataSnapshot | None:
+            raise KeyboardInterrupt
+
+    previous = CrashingUpdatePrices()
+    replacement = NullUpdatePrices()
+    if existing_owner:
+        previous.start()
+        with pytest.raises(RuntimeError, match='terminated unexpectedly'):
+            previous.wait(timeout=5)
+
+    def interrupt_reset() -> None:
+        raise KeyboardInterrupt
+
+    try:
+        with monkeypatch.context() as context:
+            context.setattr(update_prices_module._shared_updater.ready, 'clear', interrupt_reset)
+            with pytest.raises(KeyboardInterrupt):
+                replacement.start()
+        assert replacement.wait(timeout=0) is False
+        if existing_owner:
+            with pytest.raises(RuntimeError, match='terminated unexpectedly'):
+                previous.wait(timeout=0)
+        else:
+            assert wait_prices_updated_sync(timeout=0) is False
+        replacement.start(wait=True)
+        replacement.stop()
+        previous.stop()
+        assert wait_prices_updated_sync(timeout=0) is False
+    finally:
+        replacement.stop()
+        previous.stop()
+
+
 def test_interrupted_thread_start_leaves_no_running_worker(monkeypatch: pytest.MonkeyPatch):
     original_start = threading.Thread.start
     launched: list[threading.Thread] = []
