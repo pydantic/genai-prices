@@ -306,15 +306,19 @@ def _parse_cli(args_list: Sequence[str] | None) -> CLIRoot:
 def calc_prices(args: CalcCLI, *, plain: bool) -> int:
     from .data import providers
 
-    usage = Usage(
-        input_tokens=args.input_tokens,
-        cache_write_tokens=args.cache_write_tokens,
-        cache_read_tokens=args.cache_read_tokens,
-        output_tokens=args.output_tokens,
-        input_audio_tokens=args.input_audio_tokens,
-        cache_audio_read_tokens=args.cache_audio_read_tokens,
-        output_audio_tokens=args.output_audio_tokens,
-    )
+    try:
+        usage = Usage(
+            input_tokens=args.input_tokens,
+            cache_write_tokens=args.cache_write_tokens,
+            cache_read_tokens=args.cache_read_tokens,
+            output_tokens=args.output_tokens,
+            input_audio_tokens=args.input_audio_tokens,
+            cache_audio_read_tokens=args.cache_audio_read_tokens,
+            output_audio_tokens=args.output_audio_tokens,
+        )
+    except ValueError as exc:
+        print(f'Error: {exc}', file=sys.stderr)
+        return 1
     console = Console(soft_wrap=True)
     err_console = Console(stderr=True, soft_wrap=True)
     use_color = not args.no_color
