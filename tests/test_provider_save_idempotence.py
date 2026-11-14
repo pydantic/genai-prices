@@ -4,12 +4,16 @@ from pathlib import Path
 
 import pytest
 
-from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice
+from prices.prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice
 from prices.update import ProviderYaml
 
 
 @pytest.mark.parametrize('operation', ['save', 'upsert'])
-def test_saved_new_models_are_not_added_again(tmp_path: Path, operation: str) -> None:
+@pytest.mark.parametrize(
+    'match',
+    [ClauseEquals(equals='new'), ClauseOr.model_validate({'or': [{'equals': 'new'}, {'equals': 'alias'}]})],
+)
+def test_saved_new_models_are_not_added_again(tmp_path: Path, operation: str, match: ClauseEquals | ClauseOr) -> None:
     path = tmp_path / 'provider.yml'
     path.write_text(
         'id: example\nname: Example\napi_pattern: example\nmodels:\n'
@@ -18,7 +22,7 @@ def test_saved_new_models_are_not_added_again(tmp_path: Path, operation: str) ->
     provider = ProviderYaml(path)
     model = ModelInfo(
         id='new',
-        match=ClauseEquals(equals='new'),
+        match=match,
         prices=ModelPrice(input_mtok=Decimal(2)),
         prices_checked=date(2026, 1, 2),
     )
