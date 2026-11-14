@@ -632,11 +632,22 @@ def test_interrupted_outcome_reset_rolls_back_acquisition(
     def interrupt_reset() -> None:
         raise KeyboardInterrupt
 
+    launched: list[threading.Thread] = []
+    original_start = threading.Thread.start
+
+    def record_start(thread: threading.Thread) -> None:
+        launched.append(thread)
+        original_start(thread)
+
     try:
         with monkeypatch.context() as context:
+            context.setattr(threading.Thread, 'start', record_start)
             context.setattr(update_prices_module._shared_updater.ready, 'clear', interrupt_reset)
             with pytest.raises(KeyboardInterrupt):
                 replacement.start()
+        (launched_thread,) = launched
+        launched_thread.join(timeout=5)
+        assert not launched_thread.is_alive()
         assert replacement.wait(timeout=0) is False
         if existing_owner:
             with pytest.raises(RuntimeError, match='terminated unexpectedly'):
