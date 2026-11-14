@@ -103,7 +103,7 @@ models:
       input_mtok: 1.32
       cache_read_mtok: 0.044
       output_mtok: 3.96
-    prices_checked: 2026-11-13
+    prices_checked: 2026-11-14
 
   - id: perplexity/glm-5.3
     match:
@@ -112,7 +112,7 @@ models:
       input_mtok: 1.4
       cache_read_mtok: 0.26
       output_mtok: 4.4
-    prices_checked: 2026-11-13
+    prices_checked: 2026-11-14
 
   - id: perplexity/glm-5.3-flash
     match:
@@ -121,7 +121,7 @@ models:
       input_mtok: 0.15
       cache_read_mtok: 0.03
       output_mtok: 0.5
-    prices_checked: 2026-11-13
+    prices_checked: 2026-11-14
 
   - id: perplexity/kimi-k3
     match:
@@ -130,7 +130,7 @@ models:
       input_mtok: 3
       cache_read_mtok: 0.3
       output_mtok: 15
-    prices_checked: 2026-11-13
+    prices_checked: 2026-11-14
 
   - id: perplexity/nemotron-3.5-super-120b-a12b
     match:
@@ -139,7 +139,7 @@ models:
       input_mtok: 0.2
       cache_read_mtok: 0.04
       output_mtok: 0.5
-    prices_checked: 2026-11-13
+    prices_checked: 2026-11-14
 
   - id: perplexity/sonar
     match:
@@ -149,7 +149,7 @@ models:
       cache_read_mtok: 0.0625
       output_mtok: 2.5
       web_searches_kcount: 2.5
-    prices_checked: 2026-11-13
+    prices_checked: 2026-11-14
     price_comments: >-
       Standard web search is $2.50 per thousand invocations; Fast Search is $1 per thousand.
       Pass price_context search_type=fast for Fast Search, including presets that select it.
@@ -172,7 +172,7 @@ models:
         - equals: perplexity/pplx-decider-flash-latest
     prices:
       input_mtok: 0.01
-    prices_checked: 2026-11-13
+    prices_checked: 2026-11-14
     price_comments: >-
       Decisions API: output tokens are free and there is no per-request fee. `pplx-decider-flash-latest` selects
       this model. https://docs.perplexity.ai/docs/decisions/quickstart
@@ -182,7 +182,7 @@ models:
       equals: pplx-decider-flash-v1.3
     prices:
       input_mtok: 0.01
-    prices_checked: 2026-11-13
+    prices_checked: 2026-11-14
 
   - id: pplx-decider-v1-27b
     name: Decider V1 27B
@@ -217,7 +217,7 @@ models:
         - equals: perplexity/pplx-decider-latest
     prices:
       input_mtok: 0.02
-    prices_checked: 2026-11-13
+    prices_checked: 2026-11-14
     price_comments: >-
       Decisions API: output tokens are free and there is no per-request fee. `pplx-decider-latest` selects this
       model. https://docs.perplexity.ai/docs/decisions/quickstart
@@ -227,7 +227,7 @@ models:
       equals: pplx-decider-v1.3
     prices:
       input_mtok: 0.02
-    prices_checked: 2026-11-13
+    prices_checked: 2026-11-14
 
   - id: pplx-embed-context-v1-0.6b
     name: Embed Context V1 0.6B
@@ -235,7 +235,7 @@ models:
       equals: pplx-embed-context-v1-0.6b
     prices:
       input_mtok: 0.008
-    prices_checked: 2026-11-13
+    prices_checked: 2026-11-14
 
   - id: pplx-embed-context-v1-4b
     name: Embed Context V1 4B
@@ -243,7 +243,7 @@ models:
       equals: pplx-embed-context-v1-4b
     prices:
       input_mtok: 0.05
-    prices_checked: 2026-11-13
+    prices_checked: 2026-11-14
 
   - id: pplx-embed-v1-0.6b
     name: Embed V1 0.6B
@@ -251,7 +251,7 @@ models:
       equals: pplx-embed-v1-0.6b
     prices:
       input_mtok: 0.004
-    prices_checked: 2026-11-13
+    prices_checked: 2026-11-14
 
   - id: pplx-embed-v1-4b
     name: Embed V1 4B
@@ -259,7 +259,7 @@ models:
       equals: pplx-embed-v1-4b
     prices:
       input_mtok: 0.03
-    prices_checked: 2026-11-13
+    prices_checked: 2026-11-14
 
   - id: r1-1776
     name: R1 1776
