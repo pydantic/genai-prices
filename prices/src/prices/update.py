@@ -264,12 +264,15 @@ class ProviderYaml:
         if self._removed_models:
             existing_models = [m for m in existing_models if m['id'] not in self._removed_models]
 
-        new_models: list[dict[str, Any]] = []
+        new_models: list[CommentedMap] = []
         for model in self._extra_prices:
-            new_model = model.model_dump(by_alias=True, mode='json', exclude_none=True)
+            new_model = cast(
+                CommentedMap,
+                yaml.load(model.model_dump_json(by_alias=True, exclude_none=True)),  # pyright: ignore[reportUnknownMemberType]
+            )
             if model.prices_checked is not None:
                 new_model['prices_checked'] = model.prices_checked
-            if description := new_model.get('description'):
+            if description := model.description:
                 new_model['description'] = FoldedScalarString(description.strip())
             new_models.append(new_model)
 
@@ -278,6 +281,7 @@ class ProviderYaml:
 
         self.path.write_text(get_provider_yaml_string(self.data))
         self._extra_prices.clear()
+        self._removed_models.clear()
 
 
 def flow_map(values: dict[str, Any]) -> CommentedMap:
