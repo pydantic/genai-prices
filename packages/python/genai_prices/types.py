@@ -182,7 +182,14 @@ class ExtractedUsage:
         if not isinstance(other, ExtractedUsage):
             return NotImplemented  # will raise a TypeError
 
-        models_match = self.model and other.model and other.model.id == self.model.id
+        # A missing model is a supported state: extract_usage returns model=None for responses
+        # whose data carries no model reference (e.g. xAI Realtime), and calc_price accepts that
+        # plus a `model` argument. Two model-less extracts can therefore be accumulated; only a
+        # mix of one model-less and one modelled extract is a mismatch.
+        if self.model is None or other.model is None:
+            models_match = self.model is None and other.model is None
+        else:
+            models_match = other.model.id == self.model.id
         if not models_match:
             raise ValueError(f'Cannot add {other} to {self}, models do not match {other.model} != {self.model}')
 
@@ -200,6 +207,9 @@ class ExtractedUsage:
         )
 
     def __radd__(self, other: ExtractedUsage | Any) -> ExtractedUsage:
+        if other == 0:
+            # Allow this to work with sum()
+            return self
         return self + other
 
 
