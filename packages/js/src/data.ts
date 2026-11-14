@@ -50074,6 +50074,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gemini-4-hydrogen',
+        name: 'Gemini 4 Hydrogen',
+        match: {
+          equals: 'gemini-4-hydrogen',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.5,
+          cache_read_mtok: 0.075,
+          output_mtok: 7.5,
+        },
+      },
+      {
         id: 'glm-5.2',
         name: 'GLM 5.2',
         match: {
@@ -50648,6 +50661,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'inkling-2-small',
+        name: 'Inkling 2 Small',
+        match: {
+          equals: 'inkling-2-small',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.165,
+          cache_read_mtok: 0.033,
+          output_mtok: 0.55,
+        },
+      },
+      {
         id: 'jev-1.13',
         name: 'Jev 1.13',
         match: {
@@ -50861,6 +50887,19 @@ export const data: Provider[] = [
           input_mtok: 0.68,
           cache_read_mtok: 0.07,
           output_mtok: 2.09,
+        },
+      },
+      {
+        id: 'muse-ember',
+        name: 'Muse Ember',
+        match: {
+          equals: 'muse-ember',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.1,
+          cache_read_mtok: 0.004,
+          output_mtok: 0.5,
         },
       },
       {

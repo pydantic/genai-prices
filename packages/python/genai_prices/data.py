@@ -28480,6 +28480,15 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
+                id='gemini-4-hydrogen',
+                match=ClauseEquals(equals='gemini-4-hydrogen'),
+                name='Gemini 4 Hydrogen',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('7.5')
+                ),
+            ),
+            ModelInfo(
                 id='glm-5.2',
                 match=ClauseEquals(equals='glm-5.2'),
                 name='GLM 5.2',
@@ -28780,6 +28789,15 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='inkling-2-small',
+                match=ClauseEquals(equals='inkling-2-small'),
+                name='Inkling 2 Small',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.165'), cache_read_mtok=Decimal('0.033'), output_mtok=Decimal('0.55')
+                ),
+            ),
+            ModelInfo(
                 id='jev-1.13',
                 match=ClauseEquals(equals='jev-1.13'),
                 name='Jev 1.13',
@@ -28924,6 +28942,15 @@ providers: list[Provider] = [
                 context_window=524288,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.68'), cache_read_mtok=Decimal('0.07'), output_mtok=Decimal('2.09')
+                ),
+            ),
+            ModelInfo(
+                id='muse-ember',
+                match=ClauseEquals(equals='muse-ember'),
+                name='Muse Ember',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1'), cache_read_mtok=Decimal('0.004'), output_mtok=Decimal('0.5')
                 ),
             ),
             ModelInfo(
