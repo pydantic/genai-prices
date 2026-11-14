@@ -181,9 +181,6 @@ class _SharedUpdater:
         self.ref_count += 1
 
         if self.thread is None:
-            # A new run: waiters see only what this thread reports.
-            self.outcome = None
-            self.ready.clear()
             self.thread = threading.Thread(target=self._run, daemon=True, name='genai_prices:update')
             try:
                 self.thread.start()
@@ -194,6 +191,9 @@ class _SharedUpdater:
                 self.fetcher = previous
                 self.ref_count -= 1
                 raise
+            # Only a successful launch replaces the outcome existing owners are waiting for.
+            self.outcome = None
+            self.ready.clear()
 
     def release(self) -> None:
         """Count one instance out; the thread exits on its own once none are left. Caller holds `lock`."""
