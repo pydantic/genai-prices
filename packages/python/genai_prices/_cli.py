@@ -341,17 +341,20 @@ def calc_prices(args: CalcCLI, *, plain: bool) -> int:
                 provider_id=provider_id,
                 genai_request_timestamp=args.timestamp,
             )
-        except LookupError as exc:
+        except (LookupError, ValueError) as exc:
             had_error = True
-            _render_calc_error(
-                err_console,
-                message=str(exc),
-                model_ref=model,
-                provider_id=provider_id,
-                providers=providers,
-                plain=plain,
-                use_color=use_color,
-            )
+            if isinstance(exc, ValueError):
+                print(f'Error: {exc}', file=sys.stderr)
+            else:
+                _render_calc_error(
+                    err_console,
+                    message=str(exc),
+                    model_ref=model,
+                    provider_id=provider_id,
+                    providers=providers,
+                    plain=plain,
+                    use_color=use_color,
+                )
             if not args.keep_going:
                 if not plain:
                     if args.table:
