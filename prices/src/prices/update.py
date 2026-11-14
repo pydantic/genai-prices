@@ -277,6 +277,7 @@ class ProviderYaml:
         self.data['models'] = existing_models
 
         self.path.write_text(get_provider_yaml_string(self.data))
+        self._extra_prices.clear()
 
 
 def flow_map(values: dict[str, Any]) -> CommentedMap:
