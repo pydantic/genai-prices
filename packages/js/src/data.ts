@@ -1648,6 +1648,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'moonshotai/kimi-k3.1-pro',
+        name: 'moonshotai/kimi-k3.1-pro',
+        match: {
+          equals: 'moonshotai/kimi-k3.1-pro',
+        },
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
+      },
+      {
         id: 'thinkingmachines/inkling-small',
         name: 'Inkling Small',
         match: {
@@ -7001,6 +7013,16 @@ export const data: Provider[] = [
         },
       },
       {
+        id: '@cf/google/embeddinggemma-2',
+        name: 'embeddinggemma-2',
+        match: {
+          equals: '@cf/google/embeddinggemma-2',
+        },
+        prices: {
+          input_mtok: 0.0017,
+        },
+      },
+      {
         id: '@cf/google/gemma-3-12b-it',
         name: 'Gemma 3 12B IT',
         match: {
@@ -7392,6 +7414,18 @@ export const data: Provider[] = [
         },
         prices: {
           input_mtok: 0.66,
+          output_mtok: 1,
+        },
+      },
+      {
+        id: '@cf/thinkingmachines/inkling-2-small',
+        name: 'inkling-2-small',
+        match: {
+          equals: '@cf/thinkingmachines/inkling-2-small',
+        },
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.1,
           output_mtok: 1,
         },
       },
@@ -20566,6 +20600,42 @@ export const data: Provider[] = [
     ],
     models: [
       {
+        id: 'muse-ember-1.0',
+        match: {
+          equals: 'muse-ember-1.0',
+        },
+        prices: {
+          input_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.3,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.004,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.012,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 0.5,
+            tiers: [
+              {
+                start: 200000,
+                price: 1.5,
+              },
+            ],
+          },
+          web_searches_kcount: 2.5,
+        },
+      },
+      {
         id: 'muse-spark-1.1',
         name: 'Muse Spark 1.1',
         match: {
@@ -22633,6 +22703,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'thinkingmachines/inkling-2-small',
+        name: 'Inkling 2 Small',
+        match: {
+          equals: 'thinkingmachines/inkling-2-small',
+        },
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.03,
+          output_mtok: 1,
+        },
+      },
+      {
         id: 'zai-org/GLM-5.3',
         name: 'GLM 5.3',
         match: {
@@ -23604,10 +23686,24 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: {
-          input_mtok: 1,
-          output_mtok: 1,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 1,
+              output_mtok: 1,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-12',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1,
+              output_mtok: 2,
+            },
+          },
+        ],
       },
       {
         id: 'minimax/minimax-m2.5',
@@ -27211,6 +27307,17 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gpt-5.5-cyber-preview',
+        match: {
+          equals: 'gpt-5.5-cyber-preview',
+        },
+        prices: {
+          input_mtok: 12.5,
+          cache_read_mtok: 1.25,
+          output_mtok: 75,
+        },
+      },
+      {
         id: 'gpt-5.5-pro',
         name: 'GPT-5.5 Pro',
         description: 'Version of GPT-5.5 that produces smarter and more precise responses.',
@@ -28495,16 +28602,67 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gpt-6-astra-law',
+        match: {
+          equals: 'gpt-6-astra-law',
+        },
+        prices: {
+          input_mtok: 10,
+          cache_read_mtok: 1,
+          output_mtok: 50,
+        },
+      },
+      {
         id: 'gpt-6-cyber',
         match: {
           equals: 'gpt-6-cyber',
         },
-        prices: {
-          input_mtok: 20,
-          cache_write_mtok: 25,
-          cache_read_mtok: 2,
-          output_mtok: 100,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 20,
+              cache_write_mtok: 25,
+              cache_read_mtok: 2,
+              output_mtok: 100,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-12',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 20,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 40,
+                  },
+                ],
+              },
+              cache_write_mtok: 25,
+              cache_read_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 100,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 150,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'gpt-6-luna',
@@ -49032,6 +49190,15 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'pplx-decider-flash-v1.3',
+        match: {
+          equals: 'pplx-decider-flash-v1.3',
+        },
+        prices: {
+          input_mtok: 0.01,
+        },
+      },
+      {
         id: 'pplx-decider-v1-27b',
         name: 'Decider V1 27B',
         match: {
@@ -49075,6 +49242,15 @@ export const data: Provider[] = [
         },
         price_comments:
           'Decisions API: output tokens are free and there is no per-request fee. `pplx-decider-latest` selects this model. https://docs.perplexity.ai/docs/decisions/quickstart',
+        prices: {
+          input_mtok: 0.02,
+        },
+      },
+      {
+        id: 'pplx-decider-v1.3',
+        match: {
+          equals: 'pplx-decider-v1.3',
+        },
         prices: {
           input_mtok: 0.02,
         },
@@ -49377,6 +49553,20 @@ export const data: Provider[] = [
             },
           },
         ],
+      },
+      {
+        id: 'claude-fable-5-2',
+        name: 'Claude Fable 5.2',
+        match: {
+          equals: 'claude-fable-5-2',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.05,
+          output_mtok: 10,
+        },
       },
       {
         id: 'claude-haiku-4-5',
@@ -49704,6 +49894,17 @@ export const data: Provider[] = [
               output_mtok: 0.2231,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-11-12',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.154,
+              cache_read_mtok: 0.0046,
+              output_mtok: 0.462,
+            },
+          },
         ],
       },
       {
@@ -49857,6 +50058,32 @@ export const data: Provider[] = [
           input_mtok: 2,
           cache_read_mtok: 0.1,
           output_mtok: 10,
+        },
+      },
+      {
+        id: 'gemini-4-carbon',
+        name: 'Gemini 4 Carbon',
+        match: {
+          equals: 'gemini-4-carbon',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.1,
+          output_mtok: 10,
+        },
+      },
+      {
+        id: 'gemini-4-hydrogen',
+        name: 'Gemini 4 Hydrogen',
+        match: {
+          equals: 'gemini-4-hydrogen',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.5,
+          cache_read_mtok: 0.075,
+          output_mtok: 7.5,
         },
       },
       {
@@ -50434,6 +50661,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'inkling-2-small',
+        name: 'Inkling 2 Small',
+        match: {
+          equals: 'inkling-2-small',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.165,
+          cache_read_mtok: 0.033,
+          output_mtok: 0.55,
+        },
+      },
+      {
         id: 'jev-1.13',
         name: 'Jev 1.13',
         match: {
@@ -50647,6 +50887,19 @@ export const data: Provider[] = [
           input_mtok: 0.68,
           cache_read_mtok: 0.07,
           output_mtok: 2.09,
+        },
+      },
+      {
+        id: 'muse-ember',
+        name: 'Muse Ember',
+        match: {
+          equals: 'muse-ember',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.1,
+          cache_read_mtok: 0.004,
+          output_mtok: 0.5,
         },
       },
       {
@@ -50930,6 +51183,20 @@ export const data: Provider[] = [
           input_mtok: 0.15,
           cache_read_mtok: 0.016,
           output_mtok: 0.47,
+        },
+      },
+      {
+        id: 'qwen4-max-preview',
+        name: 'Qwen4-Max Preview',
+        match: {
+          equals: 'qwen4-max-preview',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 2,
+          cache_write_mtok: 2.5,
+          cache_read_mtok: 0.25,
+          output_mtok: 6,
         },
       },
       {
@@ -51401,6 +51668,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'elorian-labs/glimpse-1.0',
+        name: 'Glimpse 1.0',
+        match: {
+          equals: 'elorian-labs/glimpse-1.0',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.06,
+          output_mtok: 3,
+        },
+      },
+      {
         id: 'garage-bAInd/Platypus2-70B-instruct',
         match: {
           equals: 'garage-bAInd/Platypus2-70B-instruct',
@@ -51857,6 +52137,19 @@ export const data: Provider[] = [
           input_mtok: 1,
           cache_read_mtok: 0.17,
           output_mtok: 4.05,
+        },
+      },
+      {
+        id: 'thinkingmachines/Inkling-2-Small',
+        name: 'Inkling 2 Small',
+        match: {
+          equals: 'thinkingmachines/Inkling-2-Small',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.03,
+          output_mtok: 1,
         },
       },
       {
