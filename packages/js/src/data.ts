@@ -10472,6 +10472,20 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gemini-4-hydrogen',
+        name: 'Gemini 4 Hydrogen',
+        match: {
+          equals: 'gemini-4-hydrogen',
+        },
+        price_comments:
+          'Rates published at https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing. The page lists no promotional end date and no cache-write column. Copilot does not charge for cache writes on the Gemini models.',
+        prices: {
+          input_mtok: 1.5,
+          cache_read_mtok: 0.075,
+          output_mtok: 7.5,
+        },
+      },
+      {
         id: 'gpt-3.5-turbo',
         name: 'GPT 3.5 Turbo',
         match: {
