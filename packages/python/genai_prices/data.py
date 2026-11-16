@@ -8107,6 +8107,123 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='gemini-4-carbon',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gemini-4-carbon'),
+                        ClauseStartsWith(starts_with='gemini-4-carbon-preview'),
+                        ClauseRegex(regex='^gemini-4-carbon-\\d'),
+                    ]
+                ),
+                name='Gemini 4 Carbon',
+                description="Google's most capable reasoning model, for complex software engineering, mathematical and scientific problem solving, high factual accuracy, and autonomous multi-step agents, with output of up to 1M tokens.",
+                context_window=1048576,
+                price_comments='See https://aistudio.google.com/docs/pricing#gemini-4-carbon. Standard tier shown. Introductory rates apply through 2026-11-30. Batch and Flex are half of standard; Priority is 1.8x, at both the introductory and the 2026-12-01 rates. No prompt-size tiers or separate audio input rate are documented. Implicit caching only; explicit caching is not supported, and Vertex lists no cache-write rate. Vertex global rates match these figures; multi-region endpoints add a 10% premium and are not encoded. Grounding is $14 per 1,000 search queries. Batch, Flex and Priority history before 2026-11-16 is not modelled. The invite-only Contributor tier is not modelled. Vertex ref: https://cloud.google.com/model-garden/pricing',
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2'),
+                            cache_read_mtok=Decimal('0.1'),
+                            output_mtok=Decimal('10'),
+                            web_searches_kcount=Decimal('14'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 12, 1)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('4'),
+                            cache_read_mtok=Decimal('0.2'),
+                            output_mtok=Decimal('20'),
+                            web_searches_kcount=Decimal('14'),
+                        ),
+                    ),
+                ],
+                price_variants=[
+                    PriceVariant(
+                        when={'processing': 'batch'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('10')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 12, 1)),
+                    ),
+                    PriceVariant(
+                        when={'processing': 'batch'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('5')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 16)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('10')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 12, 1)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('5')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 16)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('7.2'), cache_read_mtok=Decimal('0.36'), output_mtok=Decimal('36')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 12, 1)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('3.6'), cache_read_mtok=Decimal('0.18'), output_mtok=Decimal('18')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 16)),
+                    ),
+                ],
+            ),
+            ModelInfo(
+                id='gemini-4-hydrogen',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gemini-4-hydrogen'),
+                        ClauseStartsWith(starts_with='gemini-4-hydrogen-preview'),
+                        ClauseRegex(regex='^gemini-4-hydrogen-\\d'),
+                    ]
+                ),
+                name='Gemini 4 Hydrogen',
+                description="Google's Gemini 4 model for everyday coding and agentic workflows, with a 1M-token context window and output of up to 1M tokens.",
+                context_window=1048576,
+                price_comments='See https://aistudio.google.com/docs/pricing#gemini-4-hydrogen. Standard tier shown. No promotional end date is published. Batch and Flex are half of standard; Priority is 1.8x. No prompt-size tiers or separate audio input rate are documented. Implicit caching only; explicit caching is not supported. Vertex lists a global cache-write rate of $1.875 per 1M tokens effective 2027-01-12 (https://cloud.google.com/model-garden/pricing); it is not scheduled here, because this card is shared with the Gemini API, which publishes no cache-write price. Vertex global rates match these figures; multi-region endpoints add a 10% premium and are not encoded. Grounding is $14 per 1,000 search queries. The invite-only Contributor tier is not modelled.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.5'),
+                    cache_read_mtok=Decimal('0.075'),
+                    output_mtok=Decimal('7.5'),
+                    web_searches_kcount=Decimal('14'),
+                ),
+                price_variants=[
+                    PriceVariant(
+                        when={'processing': 'batch'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.0375'), output_mtok=Decimal('3.75')
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.0375'), output_mtok=Decimal('3.75')
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2.7'), cache_read_mtok=Decimal('0.135'), output_mtok=Decimal('13.5')
+                        ),
+                    ),
+                ],
+            ),
+            ModelInfo(
                 id='gemini-embedding-001',
                 match=ClauseEquals(equals='gemini-embedding-001'),
                 prices=ModelPrice(input_mtok=Decimal('0.15')),

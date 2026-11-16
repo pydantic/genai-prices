@@ -68,6 +68,9 @@ it.each([
   ['anthropic', 'claude-sonnet-5', '2026-10-14', 5.775],
   ['google', 'gemini-4-argon', '2026-10-14', 5.7625],
   ['google', 'gemini-4-argon', '2026-12-01', 11.525],
+  ['google', 'gemini-4-carbon', '2026-11-16', 5.7625],
+  ['google', 'gemini-4-carbon', '2026-12-01', 11.525],
+  ['google', 'gemini-4-hydrogen', '2026-11-16', 4.321875],
   ['groq', 'openai/gpt-oss-120b', '2026-10-14', 0.375],
   ['mistral', 'mistral-small-2603', '2026-10-14', 0.358125],
   ['x-ai', 'grok-4.3', '2026-10-14', 5.58],
@@ -76,6 +79,23 @@ it.each([
     calcPrice({ cache_read_tokens: 250_000, input_tokens: 1_000_000, output_tokens: 1_000_000 }, model, {
       priceContext: { processing: 'batch' },
       providerId,
+      timestamp: new Date(`${date}T00:00:00Z`),
+    })?.total_price
+  ).toBeCloseTo(total, 12)
+})
+
+it.each([
+  ['gemini-4-hydrogen', 'flex', '2026-11-16', 4.321875],
+  ['gemini-4-hydrogen', 'priority', '2026-11-16', 15.55875],
+  ['gemini-4-carbon', 'flex', '2026-11-16', 5.7625],
+  ['gemini-4-carbon', 'flex', '2026-12-01', 11.525],
+  ['gemini-4-carbon', 'priority', '2026-11-16', 20.745],
+  ['gemini-4-carbon', 'priority', '2026-12-01', 41.49],
+] as const)('prices Google %s %s on %s', (model, tier, date, total) => {
+  expect(
+    calcPrice({ cache_read_tokens: 250_000, input_tokens: 1_000_000, output_tokens: 1_000_000 }, model, {
+      priceContext: { service_tier: tier },
+      providerId: 'google',
       timestamp: new Date(`${date}T00:00:00Z`),
     })?.total_price
   ).toBeCloseTo(total, 12)
