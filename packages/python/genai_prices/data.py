@@ -14089,6 +14089,15 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
+                id='qwen/qwen4-max',
+                match=ClauseEquals(equals='qwen/qwen4-max'),
+                name='Qwen4 Max',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.413'), cache_read_mtok=Decimal('0.071'), output_mtok=Decimal('4.24')
+                ),
+            ),
+            ModelInfo(
                 id='sao10k/l3-70b-euryale-v2.1',
                 match=ClauseEquals(equals='sao10k/l3-70b-euryale-v2.1'),
                 name='Llama 3 70B Euryale V2.1',

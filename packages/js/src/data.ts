@@ -24226,6 +24226,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'qwen/qwen4-max',
+        name: 'Qwen4 Max',
+        match: {
+          equals: 'qwen/qwen4-max',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 1.413,
+          cache_read_mtok: 0.071,
+          output_mtok: 4.24,
+        },
+      },
+      {
         id: 'sao10k/l3-70b-euryale-v2.1',
         name: 'Llama 3 70B Euryale V2.1',
         match: {
