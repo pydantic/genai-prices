@@ -3465,6 +3465,8 @@ def test_openrouter_gpt_56_sol_cache_write_price():
         ('openrouter', 'typesafe/jev-1.14', 'typesafe/jev-1.14', 285, Decimal('0.00001197')),
         ('openrouter', 'typesafe/jev-1.14-20261014', 'typesafe/jev-1.14', 285, Decimal('0.00001197')),
         ('openrouter', '~typesafe/jev-latest', 'typesafe/jev-1.14', 285, Decimal('0.00001197')),
+        ('openrouter', 'jev-1.14', 'typesafe/jev-1.14', 283, Decimal('0.000011886')),
+        ('openrouter', 'jev-latest', 'typesafe/jev-1.14', 283, Decimal('0.000011886')),
         ('typesafe', 'typesafe/jev-1.13', 'jev-1.13.0', 476, Decimal('0.000019992')),
         ('typesafe', 'typesafe/jev-1.13-20260917', 'jev-1.13.0', 476, Decimal('0.000019992')),
         ('typesafe', 'typesafe/jev-1.14', 'jev-1.14.0', 285, Decimal('0.00001197')),
@@ -3491,7 +3493,14 @@ def test_decision_model_input_only_prices(
 
 @pytest.mark.parametrize('provider_id', ['openrouter', 'typesafe'])
 @pytest.mark.parametrize(
-    'model_ref', ['typesafe/jev-1.140', 'typesafe/jev-1.14-2026101', 'typesafe/jev-1.14-router', 'typesafe/jev-router']
+    'model_ref',
+    [
+        'typesafe/jev-1.140',
+        'typesafe/jev-1.14-2026101',
+        'typesafe/jev-1.14-router',
+        'typesafe/jev-router',
+        'typesafe/jev-latest',
+    ],
 )
 def test_typesafe_served_id_match_is_exact(provider_id: str, model_ref: str) -> None:
     with pytest.raises(LookupError, match='Unable to find model'):
