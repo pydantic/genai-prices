@@ -8195,7 +8195,7 @@ providers: list[Provider] = [
                 name='Gemini 4 Hydrogen',
                 description="Google's Gemini 4 model for everyday coding and agentic workflows, with a 1M-token context window and output of up to 1M tokens.",
                 context_window=1048576,
-                price_comments='See https://aistudio.google.com/docs/pricing#gemini-4-hydrogen. Standard tier shown. No promotional end date is published. Batch and Flex are half of standard; Priority is 1.8x. No prompt-size tiers or separate audio input rate are documented. Implicit caching only; explicit caching is not supported. Vertex lists a global cache-write rate of $1.875 per 1M tokens effective 2027-01-12 (https://cloud.google.com/model-garden/pricing); it is not scheduled here, because this card is shared with the Gemini API, which publishes no cache-write price. Vertex global rates match these figures; multi-region endpoints add a 10% premium and are not encoded. Grounding is $14 per 1,000 search queries. The invite-only Contributor tier is not modelled.',
+                price_comments='See https://aistudio.google.com/docs/pricing#gemini-4-hydrogen. Standard tier shown. No promotional end date is published. Batch and Flex are half of standard; Priority is 1.8x. Batch, Flex and Priority history before 2026-11-16 is not modelled. No prompt-size tiers or separate audio input rate are documented. Implicit caching only; explicit caching is not supported. Vertex lists a global cache-write rate of $1.875 per 1M tokens effective 2027-01-12 (https://cloud.google.com/model-garden/pricing); it is not scheduled here, because this card is shared with the Gemini API, which publishes no cache-write price. Vertex global rates match these figures; multi-region endpoints add a 10% premium and are not encoded. Grounding is $14 per 1,000 search queries. The invite-only Contributor tier is not modelled.',
                 prices=ModelPrice(
                     input_mtok=Decimal('1.5'),
                     cache_read_mtok=Decimal('0.075'),
@@ -8208,18 +8208,21 @@ providers: list[Provider] = [
                         prices=ModelPrice(
                             input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.0375'), output_mtok=Decimal('3.75')
                         ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 16)),
                     ),
                     PriceVariant(
                         when={'service_tier': 'flex'},
                         prices=ModelPrice(
                             input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.0375'), output_mtok=Decimal('3.75')
                         ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 16)),
                     ),
                     PriceVariant(
                         when={'service_tier': 'priority'},
                         prices=ModelPrice(
                             input_mtok=Decimal('2.7'), cache_read_mtok=Decimal('0.135'), output_mtok=Decimal('13.5')
                         ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 16)),
                     ),
                 ],
             ),

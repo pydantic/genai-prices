@@ -101,6 +101,7 @@ func TestBatchProcessing(t *testing.T) {
 		{"google", "gemini-4-argon", time.Date(2026, 12, 1, 0, 0, 0, 0, time.UTC), 11.525},
 		{"google", "gemini-4-carbon", time.Date(2026, 11, 16, 0, 0, 0, 0, time.UTC), 5.7625},
 		{"google", "gemini-4-carbon", time.Date(2026, 12, 1, 0, 0, 0, 0, time.UTC), 11.525},
+		{"google", "gemini-4-hydrogen", time.Date(2026, 11, 15, 0, 0, 0, 0, time.UTC), 8.64375},
 		{"google", "gemini-4-hydrogen", time.Date(2026, 11, 16, 0, 0, 0, 0, time.UTC), 4.321875},
 		{"groq", "openai/gpt-oss-120b", time.Date(2026, 10, 14, 0, 0, 0, 0, time.UTC), 0.375},
 		{"mistral", "mistral-small-2603", time.Date(2026, 10, 14, 0, 0, 0, 0, time.UTC), 0.358125},
@@ -131,7 +132,9 @@ func TestGoogleGemini4ServiceTiers(t *testing.T) {
 		timestamp   time.Time
 		total       float64
 	}{
+		{"gemini-4-hydrogen", "flex", time.Date(2026, 11, 15, 0, 0, 0, 0, time.UTC), 8.64375},
 		{"gemini-4-hydrogen", "flex", time.Date(2026, 11, 16, 0, 0, 0, 0, time.UTC), 4.321875},
+		{"gemini-4-hydrogen", "priority", time.Date(2026, 11, 15, 0, 0, 0, 0, time.UTC), 8.64375},
 		{"gemini-4-hydrogen", "priority", time.Date(2026, 11, 16, 0, 0, 0, 0, time.UTC), 15.55875},
 		{"gemini-4-carbon", "flex", time.Date(2026, 11, 16, 0, 0, 0, 0, time.UTC), 5.7625},
 		{"gemini-4-carbon", "flex", time.Date(2026, 12, 1, 0, 0, 0, 0, time.UTC), 11.525},

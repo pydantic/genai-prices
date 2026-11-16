@@ -1849,7 +1849,8 @@ models:
     prices_checked: 2026-11-16
     price_comments: >-
       See https://aistudio.google.com/docs/pricing#gemini-4-hydrogen. Standard tier shown. No promotional end
-      date is published. Batch and Flex are half of standard; Priority is 1.8x. No prompt-size tiers or separate
+      date is published. Batch and Flex are half of standard; Priority is 1.8x. Batch, Flex and Priority
+      history before 2026-11-16 is not modelled. No prompt-size tiers or separate
       audio input rate are documented. Implicit caching only; explicit caching is not supported. Vertex lists a
       global cache-write rate of $1.875 per 1M tokens effective 2027-01-12 (https://cloud.google.com/model-garden/pricing);
       it is not scheduled here, because this card is shared with the Gemini API, which publishes no cache-write
@@ -1862,16 +1863,19 @@ models:
       web_searches_kcount: 14 # per search query
     price_variants:
       - when: { processing: batch }
+        constraint: { start_date: 2026-11-16 }
         prices:
           input_mtok: 0.75
           cache_read_mtok: 0.0375
           output_mtok: 3.75
       - when: { service_tier: flex }
+        constraint: { start_date: 2026-11-16 }
         prices:
           input_mtok: 0.75
           cache_read_mtok: 0.0375
           output_mtok: 3.75
       - when: { service_tier: priority }
+        constraint: { start_date: 2026-11-16 }
         prices:
           input_mtok: 2.7
           cache_read_mtok: 0.135

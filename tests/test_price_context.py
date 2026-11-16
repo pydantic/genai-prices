@@ -83,6 +83,7 @@ def test_openai_service_tiers(model: str, tier: str, total: str) -> None:
         ('google', 'gemini-4-argon', datetime(2026, 12, 1), '11.525'),
         ('google', 'gemini-4-carbon', datetime(2026, 11, 16), '5.7625'),
         ('google', 'gemini-4-carbon', datetime(2026, 12, 1), '11.525'),
+        ('google', 'gemini-4-hydrogen', datetime(2026, 11, 15), '8.64375'),
         ('google', 'gemini-4-hydrogen', datetime(2026, 11, 16), '4.321875'),
         ('groq', 'openai/gpt-oss-120b', datetime(2026, 10, 14), '0.375'),
         ('mistral', 'mistral-small-2603', datetime(2026, 10, 14), '0.358125'),
@@ -103,7 +104,9 @@ def test_batch_processing(provider: str, model: str, timestamp: datetime, total:
 @pytest.mark.parametrize(
     'model,tier,timestamp,total',
     [
+        ('gemini-4-hydrogen', 'flex', datetime(2026, 11, 15), '8.64375'),
         ('gemini-4-hydrogen', 'flex', datetime(2026, 11, 16), '4.321875'),
+        ('gemini-4-hydrogen', 'priority', datetime(2026, 11, 15), '8.64375'),
         ('gemini-4-hydrogen', 'priority', datetime(2026, 11, 16), '15.55875'),
         ('gemini-4-carbon', 'flex', datetime(2026, 11, 16), '5.7625'),
         ('gemini-4-carbon', 'flex', datetime(2026, 12, 1), '11.525'),
