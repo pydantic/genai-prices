@@ -29151,15 +29151,12 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
-                id='qwen4-max-preview',
-                match=ClauseEquals(equals='qwen4-max-preview'),
-                name='Qwen4-Max Preview',
+                id='qwen4-max',
+                match=ClauseEquals(equals='qwen4-max'),
+                name='Qwen4-Max',
                 context_window=1000000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('2'),
-                    cache_write_mtok=Decimal('2.5'),
-                    cache_read_mtok=Decimal('0.25'),
-                    output_mtok=Decimal('6'),
+                    input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('4.5')
                 ),
             ),
             ModelInfo(

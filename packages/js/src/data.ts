@@ -51186,17 +51186,16 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'qwen4-max-preview',
-        name: 'Qwen4-Max Preview',
+        id: 'qwen4-max',
+        name: 'Qwen4-Max',
         match: {
-          equals: 'qwen4-max-preview',
+          equals: 'qwen4-max',
         },
         context_window: 1000000,
         prices: {
-          input_mtok: 2,
-          cache_write_mtok: 2.5,
-          cache_read_mtok: 0.25,
-          output_mtok: 6,
+          input_mtok: 1.5,
+          cache_read_mtok: 0.075,
+          output_mtok: 4.5,
         },
       },
       {
