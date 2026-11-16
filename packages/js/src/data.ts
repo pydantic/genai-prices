@@ -46386,11 +46386,17 @@ export const data: Provider[] = [
             {
               regex: '^typesafe/jev-1\\.14-\\d{8}$',
             },
+            {
+              equals: 'jev-1.14',
+            },
+            {
+              equals: 'jev-latest',
+            },
           ],
         },
         context_window: 32000,
         price_comments:
-          'Same $0.042 per million input tokens as TypeSafe. Output is free. System One responses name a dated id such as typesafe/jev-1.14-20261014. ~typesafe/jev-latest redirects to the latest Jev release, Jev 1.14 since October 14, 2026, at the same rate as Jev 1.13. https://openrouter.ai/api/v1/models/typesafe/jev-1.14/endpoints',
+          "Same $0.042 per million input tokens as TypeSafe. Output is free. System One responses name a dated id such as typesafe/jev-1.14-20261014. ~typesafe/jev-latest redirects to the latest Jev release, Jev 1.14 since October 14, 2026, at the same rate as Jev 1.13. OpenRouter also accepts TypeSafe's bare jev-1.14 and jev-latest, but rejects typesafe/jev-latest. https://openrouter.ai/api/v1/models/typesafe/jev-1.14/endpoints",
         prices: {
           input_mtok: 0.042,
         },
