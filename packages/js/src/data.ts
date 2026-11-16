@@ -24333,6 +24333,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'tencent/hy4-flash',
+        name: 'Hy4 Flash',
+        match: {
+          equals: 'tencent/hy4-flash',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.07,
+          cache_read_mtok: 0.003,
+          output_mtok: 0.281,
+        },
+      },
+      {
         id: 'tencent/hy4-preview',
         name: 'Hy4 Preview',
         match: {

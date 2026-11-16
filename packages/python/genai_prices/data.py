@@ -14153,6 +14153,15 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='tencent/hy4-flash',
+                match=ClauseEquals(equals='tencent/hy4-flash'),
+                name='Hy4 Flash',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.07'), cache_read_mtok=Decimal('0.003'), output_mtok=Decimal('0.281')
+                ),
+            ),
+            ModelInfo(
                 id='tencent/hy4-preview',
                 match=ClauseEquals(equals='tencent/hy4-preview'),
                 name='Hy4 Preview',
