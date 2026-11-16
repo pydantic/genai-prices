@@ -14,7 +14,13 @@ from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeGuard, TypeVar, c
 import pydantic
 from typing_extensions import Self, TypeAlias, TypedDict  # noqa: UP035 - keep typing aliases with the backports
 
-from genai_prices._usage import UsageValue, add_usage_values, usage_value_as_decimal, validate_usage_value
+from genai_prices._usage import (
+    UsageValue,
+    add_usage_values,
+    price_arithmetic_context,
+    usage_value_as_decimal,
+    validate_usage_value,
+)
 from genai_prices.units import UnitRegistry
 
 if TYPE_CHECKING:
@@ -840,20 +846,21 @@ class ModelPrice:
             usage_data.input_tokens if any(isinstance(price, TieredPrices) for _, price in resolved_prices) else 0
         )
 
-        for unit, price in resolved_prices:
-            unit_price = calc_unit_price(
-                price,
-                priced_counts[unit.usage_key],
-                total_input_tokens,
-                unit.per,
-            )
-            total_price += unit_price
+        with price_arithmetic_context():
+            for unit, price in resolved_prices:
+                unit_price = calc_unit_price(
+                    price,
+                    priced_counts[unit.usage_key],
+                    total_input_tokens,
+                    unit.per,
+                )
+                total_price += unit_price
 
-            direction = unit.dimensions.get('direction')
-            if direction == 'input':
-                input_price += unit_price
-            elif direction == 'output':
-                output_price += unit_price
+                direction = unit.dimensions.get('direction')
+                if direction == 'input':
+                    input_price += unit_price
+                elif direction == 'output':
+                    output_price += unit_price
 
         return {'input_price': input_price, 'output_price': output_price, 'total_price': total_price}
 
@@ -904,19 +911,20 @@ def calc_unit_price(
         return Decimal(0)
 
     decimal_count = usage_value_as_decimal(count)
-    if isinstance(price, TieredPrices):
-        # Threshold-based pricing: tier is determined by total_input_tokens
-        # Find the highest tier that applies based on total input tokens
-        # When total_input_tokens is 0, no tier condition is met, so base rate is used
-        applicable_price = price.base
-        for tier in reversed(price.tiers):
-            if total_input_tokens > tier.start:
-                applicable_price = tier.price
-                break
-        unit_price = applicable_price * decimal_count
-    else:
-        unit_price = price * decimal_count
-    return unit_price / per
+    with price_arithmetic_context():
+        if isinstance(price, TieredPrices):
+            # Threshold-based pricing: tier is determined by total_input_tokens
+            # Find the highest tier that applies based on total input tokens
+            # When total_input_tokens is 0, no tier condition is met, so base rate is used
+            applicable_price = price.base
+            for tier in reversed(price.tiers):
+                if total_input_tokens > tier.start:
+                    applicable_price = tier.price
+                    break
+            unit_price = applicable_price * decimal_count
+        else:
+            unit_price = price * decimal_count
+        return unit_price / per
 
 
 def _collect_resolved_model_prices(
