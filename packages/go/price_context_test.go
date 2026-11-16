@@ -140,8 +140,10 @@ func TestGoogleGemini4ServiceTiers(t *testing.T) {
 		{"gemini-4-carbon", "flex", time.Date(2026, 12, 1, 0, 0, 0, 0, time.UTC), 11.525},
 		{"gemini-4-carbon", "priority", time.Date(2026, 11, 16, 0, 0, 0, 0, time.UTC), 20.745},
 		{"gemini-4-carbon", "priority", time.Date(2026, 12, 1, 0, 0, 0, 0, time.UTC), 41.49},
+		{"gemini-4-argon", "flex", time.Date(2026, 10, 13, 0, 0, 0, 0, time.UTC), 11.525},
 		{"gemini-4-argon", "flex", time.Date(2026, 10, 14, 0, 0, 0, 0, time.UTC), 5.7625},
 		{"gemini-4-argon", "flex", time.Date(2026, 12, 1, 0, 0, 0, 0, time.UTC), 11.525},
+		{"gemini-4-argon", "priority", time.Date(2026, 10, 13, 0, 0, 0, 0, time.UTC), 11.525},
 		{"gemini-4-argon", "priority", time.Date(2026, 10, 14, 0, 0, 0, 0, time.UTC), 20.745},
 		{"gemini-4-argon", "priority", time.Date(2026, 12, 1, 0, 0, 0, 0, time.UTC), 41.49},
 	} {

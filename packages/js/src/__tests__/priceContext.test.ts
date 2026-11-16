@@ -94,8 +94,10 @@ it.each([
   ['gemini-4-carbon', 'flex', '2026-12-01', 11.525],
   ['gemini-4-carbon', 'priority', '2026-11-16', 20.745],
   ['gemini-4-carbon', 'priority', '2026-12-01', 41.49],
+  ['gemini-4-argon', 'flex', '2026-10-13', 11.525],
   ['gemini-4-argon', 'flex', '2026-10-14', 5.7625],
   ['gemini-4-argon', 'flex', '2026-12-01', 11.525],
+  ['gemini-4-argon', 'priority', '2026-10-13', 11.525],
   ['gemini-4-argon', 'priority', '2026-10-14', 20.745],
   ['gemini-4-argon', 'priority', '2026-12-01', 41.49],
 ] as const)('prices Google %s %s on %s', (model, tier, date, total) => {
