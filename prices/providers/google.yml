@@ -1728,13 +1728,13 @@ models:
         - starts_with: gemini-4-argon-preview
         - regex: '^gemini-4-argon-\d'
     context_window: 1048576
-    prices_checked: 2026-10-14
+    prices_checked: 2026-11-16
     price_comments: >-
-      See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50%
-      discount, Priority tier is 1.8x. Introductory rates apply through 2026-11-30. No prompt-size tiers or separate
-      audio input rate are documented. Implicit caching only. Batch rates verified on 2026-10-14 at
-      https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves
-      input, output and context caching, at both the introductory and the 2026-12-01 rates.
+      See https://aistudio.google.com/docs/pricing#gemini-4-argon. Standard tier pricing shown. Introductory rates
+      apply through 2026-11-30. Batch and Flex are half of standard; Priority is 1.8x, at both the introductory and
+      the 2026-12-01 rates. No prompt-size tiers or separate audio input rate are documented. Implicit caching only.
+      Batch rates verified on 2026-10-14; Flex and Priority verified on 2026-11-16. Tier history before 2026-10-14 is
+      not modelled.
     prices:
       - prices:
           input_mtok: 2
@@ -1762,6 +1762,148 @@ models:
           input_mtok: 1
           cache_read_mtok: 0.05
           output_mtok: 5
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-12-01 }
+        prices:
+          input_mtok: 2
+          cache_read_mtok: 0.1
+          output_mtok: 10
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 1
+          cache_read_mtok: 0.05
+          output_mtok: 5
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-12-01 }
+        prices:
+          input_mtok: 7.2
+          cache_read_mtok: 0.36
+          output_mtok: 36
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 3.6
+          cache_read_mtok: 0.18
+          output_mtok: 18
+
+  - id: gemini-4-carbon
+    name: Gemini 4 Carbon
+    description: >-
+      Google's most capable reasoning model, for complex software engineering, mathematical and scientific
+      problem solving, high factual accuracy, and autonomous multi-step agents, with output of up to 1M tokens.
+    match:
+      or:
+        - equals: gemini-4-carbon
+        - starts_with: gemini-4-carbon-preview
+        - regex: '^gemini-4-carbon-\d'
+    context_window: 1048576
+    prices_checked: 2026-11-16
+    price_comments: >-
+      See https://aistudio.google.com/docs/pricing#gemini-4-carbon. Standard tier shown. Introductory rates apply
+      through 2026-11-30. Batch and Flex are half of standard; Priority is 1.8x, at both the introductory and the
+      2026-12-01 rates. No prompt-size tiers or separate audio input rate are documented. Implicit caching only;
+      explicit caching is not supported, and Vertex lists no cache-write rate. Vertex global rates match these
+      figures; multi-region endpoints add a 10% premium and are not encoded. Grounding is $14 per 1,000 search
+      queries. Batch, Flex and Priority history before 2026-11-16 is not modelled. The invite-only Contributor
+      tier is not modelled. Vertex ref: https://cloud.google.com/model-garden/pricing
+    prices:
+      - prices:
+          input_mtok: 2
+          cache_read_mtok: 0.1
+          output_mtok: 10
+          web_searches_kcount: 14 # per search query
+      - constraint:
+          # https://aistudio.google.com/docs/pricing#gemini-4-carbon - "$4.00 starting December 1, 2026"
+          start_date: 2026-12-01
+        prices:
+          input_mtok: 4
+          cache_read_mtok: 0.2
+          output_mtok: 20
+          web_searches_kcount: 14 # per search query
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-12-01 }
+        prices:
+          input_mtok: 2
+          cache_read_mtok: 0.1
+          output_mtok: 10
+      - when: { processing: batch }
+        constraint: { start_date: 2026-11-16 }
+        prices:
+          input_mtok: 1
+          cache_read_mtok: 0.05
+          output_mtok: 5
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-12-01 }
+        prices:
+          input_mtok: 2
+          cache_read_mtok: 0.1
+          output_mtok: 10
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-11-16 }
+        prices:
+          input_mtok: 1
+          cache_read_mtok: 0.05
+          output_mtok: 5
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-12-01 }
+        prices:
+          input_mtok: 7.2
+          cache_read_mtok: 0.36
+          output_mtok: 36
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-11-16 }
+        prices:
+          input_mtok: 3.6
+          cache_read_mtok: 0.18
+          output_mtok: 18
+
+  - id: gemini-4-hydrogen
+    name: Gemini 4 Hydrogen
+    description: >-
+      Google's Gemini 4 model for everyday coding and agentic workflows, with a 1M-token context window and
+      output of up to 1M tokens.
+    match:
+      or:
+        - equals: gemini-4-hydrogen
+        - starts_with: gemini-4-hydrogen-preview
+        - regex: '^gemini-4-hydrogen-\d'
+    context_window: 1048576
+    prices_checked: 2026-11-16
+    price_comments: >-
+      See https://aistudio.google.com/docs/pricing#gemini-4-hydrogen. Standard tier shown. No promotional end
+      date is published. Batch and Flex are half of standard; Priority is 1.8x. Batch, Flex and Priority
+      history before 2026-11-16 is not modelled. No prompt-size tiers or separate
+      audio input rate are documented. Implicit caching only; explicit caching is not supported. Vertex lists a
+      global cache-write rate of $1.875 per 1M tokens effective 2027-01-12 (https://cloud.google.com/model-garden/pricing);
+      it is not scheduled here, because this card is shared with the Gemini API, which publishes no cache-write
+      price. Vertex global rates match these figures; multi-region endpoints add a 10% premium and are not encoded.
+      Grounding is $14 per 1,000 search queries. The invite-only Contributor tier is not modelled.
+    prices:
+      input_mtok: 1.5
+      cache_read_mtok: 0.075
+      output_mtok: 7.5
+      web_searches_kcount: 14 # per search query
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-11-16 }
+        prices:
+          input_mtok: 0.75
+          cache_read_mtok: 0.0375
+          output_mtok: 3.75
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-11-16 }
+        prices:
+          input_mtok: 0.75
+          cache_read_mtok: 0.0375
+          output_mtok: 3.75
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-11-16 }
+        prices:
+          input_mtok: 2.7
+          cache_read_mtok: 0.135
+          output_mtok: 13.5
 
   - id: gemini-embedding-001
     match:
