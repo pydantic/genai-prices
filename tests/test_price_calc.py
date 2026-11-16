@@ -321,6 +321,7 @@ def test_elevenlabs_does_not_price_other_models_in_its_namespace():
         ('claude-sonnet-5', Decimal('12.2')),
         ('claude-sonnet-5.5', Decimal('12.1')),
         ('gemini-3.6-flash', Decimal('4.575')),
+        ('gemini-4-hydrogen', Decimal('9.075')),
         ('gpt-5-mini', Decimal('2.275')),
         ('gpt-5.4-nano', Decimal('1.47')),
         ('gpt-6-astra', Decimal('97')),
