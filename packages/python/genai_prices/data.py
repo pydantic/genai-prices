@@ -8069,7 +8069,7 @@ providers: list[Provider] = [
                 name='Gemini 4 Argon',
                 description="Google's frontier model for complex, long-horizon workflows across real-world software engineering, enterprise knowledge work like legal and finance, and cybersecurity defense, with output of up to 1M tokens.",
                 context_window=1048576,
-                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount, Priority tier is 1.8x. Introductory rates apply through 2026-11-30. No prompt-size tiers or separate audio input rate are documented. Implicit caching only. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input, output and context caching, at both the introductory and the 2026-12-01 rates.',
+                price_comments='See https://aistudio.google.com/docs/pricing#gemini-4-argon. Standard tier pricing shown. Introductory rates apply through 2026-11-30. Batch and Flex are half of standard; Priority is 1.8x, at both the introductory and the 2026-12-01 rates. No prompt-size tiers or separate audio input rate are documented. Implicit caching only. Batch rates verified on 2026-10-14; Flex and Priority verified on 2026-11-16. Tier history before 2026-10-14 is not modelled.',
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
@@ -8101,6 +8101,34 @@ providers: list[Provider] = [
                         when={'processing': 'batch'},
                         prices=ModelPrice(
                             input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('5')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('10')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 12, 1)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('5')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('7.2'), cache_read_mtok=Decimal('0.36'), output_mtok=Decimal('36')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 12, 1)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('3.6'), cache_read_mtok=Decimal('0.18'), output_mtok=Decimal('18')
                         ),
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
                     ),

@@ -13890,7 +13890,7 @@ export const data: Provider[] = [
         },
         context_window: 1048576,
         price_comments:
-          'See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount, Priority tier is 1.8x. Introductory rates apply through 2026-11-30. No prompt-size tiers or separate audio input rate are documented. Implicit caching only. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input, output and context caching, at both the introductory and the 2026-12-01 rates.',
+          'See https://aistudio.google.com/docs/pricing#gemini-4-argon. Standard tier pricing shown. Introductory rates apply through 2026-11-30. Batch and Flex are half of standard; Priority is 1.8x, at both the introductory and the 2026-12-01 rates. No prompt-size tiers or separate audio input rate are documented. Implicit caching only. Batch rates verified on 2026-10-14; Flex and Priority verified on 2026-11-16. Tier history before 2026-10-14 is not modelled.',
         prices: [
           {
             prices: {
@@ -13936,6 +13936,62 @@ export const data: Provider[] = [
               input_mtok: 1,
               cache_read_mtok: 0.05,
               output_mtok: 5,
+            },
+            constraint: {
+              start_date: '2026-10-14',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 2,
+              cache_read_mtok: 0.1,
+              output_mtok: 10,
+            },
+            constraint: {
+              start_date: '2026-12-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 1,
+              cache_read_mtok: 0.05,
+              output_mtok: 5,
+            },
+            constraint: {
+              start_date: '2026-10-14',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 7.2,
+              cache_read_mtok: 0.36,
+              output_mtok: 36,
+            },
+            constraint: {
+              start_date: '2026-12-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 3.6,
+              cache_read_mtok: 0.18,
+              output_mtok: 18,
             },
             constraint: {
               start_date: '2026-10-14',

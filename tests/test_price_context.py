@@ -112,6 +112,10 @@ def test_batch_processing(provider: str, model: str, timestamp: datetime, total:
         ('gemini-4-carbon', 'flex', datetime(2026, 12, 1), '11.525'),
         ('gemini-4-carbon', 'priority', datetime(2026, 11, 16), '20.745'),
         ('gemini-4-carbon', 'priority', datetime(2026, 12, 1), '41.49'),
+        ('gemini-4-argon', 'flex', datetime(2026, 10, 14), '5.7625'),
+        ('gemini-4-argon', 'flex', datetime(2026, 12, 1), '11.525'),
+        ('gemini-4-argon', 'priority', datetime(2026, 10, 14), '20.745'),
+        ('gemini-4-argon', 'priority', datetime(2026, 12, 1), '41.49'),
     ],
 )
 def test_google_gemini_4_service_tiers(model: str, tier: str, timestamp: datetime, total: str) -> None:
