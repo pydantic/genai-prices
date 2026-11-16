@@ -81,6 +81,10 @@ def test_openai_service_tiers(model: str, tier: str, total: str) -> None:
         ('anthropic', 'claude-sonnet-5', datetime(2026, 10, 14), '5.775'),
         ('google', 'gemini-4-argon', datetime(2026, 10, 14), '5.7625'),
         ('google', 'gemini-4-argon', datetime(2026, 12, 1), '11.525'),
+        ('google', 'gemini-4-carbon', datetime(2026, 11, 16), '5.7625'),
+        ('google', 'gemini-4-carbon', datetime(2026, 12, 1), '11.525'),
+        ('google', 'gemini-4-hydrogen', datetime(2026, 11, 15), '8.64375'),
+        ('google', 'gemini-4-hydrogen', datetime(2026, 11, 16), '4.321875'),
         ('groq', 'openai/gpt-oss-120b', datetime(2026, 10, 14), '0.375'),
         ('mistral', 'mistral-small-2603', datetime(2026, 10, 14), '0.358125'),
         ('x-ai', 'grok-4.3', datetime(2026, 10, 14), '5.58'),
@@ -93,6 +97,36 @@ def test_batch_processing(provider: str, model: str, timestamp: datetime, total:
         provider_id=provider,
         genai_request_timestamp=timestamp,
         price_context={'processing': 'batch'},
+    )
+    assert result.total_price == Decimal(total)
+
+
+@pytest.mark.parametrize(
+    'model,tier,timestamp,total',
+    [
+        ('gemini-4-hydrogen', 'flex', datetime(2026, 11, 15), '8.64375'),
+        ('gemini-4-hydrogen', 'flex', datetime(2026, 11, 16), '4.321875'),
+        ('gemini-4-hydrogen', 'priority', datetime(2026, 11, 15), '8.64375'),
+        ('gemini-4-hydrogen', 'priority', datetime(2026, 11, 16), '15.55875'),
+        ('gemini-4-carbon', 'flex', datetime(2026, 11, 16), '5.7625'),
+        ('gemini-4-carbon', 'flex', datetime(2026, 12, 1), '11.525'),
+        ('gemini-4-carbon', 'priority', datetime(2026, 11, 16), '20.745'),
+        ('gemini-4-carbon', 'priority', datetime(2026, 12, 1), '41.49'),
+        ('gemini-4-argon', 'flex', datetime(2026, 10, 13), '11.525'),
+        ('gemini-4-argon', 'flex', datetime(2026, 10, 14), '5.7625'),
+        ('gemini-4-argon', 'flex', datetime(2026, 12, 1), '11.525'),
+        ('gemini-4-argon', 'priority', datetime(2026, 10, 13), '11.525'),
+        ('gemini-4-argon', 'priority', datetime(2026, 10, 14), '20.745'),
+        ('gemini-4-argon', 'priority', datetime(2026, 12, 1), '41.49'),
+    ],
+)
+def test_google_gemini_4_service_tiers(model: str, tier: str, timestamp: datetime, total: str) -> None:
+    result = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=250_000, output_tokens=1_000_000),
+        model,
+        provider_id='google',
+        genai_request_timestamp=timestamp,
+        price_context={'service_tier': tier},
     )
     assert result.total_price == Decimal(total)
 
