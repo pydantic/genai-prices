@@ -797,6 +797,58 @@ def test_gpt_6_astra_long_context_boundary():
 
 
 @pytest.mark.parametrize(
+    ('model_ref', 'model_id', 'standard_total', 'long_total'),
+    [
+        ('gpt-6.2-astra', 'gpt-6.2-astra', Decimal('2.2104'), Decimal('4.400816')),
+        ('gpt-6.2-astra-2026-11-17', 'gpt-6.2-astra', Decimal('2.2104'), Decimal('4.400816')),
+        ('gpt-6.2-sol', 'gpt-6.2-sol', Decimal('0.5526'), Decimal('1.100204')),
+        ('gpt-6.2-sol-2026-11-17', 'gpt-6.2-sol', Decimal('0.5526'), Decimal('1.100204')),
+    ],
+)
+def test_gpt_6_2_prices(model_ref: str, model_id: str, standard_total: Decimal, long_total: Decimal):
+    for tokens, expected_total in ((272_000, standard_total), (272_001, long_total)):
+        price = calc_price(
+            Usage(input_tokens=tokens, cache_read_tokens=1_000, cache_write_tokens=1_000, output_tokens=1_000),
+            model_ref=model_ref,
+            provider_id='openai',
+        )
+
+        assert price.model.id == model_id
+        assert price.model.context_window == 1_050_000
+        assert price.total_price == expected_total
+
+
+@pytest.mark.parametrize(
+    ('model_ref', 'input_rate', 'cache_read_rate', 'output_rate'),
+    [
+        ('gpt-6.2-astra', Decimal('8'), Decimal('0.4'), Decimal('40')),
+        ('gpt-6.2-sol', Decimal('2'), Decimal('0.1'), Decimal('10')),
+    ],
+)
+def test_gpt_6_2_standard_rates(model_ref: str, input_rate: Decimal, cache_read_rate: Decimal, output_rate: Decimal):
+    price = calc_price(
+        Usage(input_tokens=1_000, cache_read_tokens=1_000, output_tokens=1_000_000),
+        model_ref=model_ref,
+        provider_id='openai',
+    )
+
+    assert price.input_price == cache_read_rate / 1_000
+    assert price.output_price == output_rate
+    assert price.model_price.cache_write_mtok is not None
+    assert price.model_price.input_mtok == TieredPrices(
+        base=input_rate, tiers=[Tier(start=272_000, price=input_rate * 2)]
+    )
+
+
+@pytest.mark.parametrize(
+    'model_ref', ['gpt-6.2-astra-2026-11', 'gpt-6.2-astra-pro', 'gpt-6-2-astra', 'gpt-6.2-sol-pro']
+)
+def test_gpt_6_2_matchers_reject_other_ids(model_ref: str):
+    with pytest.raises(LookupError, match='Unable to find model'):
+        calc_price(Usage(input_tokens=1), model_ref=model_ref, provider_id='openai')
+
+
+@pytest.mark.parametrize(
     ('model_ref', 'request_timestamp', 'expected_prices'),
     [
         (
@@ -2901,6 +2953,8 @@ def test_price_deepseek_v4_flash_routed_to_v4_1_flash(timestamp: datetime, off_p
         ('gpt-5.6-terra', 272_001, Decimal('2'), Decimal('4')),
         ('gpt-6.1-sol', 272_001, Decimal('2'), Decimal('4')),
         ('gpt-6.1-terra', 272_001, Decimal('1'), Decimal('2')),
+        ('gpt-6.2-astra', 272_001, Decimal('8'), Decimal('16')),
+        ('gpt-6.2-sol', 272_001, Decimal('2'), Decimal('4')),
     ],
 )
 def test_price_long_context_cliff(model_ref: str, first_long_token: int, base_input: Decimal, long_input: Decimal):

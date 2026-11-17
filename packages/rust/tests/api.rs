@@ -195,6 +195,8 @@ fn openai_long_context_boundary() {
         ("gpt-5.6-terra", 2.0, 4.0),
         ("gpt-6.1-sol", 2.0, 4.0),
         ("gpt-6.1-terra", 1.0, 2.0),
+        ("gpt-6.2-astra", 8.0, 16.0),
+        ("gpt-6.2-sol", 2.0, 4.0),
     ] {
         for (tokens, rate) in [(272_000.0, base_rate), (272_001.0, long_rate)] {
             let usage = usage([(UsageKey::INPUT_TOKENS, tokens)]);

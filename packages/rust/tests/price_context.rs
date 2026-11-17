@@ -109,6 +109,72 @@ fn batch_processing() {
 }
 
 #[test]
+fn openai_gpt_6_2_price_variants() {
+    for (model, key, value, input_tokens, total) in [
+        ("gpt-6.2-astra", "service_tier", "default", 200_000.0, 5.24),
+        ("gpt-6.2-astra", "service_tier", "default", 1_000_000.0, 21.28),
+        ("gpt-6.2-astra", "service_tier", "fast", 200_000.0, 10.48),
+        ("gpt-6.2-astra", "service_tier", "fast", 1_000_000.0, 42.56),
+        ("gpt-6.2-astra", "service_tier", "priority", 200_000.0, 10.48),
+        ("gpt-6.2-astra", "service_tier", "priority", 1_000_000.0, 42.56),
+        ("gpt-6.2-astra", "processing", "batch", 200_000.0, 2.62),
+        ("gpt-6.2-astra", "processing", "batch", 1_000_000.0, 10.64),
+        ("gpt-6.2-sol", "service_tier", "default", 200_000.0, 1.31),
+        ("gpt-6.2-sol", "service_tier", "default", 1_000_000.0, 5.32),
+        ("gpt-6.2-sol", "service_tier", "fast", 200_000.0, 2.62),
+        ("gpt-6.2-sol", "service_tier", "fast", 1_000_000.0, 10.64),
+        ("gpt-6.2-sol", "service_tier", "priority", 200_000.0, 2.62),
+        ("gpt-6.2-sol", "service_tier", "priority", 1_000_000.0, 10.64),
+        ("gpt-6.2-sol", "processing", "batch", 200_000.0, 0.655),
+        ("gpt-6.2-sol", "processing", "batch", 1_000_000.0, 2.66),
+    ] {
+        let usage = usage([
+            (UsageKey::INPUT_TOKENS, input_tokens),
+            (UsageKey::CACHE_READ_TOKENS, 50_000.0),
+            (UsageKey::CACHE_WRITE_TOKENS, 10_000.0),
+            (UsageKey::OUTPUT_TOKENS, 100_000.0),
+        ]);
+        let request = PriceRequest::new(model, &usage)
+            .with_provider_id("openai")
+            .with_timestamp(date(2026, 11, 17))
+            .with_price_context(key, value);
+        let result = genai_prices::calculate(&request).unwrap();
+        assert_close(result.total_price, total, 1e-12);
+        assert!(result.warnings.is_empty(), "{model}/{value}/{input_tokens}: {:?}", result.warnings);
+    }
+}
+
+#[test]
+fn openai_gpt_6_2_ultrafast() {
+    for (model, timestamp, input_tokens, total) in [
+        ("gpt-6.2-astra", date(2026, 11, 17), 200_000.0, 15.72),
+        ("gpt-6.2-astra", date(2026, 11, 17), 1_000_000.0, 63.84),
+        ("gpt-6.2-astra", date(2027, 2, 28), 200_000.0, 15.72),
+        ("gpt-6.2-astra", date(2027, 3, 1), 200_000.0, 31.44),
+        ("gpt-6.2-astra", date(2027, 3, 1), 1_000_000.0, 127.68),
+        ("gpt-6.2-sol", date(2026, 11, 17), 200_000.0, 3.93),
+        ("gpt-6.2-sol", date(2026, 11, 17), 1_000_000.0, 15.96),
+        ("gpt-6.2-sol", date(2027, 2, 28), 200_000.0, 3.93),
+        ("gpt-6.2-sol", date(2027, 3, 1), 200_000.0, 7.86),
+        ("gpt-6.2-sol", date(2027, 3, 1), 1_000_000.0, 31.92),
+    ] {
+        let usage = usage([
+            (UsageKey::INPUT_TOKENS, input_tokens),
+            (UsageKey::CACHE_READ_TOKENS, 50_000.0),
+            (UsageKey::CACHE_WRITE_TOKENS, 10_000.0),
+            (UsageKey::OUTPUT_TOKENS, 100_000.0),
+        ]);
+        let request = PriceRequest::new(model, &usage)
+            .with_provider_id("openai")
+            .with_timestamp(timestamp)
+            .with_price_context("service_tier", "ultrafast");
+        let result = genai_prices::calculate(&request).unwrap();
+        assert_close(result.total_price, total, 1e-12);
+        assert!(result.warnings.is_empty(), "{model}/{input_tokens}: {:?}", result.warnings);
+    }
+}
+
+#[test]
 fn openai_published_flex_rates() {
     for (model, input_tokens, cache_read_tokens, input_price, output_price) in [
         ("o4-mini", 100_000.0, 100_000.0, 0.0138, 2.2),
