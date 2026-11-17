@@ -29823,6 +29823,576 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gpt-6.2-astra',
+        name: 'GPT-6.2 Astra',
+        description: 'A frontier reasoning model for coding and professional work.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6.2-astra',
+            },
+            {
+              regex: '^gpt-6\\.2-astra-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'Released 2026-11-17. Standard, batch, fast and ultrafast rates verified on 2026-11-17 at https://developers.openai.com/api/docs/pricing and https://developers.openai.com/api/docs/models/gpt-6.2-astra. Batch is 50% of standard; fast (formerly priority) is 2x. Ultrafast (service_tier "ultrafast") is 3x through 2027-02-28 and 6x from 2027-03-01 Pacific time; the start_date constraint is a date, so the switch is modeled at the start of 2027-03-01. Flex is not offered. Cache reads cost 5% of input; cache writes are the 30-minute retention rate (1.25x input). The 12-hour retention rate (2.5x input) and the discounted 2-hour/8-hour background completion windows are not modeled. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output, applied to the full request. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Refs: https://developers.openai.com/api/docs/changelog',
+        prices: {
+          input_mtok: {
+            base: 8,
+            tiers: [
+              {
+                start: 272000,
+                price: 16,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 20,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.4,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.8,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 40,
+            tiers: [
+              {
+                start: 272000,
+                price: 60,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+          storage_searches_kcount: 2.5,
+        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: {
+                base: 16,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 32,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 20,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 40,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.8,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1.6,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 80,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 120,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: {
+                base: 16,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 32,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 20,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 40,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.8,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1.6,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 80,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 120,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            when: {
+              service_tier: 'ultrafast',
+            },
+            prices: {
+              input_mtok: {
+                base: 48,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 96,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 60,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 120,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 2.4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 4.8,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 240,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 360,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2027-03-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'ultrafast',
+            },
+            prices: {
+              input_mtok: {
+                base: 24,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 48,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 30,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 60,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 1.2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 2.4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 120,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 180,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: {
+                base: 4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 8,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 10,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 20,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 30,
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      {
+        id: 'gpt-6.2-sol',
+        name: 'GPT-6.2 Sol',
+        description: 'A reasoning model for text, images, and tool use.',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6.2-sol',
+            },
+            {
+              regex: '^gpt-6\\.2-sol-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        context_window: 1050000,
+        price_comments:
+          'Released 2026-11-17. Standard, batch, fast and ultrafast rates verified on 2026-11-17 at https://developers.openai.com/api/docs/pricing and https://developers.openai.com/api/docs/models/gpt-6.2-sol. Batch is 50% of standard; fast (formerly priority) is 2x. Ultrafast (service_tier "ultrafast") is 3x through 2027-02-28 and 6x from 2027-03-01 Pacific time; the start_date constraint is a date, so the switch is modeled at the start of 2027-03-01. Flex is not offered. Cache reads cost 5% of input; cache writes are the 30-minute retention rate (1.25x input). The 12-hour retention rate (2.5x input) and the discounted 2-hour/8-hour background completion windows are not modeled. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output, applied to the full request. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Refs: https://developers.openai.com/api/docs/changelog',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+          web_searches_kcount: 10,
+          storage_searches_kcount: 2.5,
+        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: {
+                base: 4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 8,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 10,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 20,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 30,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: {
+                base: 4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 8,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 10,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 20,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 30,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            when: {
+              service_tier: 'ultrafast',
+            },
+            prices: {
+              input_mtok: {
+                base: 12,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 24,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 15,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 30,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.6,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1.2,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 60,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 90,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2027-03-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'ultrafast',
+            },
+            prices: {
+              input_mtok: {
+                base: 6,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 12,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 7.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 15,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.3,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.6,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 30,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 45,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: {
+                base: 1,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 2,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 1.25,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 2.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.05,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.1,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 7.5,
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+      {
         id: 'gpt-audio',
         name: 'GPT Audio',
         description:

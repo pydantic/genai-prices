@@ -61,6 +61,10 @@ def test_price_context_contract(case: dict[str, Any]) -> None:
         ('gpt-6.1-terra', 'flex', '4.5125'),
         ('gpt-6.1-terra', 'fast', '18.05'),
         ('gpt-6.1-terra', 'priority', '18.05'),
+        ('gpt-6.2-astra', 'fast', '144.4'),
+        ('gpt-6.2-astra', 'ultrafast', '216.6'),
+        ('gpt-6.2-sol', 'fast', '36.1'),
+        ('gpt-6.2-sol', 'ultrafast', '54.15'),
     ],
 )
 def test_openai_service_tiers(model: str, tier: str, total: str) -> None:
@@ -75,9 +79,32 @@ def test_openai_service_tiers(model: str, tier: str, total: str) -> None:
 
 
 @pytest.mark.parametrize(
+    'model,timestamp,total',
+    [
+        ('gpt-6.2-astra', datetime(2027, 2, 28), '216.6'),
+        ('gpt-6.2-astra', datetime(2027, 3, 1), '433.2'),
+        ('gpt-6.2-sol', datetime(2027, 2, 28), '54.15'),
+        ('gpt-6.2-sol', datetime(2027, 3, 1), '108.3'),
+    ],
+)
+def test_openai_ultrafast_promo_ends(model: str, timestamp: datetime, total: str) -> None:
+    """GPT-6.2 ultrafast is 3x standard through 2027-02-28 and 6x from 2027-03-01."""
+    result = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=250_000, output_tokens=1_000_000),
+        model,
+        provider_id='openai',
+        genai_request_timestamp=timestamp,
+        price_context={'service_tier': 'ultrafast'},
+    )
+    assert result.total_price == Decimal(total)
+
+
+@pytest.mark.parametrize(
     'provider,model,timestamp,total',
     [
         ('openai', 'o3', datetime(2026, 10, 14), '4.875'),
+        ('openai', 'gpt-6.2-astra', datetime(2026, 11, 17), '36.1'),
+        ('openai', 'gpt-6.2-sol', datetime(2026, 11, 17), '9.025'),
         ('anthropic', 'claude-sonnet-5', datetime(2026, 10, 14), '5.775'),
         ('google', 'gemini-4-argon', datetime(2026, 10, 14), '5.7625'),
         ('google', 'gemini-4-argon', datetime(2026, 12, 1), '11.525'),

@@ -2901,6 +2901,8 @@ def test_price_deepseek_v4_flash_routed_to_v4_1_flash(timestamp: datetime, off_p
         ('gpt-5.6-terra', 272_001, Decimal('2'), Decimal('4')),
         ('gpt-6.1-sol', 272_001, Decimal('2'), Decimal('4')),
         ('gpt-6.1-terra', 272_001, Decimal('1'), Decimal('2')),
+        ('gpt-6.2-astra', 272_001, Decimal('8'), Decimal('16')),
+        ('gpt-6.2-sol', 272_001, Decimal('2'), Decimal('4')),
     ],
 )
 def test_price_long_context_cliff(model_ref: str, first_long_token: int, base_input: Decimal, long_input: Decimal):

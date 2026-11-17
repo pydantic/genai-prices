@@ -53,6 +53,10 @@ it.each([
   ['gpt-6.1-terra', 'flex', 4.5125],
   ['gpt-6.1-terra', 'fast', 18.05],
   ['gpt-6.1-terra', 'priority', 18.05],
+  ['gpt-6.2-astra', 'fast', 144.4],
+  ['gpt-6.2-astra', 'ultrafast', 216.6],
+  ['gpt-6.2-sol', 'fast', 36.1],
+  ['gpt-6.2-sol', 'ultrafast', 54.15],
 ] as const)('prices OpenAI %s %s', (model, tier, total) => {
   expect(
     calcPrice({ cache_read_tokens: 250_000, input_tokens: 1_000_000, output_tokens: 1_000_000 }, model, {
@@ -64,7 +68,24 @@ it.each([
 })
 
 it.each([
+  ['gpt-6.2-astra', '2027-02-28', 216.6],
+  ['gpt-6.2-astra', '2027-03-01', 433.2],
+  ['gpt-6.2-sol', '2027-02-28', 54.15],
+  ['gpt-6.2-sol', '2027-03-01', 108.3],
+] as const)('prices OpenAI %s ultrafast on %s', (model, date, total) => {
+  expect(
+    calcPrice({ cache_read_tokens: 250_000, input_tokens: 1_000_000, output_tokens: 1_000_000 }, model, {
+      priceContext: { service_tier: 'ultrafast' },
+      providerId: 'openai',
+      timestamp: new Date(`${date}T00:00:00Z`),
+    })?.total_price
+  ).toBeCloseTo(total, 12)
+})
+
+it.each([
   ['openai', 'o3', '2026-10-14', 4.875],
+  ['openai', 'gpt-6.2-astra', '2026-11-17', 36.1],
+  ['openai', 'gpt-6.2-sol', '2026-11-17', 9.025],
   ['anthropic', 'claude-sonnet-5', '2026-10-14', 5.775],
   ['google', 'gemini-4-argon', '2026-10-14', 5.7625],
   ['google', 'gemini-4-argon', '2026-12-01', 11.525],
