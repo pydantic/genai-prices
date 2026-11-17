@@ -69,8 +69,6 @@ func TestOpenAIServiceTiers(t *testing.T) {
 		{"gpt-5-mini", "flex", 1.096875}, {"gpt-6.1-sol", "fast", 36.1},
 		{"gpt-6.1-sol", "priority", 36.1}, {"gpt-6.1-terra", "flex", 4.5125},
 		{"gpt-6.1-terra", "fast", 18.05}, {"gpt-6.1-terra", "priority", 18.05},
-		{"gpt-6.2-astra", "fast", 144.4}, {"gpt-6.2-astra", "priority", 144.4},
-		{"gpt-6.2-sol", "fast", 36.1}, {"gpt-6.2-sol", "priority", 36.1},
 	} {
 		t.Run(test.model+"/"+test.tier, func(t *testing.T) {
 			result, err := genai_prices.Calculate(genai_prices.PriceRequest{
@@ -98,8 +96,6 @@ func TestBatchProcessing(t *testing.T) {
 		total           float64
 	}{
 		{"openai", "o3", time.Date(2026, 10, 14, 0, 0, 0, 0, time.UTC), 4.875},
-		{"openai", "gpt-6.2-astra", time.Date(2026, 11, 17, 0, 0, 0, 0, time.UTC), 36.1},
-		{"openai", "gpt-6.2-sol", time.Date(2026, 11, 17, 0, 0, 0, 0, time.UTC), 9.025},
 		{"anthropic", "claude-sonnet-5", time.Date(2026, 10, 14, 0, 0, 0, 0, time.UTC), 5.775},
 		{"google", "gemini-4-argon", time.Date(2026, 10, 14, 0, 0, 0, 0, time.UTC), 5.7625},
 		{"google", "gemini-4-argon", time.Date(2026, 12, 1, 0, 0, 0, 0, time.UTC), 11.525},
@@ -116,6 +112,39 @@ func TestBatchProcessing(t *testing.T) {
 				Usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000, genai_prices.UsageCacheReadTokens: 250_000, genai_prices.UsageOutputTokens: 1_000_000},
 				Model: test.model, ProviderID: test.provider, Timestamp: test.timestamp,
 				PriceContext: map[string]string{"processing": "batch"},
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if math.Abs(result.TotalPrice-test.total) > 1e-12 {
+				t.Fatalf("got %v, want %v", result.TotalPrice, test.total)
+			}
+			if len(result.Warnings) != 0 {
+				t.Fatalf("got warnings %v", result.Warnings)
+			}
+		})
+	}
+}
+
+func TestOpenAIGPT62PriceVariants(t *testing.T) {
+	for _, test := range []struct {
+		model, key, value  string
+		inputTokens, total float64
+	}{
+		{"gpt-6.2-astra", "service_tier", "default", 200_000, 5.24}, {"gpt-6.2-astra", "service_tier", "default", 1_000_000, 21.28},
+		{"gpt-6.2-astra", "service_tier", "fast", 200_000, 10.48}, {"gpt-6.2-astra", "service_tier", "fast", 1_000_000, 42.56},
+		{"gpt-6.2-astra", "service_tier", "priority", 200_000, 10.48}, {"gpt-6.2-astra", "service_tier", "priority", 1_000_000, 42.56},
+		{"gpt-6.2-astra", "processing", "batch", 200_000, 2.62}, {"gpt-6.2-astra", "processing", "batch", 1_000_000, 10.64},
+		{"gpt-6.2-sol", "service_tier", "default", 200_000, 1.31}, {"gpt-6.2-sol", "service_tier", "default", 1_000_000, 5.32},
+		{"gpt-6.2-sol", "service_tier", "fast", 200_000, 2.62}, {"gpt-6.2-sol", "service_tier", "fast", 1_000_000, 10.64},
+		{"gpt-6.2-sol", "service_tier", "priority", 200_000, 2.62}, {"gpt-6.2-sol", "service_tier", "priority", 1_000_000, 10.64},
+		{"gpt-6.2-sol", "processing", "batch", 200_000, 0.655}, {"gpt-6.2-sol", "processing", "batch", 1_000_000, 2.66},
+	} {
+		t.Run(fmt.Sprintf("%s/%s/%g", test.model, test.value, test.inputTokens), func(t *testing.T) {
+			result, err := genai_prices.Calculate(genai_prices.PriceRequest{
+				Usage: genai_prices.Usage{genai_prices.UsageInputTokens: test.inputTokens, genai_prices.UsageCacheReadTokens: 50_000, genai_prices.UsageCacheWriteTokens: 10_000, genai_prices.UsageOutputTokens: 100_000},
+				Model: test.model, ProviderID: "openai", Timestamp: time.Date(2026, 11, 17, 0, 0, 0, 0, time.UTC),
+				PriceContext: map[string]string{test.key: test.value},
 			})
 			if err != nil {
 				t.Fatal(err)

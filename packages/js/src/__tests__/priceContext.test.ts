@@ -53,10 +53,6 @@ it.each([
   ['gpt-6.1-terra', 'flex', 4.5125],
   ['gpt-6.1-terra', 'fast', 18.05],
   ['gpt-6.1-terra', 'priority', 18.05],
-  ['gpt-6.2-astra', 'fast', 144.4],
-  ['gpt-6.2-astra', 'priority', 144.4],
-  ['gpt-6.2-sol', 'fast', 36.1],
-  ['gpt-6.2-sol', 'priority', 36.1],
 ] as const)('prices OpenAI %s %s', (model, tier, total) => {
   expect(
     calcPrice({ cache_read_tokens: 250_000, input_tokens: 1_000_000, output_tokens: 1_000_000 }, model, {
@@ -69,8 +65,6 @@ it.each([
 
 it.each([
   ['openai', 'o3', '2026-10-14', 4.875],
-  ['openai', 'gpt-6.2-astra', '2026-11-17', 36.1],
-  ['openai', 'gpt-6.2-sol', '2026-11-17', 9.025],
   ['anthropic', 'claude-sonnet-5', '2026-10-14', 5.775],
   ['google', 'gemini-4-argon', '2026-10-14', 5.7625],
   ['google', 'gemini-4-argon', '2026-12-01', 11.525],
@@ -87,6 +81,33 @@ it.each([
       priceContext: { processing: 'batch' },
       providerId,
       timestamp: new Date(`${date}T00:00:00Z`),
+    })?.total_price
+  ).toBeCloseTo(total, 12)
+})
+
+it.each([
+  ['gpt-6.2-astra', 'service_tier', 'default', 200_000, 5.24],
+  ['gpt-6.2-astra', 'service_tier', 'default', 1_000_000, 21.28],
+  ['gpt-6.2-astra', 'service_tier', 'fast', 200_000, 10.48],
+  ['gpt-6.2-astra', 'service_tier', 'fast', 1_000_000, 42.56],
+  ['gpt-6.2-astra', 'service_tier', 'priority', 200_000, 10.48],
+  ['gpt-6.2-astra', 'service_tier', 'priority', 1_000_000, 42.56],
+  ['gpt-6.2-astra', 'processing', 'batch', 200_000, 2.62],
+  ['gpt-6.2-astra', 'processing', 'batch', 1_000_000, 10.64],
+  ['gpt-6.2-sol', 'service_tier', 'default', 200_000, 1.31],
+  ['gpt-6.2-sol', 'service_tier', 'default', 1_000_000, 5.32],
+  ['gpt-6.2-sol', 'service_tier', 'fast', 200_000, 2.62],
+  ['gpt-6.2-sol', 'service_tier', 'fast', 1_000_000, 10.64],
+  ['gpt-6.2-sol', 'service_tier', 'priority', 200_000, 2.62],
+  ['gpt-6.2-sol', 'service_tier', 'priority', 1_000_000, 10.64],
+  ['gpt-6.2-sol', 'processing', 'batch', 200_000, 0.655],
+  ['gpt-6.2-sol', 'processing', 'batch', 1_000_000, 2.66],
+] as const)('prices OpenAI %s with %s %s at %i input tokens', (model, key, value, inputTokens, total) => {
+  expect(
+    calcPrice({ cache_read_tokens: 50_000, cache_write_tokens: 10_000, input_tokens: inputTokens, output_tokens: 100_000 }, model, {
+      priceContext: { [key]: value },
+      providerId: 'openai',
+      timestamp: new Date('2026-11-17T00:00:00Z'),
     })?.total_price
   ).toBeCloseTo(total, 12)
 })

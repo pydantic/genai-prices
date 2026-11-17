@@ -61,10 +61,6 @@ def test_price_context_contract(case: dict[str, Any]) -> None:
         ('gpt-6.1-terra', 'flex', '4.5125'),
         ('gpt-6.1-terra', 'fast', '18.05'),
         ('gpt-6.1-terra', 'priority', '18.05'),
-        ('gpt-6.2-astra', 'fast', '144.4'),
-        ('gpt-6.2-astra', 'priority', '144.4'),
-        ('gpt-6.2-sol', 'fast', '36.1'),
-        ('gpt-6.2-sol', 'priority', '36.1'),
     ],
 )
 def test_openai_service_tiers(model: str, tier: str, total: str) -> None:
@@ -82,8 +78,6 @@ def test_openai_service_tiers(model: str, tier: str, total: str) -> None:
     'provider,model,timestamp,total',
     [
         ('openai', 'o3', datetime(2026, 10, 14), '4.875'),
-        ('openai', 'gpt-6.2-astra', datetime(2026, 11, 17), '36.1'),
-        ('openai', 'gpt-6.2-sol', datetime(2026, 11, 17), '9.025'),
         ('anthropic', 'claude-sonnet-5', datetime(2026, 10, 14), '5.775'),
         ('google', 'gemini-4-argon', datetime(2026, 10, 14), '5.7625'),
         ('google', 'gemini-4-argon', datetime(2026, 12, 1), '11.525'),
@@ -103,6 +97,39 @@ def test_batch_processing(provider: str, model: str, timestamp: datetime, total:
         provider_id=provider,
         genai_request_timestamp=timestamp,
         price_context={'processing': 'batch'},
+    )
+    assert result.total_price == Decimal(total)
+
+
+@pytest.mark.parametrize(
+    'model,context,input_tokens,total',
+    [
+        ('gpt-6.2-astra', {'service_tier': 'default'}, 200_000, '5.24'),
+        ('gpt-6.2-astra', {'service_tier': 'default'}, 1_000_000, '21.28'),
+        ('gpt-6.2-astra', {'service_tier': 'fast'}, 200_000, '10.48'),
+        ('gpt-6.2-astra', {'service_tier': 'fast'}, 1_000_000, '42.56'),
+        ('gpt-6.2-astra', {'service_tier': 'priority'}, 200_000, '10.48'),
+        ('gpt-6.2-astra', {'service_tier': 'priority'}, 1_000_000, '42.56'),
+        ('gpt-6.2-astra', {'processing': 'batch'}, 200_000, '2.62'),
+        ('gpt-6.2-astra', {'processing': 'batch'}, 1_000_000, '10.64'),
+        ('gpt-6.2-sol', {'service_tier': 'default'}, 200_000, '1.31'),
+        ('gpt-6.2-sol', {'service_tier': 'default'}, 1_000_000, '5.32'),
+        ('gpt-6.2-sol', {'service_tier': 'fast'}, 200_000, '2.62'),
+        ('gpt-6.2-sol', {'service_tier': 'fast'}, 1_000_000, '10.64'),
+        ('gpt-6.2-sol', {'service_tier': 'priority'}, 200_000, '2.62'),
+        ('gpt-6.2-sol', {'service_tier': 'priority'}, 1_000_000, '10.64'),
+        ('gpt-6.2-sol', {'processing': 'batch'}, 200_000, '0.655'),
+        ('gpt-6.2-sol', {'processing': 'batch'}, 1_000_000, '2.66'),
+    ],
+)
+def test_openai_gpt_6_2_price_variants(model: str, context: dict[str, str], input_tokens: int, total: str) -> None:
+    """Base and long-context (>272K input) rates for every GPT-6.2 variant, on the release date."""
+    result = calc_price(
+        Usage(input_tokens=input_tokens, cache_read_tokens=50_000, cache_write_tokens=10_000, output_tokens=100_000),
+        model,
+        provider_id='openai',
+        genai_request_timestamp=datetime(2026, 11, 17),
+        price_context=context,
     )
     assert result.total_price == Decimal(total)
 
