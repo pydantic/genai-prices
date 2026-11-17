@@ -16737,7 +16737,7 @@ providers: list[Provider] = [
                 name='GPT-6.2 Astra',
                 description='A frontier reasoning model for coding and professional work.',
                 context_window=1050000,
-                price_comments="Released 2026-11-17. OpenAI's announcement: 20% off GPT-6 Astra input and output ($8/$40) and 60% off cached input ($0.40). Official standard rates match the announcement. Cache writes are the 30-minute retention rate (1.25x input); the 12-hour retention rate (2x input) is not modeled. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Batch is 50% of Standard; fast (formerly priority) is 2x. OpenAI lists no Flex rate for this model, so no flex variant is modeled. Ultrafast (3x until 2027-02-28, 6x from 2027-03-01) and background completion-window discounts are not modeled. Refs: https://developers.openai.com/api/docs/models/gpt-6.2-astra, https://developers.openai.com/api/docs/pricing, https://developers.openai.com/api/docs/changelog",
+                price_comments='Released 2026-11-17. Announced: 20% off GPT-6 Astra input and output ($8/$40) and 60% off cached input ($0.40). Official rates match. Cache writes are the 30-minute rate (1.25x input); the 12-hour rate (2x input) is not modeled. Above 272K input tokens, input and cache cost 2x and output 1.5x; tier starts use 272000 because the engines select a tier when token count exceeds start. Batch is 0.5x; fast (formerly priority) is 2x; ultrafast is 3x through 2027-02-28 and 6x from 2027-03-01 Pacific time (applied by UTC date). No Flex rate is published, so flex is not modeled; background completion-window discounts are not modeled. Refs: https://developers.openai.com/api/docs/models/gpt-6.2-astra, https://developers.openai.com/api/docs/pricing, https://developers.openai.com/api/docs/changelog',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('8'), tiers=[Tier(start=272000, price=Decimal('16'))]),
                     cache_write_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('20'))]),
@@ -16783,6 +16783,41 @@ providers: list[Provider] = [
                         ),
                     ),
                     PriceVariant(
+                        when={'service_tier': 'ultrafast'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('48'), tiers=[Tier(start=272000, price=Decimal('96'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('60'), tiers=[Tier(start=272000, price=Decimal('120'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('2.4'), tiers=[Tier(start=272000, price=Decimal('4.8'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('240'), tiers=[Tier(start=272000, price=Decimal('360'))]
+                            ),
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2027, 3, 1)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'ultrafast'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('24'), tiers=[Tier(start=272000, price=Decimal('48'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('60'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('1.2'), tiers=[Tier(start=272000, price=Decimal('2.4'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('120'), tiers=[Tier(start=272000, price=Decimal('180'))]
+                            ),
+                        ),
+                    ),
+                    PriceVariant(
                         when={'processing': 'batch'},
                         prices=ModelPrice(
                             input_mtok=TieredPrices(base=Decimal('4'), tiers=[Tier(start=272000, price=Decimal('8'))]),
@@ -16807,7 +16842,7 @@ providers: list[Provider] = [
                 name='GPT-6.2 Sol',
                 description='A reasoning model for text, images, and tool use.',
                 context_window=1050000,
-                price_comments="Released 2026-11-17. OpenAI's announcement: carries forward GPT-6.1 Sol's rates ($2 input, $0.10 cached input, $10 output). Official standard rates match the announcement. Cache writes are the 30-minute retention rate (1.25x input); the 12-hour retention rate (2x input) is not modeled. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Batch is 50% of Standard; fast (formerly priority) is 2x. OpenAI lists no Flex rate for this model, so no flex variant is modeled. Ultrafast (3x until 2027-02-28, 6x from 2027-03-01) and background completion-window discounts are not modeled. Refs: https://developers.openai.com/api/docs/models/gpt-6.2-sol, https://developers.openai.com/api/docs/pricing, https://developers.openai.com/api/docs/changelog",
+                price_comments="Released 2026-11-17. Announced: carries forward GPT-6.1 Sol's rates ($2 input, $0.10 cached input, $10 output). Official rates match. Cache writes are the 30-minute rate (1.25x input); the 12-hour rate (2x input) is not modeled. Above 272K input tokens, input and cache cost 2x and output 1.5x; tier starts use 272000 because the engines select a tier when token count exceeds start. Batch is 0.5x; fast (formerly priority) is 2x; ultrafast is 3x through 2027-02-28 and 6x from 2027-03-01 Pacific time (applied by UTC date). No Flex rate is published, so flex is not modeled; background completion-window discounts are not modeled. Refs: https://developers.openai.com/api/docs/models/gpt-6.2-sol, https://developers.openai.com/api/docs/pricing, https://developers.openai.com/api/docs/changelog",
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
                     cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
@@ -16845,6 +16880,39 @@ providers: list[Provider] = [
                             ),
                             output_mtok=TieredPrices(
                                 base=Decimal('20'), tiers=[Tier(start=272000, price=Decimal('30'))]
+                            ),
+                        ),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'ultrafast'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('12'), tiers=[Tier(start=272000, price=Decimal('24'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('15'), tiers=[Tier(start=272000, price=Decimal('30'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.6'), tiers=[Tier(start=272000, price=Decimal('1.2'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('60'), tiers=[Tier(start=272000, price=Decimal('90'))]
+                            ),
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2027, 3, 1)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'ultrafast'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=272000, price=Decimal('12'))]),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('7.5'), tiers=[Tier(start=272000, price=Decimal('15'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.3'), tiers=[Tier(start=272000, price=Decimal('0.6'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('30'), tiers=[Tier(start=272000, price=Decimal('45'))]
                             ),
                         ),
                     ),

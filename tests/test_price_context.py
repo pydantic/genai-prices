@@ -135,6 +135,33 @@ def test_openai_gpt_6_2_price_variants(model: str, context: dict[str, str], inpu
 
 
 @pytest.mark.parametrize(
+    'model,timestamp,input_tokens,total',
+    [
+        ('gpt-6.2-astra', datetime(2026, 11, 17), 200_000, '15.72'),
+        ('gpt-6.2-astra', datetime(2026, 11, 17), 1_000_000, '63.84'),
+        ('gpt-6.2-astra', datetime(2027, 2, 28), 200_000, '15.72'),
+        ('gpt-6.2-astra', datetime(2027, 3, 1), 200_000, '31.44'),
+        ('gpt-6.2-astra', datetime(2027, 3, 1), 1_000_000, '127.68'),
+        ('gpt-6.2-sol', datetime(2026, 11, 17), 200_000, '3.93'),
+        ('gpt-6.2-sol', datetime(2026, 11, 17), 1_000_000, '15.96'),
+        ('gpt-6.2-sol', datetime(2027, 2, 28), 200_000, '3.93'),
+        ('gpt-6.2-sol', datetime(2027, 3, 1), 200_000, '7.86'),
+        ('gpt-6.2-sol', datetime(2027, 3, 1), 1_000_000, '31.92'),
+    ],
+)
+def test_openai_gpt_6_2_ultrafast(model: str, timestamp: datetime, input_tokens: int, total: str) -> None:
+    """Ultrafast is 3x Standard through 2027-02-28 and 6x from 2027-03-01, for the same context length."""
+    result = calc_price(
+        Usage(input_tokens=input_tokens, cache_read_tokens=50_000, cache_write_tokens=10_000, output_tokens=100_000),
+        model,
+        provider_id='openai',
+        genai_request_timestamp=timestamp,
+        price_context={'service_tier': 'ultrafast'},
+    )
+    assert result.total_price == Decimal(total)
+
+
+@pytest.mark.parametrize(
     'model,tier,timestamp,total',
     [
         ('gemini-4-hydrogen', 'flex', datetime(2026, 11, 15), '8.64375'),

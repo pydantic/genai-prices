@@ -29838,7 +29838,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          "Released 2026-11-17. OpenAI's announcement: 20% off GPT-6 Astra input and output ($8/$40) and 60% off cached input ($0.40). Official standard rates match the announcement. Cache writes are the 30-minute retention rate (1.25x input); the 12-hour retention rate (2x input) is not modeled. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Batch is 50% of Standard; fast (formerly priority) is 2x. OpenAI lists no Flex rate for this model, so no flex variant is modeled. Ultrafast (3x until 2027-02-28, 6x from 2027-03-01) and background completion-window discounts are not modeled. Refs: https://developers.openai.com/api/docs/models/gpt-6.2-astra, https://developers.openai.com/api/docs/pricing, https://developers.openai.com/api/docs/changelog",
+          'Released 2026-11-17. Announced: 20% off GPT-6 Astra input and output ($8/$40) and 60% off cached input ($0.40). Official rates match. Cache writes are the 30-minute rate (1.25x input); the 12-hour rate (2x input) is not modeled. Above 272K input tokens, input and cache cost 2x and output 1.5x; tier starts use 272000 because the engines select a tier when token count exceeds start. Batch is 0.5x; fast (formerly priority) is 2x; ultrafast is 3x through 2027-02-28 and 6x from 2027-03-01 Pacific time (applied by UTC date). No Flex rate is published, so flex is not modeled; background completion-window discounts are not modeled. Refs: https://developers.openai.com/api/docs/models/gpt-6.2-astra, https://developers.openai.com/api/docs/pricing, https://developers.openai.com/api/docs/changelog',
         prices: {
           input_mtok: {
             base: 8,
@@ -29974,6 +29974,96 @@ export const data: Provider[] = [
           },
           {
             when: {
+              service_tier: 'ultrafast',
+            },
+            prices: {
+              input_mtok: {
+                base: 48,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 96,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 60,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 120,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 2.4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 4.8,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 240,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 360,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2027-03-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'ultrafast',
+            },
+            prices: {
+              input_mtok: {
+                base: 24,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 48,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 30,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 60,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 1.2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 2.4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 120,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 180,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            when: {
               processing: 'batch',
             },
             prices: {
@@ -30033,7 +30123,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          "Released 2026-11-17. OpenAI's announcement: carries forward GPT-6.1 Sol's rates ($2 input, $0.10 cached input, $10 output). Official standard rates match the announcement. Cache writes are the 30-minute retention rate (1.25x input); the 12-hour retention rate (2x input) is not modeled. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Batch is 50% of Standard; fast (formerly priority) is 2x. OpenAI lists no Flex rate for this model, so no flex variant is modeled. Ultrafast (3x until 2027-02-28, 6x from 2027-03-01) and background completion-window discounts are not modeled. Refs: https://developers.openai.com/api/docs/models/gpt-6.2-sol, https://developers.openai.com/api/docs/pricing, https://developers.openai.com/api/docs/changelog",
+          "Released 2026-11-17. Announced: carries forward GPT-6.1 Sol's rates ($2 input, $0.10 cached input, $10 output). Official rates match. Cache writes are the 30-minute rate (1.25x input); the 12-hour rate (2x input) is not modeled. Above 272K input tokens, input and cache cost 2x and output 1.5x; tier starts use 272000 because the engines select a tier when token count exceeds start. Batch is 0.5x; fast (formerly priority) is 2x; ultrafast is 3x through 2027-02-28 and 6x from 2027-03-01 Pacific time (applied by UTC date). No Flex rate is published, so flex is not modeled; background completion-window discounts are not modeled. Refs: https://developers.openai.com/api/docs/models/gpt-6.2-sol, https://developers.openai.com/api/docs/pricing, https://developers.openai.com/api/docs/changelog",
         prices: {
           input_mtok: {
             base: 2,
@@ -30162,6 +30252,96 @@ export const data: Provider[] = [
                   {
                     start: 272000,
                     price: 30,
+                  },
+                ],
+              },
+            },
+          },
+          {
+            when: {
+              service_tier: 'ultrafast',
+            },
+            prices: {
+              input_mtok: {
+                base: 12,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 24,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 15,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 30,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.6,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1.2,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 60,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 90,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2027-03-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'ultrafast',
+            },
+            prices: {
+              input_mtok: {
+                base: 6,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 12,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 7.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 15,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.3,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.6,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 30,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 45,
                   },
                 ],
               },

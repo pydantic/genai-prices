@@ -113,6 +113,27 @@ it.each([
 })
 
 it.each([
+  ['gpt-6.2-astra', '2026-11-17', 200_000, 15.72],
+  ['gpt-6.2-astra', '2026-11-17', 1_000_000, 63.84],
+  ['gpt-6.2-astra', '2027-02-28', 200_000, 15.72],
+  ['gpt-6.2-astra', '2027-03-01', 200_000, 31.44],
+  ['gpt-6.2-astra', '2027-03-01', 1_000_000, 127.68],
+  ['gpt-6.2-sol', '2026-11-17', 200_000, 3.93],
+  ['gpt-6.2-sol', '2026-11-17', 1_000_000, 15.96],
+  ['gpt-6.2-sol', '2027-02-28', 200_000, 3.93],
+  ['gpt-6.2-sol', '2027-03-01', 200_000, 7.86],
+  ['gpt-6.2-sol', '2027-03-01', 1_000_000, 31.92],
+] as const)('prices OpenAI %s ultrafast on %s at %i input tokens', (model, date, inputTokens, total) => {
+  expect(
+    calcPrice({ cache_read_tokens: 50_000, cache_write_tokens: 10_000, input_tokens: inputTokens, output_tokens: 100_000 }, model, {
+      priceContext: { service_tier: 'ultrafast' },
+      providerId: 'openai',
+      timestamp: new Date(`${date}T00:00:00Z`),
+    })?.total_price
+  ).toBeCloseTo(total, 12)
+})
+
+it.each([
   ['gemini-4-hydrogen', 'flex', '2026-11-15', 8.64375],
   ['gemini-4-hydrogen', 'flex', '2026-11-16', 4.321875],
   ['gemini-4-hydrogen', 'priority', '2026-11-15', 8.64375],

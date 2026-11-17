@@ -159,6 +159,42 @@ func TestOpenAIGPT62PriceVariants(t *testing.T) {
 	}
 }
 
+func TestOpenAIGPT62Ultrafast(t *testing.T) {
+	for _, test := range []struct {
+		model              string
+		timestamp          time.Time
+		inputTokens, total float64
+	}{
+		{"gpt-6.2-astra", time.Date(2026, 11, 17, 0, 0, 0, 0, time.UTC), 200_000, 15.72},
+		{"gpt-6.2-astra", time.Date(2026, 11, 17, 0, 0, 0, 0, time.UTC), 1_000_000, 63.84},
+		{"gpt-6.2-astra", time.Date(2027, 2, 28, 0, 0, 0, 0, time.UTC), 200_000, 15.72},
+		{"gpt-6.2-astra", time.Date(2027, 3, 1, 0, 0, 0, 0, time.UTC), 200_000, 31.44},
+		{"gpt-6.2-astra", time.Date(2027, 3, 1, 0, 0, 0, 0, time.UTC), 1_000_000, 127.68},
+		{"gpt-6.2-sol", time.Date(2026, 11, 17, 0, 0, 0, 0, time.UTC), 200_000, 3.93},
+		{"gpt-6.2-sol", time.Date(2026, 11, 17, 0, 0, 0, 0, time.UTC), 1_000_000, 15.96},
+		{"gpt-6.2-sol", time.Date(2027, 2, 28, 0, 0, 0, 0, time.UTC), 200_000, 3.93},
+		{"gpt-6.2-sol", time.Date(2027, 3, 1, 0, 0, 0, 0, time.UTC), 200_000, 7.86},
+		{"gpt-6.2-sol", time.Date(2027, 3, 1, 0, 0, 0, 0, time.UTC), 1_000_000, 31.92},
+	} {
+		t.Run(fmt.Sprintf("%s/%s/%g", test.model, test.timestamp.Format(time.DateOnly), test.inputTokens), func(t *testing.T) {
+			result, err := genai_prices.Calculate(genai_prices.PriceRequest{
+				Usage: genai_prices.Usage{genai_prices.UsageInputTokens: test.inputTokens, genai_prices.UsageCacheReadTokens: 50_000, genai_prices.UsageCacheWriteTokens: 10_000, genai_prices.UsageOutputTokens: 100_000},
+				Model: test.model, ProviderID: "openai", Timestamp: test.timestamp,
+				PriceContext: map[string]string{"service_tier": "ultrafast"},
+			})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if math.Abs(result.TotalPrice-test.total) > 1e-12 {
+				t.Fatalf("got %v, want %v", result.TotalPrice, test.total)
+			}
+			if len(result.Warnings) != 0 {
+				t.Fatalf("got warnings %v", result.Warnings)
+			}
+		})
+	}
+}
+
 func TestGoogleGemini4ServiceTiers(t *testing.T) {
 	for _, test := range []struct {
 		model, tier string
