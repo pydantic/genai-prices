@@ -74,6 +74,10 @@ fn openai_service_tiers() {
         ("gpt-6.1-terra", "flex", 4.5125),
         ("gpt-6.1-terra", "fast", 18.05),
         ("gpt-6.1-terra", "priority", 18.05),
+        ("gpt-6.2-astra", "fast", 144.4),
+        ("gpt-6.2-astra", "priority", 144.4),
+        ("gpt-6.2-sol", "fast", 36.1),
+        ("gpt-6.2-sol", "priority", 36.1),
     ] {
         let usage = token_usage();
         let request = PriceRequest::new(model, &usage)
@@ -90,6 +94,8 @@ fn openai_service_tiers() {
 fn batch_processing() {
     for (provider, model, timestamp, total) in [
         ("openai", "o3", date(2026, 10, 14), 4.875),
+        ("openai", "gpt-6.2-astra", date(2026, 11, 17), 36.1),
+        ("openai", "gpt-6.2-sol", date(2026, 11, 17), 9.025),
         ("anthropic", "claude-sonnet-5", date(2026, 10, 14), 5.775),
         ("google", "gemini-4-argon", date(2026, 10, 14), 5.7625),
         ("google", "gemini-4-argon", date(2026, 12, 1), 11.525),

@@ -53,6 +53,10 @@ it.each([
   ['gpt-6.1-terra', 'flex', 4.5125],
   ['gpt-6.1-terra', 'fast', 18.05],
   ['gpt-6.1-terra', 'priority', 18.05],
+  ['gpt-6.2-astra', 'fast', 144.4],
+  ['gpt-6.2-astra', 'priority', 144.4],
+  ['gpt-6.2-sol', 'fast', 36.1],
+  ['gpt-6.2-sol', 'priority', 36.1],
 ] as const)('prices OpenAI %s %s', (model, tier, total) => {
   expect(
     calcPrice({ cache_read_tokens: 250_000, input_tokens: 1_000_000, output_tokens: 1_000_000 }, model, {
@@ -65,6 +69,8 @@ it.each([
 
 it.each([
   ['openai', 'o3', '2026-10-14', 4.875],
+  ['openai', 'gpt-6.2-astra', '2026-11-17', 36.1],
+  ['openai', 'gpt-6.2-sol', '2026-11-17', 9.025],
   ['anthropic', 'claude-sonnet-5', '2026-10-14', 5.775],
   ['google', 'gemini-4-argon', '2026-10-14', 5.7625],
   ['google', 'gemini-4-argon', '2026-12-01', 11.525],

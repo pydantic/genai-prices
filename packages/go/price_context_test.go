@@ -69,6 +69,8 @@ func TestOpenAIServiceTiers(t *testing.T) {
 		{"gpt-5-mini", "flex", 1.096875}, {"gpt-6.1-sol", "fast", 36.1},
 		{"gpt-6.1-sol", "priority", 36.1}, {"gpt-6.1-terra", "flex", 4.5125},
 		{"gpt-6.1-terra", "fast", 18.05}, {"gpt-6.1-terra", "priority", 18.05},
+		{"gpt-6.2-astra", "fast", 144.4}, {"gpt-6.2-astra", "priority", 144.4},
+		{"gpt-6.2-sol", "fast", 36.1}, {"gpt-6.2-sol", "priority", 36.1},
 	} {
 		t.Run(test.model+"/"+test.tier, func(t *testing.T) {
 			result, err := genai_prices.Calculate(genai_prices.PriceRequest{
@@ -96,6 +98,8 @@ func TestBatchProcessing(t *testing.T) {
 		total           float64
 	}{
 		{"openai", "o3", time.Date(2026, 10, 14, 0, 0, 0, 0, time.UTC), 4.875},
+		{"openai", "gpt-6.2-astra", time.Date(2026, 11, 17, 0, 0, 0, 0, time.UTC), 36.1},
+		{"openai", "gpt-6.2-sol", time.Date(2026, 11, 17, 0, 0, 0, 0, time.UTC), 9.025},
 		{"anthropic", "claude-sonnet-5", time.Date(2026, 10, 14, 0, 0, 0, 0, time.UTC), 5.775},
 		{"google", "gemini-4-argon", time.Date(2026, 10, 14, 0, 0, 0, 0, time.UTC), 5.7625},
 		{"google", "gemini-4-argon", time.Date(2026, 12, 1, 0, 0, 0, 0, time.UTC), 11.525},

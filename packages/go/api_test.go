@@ -217,6 +217,8 @@ func TestOpenAILongContextBoundary(t *testing.T) {
 		{model: "gpt-5.6-terra", baseRate: 2, longRate: 4},
 		{model: "gpt-6.1-sol", baseRate: 2, longRate: 4},
 		{model: "gpt-6.1-terra", baseRate: 1, longRate: 2},
+		{model: "gpt-6.2-astra", baseRate: 8, longRate: 16},
+		{model: "gpt-6.2-sol", baseRate: 2, longRate: 4},
 	}
 	for _, test := range tests {
 		t.Run(test.model, func(t *testing.T) {

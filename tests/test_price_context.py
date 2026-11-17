@@ -61,6 +61,10 @@ def test_price_context_contract(case: dict[str, Any]) -> None:
         ('gpt-6.1-terra', 'flex', '4.5125'),
         ('gpt-6.1-terra', 'fast', '18.05'),
         ('gpt-6.1-terra', 'priority', '18.05'),
+        ('gpt-6.2-astra', 'fast', '144.4'),
+        ('gpt-6.2-astra', 'priority', '144.4'),
+        ('gpt-6.2-sol', 'fast', '36.1'),
+        ('gpt-6.2-sol', 'priority', '36.1'),
     ],
 )
 def test_openai_service_tiers(model: str, tier: str, total: str) -> None:
@@ -78,6 +82,8 @@ def test_openai_service_tiers(model: str, tier: str, total: str) -> None:
     'provider,model,timestamp,total',
     [
         ('openai', 'o3', datetime(2026, 10, 14), '4.875'),
+        ('openai', 'gpt-6.2-astra', datetime(2026, 11, 17), '36.1'),
+        ('openai', 'gpt-6.2-sol', datetime(2026, 11, 17), '9.025'),
         ('anthropic', 'claude-sonnet-5', datetime(2026, 10, 14), '5.775'),
         ('google', 'gemini-4-argon', datetime(2026, 10, 14), '5.7625'),
         ('google', 'gemini-4-argon', datetime(2026, 12, 1), '11.525'),
