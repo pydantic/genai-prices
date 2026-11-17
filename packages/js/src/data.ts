@@ -24361,6 +24361,55 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'qwen/qwen3-vl-plus',
+        name: 'Qwen3 VL Plus',
+        match: {
+          equals: 'qwen/qwen3-vl-plus',
+        },
+        context_window: 262000,
+        prices: {
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 32000,
+                price: 0.216,
+              },
+              {
+                start: 128000,
+                price: 0.431,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 32000,
+                price: 0.022,
+              },
+              {
+                start: 128000,
+                price: 0.043,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 32000,
+                price: 2.151,
+              },
+              {
+                start: 128000,
+                price: 4.301,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'qwen/qwen3.5-122b-a10b',
         name: 'Qwen3.5 122B A10B',
         match: {

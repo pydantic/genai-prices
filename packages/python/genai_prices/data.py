@@ -14163,6 +14163,26 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.7')),
             ),
             ModelInfo(
+                id='qwen/qwen3-vl-plus',
+                match=ClauseEquals(equals='qwen/qwen3-vl-plus'),
+                name='Qwen3 VL Plus',
+                context_window=262000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(
+                        base=Decimal('1'),
+                        tiers=[Tier(start=32000, price=Decimal('0.216')), Tier(start=128000, price=Decimal('0.431'))],
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('1'),
+                        tiers=[Tier(start=32000, price=Decimal('0.022')), Tier(start=128000, price=Decimal('0.043'))],
+                    ),
+                    output_mtok=TieredPrices(
+                        base=Decimal('1'),
+                        tiers=[Tier(start=32000, price=Decimal('2.151')), Tier(start=128000, price=Decimal('4.301'))],
+                    ),
+                ),
+            ),
+            ModelInfo(
                 id='qwen/qwen3.5-122b-a10b',
                 match=ClauseEquals(equals='qwen/qwen3.5-122b-a10b'),
                 name='Qwen3.5 122B A10B',
