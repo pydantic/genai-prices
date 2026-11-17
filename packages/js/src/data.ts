@@ -29838,7 +29838,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Verified on 2026-11-17 at https://developers.openai.com/api/docs/pricing. Batch is 50% of standard; fast (formerly priority) is 2x; ultrafast is 3x through 2027-02-28, then 6x. Cache reads cost 5% of input; cache writes are the 30-minute retention rate (1.25x input). The 12-hour retention rate ($20) is not modeled. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Refs: https://developers.openai.com/api/docs/models/gpt-6.2-astra, https://developers.openai.com/api/docs/changelog',
+          'Verified on 2026-11-17 at https://developers.openai.com/api/docs/pricing. Batch is 50% of standard; fast (formerly priority) is 2x; ultrafast is 3x through 2027-02-28, then 6x. OpenAI switches at Pacific midnight, but start_date is a UTC date, so 6x starts 8 hours early. Cache reads cost 5% of input; cache writes are the 30-minute retention rate (1.25x input). The 12-hour retention rate ($20) is not modeled. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Refs: https://developers.openai.com/api/docs/models/gpt-6.2-astra, https://developers.openai.com/api/docs/changelog',
         prices: {
           input_mtok: {
             base: 8,
@@ -30123,7 +30123,7 @@ export const data: Provider[] = [
         },
         context_window: 1050000,
         price_comments:
-          'Verified on 2026-11-17 at https://developers.openai.com/api/docs/pricing. Batch is 50% of standard; fast (formerly priority) is 2x; ultrafast is 3x through 2027-02-28, then 6x. Cache reads cost 5% of input; cache writes are the 30-minute retention rate (1.25x input). The 12-hour retention rate ($5) is not modeled. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Refs: https://developers.openai.com/api/docs/models/gpt-6.2-sol, https://developers.openai.com/api/docs/changelog',
+          'Verified on 2026-11-17 at https://developers.openai.com/api/docs/pricing. Batch is 50% of standard; fast (formerly priority) is 2x; ultrafast is 3x through 2027-02-28, then 6x. OpenAI switches at Pacific midnight, but start_date is a UTC date, so 6x starts 8 hours early. Cache reads cost 5% of input; cache writes are the 30-minute retention rate (1.25x input). The 12-hour retention rate ($5) is not modeled. Prompts with more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing engines select a tier when token count exceeds start. Refs: https://developers.openai.com/api/docs/models/gpt-6.2-sol, https://developers.openai.com/api/docs/changelog',
         prices: {
           input_mtok: {
             base: 2,

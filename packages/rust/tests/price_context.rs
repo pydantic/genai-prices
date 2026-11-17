@@ -74,10 +74,6 @@ fn openai_service_tiers() {
         ("gpt-6.1-terra", "flex", 4.5125),
         ("gpt-6.1-terra", "fast", 18.05),
         ("gpt-6.1-terra", "priority", 18.05),
-        ("gpt-6.2-astra", "fast", 144.4),
-        ("gpt-6.2-astra", "ultrafast", 216.6),
-        ("gpt-6.2-sol", "fast", 36.1),
-        ("gpt-6.2-sol", "ultrafast", 54.15),
     ] {
         let usage = token_usage();
         let request = PriceRequest::new(model, &usage)
@@ -91,21 +87,25 @@ fn openai_service_tiers() {
 }
 
 #[test]
-fn openai_ultrafast_promo_ends() {
-    for (model, timestamp, total) in [
-        ("gpt-6.2-astra", date(2027, 2, 28), 216.6),
-        ("gpt-6.2-astra", date(2027, 3, 1), 433.2),
-        ("gpt-6.2-sol", date(2027, 2, 28), 54.15),
-        ("gpt-6.2-sol", date(2027, 3, 1), 108.3),
+fn openai_gpt_6_2_service_tiers() {
+    for (model, tier, timestamp, total) in [
+        ("gpt-6.2-astra", "fast", date(2026, 11, 17), 144.4),
+        ("gpt-6.2-astra", "ultrafast", date(2026, 11, 17), 216.6),
+        ("gpt-6.2-astra", "ultrafast", date(2027, 2, 28), 216.6),
+        ("gpt-6.2-astra", "ultrafast", date(2027, 3, 1), 433.2),
+        ("gpt-6.2-sol", "fast", date(2026, 11, 17), 36.1),
+        ("gpt-6.2-sol", "ultrafast", date(2026, 11, 17), 54.15),
+        ("gpt-6.2-sol", "ultrafast", date(2027, 2, 28), 54.15),
+        ("gpt-6.2-sol", "ultrafast", date(2027, 3, 1), 108.3),
     ] {
         let usage = token_usage();
         let request = PriceRequest::new(model, &usage)
             .with_provider_id("openai")
             .with_timestamp(timestamp)
-            .with_price_context("service_tier", "ultrafast");
+            .with_price_context("service_tier", tier);
         let result = genai_prices::calculate(&request).unwrap();
         assert_close(result.total_price, total, 1e-12);
-        assert!(result.warnings.is_empty(), "{model}: {:?}", result.warnings);
+        assert!(result.warnings.is_empty(), "{model}/{tier}: {:?}", result.warnings);
     }
 }
 

@@ -69,8 +69,6 @@ func TestOpenAIServiceTiers(t *testing.T) {
 		{"gpt-5-mini", "flex", 1.096875}, {"gpt-6.1-sol", "fast", 36.1},
 		{"gpt-6.1-sol", "priority", 36.1}, {"gpt-6.1-terra", "flex", 4.5125},
 		{"gpt-6.1-terra", "fast", 18.05}, {"gpt-6.1-terra", "priority", 18.05},
-		{"gpt-6.2-astra", "fast", 144.4}, {"gpt-6.2-astra", "ultrafast", 216.6},
-		{"gpt-6.2-sol", "fast", 36.1}, {"gpt-6.2-sol", "ultrafast", 54.15},
 	} {
 		t.Run(test.model+"/"+test.tier, func(t *testing.T) {
 			result, err := genai_prices.Calculate(genai_prices.PriceRequest{
@@ -91,22 +89,26 @@ func TestOpenAIServiceTiers(t *testing.T) {
 	}
 }
 
-func TestOpenAIUltrafastPromoEnds(t *testing.T) {
+func TestOpenAIGPT62ServiceTiers(t *testing.T) {
 	for _, test := range []struct {
-		model     string
-		timestamp time.Time
-		total     float64
+		model, tier string
+		timestamp   time.Time
+		total       float64
 	}{
-		{"gpt-6.2-astra", time.Date(2027, 2, 28, 0, 0, 0, 0, time.UTC), 216.6},
-		{"gpt-6.2-astra", time.Date(2027, 3, 1, 0, 0, 0, 0, time.UTC), 433.2},
-		{"gpt-6.2-sol", time.Date(2027, 2, 28, 0, 0, 0, 0, time.UTC), 54.15},
-		{"gpt-6.2-sol", time.Date(2027, 3, 1, 0, 0, 0, 0, time.UTC), 108.3},
+		{"gpt-6.2-astra", "fast", time.Date(2026, 11, 17, 0, 0, 0, 0, time.UTC), 144.4},
+		{"gpt-6.2-astra", "ultrafast", time.Date(2026, 11, 17, 0, 0, 0, 0, time.UTC), 216.6},
+		{"gpt-6.2-astra", "ultrafast", time.Date(2027, 2, 28, 0, 0, 0, 0, time.UTC), 216.6},
+		{"gpt-6.2-astra", "ultrafast", time.Date(2027, 3, 1, 0, 0, 0, 0, time.UTC), 433.2},
+		{"gpt-6.2-sol", "fast", time.Date(2026, 11, 17, 0, 0, 0, 0, time.UTC), 36.1},
+		{"gpt-6.2-sol", "ultrafast", time.Date(2026, 11, 17, 0, 0, 0, 0, time.UTC), 54.15},
+		{"gpt-6.2-sol", "ultrafast", time.Date(2027, 2, 28, 0, 0, 0, 0, time.UTC), 54.15},
+		{"gpt-6.2-sol", "ultrafast", time.Date(2027, 3, 1, 0, 0, 0, 0, time.UTC), 108.3},
 	} {
-		t.Run(test.model+"/"+test.timestamp.Format(time.DateOnly), func(t *testing.T) {
+		t.Run(test.model+"/"+test.tier+"/"+test.timestamp.Format(time.DateOnly), func(t *testing.T) {
 			result, err := genai_prices.Calculate(genai_prices.PriceRequest{
 				Usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000_000, genai_prices.UsageCacheReadTokens: 250_000, genai_prices.UsageOutputTokens: 1_000_000},
 				Model: test.model, ProviderID: "openai", Timestamp: test.timestamp,
-				PriceContext: map[string]string{"service_tier": "ultrafast"},
+				PriceContext: map[string]string{"service_tier": test.tier},
 			})
 			if err != nil {
 				t.Fatal(err)
