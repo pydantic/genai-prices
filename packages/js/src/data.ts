@@ -27654,17 +27654,6 @@ export const data: Provider[] = [
         ],
       },
       {
-        id: 'gpt-5.5-cyber-preview',
-        match: {
-          equals: 'gpt-5.5-cyber-preview',
-        },
-        prices: {
-          input_mtok: 12.5,
-          cache_read_mtok: 1.25,
-          output_mtok: 75,
-        },
-      },
-      {
         id: 'gpt-5.5-pro',
         name: 'GPT-5.5 Pro',
         description: 'Version of GPT-5.5 that produces smarter and more precise responses.',
@@ -28949,67 +28938,16 @@ export const data: Provider[] = [
         ],
       },
       {
-        id: 'gpt-6-astra-law',
-        match: {
-          equals: 'gpt-6-astra-law',
-        },
-        prices: {
-          input_mtok: 10,
-          cache_read_mtok: 1,
-          output_mtok: 50,
-        },
-      },
-      {
         id: 'gpt-6-cyber',
         match: {
           equals: 'gpt-6-cyber',
         },
-        prices: [
-          {
-            prices: {
-              input_mtok: 20,
-              cache_write_mtok: 25,
-              cache_read_mtok: 2,
-              output_mtok: 100,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-11-12',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: {
-                base: 20,
-                tiers: [
-                  {
-                    start: 272000,
-                    price: 40,
-                  },
-                ],
-              },
-              cache_write_mtok: 25,
-              cache_read_mtok: {
-                base: 2,
-                tiers: [
-                  {
-                    start: 272000,
-                    price: 4,
-                  },
-                ],
-              },
-              output_mtok: {
-                base: 100,
-                tiers: [
-                  {
-                    start: 272000,
-                    price: 150,
-                  },
-                ],
-              },
-            },
-          },
-        ],
+        prices: {
+          input_mtok: 20,
+          cache_write_mtok: 25,
+          cache_read_mtok: 2,
+          output_mtok: 100,
+        },
       },
       {
         id: 'gpt-6-luna',

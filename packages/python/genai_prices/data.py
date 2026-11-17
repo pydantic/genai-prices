@@ -15933,13 +15933,6 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
-                id='gpt-5.5-cyber-preview',
-                match=ClauseEquals(equals='gpt-5.5-cyber-preview'),
-                prices=ModelPrice(
-                    input_mtok=Decimal('12.5'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('75')
-                ),
-            ),
-            ModelInfo(
                 id='gpt-5.5-pro',
                 match=ClauseOr(
                     or_=[
@@ -16435,38 +16428,14 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
-                id='gpt-6-astra-law',
-                match=ClauseEquals(equals='gpt-6-astra-law'),
-                prices=ModelPrice(input_mtok=Decimal('10'), cache_read_mtok=Decimal('1'), output_mtok=Decimal('50')),
-            ),
-            ModelInfo(
                 id='gpt-6-cyber',
                 match=ClauseEquals(equals='gpt-6-cyber'),
-                prices=[
-                    ConditionalPrice(
-                        prices=ModelPrice(
-                            input_mtok=Decimal('20'),
-                            cache_write_mtok=Decimal('25'),
-                            cache_read_mtok=Decimal('2'),
-                            output_mtok=Decimal('100'),
-                        )
-                    ),
-                    ConditionalPrice(
-                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 12)),
-                        prices=ModelPrice(
-                            input_mtok=TieredPrices(
-                                base=Decimal('20'), tiers=[Tier(start=272000, price=Decimal('40'))]
-                            ),
-                            cache_write_mtok=Decimal('25'),
-                            cache_read_mtok=TieredPrices(
-                                base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]
-                            ),
-                            output_mtok=TieredPrices(
-                                base=Decimal('100'), tiers=[Tier(start=272000, price=Decimal('150'))]
-                            ),
-                        ),
-                    ),
-                ],
+                prices=ModelPrice(
+                    input_mtok=Decimal('20'),
+                    cache_write_mtok=Decimal('25'),
+                    cache_read_mtok=Decimal('2'),
+                    output_mtok=Decimal('100'),
+                ),
             ),
             ModelInfo(
                 id='gpt-6-luna',
