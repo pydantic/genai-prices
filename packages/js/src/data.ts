@@ -24267,6 +24267,9 @@ export const data: Provider[] = [
             {
               equals: 'openai/gpt-6.2-astra-azure-dst',
             },
+            {
+              equals: 'openai/gpt-6.2-astra-es',
+            },
           ],
         },
         context_window: 1050000,
@@ -24310,6 +24313,9 @@ export const data: Provider[] = [
             },
             {
               equals: 'openai/gpt-6.2-sol-azure-dst',
+            },
+            {
+              equals: 'openai/gpt-6.2-sol-es',
             },
           ],
         },
@@ -52554,6 +52560,19 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.47,
+        },
+      },
+      {
+        id: 'Qwen/Qwen4-Max',
+        name: 'Qwen4 Max',
+        match: {
+          equals: 'Qwen/Qwen4-Max',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 1.425,
+          cache_read_mtok: 0.07125,
+          output_mtok: 4.275,
         },
       },
       {

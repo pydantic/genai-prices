@@ -14109,6 +14109,7 @@ providers: list[Provider] = [
                     or_=[
                         ClauseEquals(equals='openai/gpt-6.2-astra'),
                         ClauseEquals(equals='openai/gpt-6.2-astra-azure-dst'),
+                        ClauseEquals(equals='openai/gpt-6.2-astra-es'),
                     ]
                 ),
                 name='openai/gpt-6.2-astra',
@@ -14122,7 +14123,11 @@ providers: list[Provider] = [
             ModelInfo(
                 id='openai/gpt-6.2-sol',
                 match=ClauseOr(
-                    or_=[ClauseEquals(equals='openai/gpt-6.2-sol'), ClauseEquals(equals='openai/gpt-6.2-sol-azure-dst')]
+                    or_=[
+                        ClauseEquals(equals='openai/gpt-6.2-sol'),
+                        ClauseEquals(equals='openai/gpt-6.2-sol-azure-dst'),
+                        ClauseEquals(equals='openai/gpt-6.2-sol-es'),
+                    ]
                 ),
                 name='openai/gpt-6.2-sol',
                 context_window=1050000,
@@ -29755,6 +29760,15 @@ providers: list[Provider] = [
                 name='Qwen3.8 Flash',
                 context_window=1000000,
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.47')),
+            ),
+            ModelInfo(
+                id='Qwen/Qwen4-Max',
+                match=ClauseEquals(equals='Qwen/Qwen4-Max'),
+                name='Qwen4 Max',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.425'), cache_read_mtok=Decimal('0.07125'), output_mtok=Decimal('4.275')
+                ),
             ),
             ModelInfo(
                 id='Undi95/ReMM-SLERP-L2-13B',

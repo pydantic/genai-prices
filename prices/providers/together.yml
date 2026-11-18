@@ -213,6 +213,17 @@ models:
       output_mtok: 0.47
     prices_checked: 2026-11-18
 
+  - id: Qwen/Qwen4-Max
+    name: Qwen4 Max
+    match:
+      equals: Qwen/Qwen4-Max
+    context_window: 1000000
+    prices:
+      input_mtok: 1.425
+      cache_read_mtok: 0.07125
+      output_mtok: 4.275
+    prices_checked: 2026-11-18
+
   - id: Undi95/ReMM-SLERP-L2-13B
     match:
       equals: Undi95/ReMM-SLERP-L2-13B
