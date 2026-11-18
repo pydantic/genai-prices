@@ -14104,6 +14104,19 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.05'), output_mtok=Decimal('0.2')),
             ),
             ModelInfo(
+                id='openai/gpt-6.1-terra',
+                match=ClauseEquals(equals='openai/gpt-6.1-terra'),
+                name='openai/gpt-6.1-terra',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('2'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.05'), tiers=[Tier(start=272000, price=Decimal('0.1'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'))]),
+                ),
+            ),
+            ModelInfo(
                 id='openai/gpt-6.2-astra',
                 match=ClauseOr(
                     or_=[

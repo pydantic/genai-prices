@@ -24257,6 +24257,43 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'openai/gpt-6.1-terra',
+        name: 'openai/gpt-6.1-terra',
+        match: {
+          equals: 'openai/gpt-6.1-terra',
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.05,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 272000,
+                price: 10,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'openai/gpt-6.2-astra',
         name: 'openai/gpt-6.2-astra',
         match: {
