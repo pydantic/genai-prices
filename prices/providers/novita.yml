@@ -424,7 +424,7 @@ models:
     prices:
       input_mtok: 0.27
       output_mtok: 0.85
-    prices_checked: 2026-11-18
+    prices_checked: 2026-11-09
 
   - id: meta-llama/llama-4-scout-17b-16e-instruct
     name: Llama 4 Scout Instruct
