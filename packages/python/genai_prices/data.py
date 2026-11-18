@@ -1049,6 +1049,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
+                id='moonshotai/kimi-k3.1-pro',
+                match=ClauseEquals(equals='moonshotai/kimi-k3.1-pro'),
+                name='moonshotai/kimi-k3.1-pro',
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
                 id='thinkingmachines/inkling-small',
                 match=ClauseEquals(equals='thinkingmachines/inkling-small'),
                 name='Inkling Small',
@@ -4125,6 +4131,12 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='@cf/google/embeddinggemma-2',
+                match=ClauseEquals(equals='@cf/google/embeddinggemma-2'),
+                name='embeddinggemma-2',
+                prices=ModelPrice(input_mtok=Decimal('0.0017')),
+            ),
+            ModelInfo(
                 id='@cf/google/gemma-3-12b-it',
                 match=ClauseEquals(equals='@cf/google/gemma-3-12b-it'),
                 name='Gemma 3 12B IT',
@@ -4350,6 +4362,12 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='@cf/qwen/qwq-32b'),
                 name='QwQ 32B',
                 prices=ModelPrice(input_mtok=Decimal('0.66'), output_mtok=Decimal('1')),
+            ),
+            ModelInfo(
+                id='@cf/thinkingmachines/inkling-2-small',
+                match=ClauseEquals(equals='@cf/thinkingmachines/inkling-2-small'),
+                name='inkling-2-small',
+                prices=ModelPrice(input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
                 id='@cf/zai-org/glm-4.7-flash',
@@ -12113,6 +12131,18 @@ providers: list[Provider] = [
         ],
         models=[
             ModelInfo(
+                id='muse-ember-1.0',
+                match=ClauseEquals(equals='muse-ember-1.0'),
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=200000, price=Decimal('0.3'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.004'), tiers=[Tier(start=200000, price=Decimal('0.012'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('0.5'), tiers=[Tier(start=200000, price=Decimal('1.5'))]),
+                    web_searches_kcount=Decimal('2.5'),
+                ),
+            ),
+            ModelInfo(
                 id='muse-spark-1.1',
                 match=ClauseEquals(equals='muse-spark-1.1'),
                 name='Muse Spark 1.1',
@@ -13292,6 +13322,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('1.2'), cache_read_mtok=Decimal('0.27'), output_mtok=Decimal('5')),
             ),
             ModelInfo(
+                id='thinkingmachines/inkling-2-small',
+                match=ClauseEquals(equals='thinkingmachines/inkling-2-small'),
+                name='Inkling 2 Small',
+                prices=ModelPrice(input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('1')),
+            ),
+            ModelInfo(
                 id='zai-org/GLM-5.3',
                 match=ClauseEquals(equals='zai-org/GLM-5.3'),
                 name='GLM 5.3',
@@ -13899,7 +13935,15 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='ming image 0.1 design',
-                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1')),
+                prices=[
+                    ConditionalPrice(
+                        constraint=None, prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1'))
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 12)),
+                        prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='minimax/minimax-m2.5',
@@ -14119,6 +14163,26 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.7')),
             ),
             ModelInfo(
+                id='qwen/qwen3-vl-plus',
+                match=ClauseEquals(equals='qwen/qwen3-vl-plus'),
+                name='Qwen3 VL Plus',
+                context_window=262000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(
+                        base=Decimal('1'),
+                        tiers=[Tier(start=32000, price=Decimal('0.216')), Tier(start=128000, price=Decimal('0.431'))],
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('1'),
+                        tiers=[Tier(start=32000, price=Decimal('0.022')), Tier(start=128000, price=Decimal('0.043'))],
+                    ),
+                    output_mtok=TieredPrices(
+                        base=Decimal('1'),
+                        tiers=[Tier(start=32000, price=Decimal('2.151')), Tier(start=128000, price=Decimal('4.301'))],
+                    ),
+                ),
+            ),
+            ModelInfo(
                 id='qwen/qwen3.5-122b-a10b',
                 match=ClauseEquals(equals='qwen/qwen3.5-122b-a10b'),
                 name='Qwen3.5 122B A10B',
@@ -14202,6 +14266,15 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
+                id='qwen/qwen4-max',
+                match=ClauseEquals(equals='qwen/qwen4-max'),
+                name='Qwen4 Max',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.413'), cache_read_mtok=Decimal('0.071'), output_mtok=Decimal('4.24')
+                ),
+            ),
+            ModelInfo(
                 id='sao10k/l3-70b-euryale-v2.1',
                 match=ClauseEquals(equals='sao10k/l3-70b-euryale-v2.1'),
                 name='Llama 3 70B Euryale V2.1',
@@ -14263,6 +14336,15 @@ providers: list[Provider] = [
                 context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.417'), cache_read_mtok=Decimal('0.021'), output_mtok=Decimal('1.2505')
+                ),
+            ),
+            ModelInfo(
+                id='tencent/hy4-flash',
+                match=ClauseEquals(equals='tencent/hy4-flash'),
+                name='Hy4 Flash',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.07'), cache_read_mtok=Decimal('0.003'), output_mtok=Decimal('0.281')
                 ),
             ),
             ModelInfo(
@@ -28211,6 +28293,11 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.01')),
             ),
             ModelInfo(
+                id='pplx-decider-flash-v1.3',
+                match=ClauseEquals(equals='pplx-decider-flash-v1.3'),
+                prices=ModelPrice(input_mtok=Decimal('0.01')),
+            ),
+            ModelInfo(
                 id='pplx-decider-v1-27b',
                 match=ClauseEquals(equals='pplx-decider-v1-27b'),
                 name='Decider V1 27B',
@@ -28237,6 +28324,11 @@ providers: list[Provider] = [
                 ),
                 name='Decider V1.2',
                 price_comments='Decisions API: output tokens are free and there is no per-request fee. `pplx-decider-latest` selects this model. https://docs.perplexity.ai/docs/decisions/quickstart',
+                prices=ModelPrice(input_mtok=Decimal('0.02')),
+            ),
+            ModelInfo(
+                id='pplx-decider-v1.3',
+                match=ClauseEquals(equals='pplx-decider-v1.3'),
                 prices=ModelPrice(input_mtok=Decimal('0.02')),
             ),
             ModelInfo(
@@ -28429,6 +28521,18 @@ providers: list[Provider] = [
                         ),
                     ),
                 ],
+            ),
+            ModelInfo(
+                id='claude-fable-5-2',
+                match=ClauseEquals(equals='claude-fable-5-2'),
+                name='Claude Fable 5.2',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2'),
+                    cache_write_mtok=Decimal('2.5'),
+                    cache_read_mtok=Decimal('0.05'),
+                    output_mtok=Decimal('10'),
+                ),
             ),
             ModelInfo(
                 id='claude-haiku-4-5',
@@ -28638,6 +28742,12 @@ providers: list[Provider] = [
                             output_mtok=Decimal('0.2231'),
                         ),
                     ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 12)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.154'), cache_read_mtok=Decimal('0.0046'), output_mtok=Decimal('0.462')
+                        ),
+                    ),
                 ],
             ),
             ModelInfo(
@@ -28734,6 +28844,22 @@ providers: list[Provider] = [
                 name='Gemini 4 Argon',
                 context_window=1048576,
                 prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
+                id='gemini-4-carbon',
+                match=ClauseEquals(equals='gemini-4-carbon'),
+                name='Gemini 4 Carbon',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
+                id='gemini-4-hydrogen',
+                match=ClauseEquals(equals='gemini-4-hydrogen'),
+                name='Gemini 4 Hydrogen',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('7.5')
+                ),
             ),
             ModelInfo(
                 id='glm-5.2',
@@ -29036,6 +29162,15 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='inkling-2-small',
+                match=ClauseEquals(equals='inkling-2-small'),
+                name='Inkling 2 Small',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.165'), cache_read_mtok=Decimal('0.033'), output_mtok=Decimal('0.55')
+                ),
+            ),
+            ModelInfo(
                 id='jev-1.13',
                 match=ClauseEquals(equals='jev-1.13'),
                 name='Jev 1.13',
@@ -29180,6 +29315,15 @@ providers: list[Provider] = [
                 context_window=524288,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.68'), cache_read_mtok=Decimal('0.07'), output_mtok=Decimal('2.09')
+                ),
+            ),
+            ModelInfo(
+                id='muse-ember',
+                match=ClauseEquals(equals='muse-ember'),
+                name='Muse Ember',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1'), cache_read_mtok=Decimal('0.004'), output_mtok=Decimal('0.5')
                 ),
             ),
             ModelInfo(
@@ -29377,6 +29521,15 @@ providers: list[Provider] = [
                 context_window=1048576,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.016'), output_mtok=Decimal('0.47')
+                ),
+            ),
+            ModelInfo(
+                id='qwen4-max',
+                match=ClauseEquals(equals='qwen4-max'),
+                name='Qwen4-Max',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('4.5')
                 ),
             ),
             ModelInfo(
@@ -29627,6 +29780,13 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.8'), output_mtok=Decimal('0.8')),
             ),
             ModelInfo(
+                id='elorian-labs/glimpse-1.0',
+                match=ClauseEquals(equals='elorian-labs/glimpse-1.0'),
+                name='Glimpse 1.0',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.06'), output_mtok=Decimal('3')),
+            ),
+            ModelInfo(
                 id='garage-bAInd/Platypus2-70B-instruct',
                 match=ClauseEquals(equals='garage-bAInd/Platypus2-70B-instruct'),
                 prices=ModelPrice(input_mtok=Decimal('0.9'), output_mtok=Decimal('0.9')),
@@ -29863,6 +30023,13 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.17'), output_mtok=Decimal('4.05')
                 ),
+            ),
+            ModelInfo(
+                id='thinkingmachines/Inkling-2-Small',
+                match=ClauseEquals(equals='thinkingmachines/Inkling-2-Small'),
+                name='Inkling 2 Small',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
                 id='together/Tev1-4B-experimental',
