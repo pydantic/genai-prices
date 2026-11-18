@@ -750,6 +750,52 @@ models:
             price: 7.5
     prices_checked: 2026-11-18
 
+  - id: gpt-6.2-astra
+    name: GPT-6.2 Astra
+    match:
+      equals: gpt-6.2-astra
+    context_window: 1050000
+    prices:
+      input_mtok:
+        base: 8
+        tiers:
+          - start: 200000
+            price: 16
+      cache_read_mtok:
+        base: 0.4
+        tiers:
+          - start: 200000
+            price: 0.8
+      output_mtok:
+        base: 40
+        tiers:
+          - start: 200000
+            price: 60
+    prices_checked: 2026-11-18
+
+  - id: gpt-6.2-sol
+    name: GPT-6.2 Sol
+    match:
+      equals: gpt-6.2-sol
+    context_window: 1050000
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 200000
+            price: 4
+      cache_read_mtok:
+        base: 0.1
+        tiers:
+          - start: 200000
+            price: 0.2
+      output_mtok:
+        base: 10
+        tiers:
+          - start: 200000
+            price: 15
+    prices_checked: 2026-11-18
+
   - id: gpt-oss-120b
     name: GPT-OSS 120B
     match:

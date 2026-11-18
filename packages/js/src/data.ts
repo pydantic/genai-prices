@@ -22975,18 +22975,6 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'thinkingmachines/inkling-2-small',
-        name: 'Inkling 2 Small',
-        match: {
-          equals: 'thinkingmachines/inkling-2-small',
-        },
-        prices: {
-          input_mtok: 0.3,
-          cache_read_mtok: 0.03,
-          output_mtok: 1,
-        },
-      },
-      {
         id: 'zai-org/GLM-5.3',
         name: 'GLM 5.3',
         match: {
@@ -23958,24 +23946,10 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: [
-          {
-            prices: {
-              input_mtok: 1,
-              output_mtok: 1,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-11-12',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 1,
-              output_mtok: 2,
-            },
-          },
-        ],
+        prices: {
+          input_mtok: 1,
+          output_mtok: 1,
+        },
       },
       {
         id: 'minimax/minimax-m2.5',
@@ -24361,55 +24335,6 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'qwen/qwen3-vl-plus',
-        name: 'Qwen3 VL Plus',
-        match: {
-          equals: 'qwen/qwen3-vl-plus',
-        },
-        context_window: 262000,
-        prices: {
-          input_mtok: {
-            base: 1,
-            tiers: [
-              {
-                start: 32000,
-                price: 0.216,
-              },
-              {
-                start: 128000,
-                price: 0.431,
-              },
-            ],
-          },
-          cache_read_mtok: {
-            base: 1,
-            tiers: [
-              {
-                start: 32000,
-                price: 0.022,
-              },
-              {
-                start: 128000,
-                price: 0.043,
-              },
-            ],
-          },
-          output_mtok: {
-            base: 1,
-            tiers: [
-              {
-                start: 32000,
-                price: 2.151,
-              },
-              {
-                start: 128000,
-                price: 4.301,
-              },
-            ],
-          },
-        },
-      },
-      {
         id: 'qwen/qwen3.5-122b-a10b',
         name: 'Qwen3.5 122B A10B',
         match: {
@@ -24547,19 +24472,6 @@ export const data: Provider[] = [
         },
       },
       {
-        id: 'qwen/qwen4-max',
-        name: 'Qwen4 Max',
-        match: {
-          equals: 'qwen/qwen4-max',
-        },
-        context_window: 1000000,
-        prices: {
-          input_mtok: 1.413,
-          cache_read_mtok: 0.071,
-          output_mtok: 4.24,
-        },
-      },
-      {
         id: 'sao10k/l3-70b-euryale-v2.1',
         name: 'Llama 3 70B Euryale V2.1',
         match: {
@@ -24664,19 +24576,6 @@ export const data: Provider[] = [
           input_mtok: 0.417,
           cache_read_mtok: 0.021,
           output_mtok: 1.2505,
-        },
-      },
-      {
-        id: 'tencent/hy4-flash',
-        name: 'Hy4 Flash',
-        match: {
-          equals: 'tencent/hy4-flash',
-        },
-        context_window: 1000000,
-        prices: {
-          input_mtok: 0.07,
-          cache_read_mtok: 0.003,
-          output_mtok: 0.281,
         },
       },
       {
@@ -51344,6 +51243,80 @@ export const data: Provider[] = [
               {
                 start: 200000,
                 price: 7.5,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'gpt-6.2-astra',
+        name: 'GPT-6.2 Astra',
+        match: {
+          equals: 'gpt-6.2-astra',
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 8,
+            tiers: [
+              {
+                start: 200000,
+                price: 16,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.4,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.8,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 40,
+            tiers: [
+              {
+                start: 200000,
+                price: 60,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'gpt-6.2-sol',
+        name: 'GPT-6.2 Sol',
+        match: {
+          equals: 'gpt-6.2-sol',
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 200000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 200000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 200000,
+                price: 15,
               },
             ],
           },
