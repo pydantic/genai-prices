@@ -109,6 +109,32 @@ fn batch_processing() {
 }
 
 #[test]
+fn google_gemini_flex_and_priority_tiers() {
+    for (model, tier, timestamp, total) in [
+        ("gemini-2.5-flash", "flex", date(2026, 11, 16), 2.732_5),
+        ("gemini-2.5-flash", "flex", date(2026, 11, 17), 1.37),
+        ("gemini-2.5-flash", "priority", date(2026, 11, 17), 4.918_5),
+        ("gemini-2.5-pro", "flex", date(2026, 11, 17), 8.5),
+        ("gemini-2.5-pro", "priority", date(2026, 11, 17), 30.487_5),
+        ("gemini-3.1-pro-preview", "priority", date(2026, 11, 17), 37.98),
+        ("gemini-3.5-flash-lite", "priority", date(2026, 11, 17), 4.917_5),
+        ("gemini-3.8-flash", "flex", date(2026, 11, 17), 2.165_625),
+        ("gemini-3.8-flash", "flex", date(2027, 1, 1), 4.331_25),
+        ("gemini-3.8-flash", "priority", date(2026, 11, 17), 7.796_25),
+        ("gemini-3.8-flash", "priority", date(2027, 1, 1), 15.592_5),
+    ] {
+        let usage = token_usage();
+        let request = PriceRequest::new(model, &usage)
+            .with_provider_id("google")
+            .with_timestamp(timestamp)
+            .with_price_context("service_tier", tier);
+        let result = genai_prices::calculate(&request).unwrap();
+        assert_close(result.total_price, total, 1e-12);
+        assert!(result.warnings.is_empty(), "{model}/{tier}: {:?}", result.warnings);
+    }
+}
+
+#[test]
 fn openai_gpt_6_2_price_variants() {
     for (model, key, value, input_tokens, total) in [
         ("gpt-6.2-astra", "service_tier", "default", 200_000.0, 5.24),

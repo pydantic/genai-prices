@@ -12660,7 +12660,7 @@ export const data: Provider[] = [
         },
         context_window: 1048576,
         price_comments:
-          'Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output; context caching stays at the standard rate.',
+          'Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output; context caching stays at the standard rate. Flex and Priority rates verified on 2026-11-17 at https://aistudio.google.com/docs/pricing#gemini-2.5-flash (Flex and Priority tabs); tier history before then is not modelled. Flex matches Batch (context caching stays at the standard rate); Priority is 1.8x standard for input, output and context caching.',
         prices: {
           input_mtok: 0.3,
           cache_read_mtok: 0.03,
@@ -12681,6 +12681,36 @@ export const data: Provider[] = [
             },
             constraint: {
               start_date: '2026-10-14',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.15,
+              output_mtok: 1.25,
+              input_audio_mtok: 0.5,
+            },
+            constraint: {
+              start_date: '2026-11-17',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 0.54,
+              cache_read_mtok: 0.054,
+              output_mtok: 4.5,
+              input_audio_mtok: 1.8,
+              cache_audio_read_mtok: 0.18,
+            },
+            constraint: {
+              start_date: '2026-11-17',
               type: 'start_date',
             },
           },
@@ -12735,7 +12765,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output; context caching stays at the standard rate.',
+          'Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output; context caching stays at the standard rate. Flex and Priority rates verified on 2026-11-17 at https://aistudio.google.com/docs/pricing#gemini-2.5-flash-lite (Flex and Priority tabs); tier history before then is not modelled. Flex matches Batch (context caching stays at the standard rate); Priority is 1.8x standard for input, output and context caching.',
         prices: {
           input_mtok: 0.1,
           cache_read_mtok: 0.01,
@@ -12756,6 +12786,36 @@ export const data: Provider[] = [
             },
             constraint: {
               start_date: '2026-10-14',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.05,
+              output_mtok: 0.2,
+              input_audio_mtok: 0.15,
+            },
+            constraint: {
+              start_date: '2026-11-17',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 0.18,
+              cache_read_mtok: 0.018,
+              output_mtok: 0.72,
+              input_audio_mtok: 0.54,
+              cache_audio_read_mtok: 0.054,
+            },
+            constraint: {
+              start_date: '2026-11-17',
               type: 'start_date',
             },
           },
@@ -12858,7 +12918,7 @@ export const data: Provider[] = [
           ],
         },
         price_comments:
-          'See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output in both prompt-size tiers; context caching stays at the standard rate.',
+          'See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output in both prompt-size tiers; context caching stays at the standard rate. Flex and Priority rates verified on 2026-11-17 at https://aistudio.google.com/docs/pricing#gemini-2.5-pro (Flex and Priority tabs); tier history before then is not modelled. Flex matches Batch in both prompt-size tiers (context caching stays at the standard rate); Priority is 1.8x standard for input, output and context caching in both prompt-size tiers.',
         prices: {
           input_mtok: {
             base: 1.25,
@@ -12919,6 +12979,73 @@ export const data: Provider[] = [
               type: 'start_date',
             },
           },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: {
+                base: 0.625,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 1.25,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 5,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 7.5,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-11-17',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: {
+                base: 2.25,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 4.5,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.225,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 0.45,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 18,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 27,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-11-17',
+              type: 'start_date',
+            },
+          },
         ],
       },
       {
@@ -12974,7 +13101,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'See https://ai.google.dev/gemini-api/docs/pricing. Standard pricing shown; Batch API offers 50% discount on input/output. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output; context caching is "Same as Standard".',
+          'See https://ai.google.dev/gemini-api/docs/pricing. Standard pricing shown; Batch API offers 50% discount on input/output. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output; context caching is "Same as Standard". Flex and Priority rates verified on 2026-11-17 at https://aistudio.google.com/docs/pricing#gemini-3-flash-preview (Flex and Priority tabs); tier history before then is not modelled. Flex matches Batch (context caching is "Same as Standard"); Priority is 1.8x standard for input, output and context caching.',
         prices: [
           {
             prices: {
@@ -13012,6 +13139,36 @@ export const data: Provider[] = [
             },
             constraint: {
               start_date: '2026-10-14',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.25,
+              output_mtok: 1.5,
+              input_audio_mtok: 0.5,
+            },
+            constraint: {
+              start_date: '2026-11-17',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 0.9,
+              cache_read_mtok: 0.09,
+              output_mtok: 5.4,
+              input_audio_mtok: 1.8,
+              cache_audio_read_mtok: 0.18,
+            },
+            constraint: {
+              start_date: '2026-11-17',
               type: 'start_date',
             },
           },
@@ -13218,7 +13375,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'See https://ai.google.dev/gemini-api/docs/pricing. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input, output and context caching.',
+          'See https://ai.google.dev/gemini-api/docs/pricing. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input, output and context caching. Flex and Priority rates verified on 2026-11-17 at https://aistudio.google.com/docs/pricing#gemini-3.1-flash-lite (Flex and Priority tabs); tier history before then is not modelled. Flex matches Batch; Priority is 1.8x standard for input, output and context caching.',
         prices: {
           input_mtok: 0.25,
           cache_read_mtok: 0.025,
@@ -13241,6 +13398,38 @@ export const data: Provider[] = [
             },
             constraint: {
               start_date: '2026-10-14',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.125,
+              cache_read_mtok: 0.0125,
+              output_mtok: 0.75,
+              input_audio_mtok: 0.25,
+              cache_audio_read_mtok: 0.025,
+            },
+            constraint: {
+              start_date: '2026-11-17',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 0.45,
+              cache_read_mtok: 0.045,
+              output_mtok: 2.7,
+              input_audio_mtok: 0.9,
+              cache_audio_read_mtok: 0.09,
+            },
+            constraint: {
+              start_date: '2026-11-17',
               type: 'start_date',
             },
           },
@@ -13339,7 +13528,7 @@ export const data: Provider[] = [
           ],
         },
         price_comments:
-          'Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output in both prompt-size tiers; context caching is "Same as Standard".',
+          'Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output in both prompt-size tiers; context caching is "Same as Standard". Flex and Priority rates verified on 2026-11-17 at https://aistudio.google.com/docs/pricing#gemini-3.1-pro-preview (Flex and Priority tabs); tier history before then is not modelled. Flex matches Batch in both prompt-size tiers (context caching is "Same as Standard"); Priority is 1.8x standard for input, output and context caching in both prompt-size tiers.',
         prices: {
           input_mtok: {
             base: 2,
@@ -13400,6 +13589,73 @@ export const data: Provider[] = [
               type: 'start_date',
             },
           },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: {
+                base: 1,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 2,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 6,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 9,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-11-17',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: {
+                base: 3.6,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 7.2,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.36,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 0.72,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 21.6,
+                tiers: [
+                  {
+                    start: 200000,
+                    price: 32.4,
+                  },
+                ],
+              },
+            },
+            constraint: {
+              start_date: '2026-11-17',
+              type: 'start_date',
+            },
+          },
         ],
       },
       {
@@ -13447,7 +13703,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount. Input rate is unified across text/image/video/audio (no separate audio rate). Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output; batch context caching is $0.02, not half of the $0.03 standard rate.',
+          'See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount. Input rate is unified across text/image/video/audio (no separate audio rate). Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output; batch context caching is $0.02, not half of the $0.03 standard rate. Flex and Priority rates verified on 2026-11-17 at https://aistudio.google.com/docs/pricing#gemini-3.5-flash-lite (Flex and Priority tabs); tier history before then is not modelled. Flex halves input and output, with context caching at $0.02; Priority is 1.8x standard for input and output, with context caching at $0.05.',
         prices: {
           input_mtok: 0.3,
           cache_read_mtok: 0.03,
@@ -13469,6 +13725,34 @@ export const data: Provider[] = [
               type: 'start_date',
             },
           },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.15,
+              cache_read_mtok: 0.02,
+              output_mtok: 1.25,
+            },
+            constraint: {
+              start_date: '2026-11-17',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 0.54,
+              cache_read_mtok: 0.05,
+              output_mtok: 4.5,
+            },
+            constraint: {
+              start_date: '2026-11-17',
+              type: 'start_date',
+            },
+          },
         ],
       },
       {
@@ -13481,7 +13765,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount. No separate audio input rate documented. Introductory rates apply through 2026-12-31. The cache storage price ($0.50 per 1M tokens per hour) has no unit in prices/units.yml and is not represented here. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input, output and context caching, at both the introductory and the 2027-01-01 rates.',
+          'See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount. No separate audio input rate documented. Introductory rates apply through 2026-12-31. The cache storage price ($0.50 per 1M tokens per hour) has no unit in prices/units.yml and is not represented here. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input, output and context caching, at both the introductory and the 2027-01-01 rates. Flex and Priority rates verified on 2026-11-17 at https://aistudio.google.com/docs/pricing#gemini-3.6-flash (Flex and Priority tabs); tier history before then is not modelled. Flex matches Batch; Priority is 1.8x standard for input, output and context caching, at both the introductory and the 2027-01-01 rates.',
         prices: [
           {
             prices: {
@@ -13530,6 +13814,62 @@ export const data: Provider[] = [
             },
             constraint: {
               start_date: '2026-10-14',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.75,
+              cache_read_mtok: 0.075,
+              output_mtok: 3.75,
+            },
+            constraint: {
+              start_date: '2027-01-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.375,
+              cache_read_mtok: 0.0375,
+              output_mtok: 1.875,
+            },
+            constraint: {
+              start_date: '2026-11-17',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 2.7,
+              cache_read_mtok: 0.27,
+              output_mtok: 13.5,
+            },
+            constraint: {
+              start_date: '2027-01-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 1.35,
+              cache_read_mtok: 0.135,
+              output_mtok: 6.75,
+            },
+            constraint: {
+              start_date: '2026-11-17',
               type: 'start_date',
             },
           },
@@ -13593,7 +13933,7 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         price_comments:
-          'See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount, Priority tier is 1.8x. Introductory rates apply through 2026-12-31. The cache storage price ($0.50 per 1M tokens per hour) has no unit in prices/units.yml and is not represented here. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input, output and context caching, at both the introductory and the 2027-01-01 rates.',
+          'See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount, Priority tier is 1.8x. Introductory rates apply through 2026-12-31. The cache storage price ($0.50 per 1M tokens per hour) has no unit in prices/units.yml and is not represented here. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input, output and context caching, at both the introductory and the 2027-01-01 rates. Flex and Priority rates verified on 2026-11-17 at https://aistudio.google.com/docs/pricing#gemini-3.8-flash (Flex and Priority tabs); tier history before then is not modelled. Flex matches Batch; Priority is 1.8x standard for input, output and context caching, at both the introductory and the 2027-01-01 rates.',
         prices: [
           {
             prices: {
@@ -13642,6 +13982,62 @@ export const data: Provider[] = [
             },
             constraint: {
               start_date: '2026-10-14',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.75,
+              cache_read_mtok: 0.075,
+              output_mtok: 3.75,
+            },
+            constraint: {
+              start_date: '2027-01-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 0.375,
+              cache_read_mtok: 0.0375,
+              output_mtok: 1.875,
+            },
+            constraint: {
+              start_date: '2026-11-17',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 2.7,
+              cache_read_mtok: 0.27,
+              output_mtok: 13.5,
+            },
+            constraint: {
+              start_date: '2027-01-01',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 1.35,
+              cache_read_mtok: 0.135,
+              output_mtok: 6.75,
+            },
+            constraint: {
+              start_date: '2026-11-17',
               type: 'start_date',
             },
           },
