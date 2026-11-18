@@ -13322,6 +13322,12 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('1.2'), cache_read_mtok=Decimal('0.27'), output_mtok=Decimal('5')),
             ),
             ModelInfo(
+                id='thinkingmachines/inkling-2-small',
+                match=ClauseEquals(equals='thinkingmachines/inkling-2-small'),
+                name='Inkling 2 Small',
+                prices=ModelPrice(input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('1')),
+            ),
+            ModelInfo(
                 id='zai-org/GLM-5.3',
                 match=ClauseEquals(equals='zai-org/GLM-5.3'),
                 name='GLM 5.3',
@@ -13929,7 +13935,15 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='ming image 0.1 design',
-                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1')),
+                prices=[
+                    ConditionalPrice(
+                        constraint=None, prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1'))
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 18)),
+                        prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='minimax/minimax-m2.5',
@@ -14090,6 +14104,28 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.05'), output_mtok=Decimal('0.2')),
             ),
             ModelInfo(
+                id='openai/gpt-6.2-astra',
+                match=ClauseEquals(equals='openai/gpt-6.2-astra'),
+                name='openai/gpt-6.2-astra',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('8'), tiers=[Tier(start=272000, price=Decimal('16'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.4'), tiers=[Tier(start=272000, price=Decimal('0.8'))]),
+                    output_mtok=TieredPrices(base=Decimal('40'), tiers=[Tier(start=272000, price=Decimal('60'))]),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-6.2-sol',
+                match=ClauseEquals(equals='openai/gpt-6.2-sol'),
+                name='openai/gpt-6.2-sol',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]),
+                    output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('15'))]),
+                ),
+            ),
+            ModelInfo(
                 id='openai/gpt-oss-120b',
                 match=ClauseEquals(equals='openai/gpt-oss-120b'),
                 name='OpenAI GPT OSS 120B',
@@ -14147,6 +14183,26 @@ providers: list[Provider] = [
                 name='Qwen3 VL 30B A3B Instruct',
                 context_window=131072,
                 prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.7')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-vl-plus',
+                match=ClauseEquals(equals='qwen/qwen3-vl-plus'),
+                name='Qwen3 VL Plus',
+                context_window=262000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(
+                        base=Decimal('1'),
+                        tiers=[Tier(start=32000, price=Decimal('0.216')), Tier(start=128000, price=Decimal('0.431'))],
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('1'),
+                        tiers=[Tier(start=32000, price=Decimal('0.022')), Tier(start=128000, price=Decimal('0.043'))],
+                    ),
+                    output_mtok=TieredPrices(
+                        base=Decimal('1'),
+                        tiers=[Tier(start=32000, price=Decimal('2.151')), Tier(start=128000, price=Decimal('4.301'))],
+                    ),
+                ),
             ),
             ModelInfo(
                 id='qwen/qwen3.5-122b-a10b',
@@ -14232,6 +14288,15 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('6')),
             ),
             ModelInfo(
+                id='qwen/qwen4-max',
+                match=ClauseEquals(equals='qwen/qwen4-max'),
+                name='Qwen4 Max',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.413'), cache_read_mtok=Decimal('0.071'), output_mtok=Decimal('4.24')
+                ),
+            ),
+            ModelInfo(
                 id='sao10k/l3-70b-euryale-v2.1',
                 match=ClauseEquals(equals='sao10k/l3-70b-euryale-v2.1'),
                 name='Llama 3 70B Euryale V2.1',
@@ -14293,6 +14358,15 @@ providers: list[Provider] = [
                 context_window=1000000,
                 prices=ModelPrice(
                     input_mtok=Decimal('0.417'), cache_read_mtok=Decimal('0.021'), output_mtok=Decimal('1.2505')
+                ),
+            ),
+            ModelInfo(
+                id='tencent/hy4-flash',
+                match=ClauseEquals(equals='tencent/hy4-flash'),
+                name='Hy4 Flash',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.07'), cache_read_mtok=Decimal('0.003'), output_mtok=Decimal('0.281')
                 ),
             ),
             ModelInfo(
