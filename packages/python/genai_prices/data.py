@@ -30076,7 +30076,17 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='ricursive-ai/Ripple-65B-Preview'),
                 name='Ripple 65B Preview',
                 context_window=131072,
-                prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.6')),
+                prices=[
+                    ConditionalPrice(
+                        constraint=None, prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('0.6'))
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 18)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.2'), cache_read_mtok=Decimal('0.02'), output_mtok=Decimal('0.6')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='snorkelai/Snorkel-Mistral-PairRM-DPO',

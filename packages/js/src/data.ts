@@ -53169,10 +53169,25 @@ export const data: Provider[] = [
           equals: 'ricursive-ai/Ripple-65B-Preview',
         },
         context_window: 131072,
-        prices: {
-          input_mtok: 0.2,
-          output_mtok: 0.6,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.2,
+              output_mtok: 0.6,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-18',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.2,
+              cache_read_mtok: 0.02,
+              output_mtok: 0.6,
+            },
+          },
+        ],
       },
       {
         id: 'snorkelai/Snorkel-Mistral-PairRM-DPO',
