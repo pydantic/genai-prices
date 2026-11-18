@@ -7352,7 +7352,7 @@ providers: list[Provider] = [
                 name='Gemini 2.5 Flash',
                 description='Gemini 2.5 Flash is Google\'s state-of-the-art workhorse model, specifically designed for advanced reasoning, coding, mathematics, and scientific tasks. It includes built-in "thinking" capabilities, enabling it to provide responses with greater accuracy and nuanced context handling.',
                 context_window=1048576,
-                price_comments='Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output; context caching stays at the standard rate.',
+                price_comments='Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output; context caching stays at the standard rate. Flex and Priority rates verified on 2026-11-17 at https://aistudio.google.com/docs/pricing#gemini-2.5-flash (Flex and Priority tabs); tier history before then is not modelled. Flex matches Batch (context caching stays at the standard rate); Priority is 1.8x standard for input, output and context caching.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.3'),
                     cache_read_mtok=Decimal('0.03'),
@@ -7368,7 +7368,25 @@ providers: list[Provider] = [
                             input_mtok=Decimal('0.15'), output_mtok=Decimal('1.25'), input_audio_mtok=Decimal('0.5')
                         ),
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
-                    )
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.15'), output_mtok=Decimal('1.25'), input_audio_mtok=Decimal('0.5')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 17)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.54'),
+                            cache_read_mtok=Decimal('0.054'),
+                            output_mtok=Decimal('4.5'),
+                            input_audio_mtok=Decimal('1.8'),
+                            cache_audio_read_mtok=Decimal('0.18'),
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 17)),
+                    ),
                 ],
             ),
             ModelInfo(
@@ -7404,7 +7422,7 @@ providers: list[Provider] = [
                 name='Gemini 2.5 Flash Lite',
                 description='Gemini 2.5 Flash-Lite is a lightweight reasoning model in the Gemini 2.5 family, optimized for ultra-low latency and cost efficiency. It offers improved throughput, faster token generation, and better performance across common benchmarks compared to earlier Flash models. By default, "thinking" (i.e. multi-pass reasoning) is disabled to prioritize speed, but developers can enable it via the Reasoning API parameter to selectively trade off cost for intelligence.',
                 context_window=1000000,
-                price_comments='Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output; context caching stays at the standard rate.',
+                price_comments='Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output; context caching stays at the standard rate. Flex and Priority rates verified on 2026-11-17 at https://aistudio.google.com/docs/pricing#gemini-2.5-flash-lite (Flex and Priority tabs); tier history before then is not modelled. Flex matches Batch (context caching stays at the standard rate); Priority is 1.8x standard for input, output and context caching.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.1'),
                     cache_read_mtok=Decimal('0.01'),
@@ -7420,7 +7438,25 @@ providers: list[Provider] = [
                             input_mtok=Decimal('0.05'), output_mtok=Decimal('0.2'), input_audio_mtok=Decimal('0.15')
                         ),
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
-                    )
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.05'), output_mtok=Decimal('0.2'), input_audio_mtok=Decimal('0.15')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 17)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.18'),
+                            cache_read_mtok=Decimal('0.018'),
+                            output_mtok=Decimal('0.72'),
+                            input_audio_mtok=Decimal('0.54'),
+                            cache_audio_read_mtok=Decimal('0.054'),
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 17)),
+                    ),
                 ],
             ),
             ModelInfo(
@@ -7480,7 +7516,7 @@ providers: list[Provider] = [
                 ),
                 name='Gemini 2.5 Pro',
                 description='Gemini 2.5 Pro is Google\'s state-of-the-art AI model designed for advanced reasoning, coding, mathematics, and scientific tasks. It employs "thinking" capabilities, enabling it to reason through responses with enhanced accuracy and nuanced context handling. Gemini 2.5 Pro achieves top-tier performance on multiple benchmarks, including first-place positioning on the LMArena leaderboard, reflecting superior human-preference alignment and complex problem-solving abilities.',
-                price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output in both prompt-size tiers; context caching stays at the standard rate.',
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output in both prompt-size tiers; context caching stays at the standard rate. Flex and Priority rates verified on 2026-11-17 at https://aistudio.google.com/docs/pricing#gemini-2.5-pro (Flex and Priority tabs); tier history before then is not modelled. Flex matches Batch in both prompt-size tiers (context caching stays at the standard rate); Priority is 1.8x standard for input, output and context caching in both prompt-size tiers.',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=200000, price=Decimal('2.5'))]),
                     cache_read_mtok=TieredPrices(
@@ -7501,7 +7537,34 @@ providers: list[Provider] = [
                             ),
                         ),
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
-                    )
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('0.625'), tiers=[Tier(start=200000, price=Decimal('1.25'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('5'), tiers=[Tier(start=200000, price=Decimal('7.5'))]
+                            ),
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 17)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('2.25'), tiers=[Tier(start=200000, price=Decimal('4.5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.225'), tiers=[Tier(start=200000, price=Decimal('0.45'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('18'), tiers=[Tier(start=200000, price=Decimal('27'))]
+                            ),
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 17)),
+                    ),
                 ],
             ),
             ModelInfo(
@@ -7532,7 +7595,7 @@ providers: list[Provider] = [
                 name='Gemini 3 Flash Preview',
                 description="Google's ultra-fast frontier model optimized for speed and efficiency. Delivers state-of-the-art performance while maintaining low latency and cost, with improved reasoning and coding capabilities.",
                 context_window=1000000,
-                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard pricing shown; Batch API offers 50% discount on input/output. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output; context caching is "Same as Standard".',
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard pricing shown; Batch API offers 50% discount on input/output. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output; context caching is "Same as Standard". Flex and Priority rates verified on 2026-11-17 at https://aistudio.google.com/docs/pricing#gemini-3-flash-preview (Flex and Priority tabs); tier history before then is not modelled. Flex matches Batch (context caching is "Same as Standard"); Priority is 1.8x standard for input, output and context caching.',
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
@@ -7562,7 +7625,25 @@ providers: list[Provider] = [
                             input_mtok=Decimal('0.25'), output_mtok=Decimal('1.5'), input_audio_mtok=Decimal('0.5')
                         ),
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
-                    )
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.25'), output_mtok=Decimal('1.5'), input_audio_mtok=Decimal('0.5')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 17)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.9'),
+                            cache_read_mtok=Decimal('0.09'),
+                            output_mtok=Decimal('5.4'),
+                            input_audio_mtok=Decimal('1.8'),
+                            cache_audio_read_mtok=Decimal('0.18'),
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 17)),
+                    ),
                 ],
             ),
             ModelInfo(
@@ -7681,7 +7762,7 @@ providers: list[Provider] = [
                 name='Gemini 3.1 Flash Lite',
                 description="Google's fastest and most cost-efficient Gemini 3 series model, built for intelligence at scale. Optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.",
                 context_window=1000000,
-                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input, output and context caching.',
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input, output and context caching. Flex and Priority rates verified on 2026-11-17 at https://aistudio.google.com/docs/pricing#gemini-3.1-flash-lite (Flex and Priority tabs); tier history before then is not modelled. Flex matches Batch; Priority is 1.8x standard for input, output and context caching.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.25'),
                     cache_read_mtok=Decimal('0.025'),
@@ -7701,7 +7782,29 @@ providers: list[Provider] = [
                             cache_audio_read_mtok=Decimal('0.025'),
                         ),
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
-                    )
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.125'),
+                            cache_read_mtok=Decimal('0.0125'),
+                            output_mtok=Decimal('0.75'),
+                            input_audio_mtok=Decimal('0.25'),
+                            cache_audio_read_mtok=Decimal('0.025'),
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 17)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.45'),
+                            cache_read_mtok=Decimal('0.045'),
+                            output_mtok=Decimal('2.7'),
+                            input_audio_mtok=Decimal('0.9'),
+                            cache_audio_read_mtok=Decimal('0.09'),
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 17)),
+                    ),
                 ],
             ),
             ModelInfo(
@@ -7764,7 +7867,7 @@ providers: list[Provider] = [
                 ),
                 name='Gemini 3.1 Pro Preview',
                 description='The latest performance, intelligence, and usability improvements to the best model family in the world for multimodal understanding, agentic capabilities, and vibe-coding.',
-                price_comments='Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output in both prompt-size tiers; context caching is "Same as Standard".',
+                price_comments='Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output in both prompt-size tiers; context caching is "Same as Standard". Flex and Priority rates verified on 2026-11-17 at https://aistudio.google.com/docs/pricing#gemini-3.1-pro-preview (Flex and Priority tabs); tier history before then is not modelled. Flex matches Batch in both prompt-size tiers (context caching is "Same as Standard"); Priority is 1.8x standard for input, output and context caching in both prompt-size tiers.',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=200000, price=Decimal('4'))]),
                     cache_read_mtok=TieredPrices(base=Decimal('0.2'), tiers=[Tier(start=200000, price=Decimal('0.4'))]),
@@ -7779,7 +7882,30 @@ providers: list[Provider] = [
                             output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=200000, price=Decimal('9'))]),
                         ),
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
-                    )
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=200000, price=Decimal('2'))]),
+                            output_mtok=TieredPrices(base=Decimal('6'), tiers=[Tier(start=200000, price=Decimal('9'))]),
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 17)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('3.6'), tiers=[Tier(start=200000, price=Decimal('7.2'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.36'), tiers=[Tier(start=200000, price=Decimal('0.72'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('21.6'), tiers=[Tier(start=200000, price=Decimal('32.4'))]
+                            ),
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 17)),
+                    ),
                 ],
             ),
             ModelInfo(
@@ -7813,7 +7939,7 @@ providers: list[Provider] = [
                 name='Gemini 3.5 Flash Lite',
                 description="Google's fastest and most cost-efficient Gemini 3.5 series model, optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.",
                 context_window=1000000,
-                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount. Input rate is unified across text/image/video/audio (no separate audio rate). Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output; batch context caching is $0.02, not half of the $0.03 standard rate.',
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount. Input rate is unified across text/image/video/audio (no separate audio rate). Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output; batch context caching is $0.02, not half of the $0.03 standard rate. Flex and Priority rates verified on 2026-11-17 at https://aistudio.google.com/docs/pricing#gemini-3.5-flash-lite (Flex and Priority tabs); tier history before then is not modelled. Flex halves input and output, with context caching at $0.02; Priority is 1.8x standard for input and output, with context caching at $0.05.',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.3'),
                     cache_read_mtok=Decimal('0.03'),
@@ -7827,7 +7953,21 @@ providers: list[Provider] = [
                             input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.02'), output_mtok=Decimal('1.25')
                         ),
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
-                    )
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.02'), output_mtok=Decimal('1.25')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 17)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.54'), cache_read_mtok=Decimal('0.05'), output_mtok=Decimal('4.5')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 17)),
+                    ),
                 ],
             ),
             ModelInfo(
@@ -7836,7 +7976,7 @@ providers: list[Provider] = [
                 name='Gemini 3.6 Flash',
                 description="Google's most intelligent model built for speed, combining frontier intelligence with improved reasoning, coding, and multimodal understanding.",
                 context_window=1000000,
-                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount. No separate audio input rate documented. Introductory rates apply through 2026-12-31. The cache storage price ($0.50 per 1M tokens per hour) has no unit in prices/units.yml and is not represented here. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input, output and context caching, at both the introductory and the 2027-01-01 rates.',
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount. No separate audio input rate documented. Introductory rates apply through 2026-12-31. The cache storage price ($0.50 per 1M tokens per hour) has no unit in prices/units.yml and is not represented here. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input, output and context caching, at both the introductory and the 2027-01-01 rates. Flex and Priority rates verified on 2026-11-17 at https://aistudio.google.com/docs/pricing#gemini-3.6-flash (Flex and Priority tabs); tier history before then is not modelled. Flex matches Batch; Priority is 1.8x standard for input, output and context caching, at both the introductory and the 2027-01-01 rates.',
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
@@ -7870,6 +8010,34 @@ providers: list[Provider] = [
                             input_mtok=Decimal('0.375'), cache_read_mtok=Decimal('0.0375'), output_mtok=Decimal('1.875')
                         ),
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('3.75')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2027, 1, 1)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.375'), cache_read_mtok=Decimal('0.0375'), output_mtok=Decimal('1.875')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 17)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2.7'), cache_read_mtok=Decimal('0.27'), output_mtok=Decimal('13.5')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2027, 1, 1)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.35'), cache_read_mtok=Decimal('0.135'), output_mtok=Decimal('6.75')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 17)),
                     ),
                 ],
             ),
@@ -7916,7 +8084,7 @@ providers: list[Provider] = [
                 name='Gemini 3.8 Flash',
                 description="Google's most intelligent Flash model, engineered for long-horizon software engineering, autonomous agents, and complex enterprise workflows.",
                 context_window=1000000,
-                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount, Priority tier is 1.8x. Introductory rates apply through 2026-12-31. The cache storage price ($0.50 per 1M tokens per hour) has no unit in prices/units.yml and is not represented here. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input, output and context caching, at both the introductory and the 2027-01-01 rates.',
+                price_comments='See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50% discount, Priority tier is 1.8x. Introductory rates apply through 2026-12-31. The cache storage price ($0.50 per 1M tokens per hour) has no unit in prices/units.yml and is not represented here. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input, output and context caching, at both the introductory and the 2027-01-01 rates. Flex and Priority rates verified on 2026-11-17 at https://aistudio.google.com/docs/pricing#gemini-3.8-flash (Flex and Priority tabs); tier history before then is not modelled. Flex matches Batch; Priority is 1.8x standard for input, output and context caching, at both the introductory and the 2027-01-01 rates.',
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
@@ -7950,6 +8118,34 @@ providers: list[Provider] = [
                             input_mtok=Decimal('0.375'), cache_read_mtok=Decimal('0.0375'), output_mtok=Decimal('1.875')
                         ),
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.75'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('3.75')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2027, 1, 1)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.375'), cache_read_mtok=Decimal('0.0375'), output_mtok=Decimal('1.875')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 17)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2.7'), cache_read_mtok=Decimal('0.27'), output_mtok=Decimal('13.5')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2027, 1, 1)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.35'), cache_read_mtok=Decimal('0.135'), output_mtok=Decimal('6.75')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 17)),
                     ),
                 ],
             ),

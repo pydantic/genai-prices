@@ -192,6 +192,34 @@ def test_google_gemini_4_service_tiers(model: str, tier: str, timestamp: datetim
 
 
 @pytest.mark.parametrize(
+    'model,tier,timestamp,total',
+    [
+        ('gemini-2.5-flash', 'flex', datetime(2026, 11, 16), '2.7325'),
+        ('gemini-2.5-flash', 'flex', datetime(2026, 11, 17), '1.37'),
+        ('gemini-2.5-flash', 'priority', datetime(2026, 11, 17), '4.9185'),
+        ('gemini-2.5-pro', 'flex', datetime(2026, 11, 17), '8.5'),
+        ('gemini-2.5-pro', 'priority', datetime(2026, 11, 17), '30.4875'),
+        ('gemini-3.1-pro-preview', 'priority', datetime(2026, 11, 17), '37.98'),
+        ('gemini-3.5-flash-lite', 'priority', datetime(2026, 11, 17), '4.9175'),
+        ('gemini-3.8-flash', 'flex', datetime(2026, 11, 17), '2.165625'),
+        ('gemini-3.8-flash', 'flex', datetime(2027, 1, 1), '4.33125'),
+        ('gemini-3.8-flash', 'priority', datetime(2026, 11, 17), '7.79625'),
+        ('gemini-3.8-flash', 'priority', datetime(2027, 1, 1), '15.5925'),
+    ],
+)
+def test_google_gemini_flex_and_priority_tiers(model: str, tier: str, timestamp: datetime, total: str) -> None:
+    """Flex and Priority rates verified on 2026-11-17; earlier requests keep standard rates."""
+    result = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=250_000, output_tokens=1_000_000),
+        model,
+        provider_id='google',
+        genai_request_timestamp=timestamp,
+        price_context={'service_tier': tier},
+    )
+    assert result.total_price == Decimal(total)
+
+
+@pytest.mark.parametrize(
     'model,input_tokens,cache_read_tokens,input_price,output_price',
     [
         ('o4-mini', 100_000, 100_000, '0.0138', '2.2'),

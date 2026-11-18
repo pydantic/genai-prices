@@ -159,6 +159,28 @@ it.each([
 })
 
 it.each([
+  ['gemini-2.5-flash', 'flex', '2026-11-16', 2.7325],
+  ['gemini-2.5-flash', 'flex', '2026-11-17', 1.37],
+  ['gemini-2.5-flash', 'priority', '2026-11-17', 4.9185],
+  ['gemini-2.5-pro', 'flex', '2026-11-17', 8.5],
+  ['gemini-2.5-pro', 'priority', '2026-11-17', 30.4875],
+  ['gemini-3.1-pro-preview', 'priority', '2026-11-17', 37.98],
+  ['gemini-3.5-flash-lite', 'priority', '2026-11-17', 4.9175],
+  ['gemini-3.8-flash', 'flex', '2026-11-17', 2.165625],
+  ['gemini-3.8-flash', 'flex', '2027-01-01', 4.33125],
+  ['gemini-3.8-flash', 'priority', '2026-11-17', 7.79625],
+  ['gemini-3.8-flash', 'priority', '2027-01-01', 15.5925],
+] as const)('prices Google %s %s Flex and Priority on %s', (model, tier, date, total) => {
+  expect(
+    calcPrice({ cache_read_tokens: 250_000, input_tokens: 1_000_000, output_tokens: 1_000_000 }, model, {
+      priceContext: { service_tier: tier },
+      providerId: 'google',
+      timestamp: new Date(`${date}T00:00:00Z`),
+    })?.total_price
+  ).toBeCloseTo(total, 12)
+})
+
+it.each([
   ['o4-mini', 100_000, 100_000, 0.0138, 2.2],
   ['gpt-5.4', 272_000, 272_000, 0.03536, 7.5],
   ['gpt-5.4', 272_001, 272_001, 0.06800025, 11.25],
