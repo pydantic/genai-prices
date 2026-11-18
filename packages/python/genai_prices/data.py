@@ -14105,7 +14105,12 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='openai/gpt-6.2-astra',
-                match=ClauseEquals(equals='openai/gpt-6.2-astra'),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='openai/gpt-6.2-astra'),
+                        ClauseEquals(equals='openai/gpt-6.2-astra-azure-dst'),
+                    ]
+                ),
                 name='openai/gpt-6.2-astra',
                 context_window=1050000,
                 prices=ModelPrice(
@@ -14116,7 +14121,9 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='openai/gpt-6.2-sol',
-                match=ClauseEquals(equals='openai/gpt-6.2-sol'),
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='openai/gpt-6.2-sol'), ClauseEquals(equals='openai/gpt-6.2-sol-azure-dst')]
+                ),
                 name='openai/gpt-6.2-sol',
                 context_window=1050000,
                 prices=ModelPrice(

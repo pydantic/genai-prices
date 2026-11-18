@@ -24260,7 +24260,14 @@ export const data: Provider[] = [
         id: 'openai/gpt-6.2-astra',
         name: 'openai/gpt-6.2-astra',
         match: {
-          equals: 'openai/gpt-6.2-astra',
+          or: [
+            {
+              equals: 'openai/gpt-6.2-astra',
+            },
+            {
+              equals: 'openai/gpt-6.2-astra-azure-dst',
+            },
+          ],
         },
         context_window: 1050000,
         prices: {
@@ -24297,7 +24304,14 @@ export const data: Provider[] = [
         id: 'openai/gpt-6.2-sol',
         name: 'openai/gpt-6.2-sol',
         match: {
-          equals: 'openai/gpt-6.2-sol',
+          or: [
+            {
+              equals: 'openai/gpt-6.2-sol',
+            },
+            {
+              equals: 'openai/gpt-6.2-sol-azure-dst',
+            },
+          ],
         },
         context_window: 1050000,
         prices: {
