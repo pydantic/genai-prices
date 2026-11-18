@@ -4056,7 +4056,14 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='@cf/cloudflare/clairic',
-                match=ClauseOr(or_=[ClauseEquals(equals='@cf/cloudflare/clairic'), ClauseEquals(equals='clairic')]),
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='@cf/cloudflare/clairic'),
+                        ClauseEquals(equals='clairic'),
+                        ClauseEquals(equals='@cf/cloudflare/clairic-flash'),
+                        ClauseEquals(equals='clairic-flash'),
+                    ]
+                ),
                 name='clairic',
                 price_comments='Native decision selector and input-only rate: https://developers.cloudflare.com/workers-ai/models/clairic/',
                 prices=ModelPrice(input_mtok=Decimal('0.1')),
@@ -28907,6 +28914,13 @@ providers: list[Provider] = [
                 prices=ModelPrice(
                     input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('7.5')
                 ),
+            ),
+            ModelInfo(
+                id='gemini-4-neon',
+                match=ClauseEquals(equals='gemini-4-neon'),
+                name='Gemini 4 Neon',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='glm-5.2',

@@ -139,6 +139,8 @@ models:
       or:
         - equals: "@cf/cloudflare/clairic"
         - equals: clairic
+        - equals: "@cf/cloudflare/clairic-flash"
+        - equals: clairic-flash
     price_comments: "Native decision selector and input-only rate: https://developers.cloudflare.com/workers-ai/models/clairic/"
     prices:
       input_mtok: 0.1

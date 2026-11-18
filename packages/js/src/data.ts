@@ -6875,6 +6875,12 @@ export const data: Provider[] = [
             {
               equals: 'clairic',
             },
+            {
+              equals: '@cf/cloudflare/clairic-flash',
+            },
+            {
+              equals: 'clairic-flash',
+            },
           ],
         },
         price_comments: 'Native decision selector and input-only rate: https://developers.cloudflare.com/workers-ai/models/clairic/',
@@ -51076,6 +51082,19 @@ export const data: Provider[] = [
           input_mtok: 1.5,
           cache_read_mtok: 0.075,
           output_mtok: 7.5,
+        },
+      },
+      {
+        id: 'gemini-4-neon',
+        name: 'Gemini 4 Neon',
+        match: {
+          equals: 'gemini-4-neon',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.15,
+          output_mtok: 15,
         },
       },
       {
