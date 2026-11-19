@@ -24050,10 +24050,24 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: {
-          input_mtok: 1,
-          output_mtok: 1,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 1,
+              output_mtok: 1,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-19',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1,
+              output_mtok: 2,
+            },
+          },
+        ],
       },
       {
         id: 'minimax/minimax-m2.5',
@@ -24332,6 +24346,137 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.05,
           output_mtok: 0.2,
+        },
+      },
+      {
+        id: 'openai/gpt-6.1-terra',
+        name: 'openai/gpt-6.1-terra',
+        match: {
+          equals: 'openai/gpt-6.1-terra',
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.05,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.1,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 5,
+            tiers: [
+              {
+                start: 272000,
+                price: 10,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'openai/gpt-6.2-astra',
+        name: 'openai/gpt-6.2-astra',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-6.2-astra',
+            },
+            {
+              equals: 'openai/gpt-6.2-astra-azure-dst',
+            },
+            {
+              equals: 'openai/gpt-6.2-astra-es',
+            },
+          ],
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 8,
+            tiers: [
+              {
+                start: 272000,
+                price: 16,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.4,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.8,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 40,
+            tiers: [
+              {
+                start: 272000,
+                price: 60,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'openai/gpt-6.2-sol',
+        name: 'openai/gpt-6.2-sol',
+        match: {
+          or: [
+            {
+              equals: 'openai/gpt-6.2-sol',
+            },
+            {
+              equals: 'openai/gpt-6.2-sol-azure-dst',
+            },
+            {
+              equals: 'openai/gpt-6.2-sol-es',
+            },
+          ],
+        },
+        context_window: 1050000,
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
         },
       },
       {
