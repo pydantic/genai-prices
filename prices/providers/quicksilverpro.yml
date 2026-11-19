@@ -366,7 +366,7 @@ models:
       input_mtok: 0.425
       output_mtok: 2.55
     deprecated: true
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: gemini-3-pro-image
     name: Gemini 3 Pro Image
@@ -387,7 +387,7 @@ models:
       input_mtok: 0.2125
       output_mtok: 1.275
     deprecated: true
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: gemini-3.1-pro-preview
     name: Gemini 3.1 Pro Preview
@@ -407,7 +407,7 @@ models:
     prices:
       input_mtok: 1.275
       output_mtok: 7.65
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: gemini-3.5-flash-lite
     name: Gemini 3.5 Flash-Lite
@@ -433,7 +433,7 @@ models:
         prices:
           input_mtok: 0.6375
           output_mtok: 3.1875
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: gemini-3.7-flash
     name: Gemini 3.7 Flash
@@ -444,7 +444,7 @@ models:
       input_mtok: 0.6375
       cache_read_mtok: 0.06375
       output_mtok: 3.1875
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: gemini-3.8-flash
     name: Gemini 3.8 Flash
@@ -629,7 +629,7 @@ models:
           cache_write_mtok: 2
           cache_read_mtok: 0.16
           output_mtok: 9.6
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: gpt-6-astra
     name: GPT-6 Astra
@@ -833,7 +833,7 @@ models:
       input_mtok: 1.6
       cache_read_mtok: 0.4
       output_mtok: 4.8
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: grok-4.6
     name: Grok 4.6
@@ -856,7 +856,7 @@ models:
         tiers:
           - start: 200000
             price: 12
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
     price_comments: >-
       Corrected omitted long-context input, output and cache-read tiers from https://quicksilverpro.io/pricing.json (checked
       2026-10-19). Cache-write rates have no long-context override in the catalog.
@@ -901,7 +901,7 @@ models:
           input_mtok: 0.091
           cache_read_mtok: 0.0227
           output_mtok: 0.363
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: hy4
     name: Hy4
@@ -934,7 +934,7 @@ models:
       input_mtok: 0.6672
       cache_read_mtok: 0.0336
       output_mtok: 2.0008
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: inkling-2-small
     name: Inkling 2 Small
@@ -990,7 +990,7 @@ models:
           input_mtok: 0.6712
           cache_read_mtok: 0.18
           output_mtok: 3.35
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: kimi-k3
     name: Kimi K3
@@ -1099,7 +1099,7 @@ models:
       input_mtok: 0.68
       cache_read_mtok: 0.07
       output_mtok: 2.09
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: muse-ember
     name: Muse Ember
@@ -1139,7 +1139,7 @@ models:
       input_mtok: 1
       cache_read_mtok: 0.12
       output_mtok: 3.4
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: muse-spark-1.3
     name: Muse Spark 1.3
@@ -1183,7 +1183,7 @@ models:
       input_mtok: 0.5
       cache_read_mtok: 0.1
       output_mtok: 2.2
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: nemotron-3.5-lightning
     name: Nemotron 3.5 Lightning
@@ -1230,7 +1230,7 @@ models:
       input_mtok: 0.26
       cache_write_mtok: 0.325
       output_mtok: 1.56
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: qwen3.7-flash
     name: Qwen3.7 Flash
@@ -1253,7 +1253,7 @@ models:
       cache_write_mtok: 1.5625
       cache_read_mtok: 0.25
       output_mtok: 3.75
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: qwen3.7-plus
     name: Qwen3.7 Plus
@@ -1265,7 +1265,7 @@ models:
       cache_write_mtok: 0.32
       cache_read_mtok: 0.0512
       output_mtok: 1.024
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: qwen3.8-27b
     name: Qwen3.8 27B
