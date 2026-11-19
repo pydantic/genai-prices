@@ -450,6 +450,17 @@ models:
       output_mtok: 10
     prices_checked: 2026-11-09
 
+  - id: gemini-4-neon
+    name: Gemini 4 Neon
+    match:
+      equals: gemini-4-neon
+    context_window: 1048576
+    prices:
+      input_mtok: 3
+      cache_read_mtok: 0.15
+      output_mtok: 15
+    prices_checked: 2026-11-19
+
   - id: glm-5.2
     name: GLM 5.2
     match:
