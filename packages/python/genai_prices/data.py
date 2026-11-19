@@ -14398,7 +14398,7 @@ providers: list[Provider] = [
                 name='Hy4 Flash',
                 context_window=1000000,
                 prices=ModelPrice(
-                    input_mtok=Decimal('0.07'), cache_read_mtok=Decimal('0.003'), output_mtok=Decimal('0.281')
+                    input_mtok=Decimal('0.035'), cache_read_mtok=Decimal('0.0015'), output_mtok=Decimal('0.1405')
                 ),
             ),
             ModelInfo(

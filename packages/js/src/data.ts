@@ -24811,9 +24811,9 @@ export const data: Provider[] = [
         },
         context_window: 1000000,
         prices: {
-          input_mtok: 0.07,
-          cache_read_mtok: 0.003,
-          output_mtok: 0.281,
+          input_mtok: 0.035,
+          cache_read_mtok: 0.0015,
+          output_mtok: 0.1405,
         },
       },
       {
