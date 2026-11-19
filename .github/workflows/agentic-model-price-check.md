@@ -52,6 +52,7 @@ safe-outputs:
       policy: blocked
       exclude: [README.md]
     allowed-files:
+      - prices/providers/abliteratedllm.yml
       - prices/providers/anthropic.yml
       - prices/providers/arcee.yml
       - prices/providers/avian.yml

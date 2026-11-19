@@ -3,8 +3,10 @@ network:
   allowed:
     - defaults
     - api.z.ai
+    - abliteratedllm.dev
     - ai.google.dev
     - api-docs.deepseek.com
+    - api.abliteratedllm.dev
     - api.arcee.ai
     - api.cerebras.ai
     - avian.io
