@@ -13992,15 +13992,7 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='ming image 0.1 design',
-                prices=[
-                    ConditionalPrice(
-                        constraint=None, prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1'))
-                    ),
-                    ConditionalPrice(
-                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 18)),
-                        prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
-                    ),
-                ],
+                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1')),
             ),
             ModelInfo(
                 id='minimax/minimax-m2.5',
@@ -14159,53 +14151,6 @@ providers: list[Provider] = [
                 name='NVIDIA Nemotron 3 Nano 30B A3B',
                 context_window=262144,
                 prices=ModelPrice(input_mtok=Decimal('0.05'), output_mtok=Decimal('0.2')),
-            ),
-            ModelInfo(
-                id='openai/gpt-6.1-terra',
-                match=ClauseEquals(equals='openai/gpt-6.1-terra'),
-                name='openai/gpt-6.1-terra',
-                context_window=1050000,
-                prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('2'))]),
-                    cache_read_mtok=TieredPrices(
-                        base=Decimal('0.05'), tiers=[Tier(start=272000, price=Decimal('0.1'))]
-                    ),
-                    output_mtok=TieredPrices(base=Decimal('5'), tiers=[Tier(start=272000, price=Decimal('10'))]),
-                ),
-            ),
-            ModelInfo(
-                id='openai/gpt-6.2-astra',
-                match=ClauseOr(
-                    or_=[
-                        ClauseEquals(equals='openai/gpt-6.2-astra'),
-                        ClauseEquals(equals='openai/gpt-6.2-astra-azure-dst'),
-                        ClauseEquals(equals='openai/gpt-6.2-astra-es'),
-                    ]
-                ),
-                name='openai/gpt-6.2-astra',
-                context_window=1050000,
-                prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('8'), tiers=[Tier(start=272000, price=Decimal('16'))]),
-                    cache_read_mtok=TieredPrices(base=Decimal('0.4'), tiers=[Tier(start=272000, price=Decimal('0.8'))]),
-                    output_mtok=TieredPrices(base=Decimal('40'), tiers=[Tier(start=272000, price=Decimal('60'))]),
-                ),
-            ),
-            ModelInfo(
-                id='openai/gpt-6.2-sol',
-                match=ClauseOr(
-                    or_=[
-                        ClauseEquals(equals='openai/gpt-6.2-sol'),
-                        ClauseEquals(equals='openai/gpt-6.2-sol-azure-dst'),
-                        ClauseEquals(equals='openai/gpt-6.2-sol-es'),
-                    ]
-                ),
-                name='openai/gpt-6.2-sol',
-                context_window=1050000,
-                prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
-                    cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]),
-                    output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('15'))]),
-                ),
             ),
             ModelInfo(
                 id='openai/gpt-oss-120b',
