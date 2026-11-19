@@ -9,6 +9,306 @@ __all__ = ('providers',)
 
 providers: list[Provider] = [
     Provider(
+        id='abliteratedllm',
+        name='AbliteratedLLM',
+        api_pattern='https://api\\.abliteratedllm\\.dev(?:/|$)',
+        pricing_urls=['https://abliteratedllm.dev/pricing', 'https://api.abliteratedllm.dev/v1/models'],
+        description='OpenAI- and Anthropic-compatible hosted inference for abliterated and stock open-weight models.',
+        price_comments='Prices and context windows verified against https://api.abliteratedllm.dev/v1/models and https://abliteratedllm.dev/pricing on 2026-11-19. Prompt cache reads are billed at the published cached-input rate with no cache-write surcharge. Models supporting priority service tier include a `service_tier: priority` variant effective from the 2026-11-19 verification date; earlier priority tier history is not modeled. Model IDs overlap with upstream model names, so requests require an explicit `abliteratedllm` provider ID or API URL.',
+        provider_match=ClauseContains(contains='abliteratedllm'),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['input_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['output_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='responses',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(path='cache_read_input_tokens', dest='input_tokens', required=False),
+                    UsageExtractorMapping(path='cache_read_input_tokens', dest='cache_read_tokens', required=False),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='anthropic',
+                model_path='model',
+            ),
+        ],
+        models=[
+            ModelInfo(
+                id='deepseek-v4.1-flash-1017',
+                match=ClauseEquals(equals='deepseek-v4.1-flash-1017'),
+                name='DeepSeek V4.1 Flash 1017',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.27'), cache_read_mtok=Decimal('0.0054'), output_mtok=Decimal('1.08')
+                ),
+                price_variants=[
+                    PriceVariant(when={'service_tier': 'default'}, prices=ModelPrice(), constraint=None),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.3375'),
+                            cache_read_mtok=Decimal('0.00675'),
+                            output_mtok=Decimal('1.35'),
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 19)),
+                    ),
+                ],
+            ),
+            ModelInfo(
+                id='deepseek-v4.1-flash-1017-ultrafast',
+                match=ClauseEquals(equals='deepseek-v4.1-flash-1017-ultrafast'),
+                name='DeepSeek V4.1 Flash 1017 Ultrafast',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.16'), cache_read_mtok=Decimal('0.0432'), output_mtok=Decimal('8.64')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek-v4.1-flash-original',
+                match=ClauseEquals(equals='deepseek-v4.1-flash-original'),
+                name='DeepSeek V4.1 Flash (original)',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.27'), cache_read_mtok=Decimal('0.0054'), output_mtok=Decimal('1.08')
+                ),
+                price_variants=[
+                    PriceVariant(when={'service_tier': 'default'}, prices=ModelPrice(), constraint=None),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.3375'),
+                            cache_read_mtok=Decimal('0.00675'),
+                            output_mtok=Decimal('1.35'),
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 19)),
+                    ),
+                ],
+            ),
+            ModelInfo(
+                id='ember-1',
+                match=ClauseEquals(equals='ember-1'),
+                name='Ember-1',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.7'), cache_read_mtok=Decimal('0.27'), output_mtok=Decimal('13.5')
+                ),
+            ),
+            ModelInfo(
+                id='glm-5.3',
+                match=ClauseEquals(equals='glm-5.3'),
+                name='GLM-5.3',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.26'), cache_read_mtok=Decimal('0.234'), output_mtok=Decimal('3.96')
+                ),
+                price_variants=[
+                    PriceVariant(when={'service_tier': 'default'}, prices=ModelPrice(), constraint=None),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.575'), cache_read_mtok=Decimal('0.2925'), output_mtok=Decimal('4.95')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 19)),
+                    ),
+                ],
+            ),
+            ModelInfo(
+                id='glm-5.3-cyber-abliterated',
+                match=ClauseEquals(equals='glm-5.3-cyber-abliterated'),
+                name='GLM-5.3 Cyber Abliterated',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.9'), cache_read_mtok=Decimal('0.135'), output_mtok=Decimal('1.8')
+                ),
+            ),
+            ModelInfo(
+                id='glm-5.3-fast',
+                match=ClauseEquals(equals='glm-5.3-fast'),
+                name='GLM-5.3 Fast',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.89'), cache_read_mtok=Decimal('0.351'), output_mtok=Decimal('5.94')
+                ),
+            ),
+            ModelInfo(
+                id='glm-5.3-flash',
+                match=ClauseEquals(equals='glm-5.3-flash'),
+                name='GLM-5.3 Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.135'), cache_read_mtok=Decimal('0.027'), output_mtok=Decimal('0.45')
+                ),
+                price_variants=[
+                    PriceVariant(when={'service_tier': 'default'}, prices=ModelPrice(), constraint=None),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.16875'),
+                            cache_read_mtok=Decimal('0.03375'),
+                            output_mtok=Decimal('0.5625'),
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 19)),
+                    ),
+                ],
+            ),
+            ModelInfo(
+                id='glm-5.3-flash-abliterated',
+                match=ClauseEquals(equals='glm-5.3-flash-abliterated'),
+                name='GLM-5.3 Flash Abliterated',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.0977'), cache_read_mtok=Decimal('0.0098'), output_mtok=Decimal('0.3421')
+                ),
+            ),
+            ModelInfo(
+                id='kimi-k3',
+                match=ClauseEquals(equals='kimi-k3'),
+                name='Kimi K3',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.7'), cache_read_mtok=Decimal('0.27'), output_mtok=Decimal('13.5')
+                ),
+                price_variants=[
+                    PriceVariant(when={'service_tier': 'default'}, prices=ModelPrice(), constraint=None),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('3.375'),
+                            cache_read_mtok=Decimal('0.3375'),
+                            output_mtok=Decimal('16.875'),
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 19)),
+                    ),
+                ],
+            ),
+            ModelInfo(
+                id='kimi-k3-fast',
+                match=ClauseEquals(equals='kimi-k3-fast'),
+                name='Kimi K3 Fast',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('4.05'), cache_read_mtok=Decimal('0.405'), output_mtok=Decimal('20.25')
+                ),
+            ),
+            ModelInfo(
+                id='kimi-k3.1-pro',
+                match=ClauseEquals(equals='kimi-k3.1-pro'),
+                name='Kimi K3.1 Pro',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('1.8'), cache_read_mtok=Decimal('0.18'), output_mtok=Decimal('9')),
+                price_variants=[
+                    PriceVariant(when={'service_tier': 'default'}, prices=ModelPrice(), constraint=None),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2.7'), cache_read_mtok=Decimal('0.27'), output_mtok=Decimal('13.5')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 19)),
+                    ),
+                ],
+            ),
+            ModelInfo(
+                id='minimax-m3',
+                match=ClauseEquals(equals='minimax-m3'),
+                name='MiniMax M3',
+                context_window=512000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.27'), cache_read_mtok=Decimal('0.054'), output_mtok=Decimal('1.08')
+                ),
+                price_variants=[
+                    PriceVariant(when={'service_tier': 'default'}, prices=ModelPrice(), constraint=None),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.405'), cache_read_mtok=Decimal('0.081'), output_mtok=Decimal('1.62')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 19)),
+                    ),
+                ],
+            ),
+            ModelInfo(
+                id='muse-spark-open',
+                match=ClauseEquals(equals='muse-spark-open'),
+                name='Muse Spark Open',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.125'), cache_read_mtok=Decimal('0.135'), output_mtok=Decimal('3.825')
+                ),
+                price_variants=[
+                    PriceVariant(when={'service_tier': 'default'}, prices=ModelPrice(), constraint=None),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.6875'),
+                            cache_read_mtok=Decimal('0.2025'),
+                            output_mtok=Decimal('5.7375'),
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 19)),
+                    ),
+                ],
+            ),
+            ModelInfo(
+                id='qwen3.8-2.4t-a95b',
+                match=ClauseEquals(equals='qwen3.8-2.4t-a95b'),
+                name='Qwen3.8-2.4T-A95B',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.8'), cache_read_mtok=Decimal('0.225'), output_mtok=Decimal('5.4')
+                ),
+            ),
+            ModelInfo(
+                id='qwen3.8-max',
+                match=ClauseEquals(equals='qwen3.8-max'),
+                name='Qwen3.8 Max',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.8'), cache_read_mtok=Decimal('0.225'), output_mtok=Decimal('5.4')
+                ),
+                price_variants=[
+                    PriceVariant(when={'service_tier': 'default'}, prices=ModelPrice(), constraint=None),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2.7'), cache_read_mtok=Decimal('0.3375'), output_mtok=Decimal('8.1')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 19)),
+                    ),
+                ],
+            ),
+        ],
+    ),
+    Provider(
         id='anthropic',
         name='Anthropic',
         api_pattern='https://api\\.anthropic\\.com',
