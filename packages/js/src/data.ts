@@ -23697,6 +23697,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'google/gemini-4-neon',
+        name: 'google/gemini-4-neon',
+        match: {
+          equals: 'google/gemini-4-neon',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.15,
+          output_mtok: 15,
+        },
+      },
+      {
         id: 'google/gemma-2-9b-it',
         match: {
           equals: 'google/gemma-2-9b-it',
