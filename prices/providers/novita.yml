@@ -652,7 +652,7 @@ models:
       input_mtok: 3
       cache_read_mtok: 0.3
       output_mtok: 15
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: moonshotai/kimi-k3.1-pro
     name: Kimi K3.1 Pro
