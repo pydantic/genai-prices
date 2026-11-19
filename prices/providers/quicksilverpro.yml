@@ -914,6 +914,17 @@ models:
       output_mtok: 1.375
     prices_checked: 2026-11-19
 
+  - id: hy4-flash
+    name: Hy4 Flash
+    match:
+      equals: hy4-flash
+    context_window: 1048576
+    prices:
+      input_mtok: 0.0385
+      cache_read_mtok: 0.00165
+      output_mtok: 0.1546
+    prices_checked: 2026-11-19
+
   - id: hy4-preview
     name: Hy4 Preview
     match:
