@@ -73,7 +73,7 @@ models:
     prices:
       input_mtok: 4
       output_mtok: 4
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: deepseek/deepseek-r1-0528
     name: DeepSeek R1 0528
@@ -157,7 +157,7 @@ models:
       input_mtok: 0.44
       cache_read_mtok: 0.0148
       output_mtok: 1.32
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: deepseek/deepseek-v4-pro
     name: DeepSeek V4 Pro
@@ -206,18 +206,7 @@ models:
     prices:
       input_mtok: 0.89
       output_mtok: 0.89
-    prices_checked: 2026-11-19
-
-  - id: google/gemini-4-neon
-    name: google/gemini-4-neon
-    match:
-      equals: google/gemini-4-neon
-    context_window: 1048576
-    prices:
-      input_mtok: 3
-      cache_read_mtok: 0.15
-      output_mtok: 15
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: google/gemma-2-9b-it
     match:
@@ -505,7 +494,7 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.03
       output_mtok: 1.2
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: minimax/minimax-m2.7
     name: MiniMax M2.7
@@ -516,7 +505,7 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.06
       output_mtok: 1.2
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: minimax/minimax-m2.7-highspeed
     name: MiniMax M2.7-highspeed
@@ -527,7 +516,7 @@ models:
       input_mtok: 0.6
       cache_read_mtok: 0.06
       output_mtok: 2.4
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: minimax/minimax-m3
     name: MiniMax M3
@@ -550,7 +539,7 @@ models:
         tiers:
           - start: 524288
             price: 2.4
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: minimax/minimax-m3.1-flash
     name: MiniMax M3.1 Flash
@@ -561,7 +550,7 @@ models:
       input_mtok: 0.15
       cache_read_mtok: 0.015
       output_mtok: 0.6
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: minimaxai/minimax-m1-80k
     name: MiniMax M1
@@ -571,7 +560,7 @@ models:
     prices:
       input_mtok: 0.55
       output_mtok: 2.2
-    prices_checked: 2026-11-19
+    prices_checked: 2026-11-09
 
   - id: mistralai/mistral-7b-instruct
     match:

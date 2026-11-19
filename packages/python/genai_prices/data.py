@@ -13780,13 +13780,6 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.89'), output_mtok=Decimal('0.89')),
             ),
             ModelInfo(
-                id='google/gemini-4-neon',
-                match=ClauseEquals(equals='google/gemini-4-neon'),
-                name='google/gemini-4-neon',
-                context_window=1048576,
-                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('15')),
-            ),
-            ModelInfo(
                 id='google/gemma-2-9b-it',
                 match=ClauseEquals(equals='google/gemma-2-9b-it'),
                 prices=ModelPrice(input_mtok=Decimal('0.08'), output_mtok=Decimal('0.08')),
