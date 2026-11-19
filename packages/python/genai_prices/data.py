@@ -6244,6 +6244,13 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gemini-4-neon',
+                match=ClauseEquals(equals='gemini-4-neon'),
+                name='Gemini 4 Neon',
+                price_comments='Rates published at https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing. The page lists no promotional end date and no cache-write column. Copilot does not charge for cache writes on the Gemini models.',
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
                 id='gpt-3.5-turbo',
                 match=ClauseOr(or_=[ClauseEquals(equals='gpt-3.5-turbo'), ClauseEquals(equals='gpt-3.5-turbo-0613')]),
                 name='GPT 3.5 Turbo',
@@ -8260,6 +8267,49 @@ providers: list[Provider] = [
                             input_mtok=Decimal('2.7'), cache_read_mtok=Decimal('0.135'), output_mtok=Decimal('13.5')
                         ),
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 16)),
+                    ),
+                ],
+            ),
+            ModelInfo(
+                id='gemini-4-neon',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='gemini-4-neon'),
+                        ClauseStartsWith(starts_with='gemini-4-neon-preview'),
+                        ClauseRegex(regex='^gemini-4-neon-\\d'),
+                    ]
+                ),
+                name='Gemini 4 Neon',
+                description="Google's frontier Gemini 4 model for fast end-to-end task completion across complex software engineering, knowledge work, and science workflows, with a 1M-token context window and output of up to 1M tokens.",
+                context_window=1048576,
+                price_comments='See https://aistudio.google.com/docs/pricing#gemini-4-neon. Standard tier shown. Paid tier only; flat across the 1M context, with no prompt-size tiers, no promotional period and no separate audio input rate. Batch and Flex are half of standard; Priority is 1.8x. Batch, Flex and Priority rates were verified on 2026-11-19, the day after launch; tier history before then is not modelled. Implicit caching only; explicit caching is not supported. Vertex lists a global cache-write rate of $3.75 per 1M tokens effective 2027-01-12 (https://cloud.google.com/vertex-ai/generative-ai/pricing); it is not scheduled here, because this card is shared with the Gemini API, which publishes no cache-write price. Vertex global rates match these figures; multi-region endpoints add a 10% premium and are not encoded. Vertex lists no Flex tier. Grounding is $14 per 1,000 search queries.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('3'),
+                    cache_read_mtok=Decimal('0.15'),
+                    output_mtok=Decimal('15'),
+                    web_searches_kcount=Decimal('14'),
+                ),
+                price_variants=[
+                    PriceVariant(
+                        when={'processing': 'batch'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('7.5')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 19)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'flex'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('7.5')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 19)),
+                    ),
+                    PriceVariant(
+                        when={'service_tier': 'priority'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('5.4'), cache_read_mtok=Decimal('0.27'), output_mtok=Decimal('27')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 19)),
                     ),
                 ],
             ),
@@ -20442,6 +20492,35 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='google/gemini-4-neon',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='google/gemini-4-neon'),
+                        ClauseEquals(equals='google/gemini-4-neon-20261118'),
+                    ]
+                ),
+                name='Gemini 4 Neon',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('3'),
+                    cache_write_mtok=Decimal('0.0833333333333333'),
+                    cache_read_mtok=Decimal('0.15'),
+                    output_mtok=Decimal('15'),
+                ),
+            ),
+            ModelInfo(
+                id='google/gemini-4-neon:batch',
+                match=ClauseEquals(equals='google/gemini-4-neon:batch'),
+                name='Gemini 4 Neon (batch)',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.5'),
+                    cache_write_mtok=Decimal('0.0833333333333333'),
+                    cache_read_mtok=Decimal('0.075'),
+                    output_mtok=Decimal('7.5'),
+                ),
+            ),
+            ModelInfo(
                 id='google/gemini-flash-1.5',
                 match=ClauseEquals(equals='google/gemini-flash-1.5'),
                 prices=ModelPrice(input_mtok=Decimal('0.075'), output_mtok=Decimal('0.3')),
@@ -28734,6 +28813,13 @@ providers: list[Provider] = [
                 name='Gemini 4 Argon',
                 context_window=1048576,
                 prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
+                id='gemini-4-neon',
+                match=ClauseEquals(equals='gemini-4-neon'),
+                name='Gemini 4 Neon',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.15'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
                 id='glm-5.2',

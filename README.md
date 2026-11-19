@@ -49,8 +49,8 @@ The following providers are currently supported:
 - [Doubleword](prices/providers/doubleword.yml) - 29 models
 - [ElevenLabs](prices/providers/elevenlabs.yml) - 2 models
 - [Fireworks](prices/providers/fireworks.yml) - 48 models
-- [GitHub Copilot](prices/providers/github_copilot.yml) - 46 models
-- [Google](prices/providers/google.yml) - 72 models
+- [GitHub Copilot](prices/providers/github_copilot.yml) - 47 models
+- [Google](prices/providers/google.yml) - 73 models
 - [Groq](prices/providers/groq.yml) - 37 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 3 models
 - [HuggingFace (fireworks-ai)](prices/providers/huggingface_fireworks-ai.yml) - 6 models
@@ -71,10 +71,10 @@ The following providers are currently supported:
 - [Novita](prices/providers/novita.yml) - 114 models
 - [OpenAI](prices/providers/openai.yml) - 115 models
 - [OpenAI Decisions](prices/providers/openai_decisions.yml) - 1 models
-- [OpenRouter](prices/providers/openrouter.yml) - 924 models
+- [OpenRouter](prices/providers/openrouter.yml) - 926 models
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 20 models
 - [Perplexity](prices/providers/perplexity.yml) - 23 models
-- [QuickSilver Pro](prices/providers/quicksilverpro.yml) - 75 models
+- [QuickSilver Pro](prices/providers/quicksilverpro.yml) - 76 models
 - [Together AI](prices/providers/together.yml) - 95 models
 - [TypeSafe](prices/providers/typesafe.yml) - 2 models
 - [Voyage AI](prices/providers/voyageai.yml) - 24 models

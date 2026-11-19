@@ -322,6 +322,7 @@ def test_elevenlabs_does_not_price_other_models_in_its_namespace():
         ('claude-sonnet-5.5', Decimal('12.1')),
         ('gemini-3.6-flash', Decimal('4.575')),
         ('gemini-4-hydrogen', Decimal('9.075')),
+        ('gemini-4-neon', Decimal('18.15')),
         ('gpt-5-mini', Decimal('2.275')),
         ('gpt-5.4-nano', Decimal('1.47')),
         ('gpt-6-astra', Decimal('97')),
@@ -1315,6 +1316,24 @@ def test_gemini_4_hydrogen_standard_price() -> None:
     )
     assert price.model.context_window == 1_048_576
     assert price.total_price == Decimal('8.8575')
+
+
+def test_gemini_4_neon_standard_price() -> None:
+    price = calc_price(
+        Usage(input_tokens=1_000_000, cache_read_tokens=100_000, output_tokens=1_000_000),
+        model_ref='gemini-4-neon',
+        provider_id='google',
+        genai_request_timestamp=datetime(2026, 11, 19, tzinfo=UTC),
+    )
+
+    assert price.model_price == ModelPrice(
+        input_mtok=Decimal('3'),
+        cache_read_mtok=Decimal('0.15'),
+        output_mtok=Decimal('15'),
+        web_searches_kcount=Decimal('14'),
+    )
+    assert price.model.context_window == 1_048_576
+    assert price.total_price == Decimal('17.715')
 
 
 def test_sync_success_with_url():
