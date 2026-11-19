@@ -664,6 +664,17 @@ models:
       input_mtok: 0.2
       output_mtok: 0.2
 
+  - id: tencent/Hy4
+    name: Hy4
+    match:
+      equals: tencent/Hy4
+    context_window: 1048576
+    prices:
+      input_mtok: 0.834
+      cache_read_mtok: 0.042
+      output_mtok: 2.501
+    prices_checked: 2026-11-19
+
   - id: thinkingmachines/Inkling
     name: Inkling
     match:
