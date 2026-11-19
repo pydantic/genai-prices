@@ -10526,6 +10526,20 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gemini-4-neon',
+        name: 'Gemini 4 Neon',
+        match: {
+          equals: 'gemini-4-neon',
+        },
+        price_comments:
+          'Rates published at https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing. The page lists no promotional end date and no cache-write column. Copilot does not charge for cache writes on the Gemini models.',
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.15,
+          output_mtok: 15,
+        },
+      },
+      {
         id: 'gpt-3.5-turbo',
         name: 'GPT 3.5 Turbo',
         match: {
@@ -14251,6 +14265,78 @@ export const data: Provider[] = [
             },
             constraint: {
               start_date: '2026-11-16',
+              type: 'start_date',
+            },
+          },
+        ],
+      },
+      {
+        id: 'gemini-4-neon',
+        name: 'Gemini 4 Neon',
+        description:
+          "Google's frontier Gemini 4 model for fast end-to-end task completion across complex software engineering, knowledge work, and science workflows, with a 1M-token context window and output of up to 1M tokens.",
+        match: {
+          or: [
+            {
+              equals: 'gemini-4-neon',
+            },
+            {
+              starts_with: 'gemini-4-neon-preview',
+            },
+            {
+              regex: '^gemini-4-neon-\\d',
+            },
+          ],
+        },
+        context_window: 1048576,
+        price_comments:
+          'See https://aistudio.google.com/docs/pricing#gemini-4-neon. Standard tier shown. Paid tier only; flat across the 1M context, with no prompt-size tiers, no promotional period and no separate audio input rate. Batch and Flex are half of standard; Priority is 1.8x. Batch, Flex and Priority rates were verified on 2026-11-19, the day after launch; tier history before then is not modelled. Implicit caching only; explicit caching is not supported. Vertex lists a global cache-write rate of $3.75 per 1M tokens effective 2027-01-12 (https://cloud.google.com/vertex-ai/generative-ai/pricing); it is not scheduled here, because this card is shared with the Gemini API, which publishes no cache-write price. Vertex global rates match these figures; multi-region endpoints add a 10% premium and are not encoded. Vertex lists no Flex tier. Grounding is $14 per 1,000 search queries.',
+        prices: {
+          input_mtok: 3,
+          cache_read_mtok: 0.15,
+          output_mtok: 15,
+          web_searches_kcount: 14,
+        },
+        price_variants: [
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: 1.5,
+              cache_read_mtok: 0.075,
+              output_mtok: 7.5,
+            },
+            constraint: {
+              start_date: '2026-11-19',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'flex',
+            },
+            prices: {
+              input_mtok: 1.5,
+              cache_read_mtok: 0.075,
+              output_mtok: 7.5,
+            },
+            constraint: {
+              start_date: '2026-11-19',
+              type: 'start_date',
+            },
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 5.4,
+              cache_read_mtok: 0.27,
+              output_mtok: 27,
+            },
+            constraint: {
+              start_date: '2026-11-19',
               type: 'start_date',
             },
           },
@@ -36325,6 +36411,41 @@ export const data: Provider[] = [
           cache_write_mtok: 0.1875,
           cache_read_mtok: 0.05,
           output_mtok: 5,
+        },
+      },
+      {
+        id: 'google/gemini-4-neon',
+        name: 'Gemini 4 Neon',
+        match: {
+          or: [
+            {
+              equals: 'google/gemini-4-neon',
+            },
+            {
+              equals: 'google/gemini-4-neon-20261118',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 3,
+          cache_write_mtok: 0.0833333333333333,
+          cache_read_mtok: 0.15,
+          output_mtok: 15,
+        },
+      },
+      {
+        id: 'google/gemini-4-neon:batch',
+        name: 'Gemini 4 Neon (batch)',
+        match: {
+          equals: 'google/gemini-4-neon:batch',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.5,
+          cache_write_mtok: 0.0833333333333333,
+          cache_read_mtok: 0.075,
+          output_mtok: 7.5,
         },
       },
       {

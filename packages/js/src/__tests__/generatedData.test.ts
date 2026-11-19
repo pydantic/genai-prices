@@ -179,6 +179,7 @@ describe('generated data split', () => {
     { expectedTotalPrice: 12.1, model: 'claude-sonnet-5.5' },
     { expectedTotalPrice: 4.575, model: 'gemini-3.6-flash' },
     { expectedTotalPrice: 9.075, model: 'gemini-4-hydrogen' },
+    { expectedTotalPrice: 18.15, model: 'gemini-4-neon' },
     { expectedTotalPrice: 2.275, model: 'gpt-5-mini' },
     { expectedTotalPrice: 1.47, model: 'gpt-5.4-nano' },
     { expectedTotalPrice: 97, model: 'gpt-6-astra' },

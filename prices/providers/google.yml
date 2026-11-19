@@ -1905,6 +1905,53 @@ models:
           cache_read_mtok: 0.135
           output_mtok: 13.5
 
+  - id: gemini-4-neon
+    name: Gemini 4 Neon
+    description: >-
+      Google's frontier Gemini 4 model for fast end-to-end task completion across complex software engineering,
+      knowledge work, and science workflows, with a 1M-token context window and output of up to 1M tokens.
+    match:
+      or:
+        - equals: gemini-4-neon
+        - starts_with: gemini-4-neon-preview
+        - regex: '^gemini-4-neon-\d'
+    context_window: 1048576
+    prices_checked: 2026-11-19
+    price_comments: >-
+      See https://aistudio.google.com/docs/pricing#gemini-4-neon. Standard tier shown. Paid tier only; flat across the
+      1M context, with no prompt-size tiers, no promotional period and no separate audio input rate. Batch and Flex
+      are half of standard; Priority is 1.8x. Batch, Flex and Priority rates were verified on 2026-11-19, the day
+      after launch; tier history before then is not modelled. Implicit caching only; explicit caching is not
+      supported. Vertex lists a global cache-write rate of $3.75 per 1M tokens effective 2027-01-12
+      (https://cloud.google.com/vertex-ai/generative-ai/pricing); it is not scheduled here, because this card is
+      shared with the Gemini API, which publishes no cache-write price. Vertex global rates match these figures;
+      multi-region endpoints add a 10% premium and are not encoded. Vertex lists no Flex tier. Grounding is $14 per
+      1,000 search queries.
+    prices:
+      input_mtok: 3
+      cache_read_mtok: 0.15
+      output_mtok: 15
+      web_searches_kcount: 14 # per search query
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-11-19 }
+        prices:
+          input_mtok: 1.5
+          cache_read_mtok: 0.075
+          output_mtok: 7.5
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-11-19 }
+        prices:
+          input_mtok: 1.5
+          cache_read_mtok: 0.075
+          output_mtok: 7.5
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-11-19 }
+        prices:
+          input_mtok: 5.4
+          cache_read_mtok: 0.27
+          output_mtok: 27
+
   - id: gemini-embedding-001
     match:
       equals: gemini-embedding-001

@@ -101,6 +101,7 @@ def test_google_claude_sonnet_4_aliases_do_not_fall_back_to_anthropic(model_ref:
         ('gemini-4-argon', '14'),
         ('gemini-4-carbon', '14'),
         ('gemini-4-hydrogen', '14'),
+        ('gemini-4-neon', '14'),
         ('gemini-2.5-flash', '35'),
         ('gemini-2.5-pro', '35'),
         ('gemini-2.0-flash', '35'),
