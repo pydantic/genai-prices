@@ -216,6 +216,17 @@ describe('Provider Matching', () => {
       expect(calcPrice(usage, 'command-a-03-2025', { providerId: 'cohere' })?.model.id).toBe('command-a')
       expect(calcPrice(usage, 'command-a-plus-05-2026', { providerId: 'cohere' })).toBeNull()
     })
+
+    it('prices Command R aliases as their 03-2024 and 04-2024 snapshots', () => {
+      const usage = { input_tokens: 1000, output_tokens: 100 }
+
+      expect(calcPrice(usage, 'command-r', { providerId: 'cohere' })?.total_price).toBeCloseTo(0.00065, 10)
+      expect(calcPrice(usage, 'command-r-03-2024', { providerId: 'cohere' })?.model.id).toBe('command-r')
+      expect(calcPrice(usage, 'command-r-08-2024', { providerId: 'cohere' })?.total_price).toBeCloseTo(0.00021, 10)
+      expect(calcPrice(usage, 'command-r-plus', { providerId: 'cohere' })?.total_price).toBeCloseTo(0.0045, 10)
+      expect(calcPrice(usage, 'command-r-plus-04-2024', { providerId: 'cohere' })?.model.id).toBe('command-r-plus')
+      expect(calcPrice(usage, 'command-r-plus-08-2024', { providerId: 'cohere' })?.total_price).toBeCloseTo(0.0035, 10)
+    })
   })
 
   describe('matchProvider with providerApiUrl', () => {

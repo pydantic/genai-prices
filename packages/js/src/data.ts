@@ -7604,10 +7604,26 @@ export const data: Provider[] = [
               equals: 'command-r',
             },
             {
-              equals: 'command-r-08-2024',
+              equals: 'command-r-03-2024',
             },
           ],
         },
+        price_comments:
+          '`command-r` is an alias for `command-r-03-2024`, deprecated 2025-09-15 per https://docs.cohere.com/docs/models. https://cohere.com/pricing FAQ: Command R 03-2024 pricing is $0.50/1M tokens for input and $1.50/1M tokens for output.',
+        prices: {
+          input_mtok: 0.5,
+          output_mtok: 1.5,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'command-r-08-2024',
+        name: 'Command R (08-2024)',
+        description: '`command-r-08-2024` is an update of the Command R model, delivered in August 2024.',
+        match: {
+          equals: 'command-r-08-2024',
+        },
+        price_comments: 'https://cohere.com/pricing "Command R" card: $0.15/1M tokens for input and $0.60/1M tokens for output.',
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.6,
@@ -7624,10 +7640,27 @@ export const data: Provider[] = [
               equals: 'command-r-plus',
             },
             {
-              equals: 'command-r-plus-08-2024',
+              equals: 'command-r-plus-04-2024',
             },
           ],
         },
+        price_comments:
+          '`command-r-plus` is an alias for `command-r-plus-04-2024`, deprecated 2025-09-15 per https://docs.cohere.com/docs/models. https://cohere.com/pricing FAQ: Command R+ 04-2024 pricing is $3.00/1M tokens for input and $15.00/1M tokens for output.',
+        prices: {
+          input_mtok: 3,
+          output_mtok: 15,
+        },
+        deprecated: true,
+      },
+      {
+        id: 'command-r-plus-08-2024',
+        name: 'Command R+ (08-2024)',
+        description: '`command-r-plus-08-2024` is an update of the Command R+ model, delivered in August 2024.',
+        match: {
+          equals: 'command-r-plus-08-2024',
+        },
+        price_comments:
+          'https://cohere.com/pricing FAQ: Command R+ 08-2024 pricing is $2.50/1M tokens for input and $10.00/1M tokens for output.',
         prices: {
           input_mtok: 2.5,
           output_mtok: 10,

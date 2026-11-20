@@ -1127,7 +1127,7 @@ def test_cohere_default_flavor_uses_billed_units_and_prices():
     assert extracted_usage.provider.name == snapshot('Cohere')
     assert extracted_usage.model is not None
     assert extracted_usage.model.id == snapshot('command-r-plus')
-    assert extracted_usage.calc_price().total_price == snapshot(Decimal('0.0001125'))
+    assert extracted_usage.calc_price().total_price == snapshot(Decimal('0.000159'))
 
 
 def test_cohere_tokens_flavor_extracts_raw_tokens_and_cache():

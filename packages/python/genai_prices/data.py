@@ -4465,18 +4465,38 @@ providers: list[Provider] = [
             ),
             ModelInfo(
                 id='command-r',
-                match=ClauseOr(or_=[ClauseEquals(equals='command-r'), ClauseEquals(equals='command-r-08-2024')]),
+                match=ClauseOr(or_=[ClauseEquals(equals='command-r'), ClauseEquals(equals='command-r-03-2024')]),
                 name='Command R',
                 description='Command-R is a 35B parameter model that performs conversational language tasks at a higher quality, more reliably, and with a longer context than previous models. It can be used for complex workflows like code generation, retrieval augmented generation (RAG), tool use, and agents.',
+                price_comments='`command-r` is an alias for `command-r-03-2024`, deprecated 2025-09-15 per https://docs.cohere.com/docs/models. https://cohere.com/pricing FAQ: Command R 03-2024 pricing is $0.50/1M tokens for input and $1.50/1M tokens for output.',
+                deprecated=True,
+                prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('1.5')),
+            ),
+            ModelInfo(
+                id='command-r-08-2024',
+                match=ClauseEquals(equals='command-r-08-2024'),
+                name='Command R (08-2024)',
+                description='`command-r-08-2024` is an update of the Command R model, delivered in August 2024.',
+                price_comments='https://cohere.com/pricing "Command R" card: $0.15/1M tokens for input and $0.60/1M tokens for output.',
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(
                 id='command-r-plus',
                 match=ClauseOr(
-                    or_=[ClauseEquals(equals='command-r-plus'), ClauseEquals(equals='command-r-plus-08-2024')]
+                    or_=[ClauseEquals(equals='command-r-plus'), ClauseEquals(equals='command-r-plus-04-2024')]
                 ),
                 name='Command R+',
                 description="Command R+ is a new, 104B-parameter LLM from Cohere. It's useful for roleplay, general consumer usecases, and Retrieval Augmented Generation (RAG).",
+                price_comments='`command-r-plus` is an alias for `command-r-plus-04-2024`, deprecated 2025-09-15 per https://docs.cohere.com/docs/models. https://cohere.com/pricing FAQ: Command R+ 04-2024 pricing is $3.00/1M tokens for input and $15.00/1M tokens for output.',
+                deprecated=True,
+                prices=ModelPrice(input_mtok=Decimal('3'), output_mtok=Decimal('15')),
+            ),
+            ModelInfo(
+                id='command-r-plus-08-2024',
+                match=ClauseEquals(equals='command-r-plus-08-2024'),
+                name='Command R+ (08-2024)',
+                description='`command-r-plus-08-2024` is an update of the Command R+ model, delivered in August 2024.',
+                price_comments='https://cohere.com/pricing FAQ: Command R+ 08-2024 pricing is $2.50/1M tokens for input and $10.00/1M tokens for output.',
                 prices=ModelPrice(input_mtok=Decimal('2.5'), output_mtok=Decimal('10')),
             ),
             ModelInfo(
