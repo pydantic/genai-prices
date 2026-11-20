@@ -4477,6 +4477,7 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='command-r-08-2024'),
                 name='Command R (08-2024)',
                 description='`command-r-08-2024` is an update of the Command R model, delivered in August 2024.',
+                price_comments='https://cohere.com/pricing "Command R" card: $0.15/1M tokens for input and $0.60/1M tokens for output.',
                 prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.6')),
             ),
             ModelInfo(

@@ -7623,6 +7623,7 @@ export const data: Provider[] = [
         match: {
           equals: 'command-r-08-2024',
         },
+        price_comments: 'https://cohere.com/pricing "Command R" card: $0.15/1M tokens for input and $0.60/1M tokens for output.',
         prices: {
           input_mtok: 0.15,
           output_mtok: 0.6,

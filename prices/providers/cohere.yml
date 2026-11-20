@@ -147,6 +147,8 @@ models:
     match:
       equals: command-r-08-2024
     prices_checked: 2026-11-20
+    price_comments: >-
+      https://cohere.com/pricing "Command R" card: $0.15/1M tokens for input and $0.60/1M tokens for output.
     prices:
       input_mtok: 0.15
       output_mtok: 0.6
