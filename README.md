@@ -42,7 +42,7 @@ The following providers are currently supported:
 - [Baseten](prices/providers/baseten.yml) - 22 models
 - [Cerebras](prices/providers/cerebras.yml) - 8 models
 - [Cloudflare Workers AI](prices/providers/cloudflare.yml) - 54 models
-- [Cohere](prices/providers/cohere.yml) - 9 models
+- [Cohere](prices/providers/cohere.yml) - 11 models
 - [Cursor](prices/providers/cursor.yml) - 8 models
 - [Databricks](prices/providers/databricks.yml) - 20 models
 - [Deepseek](prices/providers/deepseek.yml) - 8 models
