@@ -402,7 +402,7 @@ def list_models(args: ListCLI, *, plain: bool) -> int:
             if plain:
                 print(message, file=sys.stderr)
             else:
-                err_console.print(message, highlight=False)
+                err_console.print(Text(message), highlight=False)
             return 1
 
     for provider in providers:
