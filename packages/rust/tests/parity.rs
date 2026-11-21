@@ -31,6 +31,12 @@ fn provider_and_model_matching() {
         {
             "id":"catalog","name":"Catalog","api_pattern":"https://catalog\\.example",
             "models":[{"id":"dated","match":{"equals":"model-2025-12-11"},"prices":{"input_mtok":2}}]
+        },
+        {
+            "id":"fireworks","name":"Fireworks","api_pattern":"https://api\\.fireworks\\.ai",
+            "provider_match":{"contains":"fireworks"},
+            "model_match":{"starts_with":"accounts/fireworks/"},
+            "models":[{"id":"deepseek-r1-0528","match":{"equals":"accounts/fireworks/models/deepseek-r1-0528"},"prices":{"input_mtok":1}}]
         }
     ]"#,
     );
@@ -48,6 +54,13 @@ fn provider_and_model_matching() {
         ("compact date", "model-20251211", Some("source"), None, "dated"),
         // Go also accepts " LiTeLLM "; Python, which Rust follows, does not trim the ID before this check.
         ("litellm", "source/source-equals", Some("LiTeLLM"), None, "equals"),
+        (
+            "litellm provider prefix",
+            "fireworks_ai/accounts/fireworks/models/deepseek-r1-0528",
+            Some("litellm"),
+            None,
+            "deepseek-r1-0528",
+        ),
     ];
     let one = usage([(UsageKey::INPUT_TOKENS, 1.0)]);
     for &(name, model, provider_id, provider_api_url, want_model) in cases {

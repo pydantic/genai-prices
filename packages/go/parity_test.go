@@ -30,6 +30,12 @@ func TestProviderAndModelMatching(t *testing.T) {
 		{
 			"id":"catalog","name":"Catalog","api_pattern":"https://catalog\\.example",
 			"models":[{"id":"dated","match":{"equals":"model-2025-12-11"},"prices":{"input_mtok":2}}]
+		},
+		{
+			"id":"fireworks","name":"Fireworks","api_pattern":"https://api\\.fireworks\\.ai",
+			"provider_match":{"contains":"fireworks"},
+			"model_match":{"starts_with":"accounts/fireworks/"},
+			"models":[{"id":"deepseek-r1-0528","match":{"equals":"accounts/fireworks/models/deepseek-r1-0528"},"prices":{"input_mtok":1}}]
 		}
 	]`)
 
@@ -51,6 +57,7 @@ func TestProviderAndModelMatching(t *testing.T) {
 		{name: "fallback", model: "model-2025-12-11", providerID: "source", wantModel: "dated"},
 		{name: "compact date", model: "model-20251211", providerID: "source", wantModel: "dated"},
 		{name: "litellm", model: "source/source-equals", providerID: " LiTeLLM ", wantModel: "equals"},
+		{name: "litellm provider prefix", model: "fireworks_ai/accounts/fireworks/models/deepseek-r1-0528", providerID: "litellm", wantModel: "deepseek-r1-0528"},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
@@ -444,4 +451,22 @@ func newTestCalculator(t *testing.T, data string) *genai_prices.Calculator {
 		t.Fatal(err)
 	}
 	return calculator
+}
+
+func TestBundledFireworksLiteLLMPrefix(t *testing.T) {
+	calculator, err := genai_prices.NewCalculator()
+	if err != nil {
+		t.Fatal(err)
+	}
+	calculation, err := calculator.Calculate(genai_prices.PriceRequest{
+		Usage:      genai_prices.Usage{genai_prices.UsageInputTokens: 1},
+		Model:      "fireworks_ai/accounts/fireworks/models/deepseek-r1-0528",
+		ProviderID: "litellm",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if calculation.ProviderID != "fireworks" || calculation.ModelID != "deepseek-r1-0528" {
+		t.Fatalf("got provider %q model %q, want fireworks/deepseek-r1-0528", calculation.ProviderID, calculation.ModelID)
+	}
 }

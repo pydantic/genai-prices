@@ -4,6 +4,8 @@ id: fireworks
 pricing_urls:
   - https://fireworks.ai/pricing
 api_pattern: 'https://api\.fireworks\.ai'
+provider_match:
+  contains: fireworks
 model_match:
   starts_with: accounts/fireworks/
 
