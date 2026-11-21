@@ -51735,6 +51735,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'inkling-2-mini',
+        name: 'Inkling 2 Mini',
+        match: {
+          equals: 'inkling-2-mini',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.11,
+          cache_read_mtok: 0.022,
+          output_mtok: 0.44,
+        },
+      },
+      {
         id: 'inkling-2-small',
         name: 'Inkling 2 Small',
         match: {

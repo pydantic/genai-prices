@@ -936,6 +936,17 @@ models:
       output_mtok: 2.0008
     prices_checked: 2026-11-09
 
+  - id: inkling-2-mini
+    name: Inkling 2 Mini
+    match:
+      equals: inkling-2-mini
+    context_window: 1048576
+    prices:
+      input_mtok: 0.11
+      cache_read_mtok: 0.022
+      output_mtok: 0.44
+    prices_checked: 2026-11-21
+
   - id: inkling-2-small
     name: Inkling 2 Small
     match:

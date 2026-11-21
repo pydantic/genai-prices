@@ -29278,6 +29278,15 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='inkling-2-mini',
+                match=ClauseEquals(equals='inkling-2-mini'),
+                name='Inkling 2 Mini',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.11'), cache_read_mtok=Decimal('0.022'), output_mtok=Decimal('0.44')
+                ),
+            ),
+            ModelInfo(
                 id='inkling-2-small',
                 match=ClauseEquals(equals='inkling-2-small'),
                 name='Inkling 2 Small',
