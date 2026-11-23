@@ -1476,12 +1476,14 @@ models:
         - equals: eu.anthropic.claude-haiku-5-5
         - equals: us-gov.anthropic.claude-haiku-5-5
         - equals: jp.anthropic.claude-haiku-5-5
+        - equals: ca.anthropic.claude-haiku-5-5
         - contains: us.anthropic.claude-haiku-5-5-v1
         - contains: au.anthropic.claude-haiku-5-5-v1
         - contains: apac.anthropic.claude-haiku-5-5-v1
         - contains: eu.anthropic.claude-haiku-5-5-v1
         - contains: us-gov.anthropic.claude-haiku-5-5-v1
         - contains: jp.anthropic.claude-haiku-5-5-v1
+        - contains: ca.anthropic.claude-haiku-5-5-v1
     price_comments: >-
       Regional endpoints and inference profiles carry a 10% premium over the global endpoint.
       Prompts over 100,000 tokens bill every token at the long-context rate.
@@ -1805,12 +1807,14 @@ models:
         - equals: eu.anthropic.claude-sonnet-5-5
         - equals: us-gov.anthropic.claude-sonnet-5-5
         - equals: jp.anthropic.claude-sonnet-5-5
+        - equals: ca.anthropic.claude-sonnet-5-5
         - contains: us.anthropic.claude-sonnet-5-5-v1
         - contains: au.anthropic.claude-sonnet-5-5-v1
         - contains: apac.anthropic.claude-sonnet-5-5-v1
         - contains: eu.anthropic.claude-sonnet-5-5-v1
         - contains: us-gov.anthropic.claude-sonnet-5-5-v1
         - contains: jp.anthropic.claude-sonnet-5-5-v1
+        - contains: ca.anthropic.claude-sonnet-5-5-v1
     price_comments: >-
       Regional endpoints and inference profiles carry a 10% premium over the global endpoint.
       Cache hits are 0.05x base input (not the usual 0.1x), as on Opus 5.5.
