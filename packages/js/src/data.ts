@@ -52769,6 +52769,19 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-ai/DeepSeek-V4.1-Flash-1017-fast',
+        name: 'DeepSeek V4.1 Flash 1017 Fast',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4.1-Flash-1017-fast',
+        },
+        context_window: 1000000,
+        prices: {
+          input_mtok: 0.6,
+          cache_read_mtok: 0.012,
+          output_mtok: 2.4,
+        },
+      },
+      {
         id: 'deepseek-ai/deepseek-coder-33b-instruct',
         match: {
           equals: 'deepseek-ai/deepseek-coder-33b-instruct',

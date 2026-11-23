@@ -75,7 +75,7 @@ The following providers are currently supported:
 - [OVHcloud AI Endpoints](prices/providers/ovhcloud.yml) - 20 models
 - [Perplexity](prices/providers/perplexity.yml) - 25 models
 - [QuickSilver Pro](prices/providers/quicksilverpro.yml) - 86 models
-- [Together AI](prices/providers/together.yml) - 99 models
+- [Together AI](prices/providers/together.yml) - 100 models
 - [TypeSafe](prices/providers/typesafe.yml) - 2 models
 - [Voyage AI](prices/providers/voyageai.yml) - 24 models
 - [X AI](prices/providers/x_ai.yml) - 22 models

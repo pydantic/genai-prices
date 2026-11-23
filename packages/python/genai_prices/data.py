@@ -29913,6 +29913,15 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='deepseek-ai/DeepSeek-V4.1-Flash-1017-fast',
+                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash-1017-fast'),
+                name='DeepSeek V4.1 Flash 1017 Fast',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.6'), cache_read_mtok=Decimal('0.012'), output_mtok=Decimal('2.4')
+                ),
+            ),
+            ModelInfo(
                 id='deepseek-ai/deepseek-coder-33b-instruct',
                 match=ClauseEquals(equals='deepseek-ai/deepseek-coder-33b-instruct'),
                 prices=ModelPrice(input_mtok=Decimal('0.8'), output_mtok=Decimal('0.8')),
