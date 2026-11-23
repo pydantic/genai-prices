@@ -788,6 +788,8 @@ func TestClaudeSonnet55ResolvesToItsOwnModel(t *testing.T) {
 		{"aws", "global.anthropic.claude-sonnet-5-5-v1:0", "global.anthropic.claude-sonnet-5-5", 12.1},
 		{"aws", "us.anthropic.claude-sonnet-5-5", "regional.anthropic.claude-sonnet-5-5", 13.31},
 		{"aws", "us.anthropic.claude-sonnet-5-5-v1:0", "regional.anthropic.claude-sonnet-5-5", 13.31},
+		{"aws", "ca.anthropic.claude-sonnet-5-5", "regional.anthropic.claude-sonnet-5-5", 13.31},
+		{"aws", "ca.anthropic.claude-sonnet-5-5-v1:0", "regional.anthropic.claude-sonnet-5-5", 13.31},
 		{"aws", "anthropic.claude-sonnet-5-5", "regional.anthropic.claude-sonnet-5-5", 13.31},
 		{"openrouter", "anthropic/claude-sonnet-5.5", "anthropic/claude-sonnet-5.5", 12.1},
 	} {
@@ -1112,6 +1114,8 @@ func TestClaudeHaiku55PricesByPromptLength(t *testing.T) {
 		{"aws", "global.anthropic.claude-haiku-5-5-v1:0", "global.anthropic.claude-haiku-5-5", 0.06, 0.3000005},
 		{"aws", "us.anthropic.claude-haiku-5-5", "regional.anthropic.claude-haiku-5-5", 0.066, 0.33000055},
 		{"aws", "eu.anthropic.claude-haiku-5-5-v1:0", "regional.anthropic.claude-haiku-5-5", 0.066, 0.33000055},
+		{"aws", "ca.anthropic.claude-haiku-5-5", "regional.anthropic.claude-haiku-5-5", 0.066, 0.33000055},
+		{"aws", "ca.anthropic.claude-haiku-5-5-v1:0", "regional.anthropic.claude-haiku-5-5", 0.066, 0.33000055},
 		{"aws", "anthropic.claude-haiku-5-5", "regional.anthropic.claude-haiku-5-5", 0.066, 0.33000055},
 		{"openrouter", "anthropic/claude-haiku-5.5", "anthropic/claude-haiku-5.5", 0.06, 0.3000005},
 		{"openrouter", "anthropic/claude-haiku-5.5-20261007", "anthropic/claude-haiku-5.5", 0.06, 0.3000005},
