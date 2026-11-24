@@ -9531,16 +9531,43 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-v4p1-flash-1017-flex',
+        name: 'DeepSeek V4.1 Flash 1017 Flex',
+        match: {
+          equals: 'accounts/fireworks/routers/deepseek-v4p1-flash-1017-flex',
+        },
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.003,
+          output_mtok: 0.6,
+        },
+      },
+      {
         id: 'deepseek-v4p1-flash-1017-ultrafast',
         name: 'DeepSeek V4.1 Flash 1017 Ultra-fast (Preview)',
         match: {
           equals: 'accounts/fireworks/routers/deepseek-v4p1-flash-1017-ultrafast',
         },
-        prices: {
-          input_mtok: 2.4,
-          cache_read_mtok: 0.048,
-          output_mtok: 9.6,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 2.4,
+              cache_read_mtok: 0.048,
+              output_mtok: 9.6,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-24',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1.2,
+              cache_read_mtok: 0.024,
+              output_mtok: 4.8,
+            },
+          },
+        ],
       },
       {
         id: 'deepseek-v4p1-flash-1017-us',
@@ -9928,6 +9955,18 @@ export const data: Provider[] = [
           input_mtok: 2,
           cache_read_mtok: 0.2,
           output_mtok: 10,
+        },
+      },
+      {
+        id: 'kimi-k3p1-pro-us',
+        name: 'Kimi K3.1 Pro US',
+        match: {
+          equals: 'accounts/fireworks/routers/kimi-k3p1-pro-us',
+        },
+        prices: {
+          input_mtok: 2.5,
+          cache_read_mtok: 0.25,
+          output_mtok: 12.5,
         },
       },
       {
@@ -27892,6 +27931,17 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gpt-5.5-cyber-preview',
+        match: {
+          equals: 'gpt-5.5-cyber-preview',
+        },
+        prices: {
+          input_mtok: 12.5,
+          cache_read_mtok: 1.25,
+          output_mtok: 75,
+        },
+      },
+      {
         id: 'gpt-5.5-pro',
         name: 'GPT-5.5 Pro',
         description: 'Version of GPT-5.5 that produces smarter and more precise responses.',
@@ -29176,16 +29226,91 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gpt-6-astra-law',
+        match: {
+          equals: 'gpt-6-astra-law',
+        },
+        prices: {
+          input_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 20,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 50,
+            tiers: [
+              {
+                start: 272000,
+                price: 75,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'gpt-6-cyber',
         match: {
           equals: 'gpt-6-cyber',
         },
-        prices: {
-          input_mtok: 20,
-          cache_write_mtok: 25,
-          cache_read_mtok: 2,
-          output_mtok: 100,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 20,
+              cache_write_mtok: 25,
+              cache_read_mtok: 2,
+              output_mtok: 100,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-24',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 20,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 40,
+                  },
+                ],
+              },
+              cache_write_mtok: 25,
+              cache_read_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 100,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 150,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'gpt-6-luna',
@@ -29446,44 +29571,92 @@ export const data: Provider[] = [
         match: {
           equals: 'gpt-6-rosalind',
         },
-        prices: {
-          input_mtok: {
-            base: 15,
-            tiers: [
-              {
-                start: 272000,
-                price: 30,
+        prices: [
+          {
+            prices: {
+              input_mtok: {
+                base: 15,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 30,
+                  },
+                ],
               },
-            ],
-          },
-          cache_write_mtok: {
-            base: 18.75,
-            tiers: [
-              {
-                start: 272000,
-                price: 37.5,
+              cache_write_mtok: {
+                base: 18.75,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 37.5,
+                  },
+                ],
               },
-            ],
-          },
-          cache_read_mtok: {
-            base: 1.5,
-            tiers: [
-              {
-                start: 272000,
-                price: 3,
+              cache_read_mtok: {
+                base: 1.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 3,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 75,
-            tiers: [
-              {
-                start: 272000,
-                price: 112.5,
+              output_mtok: {
+                base: 75,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 112.5,
+                  },
+                ],
               },
-            ],
+            },
           },
-        },
+          {
+            constraint: {
+              start_date: '2026-11-24',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 10,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 20,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 12.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 25,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 1,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 2,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 50,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 75,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'gpt-6-sol',
@@ -30515,6 +30688,50 @@ export const data: Provider[] = [
             },
           },
         ],
+      },
+      {
+        id: 'gpt-6.2-astra-law',
+        match: {
+          equals: 'gpt-6.2-astra-law',
+        },
+        prices: {
+          input_mtok: {
+            base: 8,
+            tiers: [
+              {
+                start: 272000,
+                price: 16,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 20,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.4,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.8,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 40,
+            tiers: [
+              {
+                start: 272000,
+                price: 60,
+              },
+            ],
+          },
+        },
       },
       {
         id: 'gpt-6.2-sol',

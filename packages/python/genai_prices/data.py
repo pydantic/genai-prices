@@ -5606,12 +5606,30 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='deepseek-v4p1-flash-1017-flex',
+                match=ClauseEquals(equals='accounts/fireworks/routers/deepseek-v4p1-flash-1017-flex'),
+                name='DeepSeek V4.1 Flash 1017 Flex',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.003'), output_mtok=Decimal('0.6')
+                ),
+            ),
+            ModelInfo(
                 id='deepseek-v4p1-flash-1017-ultrafast',
                 match=ClauseEquals(equals='accounts/fireworks/routers/deepseek-v4p1-flash-1017-ultrafast'),
                 name='DeepSeek V4.1 Flash 1017 Ultra-fast (Preview)',
-                prices=ModelPrice(
-                    input_mtok=Decimal('2.4'), cache_read_mtok=Decimal('0.048'), output_mtok=Decimal('9.6')
-                ),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2.4'), cache_read_mtok=Decimal('0.048'), output_mtok=Decimal('9.6')
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 24)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.2'), cache_read_mtok=Decimal('0.024'), output_mtok=Decimal('4.8')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='deepseek-v4p1-flash-1017-us',
@@ -5862,6 +5880,14 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='accounts/fireworks/models/kimi-k3p1-pro'),
                 name='Kimi K3.1 Pro',
                 prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
+                id='kimi-k3p1-pro-us',
+                match=ClauseEquals(equals='accounts/fireworks/routers/kimi-k3p1-pro-us'),
+                name='Kimi K3.1 Pro US',
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.5'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('12.5')
+                ),
             ),
             ModelInfo(
                 id='llama-v3p1-8b-instruct',
@@ -16043,6 +16069,13 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='gpt-5.5-cyber-preview',
+                match=ClauseEquals(equals='gpt-5.5-cyber-preview'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('12.5'), cache_read_mtok=Decimal('1.25'), output_mtok=Decimal('75')
+                ),
+            ),
+            ModelInfo(
                 id='gpt-5.5-pro',
                 match=ClauseOr(
                     or_=[
@@ -16538,14 +16571,42 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='gpt-6-astra-law',
+                match=ClauseEquals(equals='gpt-6-astra-law'),
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('20'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('2'))]),
+                    output_mtok=TieredPrices(base=Decimal('50'), tiers=[Tier(start=272000, price=Decimal('75'))]),
+                ),
+            ),
+            ModelInfo(
                 id='gpt-6-cyber',
                 match=ClauseEquals(equals='gpt-6-cyber'),
-                prices=ModelPrice(
-                    input_mtok=Decimal('20'),
-                    cache_write_mtok=Decimal('25'),
-                    cache_read_mtok=Decimal('2'),
-                    output_mtok=Decimal('100'),
-                ),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('20'),
+                            cache_write_mtok=Decimal('25'),
+                            cache_read_mtok=Decimal('2'),
+                            output_mtok=Decimal('100'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 24)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('20'), tiers=[Tier(start=272000, price=Decimal('40'))]
+                            ),
+                            cache_write_mtok=Decimal('25'),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('100'), tiers=[Tier(start=272000, price=Decimal('150'))]
+                            ),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gpt-6-luna',
@@ -16647,14 +16708,41 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gpt-6-rosalind',
                 match=ClauseEquals(equals='gpt-6-rosalind'),
-                prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('15'), tiers=[Tier(start=272000, price=Decimal('30'))]),
-                    cache_write_mtok=TieredPrices(
-                        base=Decimal('18.75'), tiers=[Tier(start=272000, price=Decimal('37.5'))]
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('15'), tiers=[Tier(start=272000, price=Decimal('30'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('18.75'), tiers=[Tier(start=272000, price=Decimal('37.5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('1.5'), tiers=[Tier(start=272000, price=Decimal('3'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('75'), tiers=[Tier(start=272000, price=Decimal('112.5'))]
+                            ),
+                        )
                     ),
-                    cache_read_mtok=TieredPrices(base=Decimal('1.5'), tiers=[Tier(start=272000, price=Decimal('3'))]),
-                    output_mtok=TieredPrices(base=Decimal('75'), tiers=[Tier(start=272000, price=Decimal('112.5'))]),
-                ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 24)),
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('20'))]
+                            ),
+                            cache_write_mtok=TieredPrices(
+                                base=Decimal('12.5'), tiers=[Tier(start=272000, price=Decimal('25'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('2'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('50'), tiers=[Tier(start=272000, price=Decimal('75'))]
+                            ),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='gpt-6-sol',
@@ -17025,6 +17113,16 @@ providers: list[Provider] = [
                         ),
                     ),
                 ],
+            ),
+            ModelInfo(
+                id='gpt-6.2-astra-law',
+                match=ClauseEquals(equals='gpt-6.2-astra-law'),
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('8'), tiers=[Tier(start=272000, price=Decimal('16'))]),
+                    cache_write_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('20'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.4'), tiers=[Tier(start=272000, price=Decimal('0.8'))]),
+                    output_mtok=TieredPrices(base=Decimal('40'), tiers=[Tier(start=272000, price=Decimal('60'))]),
+                ),
             ),
             ModelInfo(
                 id='gpt-6.2-sol',
