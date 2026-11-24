@@ -6,13 +6,18 @@ on:
     workflows: [Update prices]
     types: [completed]
     branches: [main]
+  # The alert above fires once per newly failing job, so a daily reminder lists every job that is still failing.
+  schedule:
+    - cron: "41 13 * * *"
+  workflow_dispatch:
 
 permissions: {}
 
 jobs:
   importer-failure:
     if: >-
-      ${{ github.event.workflow_run.event == 'schedule'
+      ${{ github.event_name == 'workflow_run'
+      && github.event.workflow_run.event == 'schedule'
       && contains(fromJSON('["failure", "startup_failure"]'), github.event.workflow_run.conclusion) }}
     runs-on: ubuntu-latest
     timeout-minutes: 2
@@ -52,5 +57,75 @@ jobs:
     with:
       pr-url: ${{ github.event.workflow_run.html_url }}
       message: "GenAI Prices jobs started failing (${{ needs.importer-failure.outputs.newly-failing }}):"
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  still-failing:
+    if: ${{ github.event_name != 'workflow_run' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      actions: read
+    outputs:
+      message: ${{ steps.digest.outputs.message }}
+      run-url: ${{ steps.digest.outputs.run-url }}
+    steps:
+      - id: digest
+        env:
+          GH_TOKEN: ${{ github.token }}
+          # A week of hourly runs.
+          LOOKBACK_RUNS: 168
+        run: |
+          set -euo pipefail
+          # Each job of a run with its conclusion, plus a marker when GitHub started no import job at all.
+          jobs_of() {
+            gh run view "$1" --repo "$GITHUB_REPOSITORY" --json jobs --jq '(.jobs[]
+              | select(.name | startswith("import ") or . == "pull-request") | "\(.name)\t\(.conclusion)"),
+              (if any(.jobs[]; .name | startswith("import ")) then empty else "import: no job started\tfailure" end)'
+          }
+          gh run list --repo "$GITHUB_REPOSITORY" --workflow update-prices.yml --branch main --event schedule \
+            --status completed --limit "$LOOKBACK_RUNS" --json databaseId,createdAt,url \
+            --jq '.[] | [.databaseId, .createdAt, .url] | @tsv' > "$RUNNER_TEMP/runs.tsv"
+          IFS=$'\t' read -r latest _ latest_url < "$RUNNER_TEMP/runs.tsv"
+          mapfile -t open < <(jobs_of "$latest" | awk -F'\t' '$2 == "failure" { print $1 }' | sort)
+          [ "${#open[@]}" -gt 0 ] || exit 0
+          declare -A since=()
+          # Walk back until each failing job last passed. A run without the job, such as a weekly one, doesn't end it.
+          while [ "${#open[@]}" -gt 0 ] && IFS=$'\t' read -r id created _; do
+            jobs="$(jobs_of "$id")"
+            still=()
+            for job in "${open[@]}"; do
+              conclusion="$(awk -F'\t' -v job="$job" '$1 == job { print $2 }' <<< "$jobs")"
+              if [ "$conclusion" = failure ]; then
+                since[$job]="$created"
+              fi
+              if [ "$conclusion" = failure ] || [ -z "$conclusion" ]; then
+                still+=("$job")
+              fi
+            done
+            open=("${still[@]}")
+          done < "$RUNNER_TEMP/runs.tsv"
+          summary=()
+          for job in "${!since[@]}"; do
+            start="$(date -u -d "${since[$job]}" '+%Y-%m-%d %H:%M UTC')"
+            # A job still open failed in every run of the lookback window.
+            if printf '%s\n' "${open[@]}" | grep -qxF "$job"; then
+              summary+=("$job (since $start or earlier)")
+            else
+              summary+=("$job (since $start)")
+            fi
+          done
+          mapfile -t summary < <(printf '%s\n' "${summary[@]}" | sort)
+          echo "message=GenAI Prices jobs still failing: $(printf '%s, ' "${summary[@]}" | sed 's/, $//'). Latest run:" >> "$GITHUB_OUTPUT"
+          echo "run-url=$latest_url" >> "$GITHUB_OUTPUT"
+
+  notify-still-failing:
+    needs: still-failing
+    if: ${{ needs.still-failing.outputs.message != '' }}
+    permissions: {}
+    uses: ./.github/workflows/price-update-slack.yml
+    with:
+      pr-url: ${{ needs.still-failing.outputs.run-url }}
+      message: ${{ needs.still-failing.outputs.message }}
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
