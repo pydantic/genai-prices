@@ -11,7 +11,7 @@ from typing import Any, cast
 import httpx2
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, UnreadableRowError, report_manual_update, skipping_unreadable_row
 from prices.utils import package_dir
 
 # The page-data behind https://www.databricks.com/product/pricing/foundation-model-serving.
@@ -63,26 +63,29 @@ def parse_page_data(page_data: dict[str, Any]) -> list[ModelInfo]:
 
     models: list[ModelInfo] = []
     for row in re.findall(r'<tr>(.*?)</tr>', table[1], flags=re.S):
-        cells = [
-            html.unescape(re.sub(r'<[^>]+>', '', cell)).strip() for cell in re.findall(r'<td[^>]*>(.*?)</td>', row)
-        ]
-        if len(cells) != 4:
-            raise RuntimeError(f'Unexpected Databricks pricing row: {row}')
-        name = cells[0].removesuffix('⌖').strip()
-        if name not in MODEL_IDS:
-            print(f'Databricks: skipped {name!r}, it has no known serving endpoint')
-            continue
-        input_mtok, output_mtok, cache_read_mtok = (_usd(cell, row) for cell in cells[1:])
-        prices = ModelPrice(input_mtok=input_mtok, output_mtok=output_mtok, cache_read_mtok=cache_read_mtok)
-        models += [
-            ModelInfo(id=model_id, match=ClauseEquals(equals=model_id), prices=prices, prices_checked=date.today())
-            for model_id in MODEL_IDS[name]
-        ]
+        with skipping_unreadable_row('Databricks'):
+            cells = [
+                html.unescape(re.sub(r'<[^>]+>', '', cell)).strip() for cell in re.findall(r'<td[^>]*>(.*?)</td>', row)
+            ]
+            if len(cells) != 4:
+                raise UnreadableRowError(f'Unexpected Databricks pricing row: {row}')
+            name = cells[0].removesuffix('⌖').strip()
+            if name not in MODEL_IDS:
+                report_manual_update(
+                    f'Databricks: skipped {name!r}, it has no known serving endpoint; add it to MODEL_IDS by hand'
+                )
+                continue
+            input_mtok, output_mtok, cache_read_mtok = (_usd(cell, row) for cell in cells[1:])
+            prices = ModelPrice(input_mtok=input_mtok, output_mtok=output_mtok, cache_read_mtok=cache_read_mtok)
+            models += [
+                ModelInfo(id=model_id, match=ClauseEquals(equals=model_id), prices=prices, prices_checked=date.today())
+                for model_id in MODEL_IDS[name]
+            ]
     return models
 
 
 def main(provider_path: Path | None = None) -> None:
-    response = httpx2.get(PRICING_URL, timeout=30.0)
+    response = httpx2.get(PRICING_URL, timeout=30.0, follow_redirects=True)
     response.raise_for_status()
     models = parse_page_data(response.json())
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/databricks.yml')
@@ -111,5 +114,5 @@ def _usd(cell: str, row: str) -> Decimal | None:
     if cell == '-':
         return None
     if not re.fullmatch(r'\d+(?:\.\d+)?', cell):
-        raise RuntimeError(f'Unexpected Databricks DBU rate {cell!r} in row: {row}')
+        raise UnreadableRowError(f'Unexpected Databricks DBU rate {cell!r} in row: {row}')
     return (Decimal(cell) * USD_PER_DBU).quantize(Decimal('0.001'))

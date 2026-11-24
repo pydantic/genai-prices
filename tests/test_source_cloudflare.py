@@ -54,11 +54,17 @@ def test_parse_pricing_markdown_extracts_supported_token_prices() -> None:
     assert models[0].prices_checked == date.today()
 
 
-def test_parse_pricing_markdown_rejects_duplicate_models() -> None:
+def test_parse_pricing_markdown_reports_a_duplicate_model_and_reads_the_others(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
     duplicate = PRICING_MARKDOWN.replace('@cf/example/embedding', '@cf/example/first')
 
-    with pytest.raises(RuntimeError, match='Duplicate Cloudflare model in pricing data: @cf/example/first'):
-        source_cloudflare.parse_pricing_markdown(duplicate)
+    models = source_cloudflare.parse_pricing_markdown(duplicate)
+
+    assert [model.id for model in models] == ['@cf/example/classifier']
+    assert capsys.readouterr().out == (
+        'Cloudflare: kept @cf/example/first unchanged, the pricing page lists it more than once; update it by hand\n'
+    )
 
 
 def test_cloudflare_updater_preserves_existing_metadata(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:

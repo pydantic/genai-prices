@@ -83,20 +83,30 @@ def test_moonshot_maps_columns_by_title_and_reads_each_sections_context_window()
             'Unexpected Moonshot AI pricing columns',
         ),
         (section('262,144', K2_COLUMNS, K2_ROW).replace('All models support', 'All models have'), 'no context window'),
-        (section('262,144', K2_COLUMNS, K2_ROW.replace(',`$0.16 / MTok`', '')), 'Unexpected Moonshot AI pricing row'),
-        (
-            section('262,144', K2_COLUMNS, K2_ROW.replace('`kimi-k2.6`', '`Kimi K2.6`')),
-            'Unexpected Moonshot AI pricing row',
-        ),
-        (
-            section('262,144', K2_COLUMNS, K2_ROW.replace('`$4.00 / MTok`', '`-`')),
-            'Unexpected Moonshot AI Output for kimi-k2.6: -',
-        ),
     ],
 )
 def test_moonshot_rejects_unexpected_tables(page: str, error: str) -> None:
     with pytest.raises(RuntimeError, match=error):
         source_moonshotai.parse_pricing_page(page)
+
+
+@pytest.mark.parametrize(
+    ('row', 'error'),
+    [
+        (K2_ROW.replace(',`$0.16 / MTok`', ''), 'Unexpected Moonshot AI pricing row: '),
+        (K2_ROW.replace('`kimi-k2.6`', '`Kimi K2.6`'), 'Unexpected Moonshot AI pricing row: '),
+        (K2_ROW.replace('`$4.00 / MTok`', '`-`'), 'Unexpected Moonshot AI Output for kimi-k2.6: -'),
+    ],
+)
+def test_moonshot_reports_an_unreadable_row_and_reads_the_others(
+    row: str, error: str, capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_moonshotai.parse_pricing_page(
+        section('262,144', K2_COLUMNS, row, K2_ROW.replace('kimi-k2.6', 'kimi-k2.5'))
+    )
+
+    assert [model.id for model in models] == ['kimi-k2.5']
+    assert capsys.readouterr().out.startswith(f'Moonshot AI: skipped a row it cannot read; update it by hand. {error}')
 
 
 @pytest.mark.vcr()

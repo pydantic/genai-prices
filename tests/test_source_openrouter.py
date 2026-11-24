@@ -697,14 +697,21 @@ def test_openrouter_batch_routes_take_cache_writes_at_their_input_discount() -> 
     [
         ([{'min_prompt_tokens': 1, 'internal_reasoning': '0.1'}], 'Unexpected OpenRouter price override'),
         ([{'region': 'eu', 'prompt': '0.1'}], 'Unexpected OpenRouter price override'),
-        ([{'min_prompt_tokens': 1, 'input_cache_write': '0.1'}], 'overrides input_cache_write for vendor/m without'),
+        (
+            [{'min_prompt_tokens': 1, 'input_cache_write': '0.1'}],
+            'OpenRouter overrides input_cache_write for vendor/m without a base rate',
+        ),
     ],
 )
-def test_openrouter_provider_models_reject_overrides_they_cannot_tier(overrides: object, error: str) -> None:
+def test_openrouter_provider_models_report_overrides_they_cannot_tier_and_read_the_others(
+    overrides: object, error: str, capsys: pytest.CaptureFixture[str]
+) -> None:
     model = openrouter_model('vendor/m', pricing=pricing_with_extras({'overrides': overrides}))
 
-    with pytest.raises(RuntimeError, match=error):
-        source_openrouter.parse_provider_models([model])
+    models = source_openrouter.parse_provider_models([model, openrouter_model('vendor/n')])
+
+    assert [model.id for model in models] == ['vendor/n']
+    assert capsys.readouterr().out.startswith(f'OpenRouter: skipped a row it cannot read; update it by hand. {error}')
 
 
 def test_upsert_keeps_a_curated_tier_when_the_source_reports_only_its_base(

@@ -10,7 +10,7 @@ import httpx2
 from pydantic import BaseModel, Field
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, report_manual_update
 from prices.utils import package_dir
 
 PRICING_URL = 'https://docs.mistral.ai/inference/pricing'
@@ -82,12 +82,14 @@ def parse_pricing_page(page: str) -> list[ModelInfo]:
         if models.setdefault(model.id, model).prices != model.prices:
             conflicting.add(model.id)
     for model_id in sorted(conflicting):
-        print(f'Mistral: kept {model_id} unchanged, the pricing page lists it at conflicting rates; update it by hand')
+        report_manual_update(
+            f'Mistral: kept {model_id} unchanged, the pricing page lists it at conflicting rates; update it by hand'
+        )
     return [model for model_id, model in models.items() if model_id not in conflicting]
 
 
 def main(provider_path: Path | None = None) -> None:
-    response = httpx2.get(PRICING_URL, timeout=30.0)
+    response = httpx2.get(PRICING_URL, timeout=30.0, follow_redirects=True)
     response.raise_for_status()
     models = parse_pricing_page(response.text)
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/mistral.yml')

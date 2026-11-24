@@ -104,11 +104,19 @@ make detect-deprecated                 # Detect models that may be deprecated or
 make collapse-models                   # Collapse duplicate similar models
 ```
 
-`make help` lists every target. These importers run against live third-party APIs and nothing in CI
-exercises them, so they break silently when an upstream schema changes — if one returns suspiciously
-little, suspect the importer before the data. Every importer goes through `ProviderYaml.upsert_models`, which
-never deletes a model, adds a dated entry for each rate change, and exits non-zero when the source returns fewer
-models than the importer's `MIN_MODEL_COUNT`.
+`make help` lists every target. The hourly `Update prices` workflow (`.github/workflows/update-prices.yml`) runs
+the importers in its matrix against live third-party pages, so an upstream page change breaks an importer within the
+hour. If one returns suspiciously little, suspect the importer before the data. Every importer goes through
+`ProviderYaml.upsert_models`, which never deletes a model, adds a dated entry for each rate change, and exits non-zero
+when the source returns fewer models than the importer's `MIN_MODEL_COUNT`.
+
+When you fix a failing importer:
+
+- If one unreadable row failed it, raise `UnreadableRowError` for that row inside `skipping_unreadable_row(...)`
+  (`prices/src/prices/update.py`). The importer then reports the row for manual review and updates the other models.
+  Teach the parser the new row shape only when its prices should import automatically.
+- Search the other `prices/src/prices/source_*.py` modules for the same failure mode. Fix every one in the same PR,
+  or open an issue that lists them. A fix for only the importer that failed leaves the others to fail next.
 
 ## Important Notes
 
