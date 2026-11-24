@@ -6,7 +6,7 @@ from decimal import Decimal
 from pathlib import Path
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, Tier, TieredPrices
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, report_manual_update
 from prices.utils import get_markdown, markdown_tables, package_dir
 
 PRICING_URL = (
@@ -87,7 +87,9 @@ def main(provider_path: Path | None = None) -> None:
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/github_copilot.yml')
     for model in models:
         if provider_yaml.provider.find_model(model.id) is None:
-            print(f'GitHub Copilot: pricing lists {model.id}, which github_copilot.yml lacks; add it by hand')
+            report_manual_update(
+                f'GitHub Copilot: pricing lists {model.id}, which github_copilot.yml lacks; add it by hand'
+            )
     models = [model for model in models if provider_yaml.provider.find_model(model.id)]
     added, updated = provider_yaml.upsert_models(models, source='GitHub Copilot', min_count=MIN_MODEL_COUNT)
     print(f'GitHub Copilot prices updated: {added} added, {updated} updated')

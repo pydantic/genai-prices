@@ -159,8 +159,8 @@ def test_google_parses_standard_rates_by_modality_and_prompt_size(capsys: pytest
     }
     assert {model.prices_checked for model in models} == {TODAY}
     assert capsys.readouterr().out == (
-        'Google: skipped Argon, a rate starts on 2026-12-01, which a dated entry must record\n'
-        "Google: skipped Old image, unreadable price '$0.039 per image{% sup %}*{% /sup %}'\n"
+        'Google: skipped Argon, a rate starts on 2026-12-01, which a dated entry must record; update it by hand\n'
+        "Google: skipped Old image, unreadable price '$0.039 per image{% sup %}*{% /sup %}'; update it by hand\n"
         'Google: skipped Output only, it has no paid input price\n'
         'Google: skipped Veo, its prices are not per 1M tokens\n'
     )
@@ -189,7 +189,7 @@ def test_google_skips_a_model_whose_prices_it_cannot_read(
     markdown = section('Odd', '[`gemini-odd-x`](https://x)', rows)
 
     assert source_google.parse_pricing_markdown(markdown, today=TODAY) == []
-    assert capsys.readouterr().out == f'Google: skipped Odd, {reason}\n'
+    assert capsys.readouterr().out == f'Google: skipped Odd, {reason}; update it by hand\n'
 
 
 def test_google_rejects_a_table_row_with_missing_cells() -> None:
@@ -214,7 +214,7 @@ def test_google_main_fetches_recorded_pricing_page(
     source_google.main(provider_path)
 
     out = capsys.readouterr().out.splitlines()
-    assert 'Google: skipped gemini-3.5-transcribe, it is not in google.yml yet' in out
+    assert 'Google: skipped gemini-3.5-transcribe, it is not in google.yml yet; add it by hand' in out
     assert out[-1] == 'Google prices updated: 0 added, 20 updated'
     record = ProviderYaml(provider_path).provider.find_model('gemini-2.5-pro')
     assert record is not None and record.prices_checked == TODAY

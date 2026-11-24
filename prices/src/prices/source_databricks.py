@@ -11,7 +11,7 @@ from typing import Any, cast
 import httpx2
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, report_manual_update
 from prices.utils import package_dir
 
 # The page-data behind https://www.databricks.com/product/pricing/foundation-model-serving.
@@ -70,7 +70,9 @@ def parse_page_data(page_data: dict[str, Any]) -> list[ModelInfo]:
             raise RuntimeError(f'Unexpected Databricks pricing row: {row}')
         name = cells[0].removesuffix('⌖').strip()
         if name not in MODEL_IDS:
-            print(f'Databricks: skipped {name!r}, it has no known serving endpoint')
+            report_manual_update(
+                f'Databricks: skipped {name!r}, it has no known serving endpoint; add it to MODEL_IDS by hand'
+            )
             continue
         input_mtok, output_mtok, cache_read_mtok = (_usd(cell, row) for cell in cells[1:])
         prices = ModelPrice(input_mtok=input_mtok, output_mtok=output_mtok, cache_read_mtok=cache_read_mtok)

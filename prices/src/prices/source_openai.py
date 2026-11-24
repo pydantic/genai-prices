@@ -6,7 +6,7 @@ from decimal import Decimal
 from pathlib import Path
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, Tier, TieredPrices
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, report_manual_update
 from prices.utils import get_markdown, markdown_tables, package_dir
 
 PRICING_URL = 'https://developers.openai.com/api/docs/pricing.md'
@@ -53,7 +53,9 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     if not rates:
         raise RuntimeError('OpenAI pricing page has no standard text pricing table')
     for model_id in sorted(conflicting):
-        print(f'OpenAI: kept {model_id} unchanged, the pricing page lists it at conflicting rates; update it by hand')
+        report_manual_update(
+            f'OpenAI: kept {model_id} unchanged, the pricing page lists it at conflicting rates; update it by hand'
+        )
     return [
         ModelInfo(
             id=model_id,

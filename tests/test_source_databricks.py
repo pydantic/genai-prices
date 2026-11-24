@@ -57,7 +57,9 @@ def test_databricks_converts_dbu_rates_to_usd(capsys: pytest.CaptureFixture[str]
         ),
         'databricks-bge-large-en': ModelPrice(input_mtok=Decimal('0.100')),
     }
-    assert capsys.readouterr().out == "Databricks: skipped 'Brand New Model', it has no known serving endpoint\n"
+    assert capsys.readouterr().out == (
+        "Databricks: skipped 'Brand New Model', it has no known serving endpoint; add it to MODEL_IDS by hand\n"
+    )
 
 
 @pytest.mark.parametrize(

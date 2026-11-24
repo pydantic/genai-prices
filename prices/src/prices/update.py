@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import os
 import re
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal
@@ -34,6 +37,33 @@ yaml.sequence_dash_offset = 2
 yaml.width = 120
 # A dated price shares its `date` object with `prices_checked`; without this ruamel emits `&id001` anchors.
 yaml.representer.ignore_aliases = lambda *_: True  # pyright: ignore[reportUnknownMemberType, reportUnknownLambdaType]
+# The hourly price update points this at a file and lists every line in it on the manual review issue.
+MANUAL_UPDATE_NOTES_ENV = 'PRICE_UPDATE_NOTES'
+
+
+def report_manual_update(note: str) -> None:
+    """Report a change the importer saw but did not write, so a person applies it."""
+    print(note)
+    if notes_path := os.environ.get(MANUAL_UPDATE_NOTES_ENV):
+        with open(notes_path, 'a') as notes:
+            notes.write(f'{note}\n')
+
+
+class UnreadableRowError(ValueError):
+    """A source row the importer cannot read, such as an unknown price format or a new column."""
+
+
+@contextmanager
+def skipping_unreadable_row(source: str) -> Iterator[None]:
+    """Report an `UnreadableRowError` from the block for manual review instead of failing the importer.
+
+    Wrap the code that reads one source row. The row's model then keeps its current prices, while the
+    importer still updates every other model. `upsert_models` still fails when too few rows were readable.
+    """
+    try:
+        yield
+    except UnreadableRowError as e:
+        report_manual_update(f'{source}: skipped a row it cannot read; update it by hand. {e}')
 
 
 def get_providers_yaml() -> dict[str, ProviderYaml]:
@@ -175,7 +205,7 @@ class ProviderYaml:
                 if isinstance(tiers := curated.get(key), TieredPrices) and not isinstance(value, TieredPrices)
             }
             if any(reported[key] != tiers.base for key, tiers in tiered.items()):
-                print(
+                report_manual_update(
                     f'{source}: kept {matching_model.id} unchanged, {model.id} reports a flat rate where it is tiered'
                 )
                 continue
@@ -183,7 +213,9 @@ class ProviderYaml:
             prices = without_redundant_cache_rates(ModelPrice(**(curated | reported | tiered)))
             if previous := updated_prices.get(matching_model.id):
                 if previous != prices:
-                    print(f'{source}: kept {matching_model.id} at its own rates, alias {model.id} reports others')
+                    report_manual_update(
+                        f'{source}: kept {matching_model.id} at its own rates, alias {model.id} reports others'
+                    )
                 continue
             updated_prices[matching_model.id] = prices
             model = model.model_copy(update={'prices': prices})
@@ -221,7 +253,7 @@ class ProviderYaml:
         if (model.prices_checked is not None and record.prices_checked == model.prices_checked) or any(
             isinstance(c, StartDateConstraint) and c.start_date == model.prices_checked for c in constraints
         ):
-            print(
+            report_manual_update(
                 f'{self.provider_id}: kept {record.id} unchanged: another price change on {model.prices_checked} cannot be represented '
                 f'by date-only constraints; update them by hand. Reported rates: '
                 f'{model.prices.model_dump(mode="json", exclude_none=True)}'
@@ -238,7 +270,7 @@ class ProviderYaml:
         changes: list[tuple[int, CommentedMap]] = []
         for when, prices in follow_standard_change(record.price_variants, old, new):
             if prices is None:
-                print(
+                report_manual_update(
                     f'{source}: {record.id} {when} rates are not one share of the standard rates; update them by hand'
                 )
                 continue

@@ -7,7 +7,7 @@ from itertools import takewhile
 from pathlib import Path
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, report_manual_update
 from prices.utils import get_markdown, package_dir
 
 PRICING_URL = 'https://docs.fireworks.ai/serverless/pricing.md'
@@ -53,7 +53,9 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
             )
         )
     for api_id in sorted(duplicates):
-        print(f'Fireworks: kept {api_id} unchanged, the pricing page lists it more than once; update it by hand')
+        report_manual_update(
+            f'Fireworks: kept {api_id} unchanged, the pricing page lists it more than once; update it by hand'
+        )
     return [model for model in models if model.id not in duplicates]
 
 
