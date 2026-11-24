@@ -9531,16 +9531,43 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'deepseek-v4p1-flash-1017-flex',
+        name: 'DeepSeek V4.1 Flash 1017 Flex',
+        match: {
+          equals: 'accounts/fireworks/routers/deepseek-v4p1-flash-1017-flex',
+        },
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.003,
+          output_mtok: 0.6,
+        },
+      },
+      {
         id: 'deepseek-v4p1-flash-1017-ultrafast',
         name: 'DeepSeek V4.1 Flash 1017 Ultra-fast (Preview)',
         match: {
           equals: 'accounts/fireworks/routers/deepseek-v4p1-flash-1017-ultrafast',
         },
-        prices: {
-          input_mtok: 2.4,
-          cache_read_mtok: 0.048,
-          output_mtok: 9.6,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 2.4,
+              cache_read_mtok: 0.048,
+              output_mtok: 9.6,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-24',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1.2,
+              cache_read_mtok: 0.024,
+              output_mtok: 4.8,
+            },
+          },
+        ],
       },
       {
         id: 'deepseek-v4p1-flash-1017-us',
@@ -9774,6 +9801,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'hy4-flash',
+        name: 'HY4 Flash',
+        match: {
+          equals: 'accounts/fireworks/models/hy4-flash',
+        },
+        prices: {
+          input_mtok: 0.07,
+          cache_read_mtok: 0.003,
+          output_mtok: 0.281,
+        },
+      },
+      {
         id: 'inkling',
         name: 'Inkling',
         description: "Thinking Machines Lab's open-weights multimodal Mixture-of-Experts model, trained across text, image, and audio.",
@@ -9786,6 +9825,18 @@ export const data: Provider[] = [
           input_mtok: 1,
           cache_read_mtok: 0.17,
           output_mtok: 4.05,
+        },
+      },
+      {
+        id: 'inkling-2-small',
+        name: 'Inkling 2 Small',
+        match: {
+          equals: 'accounts/fireworks/models/inkling-2-small',
+        },
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.03,
+          output_mtok: 1,
         },
       },
       {
@@ -9928,6 +9979,18 @@ export const data: Provider[] = [
           input_mtok: 2,
           cache_read_mtok: 0.2,
           output_mtok: 10,
+        },
+      },
+      {
+        id: 'kimi-k3p1-pro-us',
+        name: 'Kimi K3.1 Pro US',
+        match: {
+          equals: 'accounts/fireworks/routers/kimi-k3p1-pro-us',
+        },
+        prices: {
+          input_mtok: 2.5,
+          cache_read_mtok: 0.25,
+          output_mtok: 12.5,
         },
       },
       {
@@ -10104,6 +10167,18 @@ export const data: Provider[] = [
           input_mtok: 2,
           cache_read_mtok: 0.25,
           output_mtok: 6,
+        },
+      },
+      {
+        id: 'qwen4-max',
+        name: 'Qwen 4 Max',
+        match: {
+          equals: 'accounts/fireworks/models/qwen4-max',
+        },
+        prices: {
+          input_mtok: 1.5,
+          cache_read_mtok: 0.075,
+          output_mtok: 4.5,
         },
       },
       {
@@ -27892,6 +27967,17 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gpt-5.5-cyber-preview',
+        match: {
+          equals: 'gpt-5.5-cyber-preview',
+        },
+        prices: {
+          input_mtok: 12.5,
+          cache_read_mtok: 1.25,
+          output_mtok: 75,
+        },
+      },
+      {
         id: 'gpt-5.5-pro',
         name: 'GPT-5.5 Pro',
         description: 'Version of GPT-5.5 that produces smarter and more precise responses.',
@@ -29176,16 +29262,126 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gpt-6-astra-healthcare',
+        match: {
+          equals: 'gpt-6-astra-healthcare',
+        },
+        prices: {
+          input_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 20,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 50,
+            tiers: [
+              {
+                start: 272000,
+                price: 75,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'gpt-6-astra-law',
+        match: {
+          equals: 'gpt-6-astra-law',
+        },
+        prices: {
+          input_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 20,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 50,
+            tiers: [
+              {
+                start: 272000,
+                price: 75,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'gpt-6-cyber',
         match: {
           equals: 'gpt-6-cyber',
         },
-        prices: {
-          input_mtok: 20,
-          cache_write_mtok: 25,
-          cache_read_mtok: 2,
-          output_mtok: 100,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 20,
+              cache_write_mtok: 25,
+              cache_read_mtok: 2,
+              output_mtok: 100,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-24',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 20,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 40,
+                  },
+                ],
+              },
+              cache_write_mtok: 25,
+              cache_read_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 100,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 150,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'gpt-6-luna',
@@ -29446,44 +29642,92 @@ export const data: Provider[] = [
         match: {
           equals: 'gpt-6-rosalind',
         },
-        prices: {
-          input_mtok: {
-            base: 15,
-            tiers: [
-              {
-                start: 272000,
-                price: 30,
+        prices: [
+          {
+            prices: {
+              input_mtok: {
+                base: 15,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 30,
+                  },
+                ],
               },
-            ],
-          },
-          cache_write_mtok: {
-            base: 18.75,
-            tiers: [
-              {
-                start: 272000,
-                price: 37.5,
+              cache_write_mtok: {
+                base: 18.75,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 37.5,
+                  },
+                ],
               },
-            ],
-          },
-          cache_read_mtok: {
-            base: 1.5,
-            tiers: [
-              {
-                start: 272000,
-                price: 3,
+              cache_read_mtok: {
+                base: 1.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 3,
+                  },
+                ],
               },
-            ],
-          },
-          output_mtok: {
-            base: 75,
-            tiers: [
-              {
-                start: 272000,
-                price: 112.5,
+              output_mtok: {
+                base: 75,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 112.5,
+                  },
+                ],
               },
-            ],
+            },
           },
-        },
+          {
+            constraint: {
+              start_date: '2026-11-24',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: {
+                base: 10,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 20,
+                  },
+                ],
+              },
+              cache_write_mtok: {
+                base: 12.5,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 25,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 1,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 2,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 50,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 75,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'gpt-6-sol',
@@ -29992,6 +30236,41 @@ export const data: Provider[] = [
             },
           },
         ],
+      },
+      {
+        id: 'gpt-6.1-sol-healthcare',
+        match: {
+          equals: 'gpt-6.1-sol-healthcare',
+        },
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+        },
       },
       {
         id: 'gpt-6.1-terra',
@@ -30517,6 +30796,94 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gpt-6.2-astra-healthcare',
+        match: {
+          equals: 'gpt-6.2-astra-healthcare',
+        },
+        prices: {
+          input_mtok: {
+            base: 8,
+            tiers: [
+              {
+                start: 272000,
+                price: 16,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 20,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.4,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.8,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 40,
+            tiers: [
+              {
+                start: 272000,
+                price: 60,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'gpt-6.2-astra-law',
+        match: {
+          equals: 'gpt-6.2-astra-law',
+        },
+        prices: {
+          input_mtok: {
+            base: 8,
+            tiers: [
+              {
+                start: 272000,
+                price: 16,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 20,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.4,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.8,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 40,
+            tiers: [
+              {
+                start: 272000,
+                price: 60,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'gpt-6.2-sol',
         name: 'GPT-6.2 Sol',
         description: 'A reasoning model for text, images, and tool use.',
@@ -30800,6 +31167,50 @@ export const data: Provider[] = [
             },
           },
         ],
+      },
+      {
+        id: 'gpt-6.2-sol-healthcare',
+        match: {
+          equals: 'gpt-6.2-sol-healthcare',
+        },
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+        },
       },
       {
         id: 'gpt-audio',
@@ -49750,6 +50161,25 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'DeepSeek-V4.1-Flash-1017',
+        name: 'DeepSeek-V4.1-Flash-1017',
+        match: {
+          or: [
+            {
+              equals: 'DeepSeek-V4.1-Flash-1017',
+            },
+            {
+              equals: 'deepseek-v4.1-flash-1017',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.31,
+          output_mtok: 1.25,
+        },
+      },
+      {
         id: 'Llama-3.1-8B-Instruct',
         name: 'Llama-3.1-8B-Instruct',
         match: {
@@ -50048,6 +50478,29 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'clef-flash',
+        name: 'clef-flash',
+        match: {
+          equals: 'clef-flash',
+        },
+        context_window: 16384,
+        prices: {
+          input_mtok: 0.04,
+        },
+      },
+      {
+        id: 'gemma-4-26b-a4b',
+        name: 'gemma-4-26b-a4b',
+        match: {
+          equals: 'gemma-4-26b-a4b',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.41,
+        },
+      },
+      {
         id: 'gpt-oss-120b',
         name: 'gpt-oss-120b',
         match: {
@@ -50069,6 +50522,66 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.05,
           output_mtok: 0.18,
+        },
+      },
+      {
+        id: 'laguna-xs-2.1',
+        name: 'laguna-xs-2.1',
+        match: {
+          equals: 'laguna-xs-2.1',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.06,
+          output_mtok: 0.12,
+        },
+      },
+      {
+        id: 'nemotron3-nano-30b',
+        name: 'nemotron3-nano-30b',
+        match: {
+          equals: 'nemotron3-nano-30b',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.06,
+          output_mtok: 0.23,
+        },
+      },
+      {
+        id: 'nemotron3-omni-30b',
+        name: 'nemotron3-omni-30b',
+        match: {
+          equals: 'nemotron3-omni-30b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.19,
+          output_mtok: 0.57,
+        },
+      },
+      {
+        id: 'qwen3-vl-30b-a3b',
+        name: 'qwen3-vl-30b-a3b',
+        match: {
+          equals: 'qwen3-vl-30b-a3b',
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.58,
+        },
+      },
+      {
+        id: 'qwen3.6-35b-a3b',
+        name: 'qwen3.6-35b-a3b',
+        match: {
+          equals: 'qwen3.6-35b-a3b',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 1.33,
         },
       },
     ],
