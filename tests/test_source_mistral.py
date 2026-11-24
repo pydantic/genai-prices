@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import json
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
 
 import pytest
+from pydantic import ValidationError
 
 from prices import source_mistral
 from prices.prices_types import (
@@ -18,48 +20,76 @@ from prices.prices_types import (
 )
 from prices.update import ProviderYaml
 
-PRICING_MARKDOWN = """\
-# API pricing
 
-| Model | API name | Price |
-| --- | --- | --- |
-| [Mistral Large 4](/models/mistral-large-4-0) | `mistral-large-4` | Input $0.68 /M Tokens (sale price, regular $1.36)<br>Cached input $0.07 /M Tokens<br>Output $2.09 /M Tokens |
-| [OCR 4.1](/models/ocr-4-1) | `mistral-ocr-4-1` | Input $4 /1000 Pages<br>Input $5 /1000 Annotated Pages |
-| [Voxtral Mini Transcribe 2](/models/voxtral-mini-transcribe-26-02) | `voxtral-mini-2602` | Input $0.003 /Min |
-| [Voxtral TTS](/models/voxtral-tts-26-03) | `voxtral-mini-tts-2603` | Input $0 /M Chars<br>Output $16 /M Chars |
-| [Mistral Moderation 2](/models/mistral-moderation-26-03) | `mistral-moderation-2603` | Free<br>$0 /M Tokens |
-| [Shieldstral 1.0](/models/shieldstral-1-0) |  |  |
-"""
+def catalog_model(name: str, api_ids: list[str], *rates: tuple[str, float, str | None], **extra: object) -> object:
+    pricing = [{'label': label, 'priceUsd': price, 'unit': unit} for label, price, unit in rates]
+    return {'name': name, 'modelIds': api_ids, 'isFree': False, 'pricing': pricing} | extra
+
+
+def pricing_page(*models: object) -> str:
+    """The docs page as Next.js serves it: a flight row of catalog JSON inside a `self.__next_f` script."""
+    row = f'1:["$","div",null,{json.dumps({"models": list(models)})}]\n2:I["chunk"]\n'
+    return f'<html><script>self.__next_f.push([1,{json.dumps(row)}])</script></html>'
 
 
 def test_mistral_parses_token_page_and_audio_rates_and_skips_unsupported_units() -> None:
-    models = source_mistral.parse_pricing_markdown(PRICING_MARKDOWN)
+    large = catalog_model(
+        'Mistral Large 4',
+        ['mistral-large-4', 'mistral-large-latest'],
+        ('Input', 0.7, '/M Tokens'),
+        ('Cached input', 0.07, '/M Tokens'),
+        ('Output', 2.1, '/M Tokens'),
+    )
+    page = pricing_page(
+        large,
+        catalog_model(
+            'OCR 4.1', ['mistral-ocr-4-1'], ('Input', 4, '/1000 Pages'), ('Input', 5, '/1000 Annotated Pages')
+        ),
+        catalog_model('Voxtral Mini Transcribe 3', ['voxtral-mini-transcribe-3-0'], ('Input', 0.0035, '/Min')),
+        catalog_model('Voxtral TTS', ['voxtral-mini-tts-2603'], ('Input', 0, '/M Chars'), ('Output', 16, '/M Chars')),
+        catalog_model('Mistral Moderation 2', ['mistral-moderation-2603'], ('Input', 0, '/M Tokens'), isFree=True),
+        catalog_model('Mistral 7B', [], ('Input (/M tokens)', 0.25, None)),
+        catalog_model(
+            'Embed', ['mistral-embed'], ('Input', 0.1, '/M Tokens'), ('Output', 0, '/M Tokens'), relatedModels=[large]
+        ),
+    )
+
+    models = source_mistral.parse_pricing_page(page)
 
     assert [(model.id, model.name, model.prices_checked) for model in models] == [
         ('mistral-large-4', 'Mistral Large 4', date.today()),
         ('mistral-ocr-4-1', 'OCR 4.1', date.today()),
-        ('voxtral-mini-2602', 'Voxtral Mini Transcribe 2', date.today()),
+        ('voxtral-mini-transcribe-3-0', 'Voxtral Mini Transcribe 3', date.today()),
+        ('mistral-embed', 'Embed', date.today()),
     ]
     assert [model.prices for model in models] == [
-        ModelPrice(input_mtok=Decimal('0.68'), cache_read_mtok=Decimal('0.07'), output_mtok=Decimal('2.09')),
+        ModelPrice(input_mtok=Decimal('0.7'), cache_read_mtok=Decimal('0.07'), output_mtok=Decimal('2.1')),
         ModelPrice.model_validate({'input_document_kpages': 4, 'input_annotated_document_kpages': 5}),
-        ModelPrice.model_validate({'audio_hours': '0.18', 'input_audio_hours': '0.18'}),
+        ModelPrice.model_validate({'audio_hours': '0.21', 'input_audio_hours': '0.21'}),
+        ModelPrice(input_mtok=Decimal('0.1')),
     ]
 
 
-@pytest.mark.parametrize(
-    ('markdown', 'error'),
-    [
-        ('| [Codestral](/models/codestral) | codestral | Input $0.3 /M Tokens |', 'Unexpected Mistral pricing row'),
-        (
-            '| [Codestral](/models/codestral) | `codestral` | Input €0.3 /M Tokens |',
-            "Unexpected Mistral price 'Input €0.3 /M Tokens'",
-        ),
-    ],
-)
-def test_mistral_rejects_unexpected_pricing_shapes(markdown: str, error: str) -> None:
-    with pytest.raises(RuntimeError, match=error):
-        source_mistral.parse_pricing_markdown(markdown)
+def test_mistral_reports_a_model_listed_at_conflicting_rates(capsys: pytest.CaptureFixture[str]) -> None:
+    page = pricing_page(
+        catalog_model('Codestral', ['codestral-2508'], ('Input', 0.3, '/M Tokens')),
+        catalog_model('Codestral', ['codestral-2508'], ('Input', 0.4, '/M Tokens')),
+        catalog_model('Mistral Embed', ['mistral-embed'], ('Input', 0.1, '/M Tokens')),
+    )
+
+    assert [model.id for model in source_mistral.parse_pricing_page(page)] == ['mistral-embed']
+    assert capsys.readouterr().out == (
+        'Mistral: kept codestral-2508 unchanged, the pricing page lists it at conflicting rates; update it by hand\n'
+    )
+
+
+def test_mistral_rejects_a_catalog_model_in_an_unexpected_shape() -> None:
+    page = pricing_page(
+        {'name': 'Codestral', 'modelIds': ['codestral'], 'isFree': False, 'pricing': [{'label': 'Input'}]}
+    )
+
+    with pytest.raises(ValidationError, match='priceUsd'):
+        source_mistral.parse_pricing_page(page)
 
 
 @pytest.mark.vcr()
@@ -79,9 +109,9 @@ models:
 
     source_mistral.main(provider_path)
 
-    assert capsys.readouterr().out == 'Mistral prices updated: 19 added, 1 updated\n'
+    assert capsys.readouterr().out == 'Mistral prices updated: 17 added, 1 updated\n'
     provider = ProviderYaml(provider_path).provider
-    assert len(provider.models) == 20
+    assert len(provider.models) == 18
     large = provider.find_model('mistral-large-4')
     assert large is not None
     assert large.prices == [
@@ -90,12 +120,12 @@ models:
         ),
         ConditionalPrice(
             constraint=StartDateConstraint(start_date=date.today()),
-            prices=ModelPrice(input_mtok=Decimal('1.36'), cache_read_mtok=Decimal('0.14'), output_mtok=Decimal('4.18')),
+            prices=ModelPrice(input_mtok=Decimal('0.7'), cache_read_mtok=Decimal('0.07'), output_mtok=Decimal('2.1')),
         ),
     ]
 
     source_mistral.main(provider_path)
-    assert capsys.readouterr().out == 'Mistral prices updated: 0 added, 20 updated\n'
+    assert capsys.readouterr().out == 'Mistral prices updated: 0 added, 18 updated\n'
     assert ProviderYaml(provider_path).provider == provider
 
 
