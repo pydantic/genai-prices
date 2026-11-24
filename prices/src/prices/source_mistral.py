@@ -45,7 +45,7 @@ def parse_pricing_page(page: str) -> list[ModelInfo]:
     records: list[MistralModel] = []
 
     def collect(obj: dict[str, object]) -> dict[str, object]:
-        if 'modelIds' in obj and 'pricing' in obj:
+        if 'modelIds' in obj:
             records.append(MistralModel.model_validate(obj))
         return obj
 
@@ -61,13 +61,14 @@ def parse_pricing_page(page: str) -> list[ModelInfo]:
             continue
         prices: dict[str, Decimal] = {}
         for rate in record.pricing:
+            if not (value := rate.price_usd * (60 if rate.unit == '/Min' else 1)):
+                continue
             keys = PRICE_KEYS.get((rate.label, rate.unit))
             if keys is None:
                 # e.g. TTS output per million characters, which the unit registry has no key for.
                 prices = {}
                 break
-            if value := rate.price_usd * (60 if rate.unit == '/Min' else 1):
-                prices |= dict.fromkeys(keys, value.normalize())
+            prices |= dict.fromkeys(keys, value.normalize())
         if not prices:
             continue
         model = ModelInfo(

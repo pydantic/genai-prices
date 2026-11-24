@@ -50,7 +50,15 @@ def test_mistral_parses_token_page_and_audio_rates_and_skips_unsupported_units()
         catalog_model('Mistral Moderation 2', ['mistral-moderation-2603'], ('Input', 0, '/M Tokens'), isFree=True),
         catalog_model('Mistral 7B', [], ('Input (/M tokens)', 0.25, None)),
         catalog_model(
-            'Embed', ['mistral-embed'], ('Input', 0.1, '/M Tokens'), ('Output', 0, '/M Tokens'), relatedModels=[large]
+            'Embed',
+            ['mistral-embed'],
+            ('Input', 0.1, '/M Tokens'),
+            ('Output', 0, '/M Chars'),
+            # Listed only among another model's related models, like a deprecated model on the live page.
+            relatedModels=[
+                catalog_model('Mistral Medium 3.5', ['mistral-medium-3-5'], ('Input', 1.5, '/M Tokens')),
+                large,
+            ],
         ),
     )
 
@@ -60,12 +68,14 @@ def test_mistral_parses_token_page_and_audio_rates_and_skips_unsupported_units()
         ('mistral-large-4', 'Mistral Large 4', date.today()),
         ('mistral-ocr-4-1', 'OCR 4.1', date.today()),
         ('voxtral-mini-transcribe-3-0', 'Voxtral Mini Transcribe 3', date.today()),
+        ('mistral-medium-3-5', 'Mistral Medium 3.5', date.today()),
         ('mistral-embed', 'Embed', date.today()),
     ]
     assert [model.prices for model in models] == [
         ModelPrice(input_mtok=Decimal('0.7'), cache_read_mtok=Decimal('0.07'), output_mtok=Decimal('2.1')),
         ModelPrice.model_validate({'input_document_kpages': 4, 'input_annotated_document_kpages': 5}),
         ModelPrice.model_validate({'audio_hours': '0.21', 'input_audio_hours': '0.21'}),
+        ModelPrice(input_mtok=Decimal('1.5')),
         ModelPrice(input_mtok=Decimal('0.1')),
     ]
 
@@ -83,13 +93,19 @@ def test_mistral_reports_a_model_listed_at_conflicting_rates(capsys: pytest.Capt
     )
 
 
-def test_mistral_rejects_a_catalog_model_in_an_unexpected_shape() -> None:
-    page = pricing_page(
-        {'name': 'Codestral', 'modelIds': ['codestral'], 'isFree': False, 'pricing': [{'label': 'Input'}]}
-    )
-
-    with pytest.raises(ValidationError, match='priceUsd'):
-        source_mistral.parse_pricing_page(page)
+@pytest.mark.parametrize(
+    ('model', 'missing'),
+    [
+        ({'name': 'Codestral', 'modelIds': ['codestral'], 'isFree': False}, 'pricing'),
+        (
+            {'name': 'Codestral', 'modelIds': ['codestral'], 'isFree': False, 'pricing': [{'label': 'Input'}]},
+            'priceUsd',
+        ),
+    ],
+)
+def test_mistral_rejects_a_catalog_model_in_an_unexpected_shape(model: dict[str, object], missing: str) -> None:
+    with pytest.raises(ValidationError, match=missing):
+        source_mistral.parse_pricing_page(pricing_page(model))
 
 
 @pytest.mark.vcr()
