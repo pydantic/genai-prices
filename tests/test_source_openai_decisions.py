@@ -3,14 +3,14 @@ from __future__ import annotations
 import re
 from datetime import date
 from decimal import Decimal
-from pathlib import Path
 
 import pytest
 
 from prices import source_openai_decisions
 from prices.prices_types import ConditionalPrice, ModelPrice, StartDateConstraint, Tier, TieredPrices
 from prices.update import ProviderYaml
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 MODEL_MARKDOWN = """\
 ### Text tokens
@@ -40,9 +40,11 @@ def test_openai_decisions_rejects_unexpected_pricing_shapes(replace: tuple[str, 
 
 
 @pytest.mark.vcr()
-def test_openai_decisions_main_fetches_recorded_model_pages(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'openai_decisions.yml'
-    current = (package_dir / 'providers/openai_decisions.yml').read_text()
+def test_openai_decisions_main_fetches_recorded_model_pages(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('openai_decisions.yml')
+    current = provider_path.read_text()
     stale = re.sub(r'prices_checked: \S+', 'prices_checked: 2026-01-01', current).replace('price: 0.2', 'price: 0.3')
     assert stale.count('2026-01-01') == stale.count('price: 0.3') == 1
     provider_path.write_text(stale)

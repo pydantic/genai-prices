@@ -2,15 +2,14 @@ from __future__ import annotations
 
 from datetime import date
 from decimal import Decimal
-from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_doubleword
 from prices.prices_types import ModelPrice
 from prices.update import ProviderYaml
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 NEW_MODEL_IDS = (
     'Qwen/Qwen3.5-35B-A3B-FP8-dottxt',
@@ -84,9 +83,10 @@ def test_doubleword_rejects_a_model_page_without_an_api_id() -> None:
 
 
 @pytest.mark.vcr()
-def test_doubleword_main_fetches_recorded_catalog(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'doubleword.yml'
-    copyfile(package_dir / 'providers/doubleword.yml', provider_path)
+def test_doubleword_main_fetches_recorded_catalog(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('doubleword.yml')
     provider_yaml = ProviderYaml(provider_path)
     for model_id in NEW_MODEL_IDS:
         provider_yaml.remove_model(model_id)

@@ -11,7 +11,9 @@ and keeping the same entries.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 
 import httpx2
@@ -21,6 +23,13 @@ from pydantic import TypeAdapter
 from prices import source_prices
 
 fixtures_dir = Path(__file__).parent
+# Copies of `prices/providers/*.yml` taken on 2026-11-24. Importer tests start from these, not the live files,
+# because every price update changes the live files and so the counts and notes an importer test asserts.
+provider_snapshots_dir = fixtures_dir / 'providers'
+# No snapshot dates a price change to this day, so an import never collides with a same-day change.
+# Timezone-aware, so `date.today()` is this day on every machine.
+IMPORT_TIME = datetime(2026, 11, 25, 12, tzinfo=UTC)
+ProviderSnapshot = Callable[[str], Path]
 
 _mapping_schema = TypeAdapter(dict[str, object])
 _entries_schema = TypeAdapter(list[dict[str, object]])

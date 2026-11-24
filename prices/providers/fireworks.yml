@@ -259,7 +259,7 @@ models:
       input_mtok: 1.4
       cache_read_mtok: 0.26
       output_mtok: 4.4
-    prices_checked: 2026-11-24
+    prices_checked: 2026-11-09
 
   - id: glm-5p3-fast
     name: GLM 5.3 Fast

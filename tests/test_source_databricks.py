@@ -1,15 +1,14 @@
 from __future__ import annotations
 
 from decimal import Decimal
-from pathlib import Path
-from shutil import copyfile
 from typing import Any
 
 import pytest
 
 from prices import source_databricks
 from prices.prices_types import ModelPrice
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 TABLE = (
     '<h2>Foundation Model Serving DBU rates</h2><h3>Pay Per Token</h3><table><thead><tr><th>Model</th>'
@@ -76,9 +75,10 @@ def test_databricks_rejects_an_unexpected_pricing_table(data: dict[str, Any], er
 
 
 @pytest.mark.vcr()
-def test_databricks_main_fetches_recorded_page_data(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'databricks.yml'
-    copyfile(package_dir / 'providers/databricks.yml', provider_path)
+def test_databricks_main_fetches_recorded_page_data(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('databricks.yml')
 
     source_databricks.main(provider_path)
 

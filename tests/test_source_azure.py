@@ -3,8 +3,6 @@ from __future__ import annotations
 import time
 from datetime import date
 from decimal import Decimal
-from pathlib import Path
-from shutil import copyfile
 from typing import Any
 
 import httpx2
@@ -12,7 +10,8 @@ import pytest
 
 from prices import source_azure
 from prices.prices_types import ModelPrice
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 
 def _items() -> list[dict[str, Any]]:
@@ -53,9 +52,10 @@ def test_azure_rejects_unexpected_retail_prices(items: list[dict[str, Any]], err
 
 
 @pytest.mark.vcr()
-def test_azure_main_fetches_recorded_retail_prices(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'azure.yml'
-    copyfile(package_dir / 'providers/azure.yml', provider_path)
+def test_azure_main_fetches_recorded_retail_prices(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('azure.yml')
 
     source_azure.main(provider_path)
 
@@ -64,10 +64,9 @@ def test_azure_main_fetches_recorded_retail_prices(tmp_path: Path, capsys: pytes
 
 @pytest.mark.parametrize(('throttled', 'error'), [(2, None), (3, '429 Too Many Requests')])
 def test_azure_main_retries_throttled_requests(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, throttled: int, error: str | None
+    monkeypatch: pytest.MonkeyPatch, provider_snapshot: ProviderSnapshot, throttled: int, error: str | None
 ) -> None:
-    provider_path = tmp_path / 'azure.yml'
-    copyfile(package_dir / 'providers/azure.yml', provider_path)
+    provider_path = provider_snapshot('azure.yml')
     responses = [
         httpx2.Response(429, headers={'Retry-After': '60'}, request=httpx2.Request('GET', source_azure.PRICES_URL))
     ] * throttled

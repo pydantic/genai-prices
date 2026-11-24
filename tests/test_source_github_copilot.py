@@ -2,15 +2,14 @@ from __future__ import annotations
 
 from datetime import date
 from decimal import Decimal
-from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_github_copilot
 from prices.prices_types import ClauseEquals, ModelPrice, Tier, TieredPrices
 from prices.update import ProviderYaml
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 HEADER = """\
 | Model | Release status | Category | Tier | Threshold (input tokens) | Input | Cached input | Cache write | Output |
@@ -94,10 +93,9 @@ def test_copilot_reads_a_reordered_table_by_column_name() -> None:
 
 
 def test_copilot_reports_unlisted_models_instead_of_guessing_their_ids(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    monkeypatch: pytest.MonkeyPatch, provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    provider_path = tmp_path / 'github_copilot.yml'
-    copyfile(package_dir / 'providers/github_copilot.yml', provider_path)
+    provider_path = provider_snapshot('github_copilot.yml')
     monkeypatch.setattr(
         source_github_copilot,
         'get_markdown',
@@ -125,9 +123,10 @@ def test_copilot_reports_unlisted_models_instead_of_guessing_their_ids(
 
 
 @pytest.mark.vcr()
-def test_copilot_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'github_copilot.yml'
-    copyfile(package_dir / 'providers/github_copilot.yml', provider_path)
+def test_copilot_main_fetches_recorded_pricing_page(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('github_copilot.yml')
 
     source_github_copilot.main(provider_path)
 

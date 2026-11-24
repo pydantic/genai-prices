@@ -3,14 +3,14 @@ from __future__ import annotations
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_anthropic
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, PriceVariant, Tier, TieredPrices
 from prices.update import ProviderYaml
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 FAST_MODE_MODELS = ('claude-fable-5-2', 'claude-mythos-5-2', 'claude-opus-5-5', 'claude-opus-5', 'claude-opus-4-8')
 
@@ -93,9 +93,10 @@ def test_anthropic_rejects_an_unexpected_pricing_table(markdown: str, error: str
 
 
 @pytest.mark.vcr()
-def test_anthropic_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'anthropic.yml'
-    copyfile(package_dir / 'providers/anthropic.yml', provider_path)
+def test_anthropic_main_fetches_recorded_pricing_page(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('anthropic.yml')
 
     fast_variants_before = _fast_variants(provider_path)
 
@@ -106,9 +107,8 @@ def test_anthropic_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: py
     assert _fast_variants(provider_path) == fast_variants_before
 
 
-def test_anthropic_standard_rate_change_dates_a_matching_fast_mode_rate(tmp_path: Path) -> None:
-    provider_path = tmp_path / 'anthropic.yml'
-    copyfile(package_dir / 'providers/anthropic.yml', provider_path)
+def test_anthropic_standard_rate_change_dates_a_matching_fast_mode_rate(provider_snapshot: ProviderSnapshot) -> None:
+    provider_path = provider_snapshot('anthropic.yml')
     [current_fast] = _fast_variants(provider_path)['claude-fable-5-2']
     rates = {'input_mtok': 6, 'cache_write_mtok': 7.5, 'cache_write_1h_mtok': 12, 'cache_read_mtok': 0.15}
     model = ModelInfo(

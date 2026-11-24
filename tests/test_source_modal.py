@@ -1,15 +1,14 @@
 from __future__ import annotations
 
 from decimal import Decimal
-from pathlib import Path
-from shutil import copyfile
 from typing import Any
 
 import pytest
 
 from prices import source_modal
 from prices.prices_types import ModelPrice
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 
 def svelte_data(values: list[Any]) -> dict[str, Any]:
@@ -81,9 +80,10 @@ def test_modal_rejects_an_unexpected_model_page(data: dict[str, Any], error: str
 
 
 @pytest.mark.vcr()
-def test_modal_main_fetches_recorded_library(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'modal.yml'
-    copyfile(package_dir / 'providers/modal.yml', provider_path)
+def test_modal_main_fetches_recorded_library(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('modal.yml')
 
     source_modal.main(provider_path)
 

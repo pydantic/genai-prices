@@ -2,14 +2,13 @@ from __future__ import annotations
 
 from datetime import date
 from decimal import Decimal
-from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_groq
 from prices.prices_types import ModelPrice
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 HEADER = '| ' + ' | '.join(source_groq.TABLE_HEADER) + ' |'
 DIVIDER = '|' + ' --- |' * len(source_groq.TABLE_HEADER)
@@ -75,9 +74,10 @@ def test_groq_rejects_an_unexpected_models_page(markdown: str, error: str) -> No
 
 
 @pytest.mark.vcr()
-def test_groq_main_fetches_recorded_models_page(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'groq.yml'
-    copyfile(package_dir / 'providers/groq.yml', provider_path)
+def test_groq_main_fetches_recorded_models_page(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('groq.yml')
 
     source_groq.main(provider_path)
 
