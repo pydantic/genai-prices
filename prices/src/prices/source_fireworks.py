@@ -14,10 +14,10 @@ PRICING_URL = 'https://docs.fireworks.ai/serverless/pricing.md'
 MIN_MODEL_COUNT = 8
 TABLE_HEADER = '| Model | Standard | Priority |'
 MODEL_CELL = re.compile(
-    r'\[(?P<name>[^]]+?)(?P<mode> Fast| Ultra-fast \(Preview\))?(?P<us> \(US\))?]'
+    r'\[(?P<name>[^]]+?)(?P<mode> Fast| Ultra-fast \(Preview\)| Flex)?(?P<us> \(US\))?]'
     r'\(https://app\.fireworks\.ai/models/fireworks/(?P<slug>[\w.-]+)\)'
 )
-MODE_SUFFIXES = {None: '', ' Fast': '-fast', ' Ultra-fast (Preview)': '-ultrafast'}
+MODE_SUFFIXES = {None: '', ' Fast': '-fast', ' Ultra-fast (Preview)': '-ultrafast', ' Flex': '-flex'}
 STANDARD_CELL = re.compile(r'\\\$(\d+(?:\.\d+)?) / \\\$(\d+(?:\.\d+)?) / \\\$(\d+(?:\.\d+)?)')
 
 
@@ -28,6 +28,7 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
         raise RuntimeError('Fireworks pricing page has no text and vision models table')
 
     models: list[ModelInfo] = []
+    duplicates: set[str] = set()
     for line in takewhile(lambda line: line.startswith('|'), lines[lines.index(TABLE_HEADER) + 2 :]):
         cells = [cell.strip() for cell in line.strip('|').split('|')]
         model = MODEL_CELL.fullmatch(cells[0]) if len(cells) == 3 else None
@@ -39,7 +40,8 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
         slug = model['slug'].removesuffix('-us') if model['us'] else model['slug']
         api_id = f'accounts/fireworks/{"routers" if suffix else "models"}/{slug}{suffix}'
         if any(existing.id == api_id for existing in models):
-            raise RuntimeError(f'Duplicate Fireworks pricing row: {line}')
+            duplicates.add(api_id)
+            continue
         input_mtok, cache_read_mtok, output_mtok = (Decimal(rate) for rate in rates.groups())
         models.append(
             ModelInfo(
@@ -50,7 +52,9 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
                 prices_checked=date.today(),
             )
         )
-    return models
+    for api_id in sorted(duplicates):
+        print(f'Fireworks: kept {api_id} unchanged, the pricing page lists it more than once; update it by hand')
+    return [model for model in models if model.id not in duplicates]
 
 
 def main(provider_path: Path | None = None) -> None:

@@ -20,9 +20,9 @@ PRICE = r'\\?\$([0-9]+(?:\.[0-9]+)?)'
 
 def parse_models(catalog: str, get_page: Callable[[str], str]) -> list[ModelInfo]:
     """Parse Realtime prices from the catalog; `get_page` fetches a model page, which holds the API model ID."""
-    table = re.search(rf'^### Active Models\s*$\n\s*{re.escape(HEADER)}\n\|[-| ]+\|\n((?:\|.*\n?)*)', catalog, re.M)
+    table = re.search(rf'^{re.escape(HEADER)}\n\|[-| ]+\|\n((?:\|.*\n?)*)', catalog, re.M)
     if table is None:
-        raise RuntimeError('Doubleword models page has no Active Models table in the expected shape')
+        raise RuntimeError('Doubleword models page has no model catalog table in the expected shape')
     models: list[ModelInfo] = []
     for line in table.group(1).splitlines():
         row = re.fullmatch(r'\| \[([^\]]+)\]\((/inference-api/models/[^)]+)\) \| (.+?) \|.*\|', line)

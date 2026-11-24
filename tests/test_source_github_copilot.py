@@ -9,6 +9,7 @@ import pytest
 
 from prices import source_github_copilot
 from prices.prices_types import ClauseEquals, ModelPrice, Tier, TieredPrices
+from prices.update import ProviderYaml
 from prices.utils import package_dir
 
 HEADER = """\
@@ -92,17 +93,35 @@ def test_copilot_reads_a_reordered_table_by_column_name() -> None:
     assert [model.id for model in source_github_copilot.parse_pricing_markdown(markdown)] == ['gpt-5.4']
 
 
-def test_copilot_refuses_to_guess_ids_for_unlisted_models(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_copilot_reports_unlisted_models_instead_of_guessing_their_ids(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     provider_path = tmp_path / 'github_copilot.yml'
     copyfile(package_dir / 'providers/github_copilot.yml', provider_path)
     monkeypatch.setattr(
         source_github_copilot,
         'get_markdown',
-        {source_github_copilot.PRICING_URL: HEADER + row('GPT-9 Nova', 'Default', 'Not applicable')}.get,
+        {
+            source_github_copilot.PRICING_URL: HEADER
+            + row('Claude Fable 5', 'Default', 'Not applicable')
+            + row('GPT-9 Nova', 'Default', 'Not applicable')
+        }.get,
     )
+    monkeypatch.setattr(source_github_copilot, 'MIN_MODEL_COUNT', 0)
 
-    with pytest.raises(RuntimeError, match='lists models missing from the provider YAML: gpt-9-nova'):
-        source_github_copilot.main(provider_path)
+    source_github_copilot.main(provider_path)
+
+    assert capsys.readouterr().out == (
+        'GitHub Copilot: pricing lists gpt-9-nova, which github_copilot.yml lacks; add it by hand\n'
+        'GitHub Copilot prices updated: 0 added, 1 updated\n'
+    )
+    provider = ProviderYaml(provider_path).provider
+    assert provider.find_model('gpt-9-nova') is None
+    fable = provider.find_model('claude-fable-5')
+    assert fable is not None and isinstance(fable.prices, list)
+    assert fable.prices[-1].prices == ModelPrice(
+        input_mtok=Decimal(1), cache_read_mtok=Decimal('0.1'), cache_write_mtok=Decimal('1.25'), output_mtok=Decimal(5)
+    )
 
 
 @pytest.mark.vcr()
