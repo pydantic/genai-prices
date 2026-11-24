@@ -44,7 +44,7 @@ def parse_model_data(path: str, data: dict[str, Any]) -> ModelInfo | None:
     rates = _get(values, model, 'tokenRates')
     model_id = _get(values, model, 'baseModelRepoId')
     if not isinstance(rates, dict) or not isinstance(model_id, str):
-        raise UnreadableRowError(f'Modal Shared Endpoint model has no token rates: {model}')
+        raise UnreadableRowError(f'Modal Shared Endpoint model on {path} has no token rates')
     prices: dict[str, Decimal] = {}
     for source_key, price_key in PRICE_KEYS.items():
         rate = _get(values, rates, source_key)

@@ -25,19 +25,21 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
 
     rows: dict[str, tuple[str, list[Decimal | None]]] = {}
     duplicates: set[str] = set()
+    unreadable: set[str] = set()
     for line in section_match.group(1).splitlines():
-        with skipping_unreadable_row('Cursor'):
+        with skipping_unreadable_row('Cursor', unreadable) as row:
             cells = line.split('|')
             if len(cells) < 8 or cells[2].strip() != 'Cursor':
                 continue
             name = re.sub(r'\[([^]]+)]\([^)]*\)', r'\1', cells[1].strip()).replace(' (Fast)', ' Fast')
             model_id = name.lower().replace(' ', '-')
+            row.model_ids.add(model_id)
             if model_id in rows:
                 duplicates.add(model_id)
                 continue
             values = [value.strip() for value in cells[3:7]]
-            if unreadable := [value for value in values if value != '-' and not PRICE_CELL.fullmatch(value)]:
-                raise UnreadableRowError(f'Unexpected Cursor price {unreadable[0]!r} in row: {line}')
+            if unexpected := [value for value in values if value != '-' and not PRICE_CELL.fullmatch(value)]:
+                raise UnreadableRowError(f'Unexpected Cursor price {unexpected[0]!r} in row: {line}')
             rows[model_id] = name, [None if value == '-' else Decimal(value.removeprefix('$')) for value in values]
 
     models: list[ModelInfo] = []
@@ -51,6 +53,9 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
                 f'Cursor: kept {model_id} unchanged, the pricing page lists {" and ".join(repeated)} more than once; '
                 'update it by hand'
             )
+            continue
+        # A model with an unreadable row keeps its current prices, long-context tier included.
+        if {model_id, long_context_id} & unreadable:
             continue
         long_context = rows.get(long_context_id)
         tiered: list[Decimal | TieredPrices | None] = list(prices)

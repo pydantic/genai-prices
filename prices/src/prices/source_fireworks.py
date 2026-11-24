@@ -29,18 +29,22 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
 
     models: list[ModelInfo] = []
     duplicates: set[str] = set()
+    unreadable: set[str] = set()
     for line in takewhile(lambda line: line.startswith('|'), lines[lines.index(TABLE_HEADER) + 2 :]):
-        with skipping_unreadable_row('Fireworks'):
+        with skipping_unreadable_row('Fireworks', unreadable) as row:
             cells = [cell.strip() for cell in line.strip('|').split('|')]
-            model = MODEL_CELL.fullmatch(cells[0]) if len(cells) == 3 else None
-            rates = STANDARD_CELL.fullmatch(cells[1]) if model else None
-            if model is None or rates is None:
+            model = MODEL_CELL.fullmatch(cells[0])
+            if model is None:
                 raise UnreadableRowError(f'Unexpected Fireworks pricing row: {line}')
             suffix = MODE_SUFFIXES[model['mode']] + ('-us' if model['us'] else '')
             # https://docs.fireworks.ai/serverless/serverless-modes and /serverless/us-only-serverless
             # name these routers.
             slug = model['slug'].removesuffix('-us') if model['us'] else model['slug']
             api_id = f'accounts/fireworks/{"routers" if suffix else "models"}/{slug}{suffix}'
+            row.model_ids.add(api_id)
+            rates = STANDARD_CELL.fullmatch(cells[1]) if len(cells) == 3 else None
+            if rates is None:
+                raise UnreadableRowError(f'Unexpected Fireworks pricing row: {line}')
             if any(existing.id == api_id for existing in models):
                 duplicates.add(api_id)
                 continue
@@ -58,7 +62,7 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
         report_manual_update(
             f'Fireworks: kept {api_id} unchanged, the pricing page lists it more than once; update it by hand'
         )
-    return [model for model in models if model.id not in duplicates]
+    return [model for model in models if model.id not in duplicates and model.id not in unreadable]
 
 
 def main(provider_path: Path | None = None) -> None:

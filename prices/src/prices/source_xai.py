@@ -25,13 +25,15 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     base_rows: dict[str, tuple[int | None, int, list[Decimal]]] = {}
     long_context_rows: dict[str, tuple[int, list[Decimal]]] = {}
     duplicates: set[str] = set()
+    unreadable: set[str] = set()
     for line in rows:
-        with skipping_unreadable_row('xAI'):
+        with skipping_unreadable_row('xAI', unreadable) as row:
             cells = [cell.strip() for cell in line.strip('|').split('|')]
             match = MODEL_CELL.fullmatch(cells[0]) if len(cells) == 5 else None
             if match is None:
                 raise UnreadableRowError(f'Unexpected xAI pricing row: {line}')
             model_id = match['id']
+            row.model_ids.add(model_id)
             threshold = int(match['threshold']) * 1000 if match['threshold'] else None
             rates = [_dollars(cell, line) for cell in cells[2:]]
             if model_id in (long_context_rows if match['op'] == '≥' else base_rows):
@@ -42,11 +44,13 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
             else:
                 base_rows[model_id] = (threshold, _context(cells[1], line), rates)
     for model_id in sorted(duplicates):
-        base_rows.pop(model_id, None)
-        long_context_rows.pop(model_id, None)
         report_manual_update(
             f'xAI: kept {model_id} unchanged, the pricing page lists it more than once; update it by hand'
         )
+    # A model with an unreadable row keeps its prices, rather than taking them from its other rows alone.
+    for model_id in duplicates | unreadable:
+        base_rows.pop(model_id, None)
+        long_context_rows.pop(model_id, None)
 
     models: list[ModelInfo] = []
     for model_id, (threshold, context_window, rates) in base_rows.items():

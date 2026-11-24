@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import ast
+from decimal import Decimal
 from pathlib import Path
 
 import pytest
 
 from prices import update
+from prices.prices_types import ModelPrice
 from prices.update import UnreadableRowError, report_manual_update, skipping_unreadable_row
 
 
@@ -45,6 +47,49 @@ def test_skipping_unreadable_row_reports_the_row_and_reads_the_rest(capsys: pyte
 
     assert read == ['a', 'c']
     assert capsys.readouterr().out == "Source: skipped a row it cannot read; update it by hand. unexpected row 'b'\n"
+
+
+def test_report_manual_update_writes_a_multiline_note_on_one_line(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    notes = tmp_path / 'importer.notes'
+    monkeypatch.setenv(update.MANUAL_UPDATE_NOTES_ENV, str(notes))
+
+    report_manual_update(
+        'Source: skipped a row it cannot read; update it by hand. Unexpected row: <tr>\n  <td>x</td>\n</tr>\n'
+    )
+
+    expected = 'Source: skipped a row it cannot read; update it by hand. Unexpected row: <tr> <td>x</td> </tr>\n'
+    assert notes.read_text() == expected
+    assert capsys.readouterr().out == expected
+
+
+def test_skipping_unreadable_row_skips_a_row_whose_values_do_not_parse(capsys: pytest.CaptureFixture[str]) -> None:
+    with skipping_unreadable_row('Source'):
+        Decimal('TBD')
+    with skipping_unreadable_row('Source'):
+        ModelPrice.model_validate({'input_mtok': 'TBD'})
+
+    first, second = capsys.readouterr().out.splitlines()
+    assert first.startswith('Source: skipped a row it cannot read; update it by hand. ')
+    assert second.startswith(
+        'Source: skipped a row it cannot read; update it by hand. 1 validation error for ModelPrice'
+    )
+
+
+def test_skipping_unreadable_row_holds_the_models_of_a_skipped_row(capsys: pytest.CaptureFixture[str]) -> None:
+    unreadable: set[str] = set()
+    for model_id, price in [('model-a', '$1'), ('model-b', 'TBD'), ('model-a', 'TBD')]:
+        with skipping_unreadable_row('Source', unreadable) as row:
+            row.model_ids.add(model_id)
+            if not price.startswith('$'):
+                raise UnreadableRowError(f'unexpected price {price!r}')
+
+    assert unreadable == {'model-a', 'model-b'}
+    assert capsys.readouterr().out == (
+        "Source: skipped a row it cannot read for model-b; update it by hand. unexpected price 'TBD'\n"
+        "Source: skipped a row it cannot read for model-a; update it by hand. unexpected price 'TBD'\n"
+    )
 
 
 def test_skipping_unreadable_row_lets_page_level_errors_fail_the_importer() -> None:

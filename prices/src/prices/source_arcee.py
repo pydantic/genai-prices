@@ -37,8 +37,7 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
             cells = [
                 html.unescape(re.sub(r'<[^>]+>', '', cell)).strip() for cell in re.findall(r'<td[^>]*>(.*?)</td>', row)
             ]
-            # The header row is built from `<th>` cells.
-            if not cells:
+            if '<th' in row:
                 continue
             if len(cells) != 4:
                 raise UnreadableRowError(f'Unexpected Arcee pricing row: {row}')

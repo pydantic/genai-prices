@@ -59,7 +59,33 @@ def test_voyageai_reports_an_unparseable_price_and_reads_the_other_rows(capsys: 
 
     assert [model.id for model in models] == ['voyage-law-2', 'voyage-code-2', 'voyage-3.5-lite']
     assert capsys.readouterr().out.startswith(
-        "Voyage AI: skipped a row it cannot read; update it by hand. Unexpected Voyage pricing row: ['`voyage-4`'"
+        'Voyage AI: skipped a row it cannot read for voyage-4; update it by hand. '
+        "Unexpected Voyage pricing row: ['`voyage-4`'"
+    )
+
+
+def test_voyageai_reports_a_row_without_a_price_cell(capsys: pytest.CaptureFixture[str]) -> None:
+    law_row = next(line for line in PRICING_MARKDOWN.splitlines() if line.startswith('| `voyage-law-2`'))
+    markdown = PRICING_MARKDOWN.replace(law_row, law_row + '\n| `voyage-5` |')
+
+    models = source_voyageai.parse_pricing_markdown(markdown)
+
+    assert 'voyage-5' not in [model.id for model in models]
+    assert capsys.readouterr().out.startswith(
+        'Voyage AI: skipped a row it cannot read for voyage-5; update it by hand. '
+    )
+
+
+def test_voyageai_keeps_a_model_unchanged_when_a_duplicate_row_is_unreadable(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    markdown = PRICING_MARKDOWN.replace('`voyage-3.5-lite`', '`voyage-4`').replace('$0.02 ', 'Contact us')
+
+    models = source_voyageai.parse_pricing_markdown(markdown)
+
+    assert [model.id for model in models] == ['voyage-law-2', 'voyage-code-2']
+    assert capsys.readouterr().out.startswith(
+        'Voyage AI: skipped a row it cannot read for voyage-4, voyage-multimodal-2; update it by hand. '
     )
 
 

@@ -74,15 +74,31 @@ def test_parse_pricing_page_rejects_a_page_without_the_token_table() -> None:
         source_baseten.parse_pricing_page('<html></html>')
 
 
-def test_parse_pricing_page_reports_an_unreadable_row_and_reads_the_others(
-    capsys: pytest.CaptureFixture[str],
-) -> None:
+def test_parse_models_reports_an_unreadable_row_and_reads_the_others(capsys: pytest.CaptureFixture[str]) -> None:
     page = pricing_page(GLM_ROW.replace('$$2.20', 'Contact us'), GPT_ROW)
 
-    assert source_baseten.parse_pricing_page(page) == [('GPT OSS 120B', [Decimal('0.10'), None, Decimal('0.50')])]
+    assert [model.id for model in source_baseten.parse_models(CATALOG_PAGE, page)] == ['openai/gpt-oss-120b']
     assert capsys.readouterr().out == (
-        'Baseten: skipped a row it cannot read; update it by hand. Unexpected Baseten price: Contact us\n'
+        'Baseten: skipped a row it cannot read for zai-org/GLM-4.7; update it by hand. '
+        'Unexpected Baseten price: Contact us\n'
+        "Skipping Baseten models without published prices: ['zai-org/GLM-4.7']\n"
     )
+
+
+@pytest.mark.parametrize(
+    'skipped_row',
+    [GLM_ROW.replace('$$2.20', 'Contact us'), GLM_ROW.replace('$$0.12', '$$0.00')],
+    ids=['unreadable', 'free rate'],
+)
+@pytest.mark.parametrize('skipped_first', [True, False], ids=['skipped first', 'readable first'])
+def test_parse_models_keeps_a_model_unchanged_when_one_of_its_rows_is_skipped(
+    skipped_row: str, skipped_first: bool
+) -> None:
+    rows = (skipped_row, GLM_ROW) if skipped_first else (GLM_ROW, skipped_row)
+
+    models = source_baseten.parse_models(CATALOG_PAGE, pricing_page(*rows, GPT_ROW))
+
+    assert [model.id for model in models] == ['openai/gpt-oss-120b']
 
 
 def test_parse_models_reports_a_duplicate_model_and_reads_the_others(capsys: pytest.CaptureFixture[str]) -> None:

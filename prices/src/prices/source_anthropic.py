@@ -44,8 +44,9 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     base_rows: dict[str, tuple[int | None, list[Decimal]]] = {}
     long_context_rows: dict[str, tuple[int, list[Decimal]]] = {}
     duplicates: set[str] = set()
+    unreadable: set[str] = set()
     for line in rows:
-        with skipping_unreadable_row('Anthropic'):
+        with skipping_unreadable_row('Anthropic', unreadable) as row:
             cells = _cells(line)
             match = MODEL_CELL.fullmatch(cells[0]) if len(cells) == len(TABLE_HEADER) else None
             if match is None:
@@ -54,6 +55,7 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
                 continue
             model_id = re.sub(r'[ .]', '-', match['name'].lower())
             model_id = MODEL_IDS.get(model_id, model_id)
+            row.model_ids.add(model_id)
             threshold = int(match['threshold'].replace(',', '')) if match['threshold'] else None
             rates = [_dollars(cell, line) for cell in cells[1:]]
             target = long_context_rows if match['op'] == 'over' else base_rows
@@ -66,11 +68,13 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
             else:
                 base_rows[model_id] = (threshold, rates)
     for model_id in sorted(duplicates):
-        base_rows.pop(model_id, None)
-        long_context_rows.pop(model_id, None)
         report_manual_update(
             f'Anthropic: kept {model_id} unchanged, the pricing page lists it more than once; update it by hand'
         )
+    # A model with an unreadable row keeps its prices, rather than taking them from its other rows alone.
+    for model_id in duplicates | unreadable:
+        base_rows.pop(model_id, None)
+        long_context_rows.pop(model_id, None)
 
     models: list[ModelInfo] = []
     for model_id, (threshold, rates) in base_rows.items():

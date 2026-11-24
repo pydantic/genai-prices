@@ -77,31 +77,49 @@ def test_fireworks_rejects_an_unexpected_pricing_table(markdown: str, error: str
         source_fireworks.parse_pricing_markdown(markdown)
 
 
+SKIPPED_KIMI_K3_FAST = 'Fireworks: skipped a row it cannot read for accounts/fireworks/routers/kimi-k3-fast; '
+
+
 @pytest.mark.parametrize(
-    ('markdown', 'model_ids'),
+    ('markdown', 'model_ids', 'note'),
     [
         (
             PRICING_MARKDOWN.replace('https://app.fireworks.ai/models/fireworks/kimi-k3)', 'https://example.com)', 1),
             ['accounts/fireworks/routers/kimi-k3-fast', 'accounts/fireworks/routers/glm-5p3-flash-us'],
+            'Fireworks: skipped a row it cannot read; ',
         ),
         (
             PRICING_MARKDOWN.replace('\\$4.50 / ', ''),
             ['accounts/fireworks/models/kimi-k3', 'accounts/fireworks/routers/glm-5p3-flash-us'],
+            SKIPPED_KIMI_K3_FAST,
         ),
         (
             PRICING_MARKDOWN.replace(' | — |\n| [GLM', ' |\n| [GLM'),
             ['accounts/fireworks/models/kimi-k3', 'accounts/fireworks/routers/glm-5p3-flash-us'],
+            SKIPPED_KIMI_K3_FAST,
         ),
     ],
 )
 def test_fireworks_reports_an_unreadable_row_and_reads_the_others(
-    markdown: str, model_ids: list[str], capsys: pytest.CaptureFixture[str]
+    markdown: str, model_ids: list[str], note: str, capsys: pytest.CaptureFixture[str]
 ) -> None:
     models = source_fireworks.parse_pricing_markdown(markdown)
 
     assert [model.id for model in models] == model_ids
+    assert capsys.readouterr().out.startswith(f'{note}update it by hand. Unexpected Fireworks pricing row')
+
+
+@pytest.mark.parametrize('unreadable_rates', ['\\$3.00 / ', '\\$4.50 / '], ids=['unreadable first', 'readable first'])
+def test_fireworks_keeps_a_model_unchanged_when_one_of_its_rows_is_unreadable(
+    unreadable_rates: str, capsys: pytest.CaptureFixture[str]
+) -> None:
+    markdown = PRICING_MARKDOWN.replace('Kimi K3 Fast', 'Kimi K3').replace(unreadable_rates, '')
+
+    models = source_fireworks.parse_pricing_markdown(markdown)
+
+    assert [model.id for model in models] == ['accounts/fireworks/routers/glm-5p3-flash-us']
     assert capsys.readouterr().out.startswith(
-        'Fireworks: skipped a row it cannot read; update it by hand. Unexpected Fireworks pricing row'
+        'Fireworks: skipped a row it cannot read for accounts/fireworks/models/kimi-k3; update it by hand. '
     )
 
 

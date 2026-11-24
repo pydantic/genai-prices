@@ -27,8 +27,9 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
 
     models: list[ModelInfo] = []
     duplicates: set[str] = set()
+    unreadable: set[str] = set()
     for family in re.split(r'^### ', section.group(1), flags=re.MULTILINE)[1:]:
-        with skipping_unreadable_row('Meta'):
+        with skipping_unreadable_row('Meta', unreadable) as family_row:
             model_line = re.search(r'^Models?: (.+)$', family, flags=re.MULTILINE)
             tables = [
                 (header, rows)
@@ -38,17 +39,19 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
             if model_line is None and not tables:
                 continue
             family_name = family.split('\n', 1)[0]
+            model_ids: list[str] = re.findall(r'`([^`]+)`', model_line.group(1)) if model_line else []
+            family_row.model_ids.update(model_ids)
             if model_line is None or len(tables) != 1 or sorted(row[0] for row in tables[0][1]) != sorted(ROWS):
                 raise UnreadableRowError(f'Unexpected Meta pricing layout for {family_name}')
             header, rows = tables[0]
-            model_ids = re.findall(r'`([^`]+)`', model_line.group(1))
             if not model_ids:
                 raise UnreadableRowError(f'No Meta model ids listed for {family_name}')
             for model_id in model_ids:
                 if any(model.id == model_id for model in models):
                     duplicates.add(model_id)
                     continue
-                with skipping_unreadable_row('Meta'):
+                with skipping_unreadable_row('Meta', unreadable) as model_row:
+                    model_row.model_ids.add(model_id)
                     contributor = model_id.endswith('-contributor')
                     if header == LONG_CONTEXT_HEADER:
                         if contributor:
@@ -78,7 +81,8 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
         report_manual_update(
             f'Meta: kept {model_id} unchanged, the pricing page lists it more than once; update it by hand'
         )
-    return [model for model in models if model.id not in duplicates]
+    # A model with an unreadable occurrence keeps its prices, rather than taking them from another occurrence.
+    return [model for model in models if model.id not in duplicates | unreadable]
 
 
 def main(provider_path: Path | None = None) -> None:

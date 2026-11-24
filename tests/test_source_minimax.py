@@ -101,33 +101,46 @@ M25_ROW = M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M2.5')
 M3_LOW_BAND = M3_ROWS.split('\n')[0] + '\n'
 
 
+SKIPPED = 'MiniMax: skipped a row it cannot read; update it by hand. '
+SKIPPED_M27 = 'MiniMax: skipped a row it cannot read for MiniMax-M2.7; update it by hand. '
+
+
 @pytest.mark.parametrize(
-    ('llm', 'errors', 'model_ids'),
+    ('llm', 'notes', 'model_ids'),
     [
         (
             FLAT_HEADER + M27_ROW.replace('**MiniMax-M2.7**', 'MiniMax-M2.7') + M25_ROW,
-            ['Unexpected MiniMax model cell: MiniMax-M2.7'],
+            [f'{SKIPPED}Unexpected MiniMax model cell: MiniMax-M2.7'],
             ['MiniMax-M2.5'],
         ),
         (
             FLAT_HEADER + M27_ROW.replace('**MiniMax-M2.7**', '**MiniMax-M2.7** (beta)') + M25_ROW,
-            ['Unexpected MiniMax pricing row: **MiniMax-M2.7** (beta)'],
+            [f'{SKIPPED_M27}Unexpected MiniMax pricing row: **MiniMax-M2.7** (beta)'],
             ['MiniMax-M2.5'],
         ),
         (
             FLAT_HEADER + M27_ROW.replace('\\$0.3 |', '\\$0.3 / hour |') + M25_ROW,
-            ['Unexpected MiniMax price cell: \\$0.3 / hour'],
+            [f'{SKIPPED_M27}Unexpected MiniMax price cell: \\$0.3 / hour'],
+            ['MiniMax-M2.5'],
+        ),
+        (
+            # A readable row after an unreadable one for the same model still leaves the model unchanged.
+            FLAT_HEADER + M27_ROW.replace('\\$0.3 |', 'TBD |') + M27_ROW + M25_ROW,
+            [f'{SKIPPED_M27}Unexpected MiniMax price cell: TBD'],
             ['MiniMax-M2.5'],
         ),
         (
             M3_HEADER + M3_LOW_BAND + '\n' + FLAT_HEADER + M27_ROW,
-            ['Unexpected MiniMax context bands for MiniMax-M3'],
+            [f'{SKIPPED}Unexpected MiniMax context bands for MiniMax-M3'],
             ['MiniMax-M2.7'],
         ),
         (
             # A skipped band row leaves the model unchanged rather than priced at its other band alone.
             M3_HEADER + M3_ROWS.replace('~~\\$1.20~~ \\$0.60', 'TBD') + '\n' + FLAT_HEADER + M27_ROW,
-            ['Unexpected MiniMax price cell: TBD', 'Unexpected MiniMax context bands for MiniMax-M3'],
+            [
+                'MiniMax: skipped a row it cannot read for MiniMax-M3; update it by hand. '
+                'Unexpected MiniMax price cell: TBD'
+            ],
             ['MiniMax-M2.7'],
         ),
         (
@@ -137,20 +150,18 @@ M3_LOW_BAND = M3_ROWS.split('\n')[0] + '\n'
             + FLAT_HEADER
             + '| **MiniMax-M3** > 512k input tokens | \\$1 | \\$1 | \\$1 | \\$1 |\n'
             + M27_ROW,
-            ['MiniMax context bands for MiniMax-M3 price different units'],
+            [f'{SKIPPED}MiniMax context bands for MiniMax-M3 price different units'],
             ['MiniMax-M2.7'],
         ),
     ],
 )
 def test_minimax_reports_an_unreadable_row_and_reads_the_others(
-    llm: str, errors: list[str], model_ids: list[str], capsys: pytest.CaptureFixture[str]
+    llm: str, notes: list[str], model_ids: list[str], capsys: pytest.CaptureFixture[str]
 ) -> None:
     models = source_minimax.parse_pricing_markdown(page(llm))
 
     assert [model.id for model in models] == model_ids
-    assert capsys.readouterr().out == ''.join(
-        f'MiniMax: skipped a row it cannot read; update it by hand. {error}\n' for error in errors
-    )
+    assert capsys.readouterr().out == ''.join(f'{note}\n' for note in notes)
 
 
 @pytest.mark.parametrize(
@@ -175,29 +186,42 @@ def test_minimax_keeps_a_model_listed_more_than_once_unchanged(
     )
 
 
-def test_minimax_keeps_a_shared_model_listed_at_conflicting_rates_unchanged(
-    monkeypatch: pytest.MonkeyPatch, provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+@pytest.mark.parametrize(
+    ('legacy', 'notes'),
+    [
+        (
+            M25_ROW + M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M2.1').replace('\\$0.3 |', '\\$0.4 |'),
+            'MiniMax: kept MiniMax-M2 unchanged, the pricing page lists it at conflicting rates; update it by hand\n',
+        ),
+        (
+            # MiniMax-M8 has no YAML entry, so its unreadable row holds no other model.
+            M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M8').replace('\\$0.3 |', 'TBD |')
+            + M25_ROW.replace('\\$0.3 |', 'TBD |')
+            + M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M2.1'),
+            'MiniMax: skipped a row it cannot read for MiniMax-M8; update it by hand. '
+            'Unexpected MiniMax price cell: TBD\n'
+            'MiniMax: skipped a row it cannot read for MiniMax-M2.5; update it by hand. '
+            'Unexpected MiniMax price cell: TBD\n',
+        ),
+    ],
+)
+def test_minimax_keeps_a_shared_model_unchanged_when_its_rows_conflict_or_one_is_unreadable(
+    legacy: str,
+    notes: str,
+    monkeypatch: pytest.MonkeyPatch,
+    provider_snapshot: ProviderSnapshot,
+    capsys: pytest.CaptureFixture[str],
 ) -> None:
     provider_path = provider_snapshot('minimax.yml')
     shared = ProviderYaml(provider_path).provider.find_model('MiniMax-M2')
-    legacy = (
-        M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M9')
-        + M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M2.5')
-        + M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M2.1').replace('\\$0.3 |', '\\$0.4 |')
-        + M27_ROW
-    )
+    pricing = page(FLAT_HEADER + M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M9') + legacy + M27_ROW)
     monkeypatch.setattr(
-        source_minimax,
-        'get_markdown',
-        {source_minimax.PRICING_URL: page(FLAT_HEADER + legacy), source_minimax.MODELS_URL: ''}.get,
+        source_minimax, 'get_markdown', {source_minimax.PRICING_URL: pricing, source_minimax.MODELS_URL: ''}.get
     )
 
     source_minimax.main(provider_path)
 
-    assert capsys.readouterr().out == (
-        'MiniMax: kept MiniMax-M2 unchanged, the pricing page lists it at conflicting rates; update it by hand\n'
-        'MiniMax prices updated: 1 added, 1 updated\n'
-    )
+    assert capsys.readouterr().out == f'{notes}MiniMax prices updated: 1 added, 1 updated\n'
     assert ProviderYaml(provider_path).provider.find_model('MiniMax-M2') == shared
 
 

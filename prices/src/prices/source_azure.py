@@ -75,13 +75,16 @@ METERS: dict[str, dict[str, str]] = {
 
 def parse_retail_prices(items: list[dict[str, Any]]) -> list[ModelInfo]:
     per_mtok: dict[str, Decimal] = {}
+    # A meter listed twice holds its models unchanged, even when one of its rows cannot be read.
+    seen: set[str] = set()
     duplicates: set[str] = set()
     for item in items:
         with skipping_unreadable_row('Azure'):
             meter = item['meterName']
-            if meter in per_mtok:
+            if meter in seen:
                 duplicates.add(meter)
                 continue
+            seen.add(meter)
             if (scale := UNIT_SCALES.get(item['unitOfMeasure'])) is None:
                 raise UnreadableRowError(f'Unexpected Azure unit {item["unitOfMeasure"]!r} for meter {meter!r}')
             rate = Decimal(str(item['retailPrice'])) * scale

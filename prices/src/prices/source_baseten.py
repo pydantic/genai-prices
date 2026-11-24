@@ -53,16 +53,12 @@ def parse_catalog(page: str) -> list[CatalogModel]:
     return [model for model in models if model.id not in duplicates]
 
 
-def parse_pricing_page(page: str) -> list[tuple[str, list[Decimal | None]]]:
-    """Return the token pricing table's rows as display name and input, cached input and output rates."""
+def parse_pricing_page(page: str) -> list[tuple[str, list[str]]]:
+    """Return the token pricing table's rows as display name and input, cached input and output cells."""
     table = TOKEN_TABLE.search(page)
     if table is None:
         raise RuntimeError('Baseten token pricing table was not found')
-    rows: list[tuple[str, list[Decimal | None]]] = []
-    for name, *cells in TABLE_ROW.findall(table.group(1)):
-        with skipping_unreadable_row('Baseten'):
-            rows.append((name, [_rate(cell) for cell in cells]))
-    return rows
+    return [(name, cells) for name, *cells in TABLE_ROW.findall(table.group(1))]
 
 
 def _rate(cell: str) -> Decimal | None:
@@ -83,19 +79,27 @@ def parse_models(catalog_page: str, pricing_page: str) -> list[ModelInfo]:
     ids = {_name_key(model.id.rsplit('/', 1)[-1]): model.id for model in catalog}
     prices: dict[str, ModelPrice] = {}
     duplicates: set[str] = set()
-    for name, rates in parse_pricing_page(pricing_page):
+    # A model with a row the importer skips keeps its prices, even when another of its rows is readable.
+    held: set[str] = set()
+    for name, cells in parse_pricing_page(pricing_page):
         model_id = PRICING_NAME_ALIASES.get(name) or ids.get(_name_key(name))
         if model_id is None or model_id not in ids.values():
             continue
         if model_id in prices:
             duplicates.add(model_id)
             continue
-        # The updater keeps a curated rate the source omits, so a rate that became free needs a manual edit.
-        if Decimal(0) in rates:
-            report_manual_update(f'Baseten lists a $0.00 rate for {model_id}; record the free rate by hand')
-            continue
-        input_mtok, cache_read_mtok, output_mtok = rates
-        prices[model_id] = ModelPrice(input_mtok=input_mtok, cache_read_mtok=cache_read_mtok, output_mtok=output_mtok)
+        with skipping_unreadable_row('Baseten', held) as row:
+            row.model_ids.add(model_id)
+            rates = [_rate(cell) for cell in cells]
+            # The updater keeps a curated rate the source omits, so a rate that became free needs a manual edit.
+            if Decimal(0) in rates:
+                held.add(model_id)
+                report_manual_update(f'Baseten lists a $0.00 rate for {model_id}; record the free rate by hand')
+                continue
+            input_mtok, cache_read_mtok, output_mtok = rates
+            prices[model_id] = ModelPrice(
+                input_mtok=input_mtok, cache_read_mtok=cache_read_mtok, output_mtok=output_mtok
+            )
     # New models often reach the catalog before the pricing page, so price only what both list.
     if unpriced := sorted({model.id for model in catalog} - prices.keys()):
         print(f'Skipping Baseten models without published prices: {unpriced}')
@@ -119,7 +123,7 @@ def parse_models(catalog_page: str, pricing_page: str) -> list[ModelInfo]:
             prices_checked=date.today(),
         )
         for model in catalog
-        if model.id in prices
+        if model.id in prices and model.id not in held
     ]
 
 

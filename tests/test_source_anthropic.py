@@ -87,8 +87,31 @@ SKIPPED = 'Anthropic: skipped a row it cannot read; update it by hand. '
         ),
         (
             PRICING_MARKDOWN.replace('$0.80 / MTok', 'N/A'),
-            [f"{SKIPPED}Unexpected Anthropic price 'N/A' in row: | Claude Haiku 3.5 |"],
+            [
+                'Anthropic: skipped a row it cannot read for claude-3-5-haiku-latest; update it by hand. '
+                "Unexpected Anthropic price 'N/A' in row: | Claude Haiku 3.5 |"
+            ],
             ['claude-fable-5-1', 'claude-opus-4-0', 'claude-haiku-5-5'],
+        ),
+        (
+            # A readable copy of a model's row does not price the model when another copy is unreadable.
+            PRICING_MARKDOWN.replace('| Claude Haiku 3.5 | $0.80 / MTok', '| Claude Fable 5.1 | N/A'),
+            [
+                'Anthropic: skipped a row it cannot read for claude-fable-5-1; update it by hand. '
+                "Unexpected Anthropic price 'N/A' in row: | Claude Fable 5.1 | N/A |"
+            ],
+            ['claude-opus-4-0', 'claude-haiku-5-5'],
+        ),
+        (
+            # An unreadable long-context row leaves its model unchanged rather than priced without the tier.
+            PRICING_MARKDOWN.replace(HAIKU_UP_TO, '| Claude Haiku 5.5 |').replace(
+                '| $0.50 / MTok | $0.625', '| N/A | $0.625'
+            ),
+            [
+                'Anthropic: skipped a row it cannot read for claude-haiku-5-5; update it by hand. '
+                f"Unexpected Anthropic price 'N/A' in row: {HAIKU_OVER} N/A |"
+            ],
+            ['claude-fable-5-1', 'claude-opus-4-0', 'claude-3-5-haiku-latest'],
         ),
         (
             PRICING_MARKDOWN.replace('Claude Haiku 3.5', 'Claude Fable 5.1'),

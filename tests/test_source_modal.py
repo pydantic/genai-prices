@@ -85,7 +85,7 @@ def test_modal_skips_models_without_a_shared_endpoint() -> None:
     ('data', 'error'),
     [
         (svelte_data([{'title': 1}, 'Not found']), 'Modal model page /library/b has no model'),
-        (model_page(None), 'Modal Shared Endpoint model has no token rates'),
+        (model_page(None), 'Modal Shared Endpoint model on /library/b has no token rates'),
         (model_page(RATES | {'promptMtok': 'TBD'}), "Unexpected Modal promptMtok rate 'TBD' for moonshotai/Kimi-K3"),
         (
             model_page(RATES | {'reasoningMtok': '20.00'}),

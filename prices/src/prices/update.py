@@ -1,12 +1,13 @@
 from __future__ import annotations
 
+import dataclasses
 import os
 import re
 from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import date
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from io import StringIO
 from operator import itemgetter
 from pathlib import Path
@@ -43,6 +44,8 @@ MANUAL_UPDATE_NOTES_ENV = 'PRICE_UPDATE_NOTES'
 
 def report_manual_update(note: str) -> None:
     """Report a change the importer saw but did not write, so a person applies it."""
+    # The workflow lists one note per line, and some source rows span several lines.
+    note = re.sub(r'\s*\n\s*', ' ', note.strip())
     print(note)
     if notes_path := os.environ.get(MANUAL_UPDATE_NOTES_ENV):
         with open(notes_path, 'a') as notes:
@@ -53,17 +56,30 @@ class UnreadableRowError(ValueError):
     """A source row the importer cannot read, such as an unknown price format or a new column."""
 
 
-@contextmanager
-def skipping_unreadable_row(source: str) -> Iterator[None]:
-    """Report an `UnreadableRowError` from the block for manual review instead of failing the importer.
+@dataclass
+class SourceRow:
+    """The row a `skipping_unreadable_row` block reads. Add the row's model ids as soon as they are known."""
 
-    Wrap the code that reads one source row. The row's model then keeps its current prices, while the
-    importer still updates every other model. `upsert_models` still fails when too few rows were readable.
+    model_ids: set[str] = dataclasses.field(default_factory=set[str])
+
+
+@contextmanager
+def skipping_unreadable_row(source: str, unreadable: set[str] | None = None) -> Iterator[SourceRow]:
+    """Skip a source row the importer cannot read and report it for manual review, instead of failing the importer.
+
+    Wrap the code that reads one row. An `UnreadableRowError`, or a `ValidationError` or `InvalidOperation` from the
+    row's values, skips only that row; `upsert_models` still fails when too few rows were readable. When a model can
+    span several rows or appear twice, pass `unreadable` and add each row's model ids to the yielded `SourceRow`. A
+    skipped row then adds its ids to `unreadable`, and the caller must drop those models so they keep their prices.
     """
+    row = SourceRow()
     try:
-        yield
-    except UnreadableRowError as e:
-        report_manual_update(f'{source}: skipped a row it cannot read; update it by hand. {e}')
+        yield row
+    except (UnreadableRowError, ValidationError, InvalidOperation) as e:
+        if unreadable is not None:
+            unreadable.update(row.model_ids)
+        models = f' for {", ".join(sorted(row.model_ids))}' if row.model_ids else ''
+        report_manual_update(f'{source}: skipped a row it cannot read{models}; update it by hand. {e}')
 
 
 def get_providers_yaml() -> dict[str, ProviderYaml]:

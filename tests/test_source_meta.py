@@ -95,46 +95,62 @@ def test_meta_rejects_a_page_without_model_pricing() -> None:
 
 
 EMBER = f'### Muse Ember\n\nModel: `muse-ember-1.0`, in Standard mode only.\n\n{LONG_CONTEXT_TABLE}\n'
+SPARK = f'### Muse Spark\n\nModel: `muse-spark-1.3`.\n\n{TABLE}\n'
+SKIPPED = 'Meta: skipped a row it cannot read; update it by hand. '
+SKIPPED_SPARK = 'Meta: skipped a row it cannot read for muse-spark-1.3; update it by hand. '
 
 
 @pytest.mark.parametrize(
-    ('family', 'error', 'model_ids'),
+    ('family', 'note', 'model_ids'),
     [
-        (f'### Muse Spark\n\n{TABLE}', 'Unexpected Meta pricing layout for Muse Spark', ['muse-ember-1.0']),
+        (f'### Muse Spark\n\n{TABLE}', f'{SKIPPED}Unexpected Meta pricing layout for Muse Spark', ['muse-ember-1.0']),
         (
             '### Muse Spark\n\nModel: `muse-spark-1.3`.\n',
-            'Unexpected Meta pricing layout for Muse Spark',
+            f'{SKIPPED_SPARK}Unexpected Meta pricing layout for Muse Spark',
             ['muse-ember-1.0'],
         ),
         (
-            f'### Muse Spark\n\nModel: `muse-spark-1.3`.\n\n{TABLE.replace("Cached input", "Cache write")}',
-            'Unexpected Meta pricing layout for Muse Spark',
+            SPARK.replace('Cached input', 'Cache write'),
+            f'{SKIPPED_SPARK}Unexpected Meta pricing layout for Muse Spark',
             ['muse-ember-1.0'],
         ),
         (
             f'### Muse Spark\n\nModels: Muse Spark 1.3.\n\n{TABLE}',
-            'No Meta model ids listed for Muse Spark',
+            f'{SKIPPED}No Meta model ids listed for Muse Spark',
             ['muse-ember-1.0'],
         ),
         (
             f'### Muse Spark\n\nModels: `muse-spark-1.3-contributor` and `muse-spark-1.3`.\n\n{TABLE.replace("$0.002", "Free")}',
+            'Meta: skipped a row it cannot read for muse-spark-1.3-contributor; update it by hand. '
             'Unexpected Meta price for muse-spark-1.3-contributor: Free',
             ['muse-ember-1.0', 'muse-spark-1.3'],
         ),
         (
             f'### Muse Ember Contributor\n\nModel: `muse-ember-1.0-contributor`.\n\n{LONG_CONTEXT_TABLE}',
+            'Meta: skipped a row it cannot read for muse-ember-1.0-contributor; update it by hand. '
             'Meta lists no Contributor mode long-context prices for muse-ember-1.0-contributor',
+            ['muse-ember-1.0'],
+        ),
+        (
+            # A readable later occurrence of a model does not price it when an earlier one is unreadable.
+            SPARK.replace('$1.25', 'Free') + SPARK,
+            f'{SKIPPED_SPARK}Unexpected Meta price for muse-spark-1.3: Free',
+            ['muse-ember-1.0'],
+        ),
+        (
+            SPARK.replace('Cached input', 'Cache write') + SPARK,
+            f'{SKIPPED_SPARK}Unexpected Meta pricing layout for Muse Spark',
             ['muse-ember-1.0'],
         ),
     ],
 )
 def test_meta_reports_an_unreadable_family_or_model_and_reads_the_others(
-    family: str, error: str, model_ids: list[str], capsys: pytest.CaptureFixture[str]
+    family: str, note: str, model_ids: list[str], capsys: pytest.CaptureFixture[str]
 ) -> None:
     models = source_meta.parse_pricing_markdown(page(EMBER + family))
 
     assert [model.id for model in models] == model_ids
-    assert capsys.readouterr().out == f'Meta: skipped a row it cannot read; update it by hand. {error}\n'
+    assert capsys.readouterr().out == f'{note}\n'
 
 
 def test_meta_keeps_a_model_listed_more_than_once_unchanged(capsys: pytest.CaptureFixture[str]) -> None:

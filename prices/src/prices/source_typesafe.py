@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, cast
 
 from prices.prices_types import ClauseEquals, ClauseOr, MatchLogic, ModelInfo, ModelPrice
-from prices.update import ProviderYaml, UnreadableRowError, skipping_unreadable_row
+from prices.update import ProviderYaml, UnreadableRowError, report_manual_update, skipping_unreadable_row
 from prices.utils import get_markdown, package_dir
 
 MODELS_URL = 'https://docs.typesafe.ai/models.md'
@@ -20,6 +20,11 @@ def parse_models_markdown(markdown: str) -> list[ModelInfo]:
     if 'Model ID' not in current or 'Price (per Btok / per Mtok)' not in current:
         raise RuntimeError('TypeSafe current models table is missing the Model ID or Price row')
     model_ids = [cell.strip('`') for cell in current['Model ID']]
+    duplicates = sorted({model_id for model_id in model_ids if model_ids.count(model_id) > 1})
+    for model_id in duplicates:
+        report_manual_update(
+            f'TypeSafe: kept {model_id} unchanged, the models page lists it more than once; update it by hand'
+        )
     unknown = set(aliases.values()) - set(model_ids)
     with skipping_unreadable_row('TypeSafe'):
         if unknown:
@@ -29,6 +34,8 @@ def parse_models_markdown(markdown: str) -> list[ModelInfo]:
     contexts = current.get('Context length', [''] * len(model_ids))
     models: list[ModelInfo] = []
     for model_id, price, context in zip(model_ids, current['Price (per Btok / per Mtok)'], contexts, strict=True):
+        if model_id in duplicates:
+            continue
         with skipping_unreadable_row('TypeSafe'):
             rate = re.fullmatch(r'\\?\$[0-9.]+ / \\?\$([0-9]+(?:\.[0-9]+)?)', price)
             if not model_id.startswith('jev-') or rate is None:

@@ -17,18 +17,21 @@ SECTIONS = ('Text Embeddings', 'Older models')
 def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     models: list[ModelInfo] = []
     duplicates: set[str] = set()
+    unreadable: set[str] = set()
     for title in SECTIONS:
         section = re.search(rf'^#+ {title}\s*$\n(.*?)(?=^#|\Z)', markdown, flags=re.MULTILINE | re.DOTALL)
         rows = [_cells(line) for line in section.group(1).splitlines() if line.startswith('|')] if section else []
         if len(rows) < 3:
             raise RuntimeError(f'Voyage pricing page has no "{title}" table')
         price_column = rows[0].index('Price per million tokens')
-        for row in rows[2:]:
-            with skipping_unreadable_row('Voyage AI'):
-                model_ids = re.findall(r'`([^`]+)`', row[0])
-                price = re.fullmatch(r'\$([0-9]+(?:\.[0-9]+)?)', row[price_column])
+        for cells in rows[2:]:
+            with skipping_unreadable_row('Voyage AI', unreadable) as row:
+                model_ids = re.findall(r'`([^`]+)`', cells[0])
+                row.model_ids.update(model_ids)
+                price_cell = cells[price_column] if len(cells) > price_column else ''
+                price = re.fullmatch(r'\$([0-9]+(?:\.[0-9]+)?)', price_cell)
                 if not model_ids or price is None:
-                    raise UnreadableRowError(f'Unexpected Voyage pricing row: {row}')
+                    raise UnreadableRowError(f'Unexpected Voyage pricing row: {cells}')
                 for model_id in model_ids:
                     if not model_id.startswith('voyage-') or 'multimodal' in model_id:
                         continue
@@ -48,7 +51,7 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
         report_manual_update(
             f'Voyage AI: kept {model_id} unchanged, the pricing page lists it more than once; update it by hand'
         )
-    return [model for model in models if model.id not in duplicates]
+    return [model for model in models if model.id not in duplicates and model.id not in unreadable]
 
 
 def main(provider_path: Path | None = None) -> None:
