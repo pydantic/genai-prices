@@ -77,20 +77,25 @@ jobs:
           LOOKBACK_RUNS: 168
         run: |
           set -euo pipefail
-          # Each job of a run with its conclusion, plus a marker when GitHub started no import job at all.
+          # Each job of a run with its conclusion, plus a marker that fails when GitHub started no import job at all.
           jobs_of() {
             gh run view "$1" --repo "$GITHUB_REPOSITORY" --json jobs --jq '(.jobs[]
               | select(.name | startswith("import ") or . == "pull-request") | "\(.name)\t\(.conclusion)"),
-              (if any(.jobs[]; .name | startswith("import ")) then empty else "import: no job started\tfailure" end)'
+              "import: no job started\t\(if any(.jobs[]; .name | startswith("import ")) then "success" else "failure" end)"'
           }
           gh run list --repo "$GITHUB_REPOSITORY" --workflow update-prices.yml --branch main --event schedule \
-            --status completed --limit "$LOOKBACK_RUNS" --json databaseId,createdAt,url \
-            --jq '.[] | [.databaseId, .createdAt, .url] | @tsv' > "$RUNNER_TEMP/runs.tsv"
+            --status completed --limit "$LOOKBACK_RUNS" --json databaseId,createdAt,url,conclusion \
+            --jq '.[] | select(.conclusion != "cancelled") | [.databaseId, .createdAt, .url] | @tsv' \
+            > "$RUNNER_TEMP/runs.tsv"
+          [ -s "$RUNNER_TEMP/runs.tsv" ] || exit 0
           IFS=$'\t' read -r latest _ latest_url < "$RUNNER_TEMP/runs.tsv"
-          mapfile -t open < <(jobs_of "$latest" | awk -F'\t' '$2 == "failure" { print $1 }' | sort)
+          # Assigned on its own so a failed lookup fails the step instead of looking like a passing run.
+          latest_jobs="$(jobs_of "$latest")"
+          mapfile -t open < <(awk -F'\t' '$2 == "failure" { print $1 }' <<< "$latest_jobs" | sort)
           [ "${#open[@]}" -gt 0 ] || exit 0
           declare -A since=()
-          # Walk back until each failing job last passed. A run without the job, such as a weekly one, doesn't end it.
+          # Walk back until each failing job last passed. A run where the job didn't run, such as a weekly run,
+          # or ended another way, such as cancelled, doesn't end the walk.
           while [ "${#open[@]}" -gt 0 ] && IFS=$'\t' read -r id created _; do
             jobs="$(jobs_of "$id")"
             still=()
@@ -99,7 +104,7 @@ jobs:
               if [ "$conclusion" = failure ]; then
                 since[$job]="$created"
               fi
-              if [ "$conclusion" = failure ] || [ -z "$conclusion" ]; then
+              if [ "$conclusion" != success ]; then
                 still+=("$job")
               fi
             done
@@ -107,7 +112,7 @@ jobs:
           done < "$RUNNER_TEMP/runs.tsv"
           summary=()
           for job in "${!since[@]}"; do
-            start="$(date -u -d "${since[$job]}" '+%Y-%m-%d %H:%M UTC')"
+            start="${since[$job]:0:10} ${since[$job]:11:5} UTC"
             # A job still open failed in every run of the lookback window.
             if printf '%s\n' "${open[@]}" | grep -qxF "$job"; then
               summary+=("$job (since $start or earlier)")
