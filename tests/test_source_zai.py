@@ -2,14 +2,14 @@ from __future__ import annotations
 
 from datetime import date
 from decimal import Decimal
-from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_zai
 from prices.prices_types import ClauseEquals, ClauseOr, ModelPrice
-from prices.utils import markdown_tables, package_dir
+from prices.utils import markdown_tables
+
+from .fixtures import ProviderSnapshot
 
 HEADER = """\
 | Model | Input | Cached Input | Cached Input Storage | Output |
@@ -84,9 +84,10 @@ def test_zai_rejects_unexpected_pricing_tables(markdown: str, error: str) -> Non
 
 
 @pytest.mark.vcr()
-def test_zai_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'zai.yml'
-    copyfile(package_dir / 'providers/zai.yml', provider_path)
+def test_zai_main_fetches_recorded_pricing_page(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('zai.yml')
 
     source_zai.main(provider_path)
 

@@ -2,15 +2,14 @@ from __future__ import annotations
 
 from datetime import date
 from decimal import Decimal
-from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_moonshotai
 from prices.prices_types import ClauseStartsWith, ModelPrice
 from prices.update import ProviderYaml
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 
 def tooltip(label: str) -> str:
@@ -101,9 +100,10 @@ def test_moonshot_rejects_unexpected_tables(page: str, error: str) -> None:
 
 
 @pytest.mark.vcr()
-def test_moonshot_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'moonshotai.yml'
-    copyfile(package_dir / 'providers/moonshotai.yml', provider_path)
+def test_moonshot_main_fetches_recorded_pricing_page(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('moonshotai.yml')
 
     source_moonshotai.main(provider_path)
 

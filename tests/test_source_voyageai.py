@@ -3,14 +3,14 @@ from __future__ import annotations
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
-from shutil import copyfile
 
 import httpx2
 import pytest
 
 from prices import source_voyageai
 from prices.prices_types import ModelPrice
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 PRICING_MARKDOWN = """\
 # Text Embeddings
@@ -65,9 +65,10 @@ def test_voyageai_rejects_duplicate_models() -> None:
 
 
 @pytest.mark.vcr()
-def test_voyageai_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'voyageai.yml'
-    copyfile(package_dir / 'providers/voyageai.yml', provider_path)
+def test_voyageai_main_fetches_recorded_pricing_page(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('voyageai.yml')
 
     source_voyageai.main(provider_path)
 

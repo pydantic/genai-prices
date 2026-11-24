@@ -4,14 +4,14 @@ import re
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_typesafe
 from prices.prices_types import ClauseEquals, ClauseOr, ClauseRegex, ModelPrice
 from prices.update import ProviderYaml
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 MODELS_MARKDOWN = """\
 ## Current models
@@ -127,9 +127,10 @@ models:
 
 
 @pytest.mark.vcr()
-def test_typesafe_main_fetches_recorded_models_page(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'typesafe.yml'
-    copyfile(package_dir / 'providers/typesafe.yml', provider_path)
+def test_typesafe_main_fetches_recorded_models_page(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('typesafe.yml')
 
     source_typesafe.main(provider_path)
 

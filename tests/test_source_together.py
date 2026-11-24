@@ -2,14 +2,13 @@ from __future__ import annotations
 
 from datetime import date
 from decimal import Decimal
-from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_together
 from prices.prices_types import ModelPrice
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 MODELS_MARKDOWN = f"""\
 ## Chat models
@@ -63,9 +62,10 @@ def test_together_rejects_an_unexpected_models_page(markdown: str, error: str) -
 
 
 @pytest.mark.vcr()
-def test_together_main_fetches_recorded_models_page(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'together.yml'
-    copyfile(package_dir / 'providers/together.yml', provider_path)
+def test_together_main_fetches_recorded_models_page(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('together.yml')
 
     source_together.main(provider_path)
 

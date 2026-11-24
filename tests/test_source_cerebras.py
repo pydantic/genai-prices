@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 from decimal import Decimal
-from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_cerebras
 from prices.prices_types import ModelPrice
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 
 def test_cerebras_converts_per_token_prices_and_skips_unpriced_models() -> None:
@@ -32,9 +31,10 @@ def test_cerebras_converts_per_token_prices_and_skips_unpriced_models() -> None:
 
 
 @pytest.mark.vcr()
-def test_cerebras_main_fetches_recorded_models(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'cerebras.yml'
-    copyfile(package_dir / 'providers/cerebras.yml', provider_path)
+def test_cerebras_main_fetches_recorded_models(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('cerebras.yml')
 
     source_cerebras.main(provider_path)
 
