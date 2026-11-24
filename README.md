@@ -34,6 +34,7 @@ The following providers are currently supported:
 
 [comment]: <> (providers-start)
 
+- [AbliteratedLLM](prices/providers/abliteratedllm.yml) - 16 models
 - [Anthropic](prices/providers/anthropic.yml) - 29 models
 - [Arcee](prices/providers/arcee.yml) - 12 models
 - [Avian](prices/providers/avian.yml) - 24 models

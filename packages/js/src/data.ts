@@ -2,6 +2,509 @@
 import type { Provider } from './types'
 export const data: Provider[] = [
   {
+    id: 'abliteratedllm',
+    name: 'AbliteratedLLM',
+    pricing_urls: ['https://abliteratedllm.dev/pricing', 'https://api.abliteratedllm.dev/v1/models'],
+    api_pattern: 'https://api\\.abliteratedllm\\.dev(?:/|$)',
+    description: 'OpenAI- and Anthropic-compatible hosted inference for abliterated and stock open-weight models.',
+    price_comments:
+      'Prices and context windows verified against https://api.abliteratedllm.dev/v1/models and https://abliteratedllm.dev/pricing on 2026-11-19. Prompt cache reads are billed at the published cached-input rate with no cache-write surcharge. Models supporting priority service tier include a `service_tier: priority` variant effective from the 2026-11-19 verification date; earlier priority tier history is not modeled. Model IDs overlap with upstream model names, so requests require an explicit `abliteratedllm` provider ID or API URL.',
+    provider_match: {
+      contains: 'abliteratedllm',
+    },
+    extractors: [
+      {
+        api_flavor: 'chat',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'prompt_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['prompt_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['completion_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'completion_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'responses',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: ['input_tokens_details', 'cached_tokens'],
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: ['output_tokens_details', 'reasoning_tokens'],
+            dest: 'output_reasoning_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+      {
+        api_flavor: 'anthropic',
+        root: 'usage',
+        model_path: 'model',
+        mappings: [
+          {
+            path: 'input_tokens',
+            dest: 'input_tokens',
+            required: true,
+          },
+          {
+            path: 'cache_read_input_tokens',
+            dest: 'input_tokens',
+            required: false,
+          },
+          {
+            path: 'cache_read_input_tokens',
+            dest: 'cache_read_tokens',
+            required: false,
+          },
+          {
+            path: 'output_tokens',
+            dest: 'output_tokens',
+            required: true,
+          },
+        ],
+      },
+    ],
+    models: [
+      {
+        id: 'deepseek-v4.1-flash-1017',
+        name: 'DeepSeek V4.1 Flash 1017',
+        match: {
+          equals: 'deepseek-v4.1-flash-1017',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.27,
+          cache_read_mtok: 0.0054,
+          output_mtok: 1.08,
+        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 0.3375,
+              cache_read_mtok: 0.00675,
+              output_mtok: 1.35,
+            },
+            constraint: {
+              start_date: '2026-11-19',
+              type: 'start_date',
+            },
+          },
+        ],
+      },
+      {
+        id: 'deepseek-v4.1-flash-1017-ultrafast',
+        name: 'DeepSeek V4.1 Flash 1017 Ultrafast',
+        match: {
+          equals: 'deepseek-v4.1-flash-1017-ultrafast',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 2.16,
+          cache_read_mtok: 0.0432,
+          output_mtok: 8.64,
+        },
+      },
+      {
+        id: 'deepseek-v4.1-flash-original',
+        name: 'DeepSeek V4.1 Flash (original)',
+        match: {
+          equals: 'deepseek-v4.1-flash-original',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.27,
+          cache_read_mtok: 0.0054,
+          output_mtok: 1.08,
+        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 0.3375,
+              cache_read_mtok: 0.00675,
+              output_mtok: 1.35,
+            },
+            constraint: {
+              start_date: '2026-11-19',
+              type: 'start_date',
+            },
+          },
+        ],
+      },
+      {
+        id: 'ember-1',
+        name: 'Ember-1',
+        match: {
+          equals: 'ember-1',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 2.7,
+          cache_read_mtok: 0.27,
+          output_mtok: 13.5,
+        },
+      },
+      {
+        id: 'glm-5.3',
+        name: 'GLM-5.3',
+        match: {
+          equals: 'glm-5.3',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.26,
+          cache_read_mtok: 0.234,
+          output_mtok: 3.96,
+        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 1.575,
+              cache_read_mtok: 0.2925,
+              output_mtok: 4.95,
+            },
+            constraint: {
+              start_date: '2026-11-19',
+              type: 'start_date',
+            },
+          },
+        ],
+      },
+      {
+        id: 'glm-5.3-cyber-abliterated',
+        name: 'GLM-5.3 Cyber Abliterated',
+        match: {
+          equals: 'glm-5.3-cyber-abliterated',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.9,
+          cache_read_mtok: 0.135,
+          output_mtok: 1.8,
+        },
+      },
+      {
+        id: 'glm-5.3-fast',
+        name: 'GLM-5.3 Fast',
+        match: {
+          equals: 'glm-5.3-fast',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.89,
+          cache_read_mtok: 0.351,
+          output_mtok: 5.94,
+        },
+      },
+      {
+        id: 'glm-5.3-flash',
+        name: 'GLM-5.3 Flash',
+        match: {
+          equals: 'glm-5.3-flash',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.135,
+          cache_read_mtok: 0.027,
+          output_mtok: 0.45,
+        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 0.16875,
+              cache_read_mtok: 0.03375,
+              output_mtok: 0.5625,
+            },
+            constraint: {
+              start_date: '2026-11-19',
+              type: 'start_date',
+            },
+          },
+        ],
+      },
+      {
+        id: 'glm-5.3-flash-abliterated',
+        name: 'GLM-5.3 Flash Abliterated',
+        match: {
+          equals: 'glm-5.3-flash-abliterated',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.0977,
+          cache_read_mtok: 0.0098,
+          output_mtok: 0.3421,
+        },
+      },
+      {
+        id: 'kimi-k3',
+        name: 'Kimi K3',
+        match: {
+          equals: 'kimi-k3',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 2.7,
+          cache_read_mtok: 0.27,
+          output_mtok: 13.5,
+        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 3.375,
+              cache_read_mtok: 0.3375,
+              output_mtok: 16.875,
+            },
+            constraint: {
+              start_date: '2026-11-19',
+              type: 'start_date',
+            },
+          },
+        ],
+      },
+      {
+        id: 'kimi-k3-fast',
+        name: 'Kimi K3 Fast',
+        match: {
+          equals: 'kimi-k3-fast',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 4.05,
+          cache_read_mtok: 0.405,
+          output_mtok: 20.25,
+        },
+      },
+      {
+        id: 'kimi-k3.1-pro',
+        name: 'Kimi K3.1 Pro',
+        match: {
+          equals: 'kimi-k3.1-pro',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.8,
+          cache_read_mtok: 0.18,
+          output_mtok: 9,
+        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 2.7,
+              cache_read_mtok: 0.27,
+              output_mtok: 13.5,
+            },
+            constraint: {
+              start_date: '2026-11-19',
+              type: 'start_date',
+            },
+          },
+        ],
+      },
+      {
+        id: 'minimax-m3',
+        name: 'MiniMax M3',
+        match: {
+          equals: 'minimax-m3',
+        },
+        context_window: 512000,
+        prices: {
+          input_mtok: 0.27,
+          cache_read_mtok: 0.054,
+          output_mtok: 1.08,
+        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 0.405,
+              cache_read_mtok: 0.081,
+              output_mtok: 1.62,
+            },
+            constraint: {
+              start_date: '2026-11-19',
+              type: 'start_date',
+            },
+          },
+        ],
+      },
+      {
+        id: 'muse-spark-open',
+        name: 'Muse Spark Open',
+        match: {
+          equals: 'muse-spark-open',
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 1.125,
+          cache_read_mtok: 0.135,
+          output_mtok: 3.825,
+        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 1.6875,
+              cache_read_mtok: 0.2025,
+              output_mtok: 5.7375,
+            },
+            constraint: {
+              start_date: '2026-11-19',
+              type: 'start_date',
+            },
+          },
+        ],
+      },
+      {
+        id: 'qwen3.8-2.4t-a95b',
+        name: 'Qwen3.8-2.4T-A95B',
+        match: {
+          equals: 'qwen3.8-2.4t-a95b',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 1.8,
+          cache_read_mtok: 0.225,
+          output_mtok: 5.4,
+        },
+      },
+      {
+        id: 'qwen3.8-max',
+        name: 'Qwen3.8 Max',
+        match: {
+          equals: 'qwen3.8-max',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 1.8,
+          cache_read_mtok: 0.225,
+          output_mtok: 5.4,
+        },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'default',
+            },
+            prices: {},
+          },
+          {
+            when: {
+              service_tier: 'priority',
+            },
+            prices: {
+              input_mtok: 2.7,
+              cache_read_mtok: 0.3375,
+              output_mtok: 8.1,
+            },
+            constraint: {
+              start_date: '2026-11-19',
+              type: 'start_date',
+            },
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'anthropic',
     name: 'Anthropic',
     pricing_urls: ['https://www.anthropic.com/pricing#api'],

@@ -280,3 +280,15 @@ providers:
       rows as unchecked. The page publishes no cached-input rate, so leave the recorded cache_read_mtok unchecked. Exclude
       burst pricing, included minutes, plan fees, and every non-Realtime product. The pricing page is not a complete catalog,
       so do not infer removals from it.
+
+  - name: AbliteratedLLM
+    file: prices/providers/abliteratedllm.yml
+    scope: Public models returned by the AbliteratedLLM /v1/models catalog.
+    sources:
+      - https://api.abliteratedllm.dev/v1/models
+      - https://abliteratedllm.dev/pricing
+    notes: >-
+      The public /v1/models JSON endpoint is authoritative for model IDs, context windows, and USD per 1M token rates
+      (pricing.input -> input_mtok, pricing.cached_input -> cache_read_mtok, pricing.output -> output_mtok). Cache writes
+      are not charged. When pricing.priority is non-null, compare its input, cached_input, and output values against the
+      model's service_tier: priority price_variants entry.
