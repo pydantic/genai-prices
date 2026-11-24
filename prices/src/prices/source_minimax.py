@@ -6,7 +6,7 @@ from decimal import Decimal
 from pathlib import Path
 
 from prices.prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice, Tier, TieredPrices
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, UnreadableRowError, report_manual_update, skipping_unreadable_row
 from prices.utils import get_markdown, markdown_tables, package_dir
 
 PRICING_URL = 'https://platform.minimax.io/docs/pricing/overview.md'
@@ -36,6 +36,7 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
 
     flat: dict[str, Rates] = {}
     tiered: dict[str, list[tuple[str, int, Rates]]] = {}
+    duplicates: set[str] = set()
     for header, rows in markdown_tables(standard):
         header = [re.sub(r'\*\*|\\\$ / M tokens', '', cell).strip() for cell in header]
         if (
@@ -45,26 +46,38 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
         ):
             raise RuntimeError(f'Unexpected MiniMax LLM pricing columns: {header}')
         for row in rows:
-            if not (model := re.fullmatch(r'\*\*([A-Za-z0-9.-]+)\*\*(.*)', row[0])):
-                raise RuntimeError(f'Unexpected MiniMax model cell: {row[0]}')
-            name, label = model.groups()
-            rates = {PRICE_COLUMNS[column]: _price(cell) for column, cell in zip(header[1:], row[1:])}
-            if band := re.match(r' ([≤>]) ([0-9]+)k input tokens', label):
-                tiered.setdefault(name, []).append((band.group(1), int(band.group(2)) * 1000, rates))
-            elif re.sub(r'Permanent [0-9]+% off', '', label).strip() or name in flat:
-                raise RuntimeError(f'Unexpected MiniMax pricing row: {row[0]}')
-            else:
-                flat[name] = rates
+            with skipping_unreadable_row('MiniMax'):
+                if not (model := re.fullmatch(r'\*\*([A-Za-z0-9.-]+)\*\*(.*)', row[0])):
+                    raise UnreadableRowError(f'Unexpected MiniMax model cell: {row[0]}')
+                name, label = model.groups()
+                rates = {PRICE_COLUMNS[column]: _price(cell) for column, cell in zip(header[1:], row[1:])}
+                if band := re.match(r' ([≤>]) ([0-9]+)k input tokens', label):
+                    tiered.setdefault(name, []).append((band.group(1), int(band.group(2)) * 1000, rates))
+                elif re.sub(r'Permanent [0-9]+% off', '', label).strip():
+                    raise UnreadableRowError(f'Unexpected MiniMax pricing row: {row[0]}')
+                elif name in flat:
+                    duplicates.add(name)
+                else:
+                    flat[name] = rates
 
-    models = [_model(name, ModelPrice(**rates)) for name, rates in flat.items()]
+    # A model with both a flat row and context bands is listed more than once.
+    duplicates |= flat.keys() & tiered.keys()
+    for name in sorted(duplicates):
+        report_manual_update(
+            f'MiniMax: kept {name} unchanged, the pricing page lists it more than once; update it by hand'
+        )
+    models = [_model(name, ModelPrice(**rates)) for name, rates in flat.items() if name not in duplicates]
     for name, bands in tiered.items():
-        if name in flat or [(sign, start) for sign, start, _ in bands] != [('≤', bands[0][1]), ('>', bands[0][1])]:
-            raise RuntimeError(f'Unexpected MiniMax context bands for {name}')
-        (_, start, base), (_, _, above) = bands
-        if base.keys() != above.keys():
-            raise RuntimeError(f'MiniMax context bands for {name} price different units')
-        prices = {key: TieredPrices(base=base[key], tiers=[Tier(start=start, price=above[key])]) for key in base}
-        models.append(_model(name, ModelPrice(**prices)))  # pyright: ignore[reportArgumentType]
+        if name in duplicates:
+            continue
+        with skipping_unreadable_row('MiniMax'):
+            if [(sign, start) for sign, start, _ in bands] != [('≤', bands[0][1]), ('>', bands[0][1])]:
+                raise UnreadableRowError(f'Unexpected MiniMax context bands for {name}')
+            (_, start, base), (_, _, above) = bands
+            if base.keys() != above.keys():
+                raise UnreadableRowError(f'MiniMax context bands for {name} price different units')
+            prices = {key: TieredPrices(base=base[key], tiers=[Tier(start=start, price=above[key])]) for key in base}
+            models.append(_model(name, ModelPrice(**prices)))  # pyright: ignore[reportArgumentType]
     return models
 
 
@@ -93,13 +106,21 @@ def main(provider_path: Path | None = None) -> None:
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/minimax.yml')
     # Several legacy page rows share one YAML model; they must agree or the shared entry would be mispriced.
     shared: dict[str, ModelInfo] = {}
+    tracked: dict[str, str] = {}
+    conflicting: set[str] = set()
     for index, model in enumerate(models):
         if (existing := provider_yaml.provider.find_model(model.id)) is not None:
             if existing.id in shared and shared[existing.id].prices != model.prices:
-                raise RuntimeError(f'MiniMax prices {shared[existing.id].id} and {model.id} differently')
+                conflicting.add(existing.id)
             shared[existing.id] = model
+            tracked[model.id] = existing.id
             # A tracked model keeps its curated match rather than gaining the page's case aliases.
             models[index] = model.model_copy(update={'match': ClauseEquals(equals=model.id)})
+    for model_id in sorted(conflicting):
+        report_manual_update(
+            f'MiniMax: kept {model_id} unchanged, the pricing page lists it at conflicting rates; update it by hand'
+        )
+    models = [model for model in models if tracked.get(model.id) not in conflicting]
     added, updated = provider_yaml.upsert_models(models, source='MiniMax', min_count=MIN_MODEL_COUNT)
     print(f'MiniMax prices updated: {added} added, {updated} updated')
 
@@ -121,5 +142,5 @@ def _model(name: str, prices: ModelPrice) -> ModelInfo:
 
 def _price(cell: str) -> Decimal:
     if not (match := re.fullmatch(r'(?:~~\\\$[0-9.]+~~ )?\\\$([0-9]+(?:\.[0-9]+)?)', cell)):
-        raise RuntimeError(f'Unexpected MiniMax price cell: {cell}')
+        raise UnreadableRowError(f'Unexpected MiniMax price cell: {cell}')
     return Decimal(match.group(1))

@@ -90,25 +90,6 @@ def test_minimax_parses_standard_tab_bands_and_flat_models() -> None:
         (page('| Model | Price |\n| :- | :- |\n| **MiniMax-M2** | \\$1 |\n'), 'Unexpected MiniMax LLM pricing columns'),
         (page('| Model | Input |\n| :- | :- |\n'), 'Unexpected MiniMax LLM pricing columns'),
         (page('| Model | Input | Output | Input |\n| :- | :- | :- | :- |\n'), 'Unexpected MiniMax LLM pricing columns'),
-        (page(FLAT_HEADER + M27_ROW.replace('**MiniMax-M2.7**', 'MiniMax-M2.7')), 'Unexpected MiniMax model cell'),
-        (page(FLAT_HEADER + M27_ROW.replace('**MiniMax-M2.7**', '**MiniMax-M2.7** (beta)')), 'pricing row'),
-        (page(FLAT_HEADER + M27_ROW * 2), r'Unexpected MiniMax pricing row: \*\*MiniMax-M2.7\*\*'),
-        (page(M3_HEADER + M3_ROWS.split('\n')[0] + '\n'), 'Unexpected MiniMax context bands for MiniMax-M3'),
-        (
-            page(M3_HEADER + M3_ROWS + '\n' + FLAT_HEADER + M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M3')),
-            'Unexpected MiniMax context bands for MiniMax-M3',
-        ),
-        (
-            page(
-                M3_HEADER
-                + M3_ROWS.split('\n')[0]
-                + '\n\n'
-                + FLAT_HEADER
-                + '| **MiniMax-M3** > 512k input tokens | \\$1 | \\$1 | \\$1 | \\$1 |\n'
-            ),
-            'context bands for MiniMax-M3 price different units',
-        ),
-        (page(FLAT_HEADER + M27_ROW.replace('\\$0.3 |', '\\$0.3 / hour |')), 'Unexpected MiniMax price cell'),
     ],
 )
 def test_minimax_rejects_unexpected_pricing_layout(markdown: str, error: str) -> None:
@@ -116,14 +97,94 @@ def test_minimax_rejects_unexpected_pricing_layout(markdown: str, error: str) ->
         source_minimax.parse_pricing_markdown(markdown)
 
 
-def test_minimax_refuses_conflicting_rates_for_one_shared_model(
-    monkeypatch: pytest.MonkeyPatch, provider_snapshot: ProviderSnapshot
+M25_ROW = M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M2.5')
+M3_LOW_BAND = M3_ROWS.split('\n')[0] + '\n'
+
+
+@pytest.mark.parametrize(
+    ('llm', 'errors', 'model_ids'),
+    [
+        (
+            FLAT_HEADER + M27_ROW.replace('**MiniMax-M2.7**', 'MiniMax-M2.7') + M25_ROW,
+            ['Unexpected MiniMax model cell: MiniMax-M2.7'],
+            ['MiniMax-M2.5'],
+        ),
+        (
+            FLAT_HEADER + M27_ROW.replace('**MiniMax-M2.7**', '**MiniMax-M2.7** (beta)') + M25_ROW,
+            ['Unexpected MiniMax pricing row: **MiniMax-M2.7** (beta)'],
+            ['MiniMax-M2.5'],
+        ),
+        (
+            FLAT_HEADER + M27_ROW.replace('\\$0.3 |', '\\$0.3 / hour |') + M25_ROW,
+            ['Unexpected MiniMax price cell: \\$0.3 / hour'],
+            ['MiniMax-M2.5'],
+        ),
+        (
+            M3_HEADER + M3_LOW_BAND + '\n' + FLAT_HEADER + M27_ROW,
+            ['Unexpected MiniMax context bands for MiniMax-M3'],
+            ['MiniMax-M2.7'],
+        ),
+        (
+            # A skipped band row leaves the model unchanged rather than priced at its other band alone.
+            M3_HEADER + M3_ROWS.replace('~~\\$1.20~~ \\$0.60', 'TBD') + '\n' + FLAT_HEADER + M27_ROW,
+            ['Unexpected MiniMax price cell: TBD', 'Unexpected MiniMax context bands for MiniMax-M3'],
+            ['MiniMax-M2.7'],
+        ),
+        (
+            M3_HEADER
+            + M3_LOW_BAND
+            + '\n'
+            + FLAT_HEADER
+            + '| **MiniMax-M3** > 512k input tokens | \\$1 | \\$1 | \\$1 | \\$1 |\n'
+            + M27_ROW,
+            ['MiniMax context bands for MiniMax-M3 price different units'],
+            ['MiniMax-M2.7'],
+        ),
+    ],
+)
+def test_minimax_reports_an_unreadable_row_and_reads_the_others(
+    llm: str, errors: list[str], model_ids: list[str], capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_minimax.parse_pricing_markdown(page(llm))
+
+    assert [model.id for model in models] == model_ids
+    assert capsys.readouterr().out == ''.join(
+        f'MiniMax: skipped a row it cannot read; update it by hand. {error}\n' for error in errors
+    )
+
+
+@pytest.mark.parametrize(
+    ('llm', 'model_id', 'model_ids'),
+    [
+        (FLAT_HEADER + M27_ROW * 2 + M25_ROW, 'MiniMax-M2.7', ['MiniMax-M2.5']),
+        (
+            M3_HEADER + M3_ROWS + '\n' + FLAT_HEADER + M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M3') + M27_ROW,
+            'MiniMax-M3',
+            ['MiniMax-M2.7'],
+        ),
+    ],
+)
+def test_minimax_keeps_a_model_listed_more_than_once_unchanged(
+    llm: str, model_id: str, model_ids: list[str], capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_minimax.parse_pricing_markdown(page(llm))
+
+    assert [model.id for model in models] == model_ids
+    assert capsys.readouterr().out == (
+        f'MiniMax: kept {model_id} unchanged, the pricing page lists it more than once; update it by hand\n'
+    )
+
+
+def test_minimax_keeps_a_shared_model_listed_at_conflicting_rates_unchanged(
+    monkeypatch: pytest.MonkeyPatch, provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
 ) -> None:
     provider_path = provider_snapshot('minimax.yml')
+    shared = ProviderYaml(provider_path).provider.find_model('MiniMax-M2')
     legacy = (
         M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M9')
         + M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M2.5')
         + M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M2.1').replace('\\$0.3 |', '\\$0.4 |')
+        + M27_ROW
     )
     monkeypatch.setattr(
         source_minimax,
@@ -131,8 +192,13 @@ def test_minimax_refuses_conflicting_rates_for_one_shared_model(
         {source_minimax.PRICING_URL: page(FLAT_HEADER + legacy), source_minimax.MODELS_URL: ''}.get,
     )
 
-    with pytest.raises(RuntimeError, match='MiniMax prices MiniMax-M2.5 and MiniMax-M2.1 differently'):
-        source_minimax.main(provider_path)
+    source_minimax.main(provider_path)
+
+    assert capsys.readouterr().out == (
+        'MiniMax: kept MiniMax-M2 unchanged, the pricing page lists it at conflicting rates; update it by hand\n'
+        'MiniMax prices updated: 1 added, 1 updated\n'
+    )
+    assert ProviderYaml(provider_path).provider.find_model('MiniMax-M2') == shared
 
 
 def test_minimax_reads_context_windows_and_descriptions_from_the_model_tables() -> None:

@@ -9,7 +9,7 @@ from pathlib import Path
 import httpx2
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, UnreadableRowError, report_manual_update, skipping_unreadable_row
 from prices.utils import package_dir
 
 PRICING_URL = 'https://docs.arcee.ai/get-started/pricing.md'
@@ -31,31 +31,41 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     }
     models: list[ModelInfo] = []
     seen_ids: set[str] = set()
+    duplicates: set[str] = set()
     for row in re.findall(r'<tr>(.*?)</tr>', section_match.group(1), flags=re.DOTALL):
-        cells = [
-            html.unescape(re.sub(r'<[^>]+>', '', cell)).strip() for cell in re.findall(r'<td[^>]*>(.*?)</td>', row)
-        ]
-        if len(cells) != 4:
-            continue
+        with skipping_unreadable_row('Arcee'):
+            cells = [
+                html.unescape(re.sub(r'<[^>]+>', '', cell)).strip() for cell in re.findall(r'<td[^>]*>(.*?)</td>', row)
+            ]
+            # The header row is built from `<th>` cells.
+            if not cells:
+                continue
+            if len(cells) != 4:
+                raise UnreadableRowError(f'Unexpected Arcee pricing row: {row}')
 
-        model_id = cells[0]
-        if model_id in seen_ids:
-            raise RuntimeError(f'Duplicate Arcee model in pricing data: {model_id}')
-        seen_ids.add(model_id)
-        models.append(
-            ModelInfo(
-                id=model_id,
-                name=model_names.get(model_id, model_id),
-                match=ClauseEquals(equals=model_id),
-                prices=ModelPrice(
-                    input_mtok=_parse_price(cells[1]),
-                    cache_read_mtok=_parse_price(cells[3]),
-                    output_mtok=_parse_price(cells[2]),
-                ),
-                prices_checked=date.today(),
+            model_id = cells[0]
+            if model_id in seen_ids:
+                duplicates.add(model_id)
+                continue
+            seen_ids.add(model_id)
+            models.append(
+                ModelInfo(
+                    id=model_id,
+                    name=model_names.get(model_id, model_id),
+                    match=ClauseEquals(equals=model_id),
+                    prices=ModelPrice(
+                        input_mtok=_parse_price(cells[1]),
+                        cache_read_mtok=_parse_price(cells[3]),
+                        output_mtok=_parse_price(cells[2]),
+                    ),
+                    prices_checked=date.today(),
+                )
             )
+    for model_id in sorted(duplicates):
+        report_manual_update(
+            f'Arcee: kept {model_id} unchanged, the pricing page lists it more than once; update it by hand'
         )
-    return models
+    return [model for model in models if model.id not in duplicates]
 
 
 def update_arcee_provider(provider_yaml: ProviderYaml, models: list[ModelInfo]) -> tuple[int, int]:
@@ -78,7 +88,7 @@ def update_arcee_provider(provider_yaml: ProviderYaml, models: list[ModelInfo]) 
 
 
 def main(provider_path: Path | None = None) -> None:
-    response = httpx2.get(PRICING_URL, timeout=30.0)
+    response = httpx2.get(PRICING_URL, timeout=30.0, follow_redirects=True)
     response.raise_for_status()
     models = parse_pricing_markdown(response.text)
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/arcee.yml')
@@ -95,7 +105,7 @@ def _parse_price(value: str) -> Decimal | None:
     if value == '-':
         return None
     if re.fullmatch(r'\$[0-9]+(?:\.[0-9]+)?', value) is None:
-        raise RuntimeError(f'Invalid Arcee price: {value}')
+        raise UnreadableRowError(f'Invalid Arcee price: {value}')
     return Decimal(value.removeprefix('$'))
 
 

@@ -64,32 +64,70 @@ HAIKU_UP_TO = '| Claude Haiku 5.5 (for prompts up to 100,000 tokens) |'
 HAIKU_OVER = '| Claude Haiku 5.5 (for prompts over 100,000 tokens) |'
 
 
+def test_anthropic_rejects_a_page_without_a_pricing_table() -> None:
+    with pytest.raises(RuntimeError, match='Anthropic pricing page has no model pricing table'):
+        source_anthropic.parse_pricing_markdown('# Pricing\n')
+
+
+SKIPPED = 'Anthropic: skipped a row it cannot read; update it by hand. '
+
+
 @pytest.mark.parametrize(
-    ('markdown', 'error'),
+    ('markdown', 'notes', 'model_ids'),
     [
-        ('# Pricing\n', 'Anthropic pricing page has no model pricing table'),
-        (PRICING_MARKDOWN.replace('| Claude Haiku 3.5 |', '| Haiku 3.5 |'), 'Unexpected Anthropic pricing row'),
-        (PRICING_MARKDOWN.replace('| $1.60 / MTok |', '|'), 'Unexpected Anthropic pricing row'),
-        (PRICING_MARKDOWN.replace('$0.80 / MTok', 'N/A'), "Unexpected Anthropic price 'N/A'"),
-        (PRICING_MARKDOWN.replace('Claude Haiku 3.5', 'Claude Fable 5.1'), 'Duplicate Anthropic pricing row'),
+        (
+            PRICING_MARKDOWN.replace('| Claude Haiku 3.5 |', '| Haiku 3.5 |'),
+            [f'{SKIPPED}Unexpected Anthropic pricing row: | Haiku 3.5 |'],
+            ['claude-fable-5-1', 'claude-opus-4-0', 'claude-haiku-5-5'],
+        ),
+        (
+            PRICING_MARKDOWN.replace('| $1.60 / MTok |', '|'),
+            [f'{SKIPPED}Unexpected Anthropic pricing row: | Claude Haiku 3.5 |'],
+            ['claude-fable-5-1', 'claude-opus-4-0', 'claude-haiku-5-5'],
+        ),
+        (
+            PRICING_MARKDOWN.replace('$0.80 / MTok', 'N/A'),
+            [f"{SKIPPED}Unexpected Anthropic price 'N/A' in row: | Claude Haiku 3.5 |"],
+            ['claude-fable-5-1', 'claude-opus-4-0', 'claude-haiku-5-5'],
+        ),
+        (
+            PRICING_MARKDOWN.replace('Claude Haiku 3.5', 'Claude Fable 5.1'),
+            ['Anthropic: kept claude-fable-5-1 unchanged, the pricing page lists it more than once; update it by hand'],
+            ['claude-opus-4-0', 'claude-haiku-5-5'],
+        ),
+        (
+            PRICING_MARKDOWN.replace(HAIKU_OVER, HAIKU_UP_TO),
+            ['Anthropic: kept claude-haiku-5-5 unchanged, the pricing page lists it more than once; update it by hand'],
+            ['claude-fable-5-1', 'claude-opus-4-0', 'claude-3-5-haiku-latest'],
+        ),
         (
             PRICING_MARKDOWN.replace('over 100,000', 'over 200,000'),
-            'claude-haiku-5-5 do not pair a base and a long-context rate',
+            [f'{SKIPPED}Anthropic pricing rows for claude-haiku-5-5 do not pair a base and a long-context rate'],
+            ['claude-fable-5-1', 'claude-opus-4-0', 'claude-3-5-haiku-latest'],
         ),
         (
             PRICING_MARKDOWN.replace(HAIKU_UP_TO, '| Claude Haiku 5 (for prompts up to 100,000 tokens) |'),
-            'claude-haiku-5 do not pair a base and a long-context rate',
+            [
+                f'{SKIPPED}Anthropic pricing rows for claude-haiku-5 do not pair a base and a long-context rate',
+                f'{SKIPPED}Anthropic long-context rows without a base row: claude-haiku-5-5',
+            ],
+            ['claude-fable-5-1', 'claude-opus-4-0', 'claude-3-5-haiku-latest'],
         ),
         (
             PRICING_MARKDOWN.replace(HAIKU_UP_TO, '| Claude Haiku 5 |'),
-            'Anthropic long-context rows without a base row: claude-haiku-5-5',
+            [f'{SKIPPED}Anthropic long-context rows without a base row: claude-haiku-5-5'],
+            ['claude-fable-5-1', 'claude-opus-4-0', 'claude-haiku-5', 'claude-3-5-haiku-latest'],
         ),
-        (PRICING_MARKDOWN.replace(HAIKU_OVER, HAIKU_UP_TO), 'Duplicate Anthropic pricing row'),
     ],
 )
-def test_anthropic_rejects_an_unexpected_pricing_table(markdown: str, error: str) -> None:
-    with pytest.raises(RuntimeError, match=error):
-        source_anthropic.parse_pricing_markdown(markdown)
+def test_anthropic_reports_an_unreadable_row_and_reads_the_others(
+    markdown: str, notes: list[str], model_ids: list[str], capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_anthropic.parse_pricing_markdown(markdown)
+
+    assert [model.id for model in models] == model_ids
+    output = capsys.readouterr().out.splitlines()
+    assert [line[: len(note)] for line, note in zip(output, notes, strict=True)] == notes
 
 
 @pytest.mark.vcr()

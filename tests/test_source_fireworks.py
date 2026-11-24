@@ -70,17 +70,39 @@ def test_fireworks_ultra_fast_row_is_a_router_model() -> None:
     ('markdown', 'error'),
     [
         ('# Pricing\n', 'Fireworks pricing page has no text and vision models table'),
-        (
-            PRICING_MARKDOWN.replace('https://app.fireworks.ai', 'https://example.com'),
-            'Unexpected Fireworks pricing row',
-        ),
-        (PRICING_MARKDOWN.replace('\\$4.50 / ', ''), 'Unexpected Fireworks pricing row'),
-        (PRICING_MARKDOWN.replace(' | — |\n| [GLM', ' |\n| [GLM'), 'Unexpected Fireworks pricing row'),
     ],
 )
 def test_fireworks_rejects_an_unexpected_pricing_table(markdown: str, error: str) -> None:
     with pytest.raises(RuntimeError, match=error):
         source_fireworks.parse_pricing_markdown(markdown)
+
+
+@pytest.mark.parametrize(
+    ('markdown', 'model_ids'),
+    [
+        (
+            PRICING_MARKDOWN.replace('https://app.fireworks.ai/models/fireworks/kimi-k3)', 'https://example.com)', 1),
+            ['accounts/fireworks/routers/kimi-k3-fast', 'accounts/fireworks/routers/glm-5p3-flash-us'],
+        ),
+        (
+            PRICING_MARKDOWN.replace('\\$4.50 / ', ''),
+            ['accounts/fireworks/models/kimi-k3', 'accounts/fireworks/routers/glm-5p3-flash-us'],
+        ),
+        (
+            PRICING_MARKDOWN.replace(' | — |\n| [GLM', ' |\n| [GLM'),
+            ['accounts/fireworks/models/kimi-k3', 'accounts/fireworks/routers/glm-5p3-flash-us'],
+        ),
+    ],
+)
+def test_fireworks_reports_an_unreadable_row_and_reads_the_others(
+    markdown: str, model_ids: list[str], capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_fireworks.parse_pricing_markdown(markdown)
+
+    assert [model.id for model in models] == model_ids
+    assert capsys.readouterr().out.startswith(
+        'Fireworks: skipped a row it cannot read; update it by hand. Unexpected Fireworks pricing row'
+    )
 
 
 def test_fireworks_flex_row_is_a_router_model() -> None:

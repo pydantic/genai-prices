@@ -7,7 +7,7 @@ from itertools import takewhile
 from pathlib import Path
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice
-from prices.update import ProviderYaml, report_manual_update
+from prices.update import ProviderYaml, UnreadableRowError, report_manual_update, skipping_unreadable_row
 from prices.utils import get_markdown, package_dir
 
 PRICING_URL = 'https://docs.fireworks.ai/serverless/pricing.md'
@@ -30,28 +30,30 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     models: list[ModelInfo] = []
     duplicates: set[str] = set()
     for line in takewhile(lambda line: line.startswith('|'), lines[lines.index(TABLE_HEADER) + 2 :]):
-        cells = [cell.strip() for cell in line.strip('|').split('|')]
-        model = MODEL_CELL.fullmatch(cells[0]) if len(cells) == 3 else None
-        rates = STANDARD_CELL.fullmatch(cells[1]) if model else None
-        if model is None or rates is None:
-            raise RuntimeError(f'Unexpected Fireworks pricing row: {line}')
-        suffix = MODE_SUFFIXES[model['mode']] + ('-us' if model['us'] else '')
-        # https://docs.fireworks.ai/serverless/serverless-modes and /serverless/us-only-serverless name these routers.
-        slug = model['slug'].removesuffix('-us') if model['us'] else model['slug']
-        api_id = f'accounts/fireworks/{"routers" if suffix else "models"}/{slug}{suffix}'
-        if any(existing.id == api_id for existing in models):
-            duplicates.add(api_id)
-            continue
-        input_mtok, cache_read_mtok, output_mtok = (Decimal(rate) for rate in rates.groups())
-        models.append(
-            ModelInfo(
-                id=api_id,
-                name=f'{model["name"]}{model["mode"] or ""}{" US" if model["us"] else ""}',
-                match=ClauseEquals(equals=api_id),
-                prices=ModelPrice(input_mtok=input_mtok, cache_read_mtok=cache_read_mtok, output_mtok=output_mtok),
-                prices_checked=date.today(),
+        with skipping_unreadable_row('Fireworks'):
+            cells = [cell.strip() for cell in line.strip('|').split('|')]
+            model = MODEL_CELL.fullmatch(cells[0]) if len(cells) == 3 else None
+            rates = STANDARD_CELL.fullmatch(cells[1]) if model else None
+            if model is None or rates is None:
+                raise UnreadableRowError(f'Unexpected Fireworks pricing row: {line}')
+            suffix = MODE_SUFFIXES[model['mode']] + ('-us' if model['us'] else '')
+            # https://docs.fireworks.ai/serverless/serverless-modes and /serverless/us-only-serverless
+            # name these routers.
+            slug = model['slug'].removesuffix('-us') if model['us'] else model['slug']
+            api_id = f'accounts/fireworks/{"routers" if suffix else "models"}/{slug}{suffix}'
+            if any(existing.id == api_id for existing in models):
+                duplicates.add(api_id)
+                continue
+            input_mtok, cache_read_mtok, output_mtok = (Decimal(rate) for rate in rates.groups())
+            models.append(
+                ModelInfo(
+                    id=api_id,
+                    name=f'{model["name"]}{model["mode"] or ""}{" US" if model["us"] else ""}',
+                    match=ClauseEquals(equals=api_id),
+                    prices=ModelPrice(input_mtok=input_mtok, cache_read_mtok=cache_read_mtok, output_mtok=output_mtok),
+                    prices_checked=date.today(),
+                )
             )
-        )
     for api_id in sorted(duplicates):
         report_manual_update(
             f'Fireworks: kept {api_id} unchanged, the pricing page lists it more than once; update it by hand'

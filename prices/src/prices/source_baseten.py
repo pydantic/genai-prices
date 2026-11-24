@@ -9,7 +9,7 @@ from pathlib import Path
 import httpx2
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, UnreadableRowError, report_manual_update, skipping_unreadable_row
 from prices.utils import package_dir
 
 # The Markdown export renders this page's model table empty, so the catalog is read from the page's compiled MDX.
@@ -44,9 +44,13 @@ def parse_catalog(page: str) -> list[CatalogModel]:
     models = [
         CatalogModel(id=model_id, name=name, context_window=int(context) * 1000) for name, model_id, context in rows
     ]
-    if len({model.id for model in models}) != len(models):
-        raise RuntimeError('Baseten model catalog contains duplicate model IDs')
-    return models
+    ids = [model.id for model in models]
+    duplicates = sorted({model_id for model_id in ids if ids.count(model_id) > 1})
+    for model_id in duplicates:
+        report_manual_update(
+            f'Baseten: kept {model_id} unchanged, the model catalog lists it more than once; update it by hand'
+        )
+    return [model for model in models if model.id not in duplicates]
 
 
 def parse_pricing_page(page: str) -> list[tuple[str, list[Decimal | None]]]:
@@ -54,7 +58,11 @@ def parse_pricing_page(page: str) -> list[tuple[str, list[Decimal | None]]]:
     table = TOKEN_TABLE.search(page)
     if table is None:
         raise RuntimeError('Baseten token pricing table was not found')
-    return [(name, [_rate(cell) for cell in cells]) for name, *cells in TABLE_ROW.findall(table.group(1))]
+    rows: list[tuple[str, list[Decimal | None]]] = []
+    for name, *cells in TABLE_ROW.findall(table.group(1)):
+        with skipping_unreadable_row('Baseten'):
+            rows.append((name, [_rate(cell) for cell in cells]))
+    return rows
 
 
 def _rate(cell: str) -> Decimal | None:
@@ -62,7 +70,7 @@ def _rate(cell: str) -> Decimal | None:
     if cell == '—':
         return None
     if (price := PRICE_CELL.fullmatch(cell)) is None:
-        raise RuntimeError(f'Unexpected Baseten price: {cell}')
+        raise UnreadableRowError(f'Unexpected Baseten price: {cell}')
     return Decimal(price.group(1))
 
 
@@ -74,20 +82,28 @@ def parse_models(catalog_page: str, pricing_page: str) -> list[ModelInfo]:
     catalog = parse_catalog(catalog_page)
     ids = {_name_key(model.id.rsplit('/', 1)[-1]): model.id for model in catalog}
     prices: dict[str, ModelPrice] = {}
+    duplicates: set[str] = set()
     for name, rates in parse_pricing_page(pricing_page):
         model_id = PRICING_NAME_ALIASES.get(name) or ids.get(_name_key(name))
         if model_id is None or model_id not in ids.values():
             continue
         if model_id in prices:
-            raise RuntimeError(f'Duplicate Baseten pricing model: {model_id}')
+            duplicates.add(model_id)
+            continue
         # The updater keeps a curated rate the source omits, so a rate that became free needs a manual edit.
         if Decimal(0) in rates:
-            raise RuntimeError(f'Baseten lists a $0.00 rate for {model_id}; record the free rate by hand')
+            report_manual_update(f'Baseten lists a $0.00 rate for {model_id}; record the free rate by hand')
+            continue
         input_mtok, cache_read_mtok, output_mtok = rates
         prices[model_id] = ModelPrice(input_mtok=input_mtok, cache_read_mtok=cache_read_mtok, output_mtok=output_mtok)
     # New models often reach the catalog before the pricing page, so price only what both list.
     if unpriced := sorted({model.id for model in catalog} - prices.keys()):
         print(f'Skipping Baseten models without published prices: {unpriced}')
+    for model_id in sorted(duplicates):
+        del prices[model_id]
+        report_manual_update(
+            f'Baseten: kept {model_id} unchanged, the pricing page lists it more than once; update it by hand'
+        )
     return [
         ModelInfo(
             id=model.id,
@@ -108,9 +124,9 @@ def parse_models(catalog_page: str, pricing_page: str) -> list[ModelInfo]:
 
 
 def main(provider_path: Path | None = None) -> None:
-    catalog_response = httpx2.get(CATALOG_URL, timeout=30.0)
+    catalog_response = httpx2.get(CATALOG_URL, timeout=30.0, follow_redirects=True)
     catalog_response.raise_for_status()
-    pricing_response = httpx2.get(PRICING_URL, timeout=30.0)
+    pricing_response = httpx2.get(PRICING_URL, timeout=30.0, follow_redirects=True)
     pricing_response.raise_for_status()
     models = parse_models(catalog_response.text, pricing_response.text)
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/baseten.yml')

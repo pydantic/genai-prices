@@ -70,11 +70,51 @@ def test_parse_pricing_markdown_folds_500k_rows_into_long_context_tiers() -> Non
     )
 
 
-def test_parse_pricing_markdown_rejects_duplicate_models() -> None:
-    markdown = PRICING_MARKDOWN.replace('Grok 4.5 |', 'Grok 4.6 |', 1)
+@pytest.mark.parametrize(
+    ('markdown', 'note', 'model_ids'),
+    [
+        (
+            PRICING_MARKDOWN.replace('Grok 4.5 |', 'Grok 4.6 |', 1),
+            'Cursor: kept grok-4.6 unchanged, the pricing page lists grok-4.6 more than once; update it by hand\n',
+            ['grok-4.7', 'grok-4.6-fast', 'grok-4.5-fast', 'composer-2.5', 'composer-2.5-fast'],
+        ),
+        (
+            PRICING_MARKDOWN.replace(
+                '| Grok 4.6 |', '| Grok 4.7 500k | Cursor | $5 | - | $1 | $15 | Long context |\n| Grok 4.6 |', 1
+            ),
+            'Cursor: kept grok-4.7 unchanged, the pricing page lists grok-4.7-500k more than once; update it by hand\n',
+            ['grok-4.6', 'grok-4.6-fast', 'grok-4.5', 'grok-4.5-fast', 'composer-2.5', 'composer-2.5-fast'],
+        ),
+    ],
+)
+def test_parse_pricing_markdown_reports_a_duplicate_model_and_reads_the_others(
+    markdown: str, note: str, model_ids: list[str], capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_cursor.parse_pricing_markdown(markdown)
 
-    with pytest.raises(RuntimeError, match='Duplicate Cursor model in pricing data: grok-4.6'):
-        source_cursor.parse_pricing_markdown(markdown)
+    assert [model.id for model in models] == model_ids
+    assert capsys.readouterr().out == note
+
+
+def test_parse_pricing_markdown_reports_an_unreadable_price_and_reads_the_others(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    markdown = PRICING_MARKDOWN.replace('| Grok 4.6 | Cursor | $2 |', '| Grok 4.6 | Cursor | Contact sales |')
+
+    models = source_cursor.parse_pricing_markdown(markdown)
+
+    assert [model.id for model in models] == [
+        'grok-4.7',
+        'grok-4.6-fast',
+        'grok-4.5',
+        'grok-4.5-fast',
+        'composer-2.5',
+        'composer-2.5-fast',
+    ]
+    assert capsys.readouterr().out == (
+        "Cursor: skipped a row it cannot read; update it by hand. Unexpected Cursor price 'Contact sales' in row: "
+        '| Grok 4.6 | Cursor | Contact sales | - | $0.5 | $6 | Jointly trained |\n'
+    )
 
 
 def test_cursor_updater_preserves_existing_metadata(tmp_path: Path) -> None:

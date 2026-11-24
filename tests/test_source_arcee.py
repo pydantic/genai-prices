@@ -45,18 +45,48 @@ def test_parse_pricing_markdown_returns_empty_without_text_models() -> None:
     assert source_arcee.parse_pricing_markdown('# Pricing\n') == []
 
 
-def test_parse_pricing_markdown_rejects_duplicate_models() -> None:
+def test_parse_pricing_markdown_reports_a_duplicate_model_and_reads_the_others(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
     duplicate = PRICING_MARKDOWN.replace('deepseek/deepseek-v4-pro', 'deepseek/deepseek-v4-flash-latest')
 
-    with pytest.raises(RuntimeError, match='Duplicate Arcee model in pricing data: deepseek/deepseek-v4-flash-latest'):
-        source_arcee.parse_pricing_markdown(duplicate)
+    models = source_arcee.parse_pricing_markdown(duplicate)
+
+    assert [model.id for model in models] == [
+        'moonshotai/kimi-k3',
+        'thinkingmachines/inkling-small',
+        'trinity-large-thinking',
+        'zai-org/glm-5.2',
+    ]
+    assert capsys.readouterr().out == (
+        'Arcee: kept deepseek/deepseek-v4-flash-latest unchanged, the pricing page lists it more than once; '
+        'update it by hand\n'
+    )
 
 
-def test_parse_pricing_markdown_rejects_invalid_prices() -> None:
-    invalid = PRICING_MARKDOWN.replace('$0.14', 'Contact Sales')
+@pytest.mark.parametrize(
+    ('markdown', 'error'),
+    [
+        (PRICING_MARKDOWN.replace('$0.14', 'Contact Sales'), 'Invalid Arcee price: Contact Sales'),
+        (
+            PRICING_MARKDOWN.replace('<td>$0.028</td>', ''),
+            'Unexpected Arcee pricing row: <td>deepseek/deepseek-v4-flash-latest</td><td>$0.14</td><td>$0.28</td>',
+        ),
+    ],
+)
+def test_parse_pricing_markdown_reports_an_unreadable_row_and_reads_the_others(
+    markdown: str, error: str, capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_arcee.parse_pricing_markdown(markdown)
 
-    with pytest.raises(RuntimeError, match='Invalid Arcee price: Contact Sales'):
-        source_arcee.parse_pricing_markdown(invalid)
+    assert [model.id for model in models] == [
+        'deepseek/deepseek-v4-pro',
+        'moonshotai/kimi-k3',
+        'thinkingmachines/inkling-small',
+        'trinity-large-thinking',
+        'zai-org/glm-5.2',
+    ]
+    assert capsys.readouterr().out == f'Arcee: skipped a row it cannot read; update it by hand. {error}\n'
 
 
 def test_parse_pricing_markdown_accepts_unpriced_units() -> None:

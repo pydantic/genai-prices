@@ -67,13 +67,35 @@ def test_databricks_converts_dbu_rates_to_usd(capsys: pytest.CaptureFixture[str]
     [
         (page_data(clouds=['azure']), 'Expected one Databricks AWS pay-per-token table, found 0'),
         (page_data(TABLE.replace('<tbody>', '<tbody >')), 'Databricks pay-per-token table has no body'),
-        (page_data(TABLE.replace('<td>-</td><td>-</td>', '<td>-</td>')), 'Unexpected Databricks pricing row'),
-        (page_data(TABLE.replace('20.000', '20 DBU')), "Unexpected Databricks DBU rate '20 DBU'"),
     ],
 )
 def test_databricks_rejects_an_unexpected_pricing_table(data: dict[str, Any], error: str) -> None:
     with pytest.raises(RuntimeError, match=error):
         source_databricks.parse_page_data(data)
+
+
+@pytest.mark.parametrize(
+    ('data', 'error', 'model_ids'),
+    [
+        (
+            page_data(TABLE.replace('<td>-</td><td>-</td>', '<td>-</td>')),
+            'Unexpected Databricks pricing row',
+            ['databricks-kimi-k3', 'databricks-glm-5-2', 'databricks-glm-5-3'],
+        ),
+        (
+            page_data(TABLE.replace('20.000', '20 DBU')),
+            "Unexpected Databricks DBU rate '20 DBU'",
+            ['databricks-kimi-k3', 'databricks-bge-large-en'],
+        ),
+    ],
+)
+def test_databricks_reports_an_unreadable_row_and_reads_the_others(
+    data: dict[str, Any], error: str, model_ids: list[str], capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_databricks.parse_page_data(data)
+
+    assert [model.id for model in models] == model_ids
+    assert capsys.readouterr().out.startswith(f'Databricks: skipped a row it cannot read; update it by hand. {error}')
 
 
 @pytest.mark.vcr()

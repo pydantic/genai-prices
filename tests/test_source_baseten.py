@@ -42,11 +42,15 @@ def test_parse_catalog_rejects_missing_table() -> None:
         source_baseten.parse_catalog('# Model APIs')
 
 
-def test_parse_catalog_rejects_duplicate_models() -> None:
-    duplicate = CATALOG_PAGE.replace('openai/gpt-oss-120b', 'zai-org/GLM-4.7')
+def test_parse_catalog_reports_a_duplicate_model_and_reads_the_others(capsys: pytest.CaptureFixture[str]) -> None:
+    duplicate = CATALOG_PAGE.replace(
+        'const rows=[', 'const rows=[{model:`GLM 4.7`,slug:`zai-org/GLM-4.7`,context:200,maxOutput:200},'
+    )
 
-    with pytest.raises(RuntimeError, match='Baseten model catalog contains duplicate model IDs'):
-        source_baseten.parse_catalog(duplicate)
+    assert [model.id for model in source_baseten.parse_catalog(duplicate)] == ['openai/gpt-oss-120b']
+    assert capsys.readouterr().out == (
+        'Baseten: kept zai-org/GLM-4.7 unchanged, the model catalog lists it more than once; update it by hand\n'
+    )
 
 
 def test_parse_models_ignores_rows_outside_the_catalog() -> None:
@@ -55,30 +59,39 @@ def test_parse_models_ignores_rows_outside_the_catalog() -> None:
     assert [model.id for model in source_baseten.parse_models(CATALOG_PAGE, page)] == ['zai-org/GLM-4.7']
 
 
-def test_parse_models_rejects_a_free_rate_on_a_catalog_model() -> None:
-    page = pricing_page(GLM_ROW.replace('$$0.12', '$$0.00'))
+def test_parse_models_reports_a_free_rate_on_a_catalog_model(capsys: pytest.CaptureFixture[str]) -> None:
+    page = pricing_page(GLM_ROW.replace('$$0.12', '$$0.00'), GPT_ROW)
 
-    with pytest.raises(RuntimeError, match='Baseten lists a \\$0.00 rate for zai-org/GLM-4.7'):
-        source_baseten.parse_models(CATALOG_PAGE, page)
-
-
-@pytest.mark.parametrize(
-    ('page', 'error'),
-    [
-        ('<html></html>', 'Baseten token pricing table was not found'),
-        (pricing_page(GLM_ROW.replace('$$2.20', 'Contact us')), 'Unexpected Baseten price: Contact us'),
-    ],
-)
-def test_parse_pricing_page_rejects_an_unexpected_table(page: str, error: str) -> None:
-    with pytest.raises(RuntimeError, match=error):
-        source_baseten.parse_pricing_page(page)
+    assert [model.id for model in source_baseten.parse_models(CATALOG_PAGE, page)] == ['openai/gpt-oss-120b']
+    assert capsys.readouterr().out == (
+        'Baseten lists a $0.00 rate for zai-org/GLM-4.7; record the free rate by hand\n'
+        "Skipping Baseten models without published prices: ['zai-org/GLM-4.7']\n"
+    )
 
 
-def test_parse_models_rejects_duplicate_models() -> None:
-    page = pricing_page(GLM_ROW, GLM_ROW.replace('GLM-4.7', 'GLM 4.7'))
+def test_parse_pricing_page_rejects_a_page_without_the_token_table() -> None:
+    with pytest.raises(RuntimeError, match='Baseten token pricing table was not found'):
+        source_baseten.parse_pricing_page('<html></html>')
 
-    with pytest.raises(RuntimeError, match='Duplicate Baseten pricing model: zai-org/GLM-4.7'):
-        source_baseten.parse_models(CATALOG_PAGE, page)
+
+def test_parse_pricing_page_reports_an_unreadable_row_and_reads_the_others(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    page = pricing_page(GLM_ROW.replace('$$2.20', 'Contact us'), GPT_ROW)
+
+    assert source_baseten.parse_pricing_page(page) == [('GPT OSS 120B', [Decimal('0.10'), None, Decimal('0.50')])]
+    assert capsys.readouterr().out == (
+        'Baseten: skipped a row it cannot read; update it by hand. Unexpected Baseten price: Contact us\n'
+    )
+
+
+def test_parse_models_reports_a_duplicate_model_and_reads_the_others(capsys: pytest.CaptureFixture[str]) -> None:
+    page = pricing_page(GLM_ROW, GLM_ROW.replace('GLM-4.7', 'GLM 4.7'), GPT_ROW)
+
+    assert [model.id for model in source_baseten.parse_models(CATALOG_PAGE, page)] == ['openai/gpt-oss-120b']
+    assert capsys.readouterr().out == (
+        'Baseten: kept zai-org/GLM-4.7 unchanged, the pricing page lists it more than once; update it by hand\n'
+    )
 
 
 def test_parse_models_skips_catalog_models_without_prices(capsys: pytest.CaptureFixture[str]) -> None:

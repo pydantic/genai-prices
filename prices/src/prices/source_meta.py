@@ -6,7 +6,7 @@ from decimal import Decimal
 from pathlib import Path
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, Tier, TieredPrices
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, UnreadableRowError, report_manual_update, skipping_unreadable_row
 from prices.utils import get_markdown, markdown_tables, package_dir
 
 PRICING_URL = 'https://dev.meta.ai/docs/pricing-rate-limits.md'
@@ -26,49 +26,59 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
         raise RuntimeError('Meta pricing page no longer has a model pricing section with a web search rate')
 
     models: list[ModelInfo] = []
+    duplicates: set[str] = set()
     for family in re.split(r'^### ', section.group(1), flags=re.MULTILINE)[1:]:
-        model_line = re.search(r'^Models?: (.+)$', family, flags=re.MULTILINE)
-        tables = [
-            (header, rows)
-            for header, rows in markdown_tables(family)
-            if header == LONG_CONTEXT_HEADER or sorted(header) == sorted(['Usage', STANDARD, CONTRIBUTOR])
-        ]
-        if model_line is None and not tables:
-            continue
-        family_name = family.split('\n', 1)[0]
-        if model_line is None or len(tables) != 1 or sorted(row[0] for row in tables[0][1]) != sorted(ROWS):
-            raise RuntimeError(f'Unexpected Meta pricing layout for {family_name}')
-        header, rows = tables[0]
-        model_ids = re.findall(r'`([^`]+)`', model_line.group(1))
-        if not model_ids:
-            raise RuntimeError(f'No Meta model ids listed for {family_name}')
-        for model_id in model_ids:
-            if any(model.id == model_id for model in models):
-                raise RuntimeError(f'Duplicate Meta model in pricing data: {model_id}')
-            contributor = model_id.endswith('-contributor')
-            if header == LONG_CONTEXT_HEADER:
-                if contributor:
-                    raise RuntimeError(f'Meta lists no Contributor mode long-context prices for {model_id}')
-                rates: dict[str, Decimal | TieredPrices] = {
-                    ROWS[row[0]]: TieredPrices(
-                        base=_price(row[1], model_id),
-                        tiers=[Tier(start=LONG_CONTEXT_START, price=_price(row[2], model_id))],
+        with skipping_unreadable_row('Meta'):
+            model_line = re.search(r'^Models?: (.+)$', family, flags=re.MULTILINE)
+            tables = [
+                (header, rows)
+                for header, rows in markdown_tables(family)
+                if header == LONG_CONTEXT_HEADER or sorted(header) == sorted(['Usage', STANDARD, CONTRIBUTOR])
+            ]
+            if model_line is None and not tables:
+                continue
+            family_name = family.split('\n', 1)[0]
+            if model_line is None or len(tables) != 1 or sorted(row[0] for row in tables[0][1]) != sorted(ROWS):
+                raise UnreadableRowError(f'Unexpected Meta pricing layout for {family_name}')
+            header, rows = tables[0]
+            model_ids = re.findall(r'`([^`]+)`', model_line.group(1))
+            if not model_ids:
+                raise UnreadableRowError(f'No Meta model ids listed for {family_name}')
+            for model_id in model_ids:
+                if any(model.id == model_id for model in models):
+                    duplicates.add(model_id)
+                    continue
+                with skipping_unreadable_row('Meta'):
+                    contributor = model_id.endswith('-contributor')
+                    if header == LONG_CONTEXT_HEADER:
+                        if contributor:
+                            raise UnreadableRowError(
+                                f'Meta lists no Contributor mode long-context prices for {model_id}'
+                            )
+                        rates: dict[str, Decimal | TieredPrices] = {
+                            ROWS[row[0]]: TieredPrices(
+                                base=_price(row[1], model_id),
+                                tiers=[Tier(start=LONG_CONTEXT_START, price=_price(row[2], model_id))],
+                            )
+                            for row in rows
+                        }
+                    else:
+                        column = header.index(CONTRIBUTOR if contributor else STANDARD)
+                        rates = {ROWS[row[0]]: _price(row[column], model_id) for row in rows}
+                    rates['web_searches_kcount'] = Decimal(web_search.group(1))
+                    models.append(
+                        ModelInfo(
+                            id=model_id,
+                            match=ClauseEquals(equals=model_id),
+                            prices=ModelPrice.model_validate(rates),
+                            prices_checked=date.today(),
+                        )
                     )
-                    for row in rows
-                }
-            else:
-                column = header.index(CONTRIBUTOR if contributor else STANDARD)
-                rates = {ROWS[row[0]]: _price(row[column], model_id) for row in rows}
-            rates['web_searches_kcount'] = Decimal(web_search.group(1))
-            models.append(
-                ModelInfo(
-                    id=model_id,
-                    match=ClauseEquals(equals=model_id),
-                    prices=ModelPrice.model_validate(rates),
-                    prices_checked=date.today(),
-                )
-            )
-    return models
+    for model_id in sorted(duplicates):
+        report_manual_update(
+            f'Meta: kept {model_id} unchanged, the pricing page lists it more than once; update it by hand'
+        )
+    return [model for model in models if model.id not in duplicates]
 
 
 def main(provider_path: Path | None = None) -> None:
@@ -85,5 +95,5 @@ def get_meta_prices() -> None:  # pragma: no cover - thin CLI alias for main
 
 def _price(cell: str, model_id: str) -> Decimal:
     if not re.fullmatch(r'\$[0-9]+(?:\.[0-9]+)?', cell):
-        raise RuntimeError(f'Unexpected Meta price for {model_id}: {cell}')
+        raise UnreadableRowError(f'Unexpected Meta price for {model_id}: {cell}')
     return Decimal(cell[1:])

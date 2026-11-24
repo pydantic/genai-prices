@@ -38,17 +38,32 @@ def test_azure_parses_mapped_meters_into_per_million_rates() -> None:
     assert models[0].prices_checked == date.today()
 
 
+SKIPPED = 'Azure: skipped a row it cannot read; update it by hand. '
+NO_ADA_METER = f"{SKIPPED}Azure retail prices have no meter 'embedding-ada-glbl Tokens' for ada\n"
+
+
 @pytest.mark.parametrize(
-    ('items', 'error'),
+    ('items', 'notes'),
     [
-        (_items()[1:], "no meter 'embedding-ada-glbl Tokens' for ada"),
-        ([*_items(), _items()[0]], "meter 'embedding-ada-glbl Tokens' more than once"),
-        ([{**_items()[0], 'unitOfMeasure': '1/Hour'}, *_items()[1:]], "Unexpected Azure unit '1/Hour'"),
+        (_items()[1:], NO_ADA_METER),
+        (
+            [*_items(), _items()[0]],
+            "Azure: kept ada unchanged, the retail prices list meter 'embedding-ada-glbl Tokens' more than once; "
+            'update it by hand\n',
+        ),
+        (
+            [{**_items()[0], 'unitOfMeasure': '1/Hour'}, *_items()[1:]],
+            f"{SKIPPED}Unexpected Azure unit '1/Hour' for meter 'embedding-ada-glbl Tokens'\n{NO_ADA_METER}",
+        ),
     ],
 )
-def test_azure_rejects_unexpected_retail_prices(items: list[dict[str, Any]], error: str) -> None:
-    with pytest.raises(RuntimeError, match=error):
-        source_azure.parse_retail_prices(items)
+def test_azure_reports_an_unreadable_meter_and_reads_the_other_models(
+    items: list[dict[str, Any]], notes: str, capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_azure.parse_retail_prices(items)
+
+    assert [model.id for model in models] == list(source_azure.METERS)[1:]
+    assert capsys.readouterr().out == notes
 
 
 @pytest.mark.vcr()

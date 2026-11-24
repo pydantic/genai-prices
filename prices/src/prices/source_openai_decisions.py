@@ -6,7 +6,7 @@ from decimal import Decimal
 from pathlib import Path
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, Tier, TieredPrices
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, UnreadableRowError, skipping_unreadable_row
 from prices.utils import get_markdown, package_dir
 
 MODEL_URL = 'https://developers.openai.com/api/docs/models/{model_id}.md'
@@ -18,7 +18,9 @@ def parse_model_markdown(model_id: str, markdown: str) -> ModelInfo:
     rate = re.search(r'^\| Input \| \$([0-9]+(?:\.[0-9]+)?) \| 1M tokens \|$', markdown, flags=re.MULTILINE)
     tier = re.search(r'more than ([0-9]+)K input tokens are priced at ([0-9]+(?:\.[0-9]+)?)x input', markdown)
     if rate is None or tier is None:
-        raise RuntimeError(f'OpenAI {model_id} page has no input rate or long-context pricing in the expected shape')
+        raise UnreadableRowError(
+            f'OpenAI {model_id} page has no input rate or long-context pricing in the expected shape'
+        )
     base = Decimal(rate.group(1))
     return ModelInfo(
         id=model_id,
@@ -34,10 +36,10 @@ def parse_model_markdown(model_id: str, markdown: str) -> ModelInfo:
 
 def main(provider_path: Path | None = None) -> None:
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/openai_decisions.yml')
-    models = [
-        parse_model_markdown(model.id, get_markdown(MODEL_URL.format(model_id=model.id)))
-        for model in provider_yaml.provider.models
-    ]
+    models: list[ModelInfo] = []
+    for model in provider_yaml.provider.models:
+        with skipping_unreadable_row('OpenAI Decisions'):
+            models.append(parse_model_markdown(model.id, get_markdown(MODEL_URL.format(model_id=model.id))))
     added, updated = provider_yaml.upsert_models(models, source='OpenAI Decisions', min_count=MIN_MODEL_COUNT)
     print(f'OpenAI Decisions prices updated: {added} added, {updated} updated')
 

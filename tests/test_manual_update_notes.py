@@ -52,18 +52,33 @@ def test_skipping_unreadable_row_lets_page_level_errors_fail_the_importer() -> N
         raise RuntimeError('Source pricing page has no pricing table')
 
 
+def printed_note_lines(source: str) -> list[int]:
+    """Lines that `print` a note asking a person to update something by hand."""
+    return [
+        node.lineno
+        for node in ast.walk(ast.parse(source))
+        if isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Name)
+        and node.func.id == 'print'
+        and any(
+            isinstance(part, ast.Constant) and isinstance(part.value, str) and 'by hand' in part.value
+            for arg in node.args
+            for part in ast.walk(arg)
+        )
+    ]
+
+
 def test_importer_notes_go_through_report_manual_update() -> None:
     # The price update collects notes from `report_manual_update` only, so a printed note never reaches anyone.
-    printed_notes: list[str] = []
-    for path in sorted(Path(update.__file__).parent.glob('*.py')):
-        for node in ast.walk(ast.parse(path.read_text())):
-            if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == 'print':
-                text = ''.join(
-                    part.value
-                    for arg in node.args
-                    for part in ast.walk(arg)
-                    if isinstance(part, ast.Constant) and isinstance(part.value, str)
-                )
-                if 'by hand' in text:
-                    printed_notes.append(f'{path.name}:{node.lineno}')
+    printed_notes = [
+        f'{path.name}:{line}'
+        for path in sorted(Path(update.__file__).parent.glob('*.py'))
+        for line in printed_note_lines(path.read_text())
+    ]
     assert not printed_notes, f'Report these with report_manual_update instead of print: {", ".join(printed_notes)}'
+
+
+def test_printed_note_lines_finds_a_printed_manual_update_note() -> None:
+    source = "print('Source: done')\nprint(f'Source: kept {model} unchanged; update it by hand')\n"
+
+    assert printed_note_lines(source) == [2]

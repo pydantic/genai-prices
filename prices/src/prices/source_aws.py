@@ -148,7 +148,7 @@ def parse_price_lists(offers: dict[str, dict[str, Any]]) -> list[ModelInfo]:
 def main(provider_path: Path | None = None) -> None:
     offers: dict[str, dict[str, Any]] = {}
     for offer_code in MODEL_IDS:
-        response = httpx2.get(OFFER_URL.format(offer=offer_code), timeout=30.0)
+        response = httpx2.get(OFFER_URL.format(offer=offer_code), timeout=30.0, follow_redirects=True)
         response.raise_for_status()
         offers[offer_code] = response.json()
     models = parse_price_lists(offers)

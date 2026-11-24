@@ -46,29 +46,59 @@ def test_xai_long_context_rows_become_tiers_billed_from_the_threshold() -> None:
     )
 
 
+def test_xai_rejects_a_page_without_the_text_pricing_table() -> None:
+    with pytest.raises(RuntimeError, match='xAI pricing page has no text pricing table'):
+        source_xai.parse_pricing_markdown('# Pricing\n')
+
+
 @pytest.mark.parametrize(
-    ('markdown', 'error'),
+    ('markdown', 'error', 'model_ids'),
     [
-        ('# Pricing\n', 'xAI pricing page has no text pricing table'),
-        (PRICING_MARKDOWN.replace('| grok-mini | 1.5M |', '| grok mini | 1.5M |'), 'Unexpected xAI pricing row'),
-        (PRICING_MARKDOWN.replace('| $0.05 | $0.50 |', '| $0.05 |'), 'Unexpected xAI pricing row'),
-        (PRICING_MARKDOWN.replace('$0.20', 'N/A'), "Unexpected xAI price 'N/A'"),
-        (PRICING_MARKDOWN.replace('1.5M', '1.5B'), "Unexpected xAI context window '1.5B'"),
-        (PRICING_MARKDOWN.replace('grok-mini', 'grok-4.7'), 'Duplicate xAI pricing row'),
-        (PRICING_MARKDOWN.replace('(≥ 200k', '(≥ 100k'), 'do not pair a base and a long-context rate'),
+        (
+            PRICING_MARKDOWN.replace('| grok-mini | 1.5M |', '| grok mini | 1.5M |'),
+            'Unexpected xAI pricing row: | grok mini |',
+            ['grok-4.7'],
+        ),
+        (
+            PRICING_MARKDOWN.replace('| $0.05 | $0.50 |', '| $0.05 |'),
+            'Unexpected xAI pricing row: | grok-mini |',
+            ['grok-4.7'],
+        ),
+        (PRICING_MARKDOWN.replace('$0.20', 'N/A'), "Unexpected xAI price 'N/A'", ['grok-4.7']),
+        (PRICING_MARKDOWN.replace('1.5M', '1.5B'), "Unexpected xAI context window '1.5B'", ['grok-4.7']),
+        (
+            PRICING_MARKDOWN.replace('(≥ 200k', '(≥ 100k'),
+            'xAI pricing rows for grok-4.7 do not pair a base and a long-context rate',
+            ['grok-mini'],
+        ),
         (
             PRICING_MARKDOWN.replace('grok-4.7 (< 200k prompt tokens)', 'grok-4.6 (< 200k prompt tokens)'),
-            'do not pair a base and a long-context rate',
+            'xAI pricing rows for grok-4.6 do not pair a base and a long-context rate',
+            ['grok-mini'],
         ),
         (
             f'{source_xai.TABLE_HEADER}\n| --- |\n| grok-x (≥ 200k prompt tokens) | 500k | $4.00 | $1.00 | $12.00 |\n',
             'xAI long-context rows without a base row: grok-x',
+            [],
         ),
     ],
 )
-def test_xai_rejects_an_unexpected_pricing_table(markdown: str, error: str) -> None:
-    with pytest.raises(RuntimeError, match=error):
-        source_xai.parse_pricing_markdown(markdown)
+def test_xai_reports_an_unreadable_row_and_reads_the_others(
+    markdown: str, error: str, model_ids: list[str], capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_xai.parse_pricing_markdown(markdown)
+
+    assert [model.id for model in models] == model_ids
+    assert capsys.readouterr().out.startswith(f'xAI: skipped a row it cannot read; update it by hand. {error}')
+
+
+def test_xai_keeps_a_duplicated_model_unchanged_and_reports_it(capsys: pytest.CaptureFixture[str]) -> None:
+    models = source_xai.parse_pricing_markdown(PRICING_MARKDOWN.replace('(≥ 200k', '(< 200k'))
+
+    assert [model.id for model in models] == ['grok-mini']
+    assert capsys.readouterr().out == (
+        'xAI: kept grok-4.7 unchanged, the pricing page lists it more than once; update it by hand\n'
+    )
 
 
 def test_upsert_prefers_the_record_id_and_keeps_its_rates_over_a_differing_alias(

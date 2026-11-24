@@ -7,7 +7,7 @@ from itertools import takewhile
 from pathlib import Path
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, Tier, TieredPrices
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, UnreadableRowError, report_manual_update, skipping_unreadable_row
 from prices.utils import get_markdown, package_dir
 
 PRICING_URL = 'https://docs.x.ai/developers/pricing.md'
@@ -24,46 +24,56 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
 
     base_rows: dict[str, tuple[int | None, int, list[Decimal]]] = {}
     long_context_rows: dict[str, tuple[int, list[Decimal]]] = {}
+    duplicates: set[str] = set()
     for line in rows:
-        cells = [cell.strip() for cell in line.strip('|').split('|')]
-        match = MODEL_CELL.fullmatch(cells[0]) if len(cells) == 5 else None
-        if match is None:
-            raise RuntimeError(f'Unexpected xAI pricing row: {line}')
-        model_id = match['id']
-        threshold = int(match['threshold']) * 1000 if match['threshold'] else None
-        rates = [_dollars(cell, line) for cell in cells[2:]]
-        if model_id in (long_context_rows if match['op'] == '≥' else base_rows):
-            raise RuntimeError(f'Duplicate xAI pricing row: {line}')
-        if match['op'] == '≥':
-            assert threshold is not None
-            long_context_rows[model_id] = (threshold, rates)
-        else:
-            base_rows[model_id] = (threshold, _context(cells[1], line), rates)
+        with skipping_unreadable_row('xAI'):
+            cells = [cell.strip() for cell in line.strip('|').split('|')]
+            match = MODEL_CELL.fullmatch(cells[0]) if len(cells) == 5 else None
+            if match is None:
+                raise UnreadableRowError(f'Unexpected xAI pricing row: {line}')
+            model_id = match['id']
+            threshold = int(match['threshold']) * 1000 if match['threshold'] else None
+            rates = [_dollars(cell, line) for cell in cells[2:]]
+            if model_id in (long_context_rows if match['op'] == '≥' else base_rows):
+                duplicates.add(model_id)
+            elif match['op'] == '≥':
+                assert threshold is not None
+                long_context_rows[model_id] = (threshold, rates)
+            else:
+                base_rows[model_id] = (threshold, _context(cells[1], line), rates)
+    for model_id in sorted(duplicates):
+        base_rows.pop(model_id, None)
+        long_context_rows.pop(model_id, None)
+        report_manual_update(
+            f'xAI: kept {model_id} unchanged, the pricing page lists it more than once; update it by hand'
+        )
 
     models: list[ModelInfo] = []
     for model_id, (threshold, context_window, rates) in base_rows.items():
-        long_context = long_context_rows.pop(model_id, None)
-        if (long_context[0] if long_context else None) != threshold:
-            raise RuntimeError(f'xAI pricing rows for {model_id} do not pair a base and a long-context rate')
-        prices: list[Decimal | TieredPrices] = list(rates)
-        if long_context:
-            # xAI bills a prompt of exactly the threshold at the long-context rate; tiers apply above `start`.
-            start = long_context[0] - 1
-            prices = [
-                TieredPrices(base=base, tiers=[Tier(start=start, price=price)])
-                for base, price in zip(rates, long_context[1])
-            ]
-        models.append(
-            ModelInfo(
-                id=model_id,
-                match=ClauseEquals(equals=model_id),
-                context_window=context_window,
-                prices=ModelPrice(input_mtok=prices[0], cache_read_mtok=prices[1], output_mtok=prices[2]),
-                prices_checked=date.today(),
+        with skipping_unreadable_row('xAI'):
+            long_context = long_context_rows.pop(model_id, None)
+            if (long_context[0] if long_context else None) != threshold:
+                raise UnreadableRowError(f'xAI pricing rows for {model_id} do not pair a base and a long-context rate')
+            prices: list[Decimal | TieredPrices] = list(rates)
+            if long_context:
+                # xAI bills a prompt of exactly the threshold at the long-context rate; tiers apply above `start`.
+                start = long_context[0] - 1
+                prices = [
+                    TieredPrices(base=base, tiers=[Tier(start=start, price=price)])
+                    for base, price in zip(rates, long_context[1])
+                ]
+            models.append(
+                ModelInfo(
+                    id=model_id,
+                    match=ClauseEquals(equals=model_id),
+                    context_window=context_window,
+                    prices=ModelPrice(input_mtok=prices[0], cache_read_mtok=prices[1], output_mtok=prices[2]),
+                    prices_checked=date.today(),
+                )
             )
-        )
-    if long_context_rows:
-        raise RuntimeError(f'xAI long-context rows without a base row: {", ".join(long_context_rows)}')
+    with skipping_unreadable_row('xAI'):
+        if long_context_rows:
+            raise UnreadableRowError(f'xAI long-context rows without a base row: {", ".join(long_context_rows)}')
     return models
 
 
@@ -81,11 +91,11 @@ def get_xai_prices() -> None:  # pragma: no cover - thin CLI alias for main
 
 def _dollars(cell: str, line: str) -> Decimal:
     if not (match := re.fullmatch(r'\$(\d+(?:\.\d+)?)', cell)):
-        raise RuntimeError(f'Unexpected xAI price {cell!r} in row: {line}')
+        raise UnreadableRowError(f'Unexpected xAI price {cell!r} in row: {line}')
     return Decimal(match[1])
 
 
 def _context(cell: str, line: str) -> int:
     if not (match := re.fullmatch(r'(\d+(?:\.\d+)?)([kM])', cell)):
-        raise RuntimeError(f'Unexpected xAI context window {cell!r} in row: {line}')
+        raise UnreadableRowError(f'Unexpected xAI context window {cell!r} in row: {line}')
     return int(Decimal(match[1]) * (1000 if match[2] == 'k' else 1_000_000))

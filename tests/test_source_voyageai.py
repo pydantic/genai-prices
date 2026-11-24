@@ -54,14 +54,22 @@ def test_voyageai_rejects_a_missing_section() -> None:
         source_voyageai.parse_pricing_markdown(PRICING_MARKDOWN.replace('Older models', 'Legacy models'))
 
 
-def test_voyageai_rejects_an_unparseable_price() -> None:
-    with pytest.raises(RuntimeError, match='Unexpected Voyage pricing row'):
-        source_voyageai.parse_pricing_markdown(PRICING_MARKDOWN.replace('$0.06 ', 'Contact us'))
+def test_voyageai_reports_an_unparseable_price_and_reads_the_other_rows(capsys: pytest.CaptureFixture[str]) -> None:
+    models = source_voyageai.parse_pricing_markdown(PRICING_MARKDOWN.replace('$0.06 ', 'Contact us'))
+
+    assert [model.id for model in models] == ['voyage-law-2', 'voyage-code-2', 'voyage-3.5-lite']
+    assert capsys.readouterr().out.startswith(
+        "Voyage AI: skipped a row it cannot read; update it by hand. Unexpected Voyage pricing row: ['`voyage-4`'"
+    )
 
 
-def test_voyageai_rejects_duplicate_models() -> None:
-    with pytest.raises(RuntimeError, match='Duplicate Voyage model in pricing data: voyage-4'):
-        source_voyageai.parse_pricing_markdown(PRICING_MARKDOWN.replace('`voyage-3.5-lite`', '`voyage-4`'))
+def test_voyageai_keeps_a_duplicated_model_unchanged_and_reports_it(capsys: pytest.CaptureFixture[str]) -> None:
+    models = source_voyageai.parse_pricing_markdown(PRICING_MARKDOWN.replace('`voyage-3.5-lite`', '`voyage-4`'))
+
+    assert [model.id for model in models] == ['voyage-law-2', 'voyage-code-2']
+    assert capsys.readouterr().out == (
+        'Voyage AI: kept voyage-4 unchanged, the pricing page lists it more than once; update it by hand\n'
+    )
 
 
 @pytest.mark.vcr()
