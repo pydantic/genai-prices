@@ -84,7 +84,7 @@ def _standard_tables(markdown: str) -> list[tuple[int, list[tuple[bool, str | No
     tables: list[tuple[int, list[tuple[bool, str | None]], list[list[str]]]] = []
     for before, heading, section in zip(sections[::2], sections[1::2], sections[2::2]):
         tab = next((line.strip() for line in reversed(before.splitlines()) if line.strip()), '')
-        if tab in NON_STANDARD_TABS or heading.partition(' ')[0] in NON_STANDARD_TABS:
+        if tab in NON_STANDARD_TABS or (heading.split() or [''])[0] in NON_STANDARD_TABS:
             continue
         for header, rows in markdown_tables(section):
             if 'Model' in header[:2] and (columns := _columns(header[header.index('Model') + 1 :])):
