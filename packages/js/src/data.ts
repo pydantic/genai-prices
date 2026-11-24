@@ -9801,6 +9801,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'hy4-flash',
+        name: 'HY4 Flash',
+        match: {
+          equals: 'accounts/fireworks/models/hy4-flash',
+        },
+        prices: {
+          input_mtok: 0.07,
+          cache_read_mtok: 0.003,
+          output_mtok: 0.281,
+        },
+      },
+      {
         id: 'inkling',
         name: 'Inkling',
         description: "Thinking Machines Lab's open-weights multimodal Mixture-of-Experts model, trained across text, image, and audio.",

@@ -5784,6 +5784,14 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='hy4-flash',
+                match=ClauseEquals(equals='accounts/fireworks/models/hy4-flash'),
+                name='HY4 Flash',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.07'), cache_read_mtok=Decimal('0.003'), output_mtok=Decimal('0.281')
+                ),
+            ),
+            ModelInfo(
                 id='inkling',
                 match=ClauseEquals(equals='accounts/fireworks/models/inkling'),
                 name='Inkling',

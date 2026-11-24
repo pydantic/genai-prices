@@ -48,7 +48,7 @@ The following providers are currently supported:
 - [Deepseek](prices/providers/deepseek.yml) - 8 models
 - [Doubleword](prices/providers/doubleword.yml) - 29 models
 - [ElevenLabs](prices/providers/elevenlabs.yml) - 2 models
-- [Fireworks](prices/providers/fireworks.yml) - 52 models
+- [Fireworks](prices/providers/fireworks.yml) - 53 models
 - [GitHub Copilot](prices/providers/github_copilot.yml) - 51 models
 - [Google](prices/providers/google.yml) - 73 models
 - [Groq](prices/providers/groq.yml) - 37 models
