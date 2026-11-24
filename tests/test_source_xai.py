@@ -56,48 +56,61 @@ SKIPPED_MINI = 'xAI: skipped a row it cannot read for grok-mini; update it by ha
 
 
 @pytest.mark.parametrize(
-    ('markdown', 'note', 'model_ids'),
+    ('markdown', 'notes', 'model_ids'),
     [
         (
             PRICING_MARKDOWN.replace('| grok-mini | 1.5M |', '| grok mini | 1.5M |'),
-            f'{SKIPPED}Unexpected xAI pricing row: | grok mini |',
+            [f'{SKIPPED}Unexpected xAI pricing row: | grok mini | 1.5M | $0.20 | $0.05 | $0.50 |'],
             ['grok-4.7'],
         ),
         (
             PRICING_MARKDOWN.replace('| $0.05 | $0.50 |', '| $0.05 |'),
-            f'{SKIPPED}Unexpected xAI pricing row: | grok-mini |',
+            [f'{SKIPPED_MINI}Unexpected xAI pricing row: | grok-mini | 1.5M | $0.20 | $0.05 |'],
             ['grok-4.7'],
         ),
-        (PRICING_MARKDOWN.replace('$0.20', 'N/A'), f"{SKIPPED_MINI}Unexpected xAI price 'N/A'", ['grok-4.7']),
+        (
+            PRICING_MARKDOWN.replace('$0.20', 'N/A'),
+            [f"{SKIPPED_MINI}Unexpected xAI price 'N/A' in row: | grok-mini | 1.5M | N/A | $0.05 | $0.50 |"],
+            ['grok-4.7'],
+        ),
         (
             PRICING_MARKDOWN.replace('1.5M', '1.5B'),
-            f"{SKIPPED_MINI}Unexpected xAI context window '1.5B'",
+            [
+                f"{SKIPPED_MINI}Unexpected xAI context window '1.5B' in row: | grok-mini | 1.5B | $0.20 | $0.05 | $0.50 |"
+            ],
             ['grok-4.7'],
         ),
         (
             PRICING_MARKDOWN.replace('(≥ 200k', '(≥ 100k'),
-            f'{SKIPPED}xAI pricing rows for grok-4.7 do not pair a base and a long-context rate',
+            [
+                'xAI: skipped a row it cannot read for grok-4.7; update it by hand. '
+                'xAI pricing rows for grok-4.7 do not pair a base and a long-context rate'
+            ],
             ['grok-mini'],
         ),
         (
             PRICING_MARKDOWN.replace('grok-4.7 (< 200k prompt tokens)', 'grok-4.6 (< 200k prompt tokens)'),
-            f'{SKIPPED}xAI pricing rows for grok-4.6 do not pair a base and a long-context rate',
+            [
+                'xAI: skipped a row it cannot read for grok-4.6; update it by hand. '
+                'xAI pricing rows for grok-4.6 do not pair a base and a long-context rate',
+                f'{SKIPPED}xAI long-context rows without a base row: grok-4.7',
+            ],
             ['grok-mini'],
         ),
         (
             f'{source_xai.TABLE_HEADER}\n| --- |\n| grok-x (≥ 200k prompt tokens) | 500k | $4.00 | $1.00 | $12.00 |\n',
-            f'{SKIPPED}xAI long-context rows without a base row: grok-x',
+            [f'{SKIPPED}xAI long-context rows without a base row: grok-x'],
             [],
         ),
     ],
 )
 def test_xai_reports_an_unreadable_row_and_reads_the_others(
-    markdown: str, note: str, model_ids: list[str], capsys: pytest.CaptureFixture[str]
+    markdown: str, notes: list[str], model_ids: list[str], capsys: pytest.CaptureFixture[str]
 ) -> None:
     models = source_xai.parse_pricing_markdown(markdown)
 
     assert [model.id for model in models] == model_ids
-    assert capsys.readouterr().out.startswith(note)
+    assert capsys.readouterr().out == ''.join(f'{note}\n' for note in notes)
 
 
 GROK_4_7_BASE = '| grok-4.7 (< 200k prompt tokens) | 500k | $2.00 |'

@@ -64,6 +64,9 @@ def test_parse_pricing_markdown_reports_a_duplicate_model_and_reads_the_others(
     )
 
 
+SKIPPED_FLASH = 'Arcee: skipped a row it cannot read for deepseek/deepseek-v4-flash-latest; update it by hand. '
+
+
 @pytest.mark.parametrize(
     ('markdown', 'error'),
     [
@@ -86,7 +89,43 @@ def test_parse_pricing_markdown_reports_an_unreadable_row_and_reads_the_others(
         'trinity-large-thinking',
         'zai-org/glm-5.2',
     ]
-    assert capsys.readouterr().out == f'Arcee: skipped a row it cannot read; update it by hand. {error}\n'
+    assert capsys.readouterr().out == f'{SKIPPED_FLASH}{error}\n'
+
+
+@pytest.mark.parametrize(
+    ('markdown', 'notes'),
+    [
+        (
+            # A readable later copy of the model's row does not price it.
+            PRICING_MARKDOWN.replace('$0.14', 'Contact Sales').replace(
+                'deepseek/deepseek-v4-pro', 'deepseek/deepseek-v4-flash-latest'
+            ),
+            f'{SKIPPED_FLASH}Invalid Arcee price: Contact Sales\n'
+            'Arcee: kept deepseek/deepseek-v4-flash-latest unchanged, the pricing page lists it more than once; '
+            'update it by hand\n',
+        ),
+        (
+            # Nor does a readable earlier copy.
+            PRICING_MARKDOWN.replace(
+                '<td>deepseek/deepseek-v4-pro</td><td>$1.74</td>', '<td>deepseek/deepseek-v4-flash-latest</td>'
+            ),
+            f'{SKIPPED_FLASH}Unexpected Arcee pricing row: '
+            '<td>deepseek/deepseek-v4-flash-latest</td><td>$3.48</td><td>$0.20</td>\n',
+        ),
+    ],
+)
+def test_parse_pricing_markdown_keeps_a_model_with_an_unreadable_row_unchanged(
+    markdown: str, notes: str, capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_arcee.parse_pricing_markdown(markdown)
+
+    assert [model.id for model in models] == [
+        'moonshotai/kimi-k3',
+        'thinkingmachines/inkling-small',
+        'trinity-large-thinking',
+        'zai-org/glm-5.2',
+    ]
+    assert capsys.readouterr().out == notes
 
 
 def test_parse_pricing_markdown_accepts_unpriced_units() -> None:

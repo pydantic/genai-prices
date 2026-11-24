@@ -48,14 +48,16 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     for line in rows:
         with skipping_unreadable_row('Anthropic', unreadable) as row:
             cells = _cells(line)
-            match = MODEL_CELL.fullmatch(cells[0]) if len(cells) == len(TABLE_HEADER) else None
-            if match is None:
+            if not (match := MODEL_CELL.fullmatch(cells[0])):
+                raise UnreadableRowError(f'Unexpected Anthropic pricing row: {line}')
+            model_id = re.sub(r'[ .]', '-', match['name'].lower())
+            model_id = MODEL_IDS.get(model_id, model_id)
+            # Named before the cell count check, so a malformed row of a model still holds the model.
+            row.model_ids.add(model_id)
+            if len(cells) != len(TABLE_HEADER):
                 raise UnreadableRowError(f'Unexpected Anthropic pricing row: {line}')
             if match['note'] and match['note'].startswith('[limited availability'):
                 continue
-            model_id = re.sub(r'[ .]', '-', match['name'].lower())
-            model_id = MODEL_IDS.get(model_id, model_id)
-            row.model_ids.add(model_id)
             threshold = int(match['threshold'].replace(',', '')) if match['threshold'] else None
             rates = [_dollars(cell, line) for cell in cells[1:]]
             target = long_context_rows if match['op'] == 'over' else base_rows
@@ -78,7 +80,8 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
 
     models: list[ModelInfo] = []
     for model_id, (threshold, rates) in base_rows.items():
-        with skipping_unreadable_row('Anthropic'):
+        with skipping_unreadable_row('Anthropic') as row:
+            row.model_ids.add(model_id)
             long_context = long_context_rows.pop(model_id, None)
             if (long_context[0] if long_context else None) != threshold:
                 raise UnreadableRowError(

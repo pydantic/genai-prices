@@ -29,11 +29,13 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     for line in rows:
         with skipping_unreadable_row('xAI', unreadable) as row:
             cells = [cell.strip() for cell in line.strip('|').split('|')]
-            match = MODEL_CELL.fullmatch(cells[0]) if len(cells) == 5 else None
-            if match is None:
+            if not (match := MODEL_CELL.fullmatch(cells[0])):
                 raise UnreadableRowError(f'Unexpected xAI pricing row: {line}')
             model_id = match['id']
+            # Named before the cell count check, so a malformed row of a model still holds the model.
             row.model_ids.add(model_id)
+            if len(cells) != 5:
+                raise UnreadableRowError(f'Unexpected xAI pricing row: {line}')
             threshold = int(match['threshold']) * 1000 if match['threshold'] else None
             rates = [_dollars(cell, line) for cell in cells[2:]]
             if model_id in (long_context_rows if match['op'] == '≥' else base_rows):
@@ -54,7 +56,8 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
 
     models: list[ModelInfo] = []
     for model_id, (threshold, context_window, rates) in base_rows.items():
-        with skipping_unreadable_row('xAI'):
+        with skipping_unreadable_row('xAI') as row:
+            row.model_ids.add(model_id)
             long_context = long_context_rows.pop(model_id, None)
             if (long_context[0] if long_context else None) != threshold:
                 raise UnreadableRowError(f'xAI pricing rows for {model_id} do not pair a base and a long-context rate')

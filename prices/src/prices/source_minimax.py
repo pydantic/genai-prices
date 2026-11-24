@@ -24,9 +24,10 @@ Rates = dict[str, Decimal]
 MARKUP = re.compile(r'<[^>]+>|\[([^]]+)]\([^)]*\)')
 
 
-def parse_pricing_markdown(markdown: str, unreadable: set[str] | None = None) -> list[ModelInfo]:
-    """The Standard tier's models. A model with a row this cannot read is left out and added to `unreadable`."""
-    unreadable = set[str]() if unreadable is None else unreadable
+def parse_pricing_markdown(markdown: str, excluded: set[str] | None = None) -> list[ModelInfo]:
+    """The Standard tier's models. A model this leaves out, because a row of it cannot be read or the page lists it
+    more than once, is added to `excluded`."""
+    excluded = set[str]() if excluded is None else excluded
     section = re.search(r'^## LLM\s*$(.*?)(?=^## |\Z)', markdown, flags=re.MULTILINE | re.DOTALL)
     if section is None:
         raise RuntimeError('MiniMax pricing page has no LLM section')
@@ -48,7 +49,7 @@ def parse_pricing_markdown(markdown: str, unreadable: set[str] | None = None) ->
         ):
             raise RuntimeError(f'Unexpected MiniMax LLM pricing columns: {header}')
         for row in rows:
-            with skipping_unreadable_row('MiniMax', unreadable) as source_row:
+            with skipping_unreadable_row('MiniMax', excluded) as source_row:
                 if not (model := re.fullmatch(r'\*\*([A-Za-z0-9.-]+)\*\*(.*)', row[0])):
                     raise UnreadableRowError(f'Unexpected MiniMax model cell: {row[0]}')
                 name, label = model.groups()
@@ -69,13 +70,14 @@ def parse_pricing_markdown(markdown: str, unreadable: set[str] | None = None) ->
         report_manual_update(
             f'MiniMax: kept {name} unchanged, the pricing page lists it more than once; update it by hand'
         )
+    excluded |= duplicates
     # A model with an unreadable row keeps its prices, rather than taking them from its other rows alone.
-    unchanged = duplicates | unreadable
-    models = [_model(name, ModelPrice(**rates)) for name, rates in flat.items() if name not in unchanged]
+    models = [_model(name, ModelPrice(**rates)) for name, rates in flat.items() if name not in excluded]
     for name, bands in tiered.items():
-        if name in unchanged:
+        if name in excluded:
             continue
-        with skipping_unreadable_row('MiniMax'):
+        with skipping_unreadable_row('MiniMax', excluded) as source_row:
+            source_row.model_ids.add(name)
             if [(sign, start) for sign, start, _ in bands] != [('≤', bands[0][1]), ('>', bands[0][1])]:
                 raise UnreadableRowError(f'Unexpected MiniMax context bands for {name}')
             (_, start, base), (_, _, above) = bands
@@ -102,12 +104,12 @@ def parse_models_markdown(markdown: str) -> dict[str, tuple[int | None, str]]:
 
 def main(provider_path: Path | None = None) -> None:
     details = parse_models_markdown(get_markdown(MODELS_URL))
-    unreadable: set[str] = set()
+    excluded: set[str] = set()
     models = [
         model.model_copy(update={'context_window': details[model.id][0], 'description': details[model.id][1]})
         if model.id in details
         else model
-        for model in parse_pricing_markdown(get_markdown(PRICING_URL), unreadable)
+        for model in parse_pricing_markdown(get_markdown(PRICING_URL), excluded)
     ]
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/minimax.yml')
     # Several legacy page rows share one YAML model; they must agree or the shared entry would be mispriced.
@@ -126,11 +128,11 @@ def main(provider_path: Path | None = None) -> None:
         report_manual_update(
             f'MiniMax: kept {model_id} unchanged, the pricing page lists it at conflicting rates; update it by hand'
         )
-    # A shared entry also keeps its prices when one of its page rows is unreadable.
-    unreadable_entries = {
-        existing.id for name in unreadable if (existing := provider_yaml.provider.find_model(name)) is not None
+    # A shared entry also keeps its prices when the parser left out one of its models.
+    excluded_entries = {
+        existing.id for name in excluded if (existing := provider_yaml.provider.find_model(name)) is not None
     }
-    models = [model for model in models if tracked.get(model.id) not in conflicting | unreadable_entries]
+    models = [model for model in models if tracked.get(model.id) not in conflicting | excluded_entries]
     added, updated = provider_yaml.upsert_models(models, source='MiniMax', min_count=MIN_MODEL_COUNT)
     print(f'MiniMax prices updated: {added} added, {updated} updated')
 

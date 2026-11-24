@@ -7,7 +7,7 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import date
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
 from io import StringIO
 from operator import itemgetter
 from pathlib import Path
@@ -67,19 +67,22 @@ class SourceRow:
 def skipping_unreadable_row(source: str, unreadable: set[str] | None = None) -> Iterator[SourceRow]:
     """Skip a source row the importer cannot read and report it for manual review, instead of failing the importer.
 
-    Wrap the code that reads one row. An `UnreadableRowError`, or a `ValidationError` or `InvalidOperation` from the
-    row's values, skips only that row; `upsert_models` still fails when too few rows were readable. When a model can
+    Wrap the code that reads one row. An `UnreadableRowError`, or any `ValueError`, `LookupError`, `TypeError` or
+    `ArithmeticError` from reading the row's data (a missing key, a malformed number), skips only that row.
+    `upsert_models` still fails when too few rows were readable. When a model can
     span several rows or appear twice, pass `unreadable` and add each row's model ids to the yielded `SourceRow`. A
     skipped row then adds its ids to `unreadable`, and the caller must drop those models so they keep their prices.
     """
     row = SourceRow()
     try:
         yield row
-    except (UnreadableRowError, ValidationError, InvalidOperation) as e:
+    except (ValueError, LookupError, TypeError, ArithmeticError) as e:
         if unreadable is not None:
             unreadable.update(row.model_ids)
         models = f' for {", ".join(sorted(row.model_ids))}' if row.model_ids else ''
-        report_manual_update(f'{source}: skipped a row it cannot read{models}; update it by hand. {e}')
+        # A bare KeyError or IndexError message, such as 'meterName', doesn't say what went wrong.
+        detail = str(e) if isinstance(e, ValueError) else f'{type(e).__name__}: {e}'
+        report_manual_update(f'{source}: skipped a row it cannot read{models}; update it by hand. {detail}')
 
 
 def get_providers_yaml() -> dict[str, ProviderYaml]:

@@ -26,7 +26,9 @@ def parse_library_data(data: dict[str, Any]) -> list[str]:
     paths: list[str] = []
     for index in cast(list[int], entries):
         with skipping_unreadable_row('Modal'):
-            path = _get(values, values[index], 'href')
+            if not isinstance(entry := values[index], dict):
+                raise UnreadableRowError(f'Unexpected Modal library model entry: {entry!r}')
+            path = _get(values, entry, 'href')
             if not isinstance(path, str) or not path.startswith('/library/'):
                 raise UnreadableRowError(f'Unexpected Modal library model link: {path!r}')
             paths.append(path)
@@ -36,7 +38,9 @@ def parse_library_data(data: dict[str, Any]) -> list[str]:
 def parse_model_data(path: str, data: dict[str, Any]) -> ModelInfo | None:
     """Parse a model page's `__data.json`; models without a Shared Endpoint have no token rates."""
     values = _page_values(data)
-    model = _get(values, values[0], 'model')
+    if not isinstance(root := values[0], dict):
+        raise UnreadableRowError(f'Unexpected Modal model page data on {path}: {root!r}')
+    model = _get(values, root, 'model')
     if not isinstance(model, dict):
         raise UnreadableRowError(f'Modal model page {path} has no model')
     if _get(values, model, 'hasSharedEndpoint') is not True:

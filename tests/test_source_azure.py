@@ -39,13 +39,17 @@ def test_azure_parses_mapped_meters_into_per_million_rates() -> None:
 
 
 SKIPPED = 'Azure: skipped a row it cannot read; update it by hand. '
-NO_ADA_METER = f"{SKIPPED}Azure retail prices have no meter 'embedding-ada-glbl Tokens' for ada\n"
+NO_ADA_METER = (
+    'Azure: skipped a row it cannot read for ada; update it by hand. Azure retail prices have no meter '
+    "'embedding-ada-glbl Tokens' for ada\n"
+)
 ADA_UNIT = f"{SKIPPED}Unexpected Azure unit '1/Hour' for meter 'embedding-ada-glbl Tokens'\n"
 ADA_METER_TWICE = (
     "Azure: kept ada unchanged, the retail prices list meter 'embedding-ada-glbl Tokens' more than once; "
     'update it by hand\n'
 )
 UNREADABLE_ADA = {**_items()[0], 'unitOfMeasure': '1/Hour'}
+UNPRICED_ADA = {key: value for key, value in _items()[0].items() if key != 'retailPrice'}
 
 
 @pytest.mark.parametrize(
@@ -56,6 +60,7 @@ UNREADABLE_ADA = {**_items()[0], 'unitOfMeasure': '1/Hour'}
         ([UNREADABLE_ADA, *_items()[1:]], f'{ADA_UNIT}{NO_ADA_METER}'),
         ([UNREADABLE_ADA, *_items()], f'{ADA_UNIT}{ADA_METER_TWICE}'),
         ([*_items(), UNREADABLE_ADA], ADA_METER_TWICE),
+        ([UNPRICED_ADA, *_items()[1:]], f"{SKIPPED}KeyError: 'retailPrice'\n{NO_ADA_METER}"),
     ],
 )
 def test_azure_reports_an_unreadable_meter_and_reads_the_other_models(

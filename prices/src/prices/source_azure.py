@@ -92,7 +92,8 @@ def parse_retail_prices(items: list[dict[str, Any]]) -> list[ModelInfo]:
 
     models: list[ModelInfo] = []
     for model_id, meters in METERS.items():
-        with skipping_unreadable_row('Azure'):
+        with skipping_unreadable_row('Azure') as row:
+            row.model_ids.add(model_id)
             if repeated := [meter for meter in meters.values() if meter in duplicates]:
                 report_manual_update(
                     f'Azure: kept {model_id} unchanged, the retail prices list meter {repeated[0]!r} more than once; '

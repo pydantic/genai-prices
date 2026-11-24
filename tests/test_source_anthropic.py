@@ -70,6 +70,11 @@ def test_anthropic_rejects_a_page_without_a_pricing_table() -> None:
 
 
 SKIPPED = 'Anthropic: skipped a row it cannot read; update it by hand. '
+HAIKU_3_5_RATES = '$0.80 / MTok | $1 / MTok | $1.60 / MTok | $0.08 / MTok | $4 / MTok |'
+
+
+def skipped_for(model_id: str) -> str:
+    return f'Anthropic: skipped a row it cannot read for {model_id}; update it by hand. '
 
 
 @pytest.mark.parametrize(
@@ -77,19 +82,22 @@ SKIPPED = 'Anthropic: skipped a row it cannot read; update it by hand. '
     [
         (
             PRICING_MARKDOWN.replace('| Claude Haiku 3.5 |', '| Haiku 3.5 |'),
-            [f'{SKIPPED}Unexpected Anthropic pricing row: | Haiku 3.5 |'],
+            [f'{SKIPPED}Unexpected Anthropic pricing row: | Haiku 3.5 | {HAIKU_3_5_RATES}'],
             ['claude-fable-5-1', 'claude-opus-4-0', 'claude-haiku-5-5'],
         ),
         (
             PRICING_MARKDOWN.replace('| $1.60 / MTok |', '|'),
-            [f'{SKIPPED}Unexpected Anthropic pricing row: | Claude Haiku 3.5 |'],
+            [
+                f'{skipped_for("claude-3-5-haiku-latest")}Unexpected Anthropic pricing row: '
+                '| Claude Haiku 3.5 | $0.80 / MTok | $1 / MTok | $0.08 / MTok | $4 / MTok |'
+            ],
             ['claude-fable-5-1', 'claude-opus-4-0', 'claude-haiku-5-5'],
         ),
         (
             PRICING_MARKDOWN.replace('$0.80 / MTok', 'N/A'),
             [
-                'Anthropic: skipped a row it cannot read for claude-3-5-haiku-latest; update it by hand. '
-                "Unexpected Anthropic price 'N/A' in row: | Claude Haiku 3.5 |"
+                f"{skipped_for('claude-3-5-haiku-latest')}Unexpected Anthropic price 'N/A' in row: "
+                '| Claude Haiku 3.5 | N/A | $1 / MTok | $1.60 / MTok | $0.08 / MTok | $4 / MTok |'
             ],
             ['claude-fable-5-1', 'claude-opus-4-0', 'claude-haiku-5-5'],
         ),
@@ -97,8 +105,8 @@ SKIPPED = 'Anthropic: skipped a row it cannot read; update it by hand. '
             # A readable copy of a model's row does not price the model when another copy is unreadable.
             PRICING_MARKDOWN.replace('| Claude Haiku 3.5 | $0.80 / MTok', '| Claude Fable 5.1 | N/A'),
             [
-                'Anthropic: skipped a row it cannot read for claude-fable-5-1; update it by hand. '
-                "Unexpected Anthropic price 'N/A' in row: | Claude Fable 5.1 | N/A |"
+                f"{skipped_for('claude-fable-5-1')}Unexpected Anthropic price 'N/A' in row: "
+                '| Claude Fable 5.1 | N/A | $1 / MTok | $1.60 / MTok | $0.08 / MTok | $4 / MTok |'
             ],
             ['claude-opus-4-0', 'claude-haiku-5-5'],
         ),
@@ -108,9 +116,14 @@ SKIPPED = 'Anthropic: skipped a row it cannot read; update it by hand. '
                 '| $0.50 / MTok | $0.625', '| N/A | $0.625'
             ),
             [
-                'Anthropic: skipped a row it cannot read for claude-haiku-5-5; update it by hand. '
-                f"Unexpected Anthropic price 'N/A' in row: {HAIKU_OVER} N/A |"
+                f"{skipped_for('claude-haiku-5-5')}Unexpected Anthropic price 'N/A' in row: "
+                f'{HAIKU_OVER} N/A | $0.625 / MTok | $1 / MTok | $0.05 / MTok | $2.50 / MTok |'
             ],
+            ['claude-fable-5-1', 'claude-opus-4-0', 'claude-3-5-haiku-latest'],
+        ),
+        (
+            PRICING_MARKDOWN.replace('over 100,000', 'over ,'),
+            [f"{skipped_for('claude-haiku-5-5')}invalid literal for int() with base 10: ''"],
             ['claude-fable-5-1', 'claude-opus-4-0', 'claude-3-5-haiku-latest'],
         ),
         (
@@ -125,13 +138,17 @@ SKIPPED = 'Anthropic: skipped a row it cannot read; update it by hand. '
         ),
         (
             PRICING_MARKDOWN.replace('over 100,000', 'over 200,000'),
-            [f'{SKIPPED}Anthropic pricing rows for claude-haiku-5-5 do not pair a base and a long-context rate'],
+            [
+                f'{skipped_for("claude-haiku-5-5")}'
+                'Anthropic pricing rows for claude-haiku-5-5 do not pair a base and a long-context rate'
+            ],
             ['claude-fable-5-1', 'claude-opus-4-0', 'claude-3-5-haiku-latest'],
         ),
         (
             PRICING_MARKDOWN.replace(HAIKU_UP_TO, '| Claude Haiku 5 (for prompts up to 100,000 tokens) |'),
             [
-                f'{SKIPPED}Anthropic pricing rows for claude-haiku-5 do not pair a base and a long-context rate',
+                f'{skipped_for("claude-haiku-5")}'
+                'Anthropic pricing rows for claude-haiku-5 do not pair a base and a long-context rate',
                 f'{SKIPPED}Anthropic long-context rows without a base row: claude-haiku-5-5',
             ],
             ['claude-fable-5-1', 'claude-opus-4-0', 'claude-3-5-haiku-latest'],
@@ -149,8 +166,7 @@ def test_anthropic_reports_an_unreadable_row_and_reads_the_others(
     models = source_anthropic.parse_pricing_markdown(markdown)
 
     assert [model.id for model in models] == model_ids
-    output = capsys.readouterr().out.splitlines()
-    assert [line[: len(note)] for line, note in zip(output, notes, strict=True)] == notes
+    assert capsys.readouterr().out == ''.join(f'{note}\n' for note in notes)
 
 
 @pytest.mark.vcr()

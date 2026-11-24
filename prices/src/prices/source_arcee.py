@@ -32,13 +32,16 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     models: list[ModelInfo] = []
     seen_ids: set[str] = set()
     duplicates: set[str] = set()
+    unreadable: set[str] = set()
     for row in re.findall(r'<tr>(.*?)</tr>', section_match.group(1), flags=re.DOTALL):
-        with skipping_unreadable_row('Arcee'):
+        with skipping_unreadable_row('Arcee', unreadable) as source_row:
             cells = [
                 html.unescape(re.sub(r'<[^>]+>', '', cell)).strip() for cell in re.findall(r'<td[^>]*>(.*?)</td>', row)
             ]
             if '<th' in row:
                 continue
+            # Named before the cell count check, so a malformed row of a model still holds the model.
+            source_row.model_ids.update(cells[:1])
             if len(cells) != 4:
                 raise UnreadableRowError(f'Unexpected Arcee pricing row: {row}')
 
@@ -64,7 +67,8 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
         report_manual_update(
             f'Arcee: kept {model_id} unchanged, the pricing page lists it more than once; update it by hand'
         )
-    return [model for model in models if model.id not in duplicates]
+    # A model with an unreadable row keeps its prices, rather than taking them from its other row.
+    return [model for model in models if model.id not in duplicates | unreadable]
 
 
 def update_arcee_provider(provider_yaml: ProviderYaml, models: list[ModelInfo]) -> tuple[int, int]:

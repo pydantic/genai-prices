@@ -64,16 +64,20 @@ def test_report_manual_update_writes_a_multiline_note_on_one_line(
     assert capsys.readouterr().out == expected
 
 
-def test_skipping_unreadable_row_skips_a_row_whose_values_do_not_parse(capsys: pytest.CaptureFixture[str]) -> None:
+def test_skipping_unreadable_row_skips_a_row_whose_data_does_not_parse(capsys: pytest.CaptureFixture[str]) -> None:
+    item: dict[str, str] = {'unitOfMeasure': '1M'}
     with skipping_unreadable_row('Source'):
         Decimal('TBD')
     with skipping_unreadable_row('Source'):
         ModelPrice.model_validate({'input_mtok': 'TBD'})
+    with skipping_unreadable_row('Source'):
+        item['meterName']
 
-    first, second = capsys.readouterr().out.splitlines()
-    assert first.startswith('Source: skipped a row it cannot read; update it by hand. ')
-    assert second.startswith('Source: skipped a row it cannot read; update it by hand. ')
-    assert 'validation error' in second
+    decimal_note, validation_note, key_note = capsys.readouterr().out.splitlines()
+    assert decimal_note.startswith('Source: skipped a row it cannot read; update it by hand. InvalidOperation: ')
+    assert validation_note.startswith('Source: skipped a row it cannot read; update it by hand. ')
+    assert 'validation error' in validation_note
+    assert key_note == "Source: skipped a row it cannot read; update it by hand. KeyError: 'meterName'"
 
 
 def test_skipping_unreadable_row_holds_the_models_of_a_skipped_row(capsys: pytest.CaptureFixture[str]) -> None:

@@ -49,7 +49,7 @@ def test_modal_reports_an_unreadable_library_link_and_reads_the_others(capsys: p
     data = svelte_data(
         [
             {'models': 1},
-            [2, 3, 4],
+            [2, 3, 4, 6],
             {'href': 5},
             {'name': 6},
             {'href': 7},
@@ -63,6 +63,7 @@ def test_modal_reports_an_unreadable_library_link_and_reads_the_others(capsys: p
     assert capsys.readouterr().out == (
         "Modal: skipped a row it cannot read; update it by hand. Unexpected Modal library model link: 'https://example.com'\n"
         'Modal: skipped a row it cannot read; update it by hand. Unexpected Modal library model link: None\n'
+        "Modal: skipped a row it cannot read; update it by hand. Unexpected Modal library model entry: 'Kimi K3'\n"
     )
 
 
@@ -91,6 +92,10 @@ def test_modal_skips_models_without_a_shared_endpoint() -> None:
             model_page(RATES | {'reasoningMtok': '20.00'}),
             'Modal prices reasoning tokens separately for moonshotai/Kimi-K3',
         ),
+        # Malformed page data: a root that is not an object, a reference past the end, a reference that is not an index.
+        (svelte_data(['Kimi K3']), "Unexpected Modal model page data on /library/b: 'Kimi K3'"),
+        (svelte_data([{'model': 9}]), 'IndexError: list index out of range'),
+        (svelte_data([{'model': 'Kimi K3'}]), "TypeError: '>=' not supported between instances of 'str' and 'int'"),
     ],
 )
 def test_modal_reports_an_unreadable_model_page_and_reads_the_others(
@@ -117,9 +122,9 @@ def test_modal_reports_an_unreadable_model_page_and_reads_the_others(
 
     source_modal.main(provider_path)
 
-    note, summary = capsys.readouterr().out.splitlines()
-    assert note.startswith(f'Modal: skipped a row it cannot read; update it by hand. {error}')
-    assert summary == 'Modal prices updated: 0 added, 2 updated'
+    assert capsys.readouterr().out == (
+        f'Modal: skipped a row it cannot read; update it by hand. {error}\nModal prices updated: 0 added, 2 updated\n'
+    )
 
 
 @pytest.mark.vcr()

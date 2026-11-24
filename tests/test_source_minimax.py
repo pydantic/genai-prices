@@ -103,6 +103,7 @@ M3_LOW_BAND = M3_ROWS.split('\n')[0] + '\n'
 
 SKIPPED = 'MiniMax: skipped a row it cannot read; update it by hand. '
 SKIPPED_M27 = 'MiniMax: skipped a row it cannot read for MiniMax-M2.7; update it by hand. '
+SKIPPED_M3 = 'MiniMax: skipped a row it cannot read for MiniMax-M3; update it by hand. '
 
 
 @pytest.mark.parametrize(
@@ -131,16 +132,13 @@ SKIPPED_M27 = 'MiniMax: skipped a row it cannot read for MiniMax-M2.7; update it
         ),
         (
             M3_HEADER + M3_LOW_BAND + '\n' + FLAT_HEADER + M27_ROW,
-            [f'{SKIPPED}Unexpected MiniMax context bands for MiniMax-M3'],
+            [f'{SKIPPED_M3}Unexpected MiniMax context bands for MiniMax-M3'],
             ['MiniMax-M2.7'],
         ),
         (
             # A skipped band row leaves the model unchanged rather than priced at its other band alone.
             M3_HEADER + M3_ROWS.replace('~~\\$1.20~~ \\$0.60', 'TBD') + '\n' + FLAT_HEADER + M27_ROW,
-            [
-                'MiniMax: skipped a row it cannot read for MiniMax-M3; update it by hand. '
-                'Unexpected MiniMax price cell: TBD'
-            ],
+            [f'{SKIPPED_M3}Unexpected MiniMax price cell: TBD'],
             ['MiniMax-M2.7'],
         ),
         (
@@ -150,7 +148,7 @@ SKIPPED_M27 = 'MiniMax: skipped a row it cannot read for MiniMax-M2.7; update it
             + FLAT_HEADER
             + '| **MiniMax-M3** > 512k input tokens | \\$1 | \\$1 | \\$1 | \\$1 |\n'
             + M27_ROW,
-            [f'{SKIPPED}MiniMax context bands for MiniMax-M3 price different units'],
+            [f'{SKIPPED_M3}MiniMax context bands for MiniMax-M3 price different units'],
             ['MiniMax-M2.7'],
         ),
     ],
@@ -203,9 +201,21 @@ def test_minimax_keeps_a_model_listed_more_than_once_unchanged(
             'MiniMax: skipped a row it cannot read for MiniMax-M2.5; update it by hand. '
             'Unexpected MiniMax price cell: TBD\n',
         ),
+        (
+            # A duplicated sibling holds the shared entry, so its other sibling cannot rewrite it.
+            M25_ROW * 2 + M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M2.1'),
+            'MiniMax: kept MiniMax-M2.5 unchanged, the pricing page lists it more than once; update it by hand\n',
+        ),
+        (
+            # So does a sibling whose context bands cannot be paired.
+            M25_ROW.replace('**MiniMax-M2.5**', '**MiniMax-M2.5** ≤ 512k input tokens')
+            + M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M2.1'),
+            'MiniMax: skipped a row it cannot read for MiniMax-M2.5; update it by hand. '
+            'Unexpected MiniMax context bands for MiniMax-M2.5\n',
+        ),
     ],
 )
-def test_minimax_keeps_a_shared_model_unchanged_when_its_rows_conflict_or_one_is_unreadable(
+def test_minimax_keeps_a_shared_model_unchanged_when_a_sibling_row_conflicts_or_is_left_out(
     legacy: str,
     notes: str,
     monkeypatch: pytest.MonkeyPatch,
