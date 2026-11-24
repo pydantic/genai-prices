@@ -48,7 +48,7 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
             if rates.setdefault(match['id'], prices) != prices:
                 conflicting.add(match['id'])
     for model_id, (long, row) in long_context_rows.items():
-        if long:
+        if long and model_id not in conflicting:
             rates[model_id] = _with_long_context(rates.get(model_id), long, row)
     if not rates:
         raise RuntimeError('OpenAI pricing page has no standard text pricing table')
@@ -84,7 +84,7 @@ def _standard_tables(markdown: str) -> list[tuple[int, list[tuple[bool, str | No
     tables: list[tuple[int, list[tuple[bool, str | None]], list[list[str]]]] = []
     for before, heading, section in zip(sections[::2], sections[1::2], sections[2::2]):
         tab = next((line.strip() for line in reversed(before.splitlines()) if line.strip()), '')
-        if tab in NON_STANDARD_TABS or heading.split()[0] in NON_STANDARD_TABS:
+        if tab in NON_STANDARD_TABS or heading.partition(' ')[0] in NON_STANDARD_TABS:
             continue
         for header, rows in markdown_tables(section):
             if 'Model' in header[:2] and (columns := _columns(header[header.index('Model') + 1 :])):

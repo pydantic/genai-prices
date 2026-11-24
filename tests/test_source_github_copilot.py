@@ -9,6 +9,7 @@ import pytest
 
 from prices import source_github_copilot
 from prices.prices_types import ClauseEquals, ModelPrice, Tier, TieredPrices
+from prices.update import ProviderYaml
 from prices.utils import package_dir
 
 HEADER = """\
@@ -100,7 +101,11 @@ def test_copilot_reports_unlisted_models_instead_of_guessing_their_ids(
     monkeypatch.setattr(
         source_github_copilot,
         'get_markdown',
-        {source_github_copilot.PRICING_URL: HEADER + row('GPT-9 Nova', 'Default', 'Not applicable')}.get,
+        {
+            source_github_copilot.PRICING_URL: HEADER
+            + row('Claude Fable 5', 'Default', 'Not applicable')
+            + row('GPT-9 Nova', 'Default', 'Not applicable')
+        }.get,
     )
     monkeypatch.setattr(source_github_copilot, 'MIN_MODEL_COUNT', 0)
 
@@ -108,9 +113,15 @@ def test_copilot_reports_unlisted_models_instead_of_guessing_their_ids(
 
     assert capsys.readouterr().out == (
         'GitHub Copilot: pricing lists gpt-9-nova, which github_copilot.yml lacks; add it by hand\n'
-        'GitHub Copilot prices updated: 0 added, 0 updated\n'
+        'GitHub Copilot prices updated: 0 added, 1 updated\n'
     )
-    assert provider_path.read_text() == (package_dir / 'providers/github_copilot.yml').read_text()
+    provider = ProviderYaml(provider_path).provider
+    assert provider.find_model('gpt-9-nova') is None
+    fable = provider.find_model('claude-fable-5')
+    assert fable is not None and isinstance(fable.prices, list)
+    assert fable.prices[-1].prices == ModelPrice(
+        input_mtok=Decimal(1), cache_read_mtok=Decimal('0.1'), cache_write_mtok=Decimal('1.25'), output_mtok=Decimal(5)
+    )
 
 
 @pytest.mark.vcr()

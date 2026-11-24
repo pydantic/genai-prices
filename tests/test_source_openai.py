@@ -142,6 +142,13 @@ Ultrafast costs 3 times the Standard rate during the promotion.
             'gpt-7-pro',
         ),
         (PRICING_MARKDOWN + '| Cyber | gpt-cyber (long context) | $41.00 | $4.00 | - |\n', 'gpt-cyber'),
+        (
+            PRICING_MARKDOWN.replace(
+                '| Cyber | gpt-cyber (short context) |',
+                '| Cyber | gpt-cyber (short context) | $20.00 | - | $100.00 |\n| Cyber | gpt-cyber (short context) |',
+            ),
+            'gpt-cyber',
+        ),
     ],
 )
 def test_openai_keeps_a_model_listed_at_conflicting_rates_unchanged(
