@@ -5795,6 +5795,12 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='inkling-2-small',
+                match=ClauseEquals(equals='accounts/fireworks/models/inkling-2-small'),
+                name='Inkling 2 Small',
+                prices=ModelPrice(input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.03'), output_mtok=Decimal('1')),
+            ),
+            ModelInfo(
                 id='kimi-k2p5',
                 match=ClauseEquals(equals='accounts/fireworks/models/kimi-k2p5'),
                 name='Kimi K2.5',
@@ -5996,6 +6002,14 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='accounts/fireworks/models/qwen3p8-max'),
                 name='Qwen 3.8 Max',
                 prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.25'), output_mtok=Decimal('6')),
+            ),
+            ModelInfo(
+                id='qwen4-max',
+                match=ClauseEquals(equals='accounts/fireworks/models/qwen4-max'),
+                name='Qwen 4 Max',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('4.5')
+                ),
             ),
             ModelInfo(
                 id='ultramarine-1-flash-us',
@@ -28256,6 +28270,18 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.74'), output_mtok=Decimal('0.74')),
             ),
             ModelInfo(
+                id='DeepSeek-V4.1-Flash-1017',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='DeepSeek-V4.1-Flash-1017'),
+                        ClauseEquals(equals='deepseek-v4.1-flash-1017'),
+                    ]
+                ),
+                name='DeepSeek-V4.1-Flash-1017',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.31'), output_mtok=Decimal('1.25')),
+            ),
+            ModelInfo(
                 id='Llama-3.1-8B-Instruct',
                 match=ClauseOr(
                     or_=[ClauseEquals(equals='Llama-3.1-8B-Instruct'), ClauseEquals(equals='llama-3.1-8b-instruct')]
@@ -28413,6 +28439,20 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('0.01')),
             ),
             ModelInfo(
+                id='clef-flash',
+                match=ClauseEquals(equals='clef-flash'),
+                name='clef-flash',
+                context_window=16384,
+                prices=ModelPrice(input_mtok=Decimal('0.04')),
+            ),
+            ModelInfo(
+                id='gemma-4-26b-a4b',
+                match=ClauseEquals(equals='gemma-4-26b-a4b'),
+                name='gemma-4-26b-a4b',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.1'), output_mtok=Decimal('0.41')),
+            ),
+            ModelInfo(
                 id='gpt-oss-120b',
                 match=ClauseEquals(equals='gpt-oss-120b'),
                 name='gpt-oss-120b',
@@ -28425,6 +28465,41 @@ providers: list[Provider] = [
                 name='gpt-oss-20b',
                 context_window=131072,
                 prices=ModelPrice(input_mtok=Decimal('0.05'), output_mtok=Decimal('0.18')),
+            ),
+            ModelInfo(
+                id='laguna-xs-2.1',
+                match=ClauseEquals(equals='laguna-xs-2.1'),
+                name='laguna-xs-2.1',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.06'), output_mtok=Decimal('0.12')),
+            ),
+            ModelInfo(
+                id='nemotron3-nano-30b',
+                match=ClauseEquals(equals='nemotron3-nano-30b'),
+                name='nemotron3-nano-30b',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.06'), output_mtok=Decimal('0.23')),
+            ),
+            ModelInfo(
+                id='nemotron3-omni-30b',
+                match=ClauseEquals(equals='nemotron3-omni-30b'),
+                name='nemotron3-omni-30b',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.19'), output_mtok=Decimal('0.57')),
+            ),
+            ModelInfo(
+                id='qwen3-vl-30b-a3b',
+                match=ClauseEquals(equals='qwen3-vl-30b-a3b'),
+                name='qwen3-vl-30b-a3b',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.15'), output_mtok=Decimal('0.58')),
+            ),
+            ModelInfo(
+                id='qwen3.6-35b-a3b',
+                match=ClauseEquals(equals='qwen3.6-35b-a3b'),
+                name='qwen3.6-35b-a3b',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.2'), output_mtok=Decimal('1.33')),
             ),
         ],
     ),

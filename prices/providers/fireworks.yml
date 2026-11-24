@@ -352,6 +352,16 @@ models:
       cache_read_mtok: 0.17
       output_mtok: 4.05
 
+  - id: inkling-2-small
+    name: Inkling 2 Small
+    match:
+      equals: accounts/fireworks/models/inkling-2-small
+    prices:
+      input_mtok: 0.3
+      cache_read_mtok: 0.03
+      output_mtok: 1
+    prices_checked: 2026-11-24
+
   - id: kimi-k2p5
     name: Kimi K2.5
     description: >-
@@ -645,6 +655,16 @@ models:
       input_mtok: 2
       cache_read_mtok: 0.25
       output_mtok: 6
+    prices_checked: 2026-11-24
+
+  - id: qwen4-max
+    name: Qwen 4 Max
+    match:
+      equals: accounts/fireworks/models/qwen4-max
+    prices:
+      input_mtok: 1.5
+      cache_read_mtok: 0.075
+      output_mtok: 4.5
     prices_checked: 2026-11-24
 
   - id: ultramarine-1-flash-us

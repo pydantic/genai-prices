@@ -9816,6 +9816,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'inkling-2-small',
+        name: 'Inkling 2 Small',
+        match: {
+          equals: 'accounts/fireworks/models/inkling-2-small',
+        },
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.03,
+          output_mtok: 1,
+        },
+      },
+      {
         id: 'kimi-k2p5',
         name: 'Kimi K2.5',
         description:
@@ -10143,6 +10155,18 @@ export const data: Provider[] = [
           input_mtok: 2,
           cache_read_mtok: 0.25,
           output_mtok: 6,
+        },
+      },
+      {
+        id: 'qwen4-max',
+        name: 'Qwen 4 Max',
+        match: {
+          equals: 'accounts/fireworks/models/qwen4-max',
+        },
+        prices: {
+          input_mtok: 1.5,
+          cache_read_mtok: 0.075,
+          output_mtok: 4.5,
         },
       },
       {
@@ -50125,6 +50149,25 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'DeepSeek-V4.1-Flash-1017',
+        name: 'DeepSeek-V4.1-Flash-1017',
+        match: {
+          or: [
+            {
+              equals: 'DeepSeek-V4.1-Flash-1017',
+            },
+            {
+              equals: 'deepseek-v4.1-flash-1017',
+            },
+          ],
+        },
+        context_window: 1048576,
+        prices: {
+          input_mtok: 0.31,
+          output_mtok: 1.25,
+        },
+      },
+      {
         id: 'Llama-3.1-8B-Instruct',
         name: 'Llama-3.1-8B-Instruct',
         match: {
@@ -50423,6 +50466,29 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'clef-flash',
+        name: 'clef-flash',
+        match: {
+          equals: 'clef-flash',
+        },
+        context_window: 16384,
+        prices: {
+          input_mtok: 0.04,
+        },
+      },
+      {
+        id: 'gemma-4-26b-a4b',
+        name: 'gemma-4-26b-a4b',
+        match: {
+          equals: 'gemma-4-26b-a4b',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.1,
+          output_mtok: 0.41,
+        },
+      },
+      {
         id: 'gpt-oss-120b',
         name: 'gpt-oss-120b',
         match: {
@@ -50444,6 +50510,66 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.05,
           output_mtok: 0.18,
+        },
+      },
+      {
+        id: 'laguna-xs-2.1',
+        name: 'laguna-xs-2.1',
+        match: {
+          equals: 'laguna-xs-2.1',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.06,
+          output_mtok: 0.12,
+        },
+      },
+      {
+        id: 'nemotron3-nano-30b',
+        name: 'nemotron3-nano-30b',
+        match: {
+          equals: 'nemotron3-nano-30b',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.06,
+          output_mtok: 0.23,
+        },
+      },
+      {
+        id: 'nemotron3-omni-30b',
+        name: 'nemotron3-omni-30b',
+        match: {
+          equals: 'nemotron3-omni-30b',
+        },
+        context_window: 131072,
+        prices: {
+          input_mtok: 0.19,
+          output_mtok: 0.57,
+        },
+      },
+      {
+        id: 'qwen3-vl-30b-a3b',
+        name: 'qwen3-vl-30b-a3b',
+        match: {
+          equals: 'qwen3-vl-30b-a3b',
+        },
+        context_window: 32768,
+        prices: {
+          input_mtok: 0.15,
+          output_mtok: 0.58,
+        },
+      },
+      {
+        id: 'qwen3.6-35b-a3b',
+        name: 'qwen3.6-35b-a3b',
+        match: {
+          equals: 'qwen3.6-35b-a3b',
+        },
+        context_window: 262144,
+        prices: {
+          input_mtok: 0.2,
+          output_mtok: 1.33,
         },
       },
     ],
