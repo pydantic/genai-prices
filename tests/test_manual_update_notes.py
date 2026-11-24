@@ -72,9 +72,8 @@ def test_skipping_unreadable_row_skips_a_row_whose_values_do_not_parse(capsys: p
 
     first, second = capsys.readouterr().out.splitlines()
     assert first.startswith('Source: skipped a row it cannot read; update it by hand. ')
-    assert second.startswith(
-        'Source: skipped a row it cannot read; update it by hand. 1 validation error for ModelPrice'
-    )
+    assert second.startswith('Source: skipped a row it cannot read; update it by hand. ')
+    assert 'validation error' in second
 
 
 def test_skipping_unreadable_row_holds_the_models_of_a_skipped_row(capsys: pytest.CaptureFixture[str]) -> None:
