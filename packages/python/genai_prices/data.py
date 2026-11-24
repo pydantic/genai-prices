@@ -13996,7 +13996,15 @@ providers: list[Provider] = [
                     ]
                 ),
                 name='ming image 0.1 design',
-                prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1')),
+                prices=[
+                    ConditionalPrice(
+                        constraint=None, prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('1'))
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 24)),
+                        prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('2')),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='minimax/minimax-m2.5',

@@ -475,9 +475,15 @@ models:
         - equals: ming-image-0.1-design
         - equals: ming-image-0.1-design-layer
     prices:
-      input_mtok: 1
-      output_mtok: 1
-    prices_checked: 2026-11-09
+      - prices:
+          input_mtok: 1
+          output_mtok: 1
+      - constraint:
+          start_date: 2026-11-24
+        prices:
+          input_mtok: 1
+          output_mtok: 2
+    prices_checked: 2026-11-24
 
   - id: minimax/minimax-m2.5
     name: MiniMax M2.5

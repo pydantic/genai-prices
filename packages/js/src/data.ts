@@ -24062,10 +24062,24 @@ export const data: Provider[] = [
             },
           ],
         },
-        prices: {
-          input_mtok: 1,
-          output_mtok: 1,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 1,
+              output_mtok: 1,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-24',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1,
+              output_mtok: 2,
+            },
+          },
+        ],
       },
       {
         id: 'minimax/minimax-m2.5',
