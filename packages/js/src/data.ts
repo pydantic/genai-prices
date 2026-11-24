@@ -11230,6 +11230,112 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gpt-6.2-astra',
+        name: 'GPT-6.2 Astra',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6.2-astra',
+            },
+            {
+              regex: '^gpt-6\\.2-astra-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        price_comments: 'Prompts over 272,000 tokens are billed at the long-context rates.',
+        prices: {
+          input_mtok: {
+            base: 8,
+            tiers: [
+              {
+                start: 272000,
+                price: 16,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 20,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.4,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.8,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 40,
+            tiers: [
+              {
+                start: 272000,
+                price: 60,
+              },
+            ],
+          },
+        },
+      },
+      {
+        id: 'gpt-6.2-sol',
+        name: 'GPT-6.2 Sol',
+        match: {
+          or: [
+            {
+              equals: 'gpt-6.2-sol',
+            },
+            {
+              regex: '^gpt-6\\.2-sol-\\d{4}-\\d{2}-\\d{2}$',
+            },
+          ],
+        },
+        price_comments: 'Prompts over 272,000 tokens are billed at the long-context rates.',
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'grok-4.5',
         name: 'Grok 4.5',
         match: {
@@ -11393,6 +11499,34 @@ export const data: Provider[] = [
           input_mtok: 0.2,
           cache_read_mtok: 0.02,
           output_mtok: 1.2,
+        },
+      },
+      {
+        id: 'mai-code-2',
+        name: 'MAI Code 2',
+        match: {
+          equals: 'mai-code-2',
+        },
+        price_comments:
+          'Promotional rates published at https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing until May 17, 2027, when they rise to $1.00 input, $0.05 cached input and $5.00 output per 1M tokens.',
+        prices: {
+          input_mtok: 0.5,
+          cache_read_mtok: 0.025,
+          output_mtok: 2.5,
+        },
+      },
+      {
+        id: 'mai-code-2-flash',
+        name: 'MAI Code 2 Flash',
+        match: {
+          equals: 'mai-code-2-flash',
+        },
+        price_comments:
+          'Promotional rates published at https://docs.github.com/en/copilot/reference/copilot-billing/models-and-pricing until May 17, 2027, when they rise to $0.10 input, $0.01 cached input and $0.50 output per 1M tokens.',
+        prices: {
+          input_mtok: 0.05,
+          cache_read_mtok: 0.005,
+          output_mtok: 0.25,
         },
       },
     ],
