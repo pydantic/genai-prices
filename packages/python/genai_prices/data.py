@@ -16571,6 +16571,15 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='gpt-6-astra-healthcare',
+                match=ClauseEquals(equals='gpt-6-astra-healthcare'),
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('20'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('2'))]),
+                    output_mtok=TieredPrices(base=Decimal('50'), tiers=[Tier(start=272000, price=Decimal('75'))]),
+                ),
+            ),
+            ModelInfo(
                 id='gpt-6-astra-law',
                 match=ClauseEquals(equals='gpt-6-astra-law'),
                 prices=ModelPrice(
@@ -16915,6 +16924,15 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='gpt-6.1-sol-healthcare',
+                match=ClauseEquals(equals='gpt-6.1-sol-healthcare'),
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]),
+                    output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('15'))]),
+                ),
+            ),
+            ModelInfo(
                 id='gpt-6.1-terra',
                 match=ClauseOr(
                     or_=[
@@ -17115,6 +17133,16 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='gpt-6.2-astra-healthcare',
+                match=ClauseEquals(equals='gpt-6.2-astra-healthcare'),
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('8'), tiers=[Tier(start=272000, price=Decimal('16'))]),
+                    cache_write_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('20'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.4'), tiers=[Tier(start=272000, price=Decimal('0.8'))]),
+                    output_mtok=TieredPrices(base=Decimal('40'), tiers=[Tier(start=272000, price=Decimal('60'))]),
+                ),
+            ),
+            ModelInfo(
                 id='gpt-6.2-astra-law',
                 match=ClauseEquals(equals='gpt-6.2-astra-law'),
                 prices=ModelPrice(
@@ -17222,6 +17250,16 @@ providers: list[Provider] = [
                         ),
                     ),
                 ],
+            ),
+            ModelInfo(
+                id='gpt-6.2-sol-healthcare',
+                match=ClauseEquals(equals='gpt-6.2-sol-healthcare'),
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
+                    cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
+                    cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]),
+                    output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('15'))]),
+                ),
             ),
             ModelInfo(
                 id='gpt-audio',

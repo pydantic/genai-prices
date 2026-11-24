@@ -29226,6 +29226,41 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gpt-6-astra-healthcare',
+        match: {
+          equals: 'gpt-6-astra-healthcare',
+        },
+        prices: {
+          input_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 20,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 1,
+            tiers: [
+              {
+                start: 272000,
+                price: 2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 50,
+            tiers: [
+              {
+                start: 272000,
+                price: 75,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'gpt-6-astra-law',
         match: {
           equals: 'gpt-6-astra-law',
@@ -30167,6 +30202,41 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gpt-6.1-sol-healthcare',
+        match: {
+          equals: 'gpt-6.1-sol-healthcare',
+        },
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'gpt-6.1-terra',
         name: 'GPT-6.1 Terra',
         description: 'Fast, efficient model for visual reasoning, precise computer use, and clear, natural writing.',
@@ -30690,6 +30760,50 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gpt-6.2-astra-healthcare',
+        match: {
+          equals: 'gpt-6.2-astra-healthcare',
+        },
+        prices: {
+          input_mtok: {
+            base: 8,
+            tiers: [
+              {
+                start: 272000,
+                price: 16,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 20,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.4,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.8,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 40,
+            tiers: [
+              {
+                start: 272000,
+                price: 60,
+              },
+            ],
+          },
+        },
+      },
+      {
         id: 'gpt-6.2-astra-law',
         match: {
           equals: 'gpt-6.2-astra-law',
@@ -31017,6 +31131,50 @@ export const data: Provider[] = [
             },
           },
         ],
+      },
+      {
+        id: 'gpt-6.2-sol-healthcare',
+        match: {
+          equals: 'gpt-6.2-sol-healthcare',
+        },
+        prices: {
+          input_mtok: {
+            base: 2,
+            tiers: [
+              {
+                start: 272000,
+                price: 4,
+              },
+            ],
+          },
+          cache_write_mtok: {
+            base: 2.5,
+            tiers: [
+              {
+                start: 272000,
+                price: 5,
+              },
+            ],
+          },
+          cache_read_mtok: {
+            base: 0.1,
+            tiers: [
+              {
+                start: 272000,
+                price: 0.2,
+              },
+            ],
+          },
+          output_mtok: {
+            base: 10,
+            tiers: [
+              {
+                start: 272000,
+                price: 15,
+              },
+            ],
+          },
+        },
       },
       {
         id: 'gpt-audio',
