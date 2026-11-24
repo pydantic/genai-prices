@@ -2,14 +2,14 @@ from __future__ import annotations
 
 from decimal import Decimal
 from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_fireworks
 from prices.prices_types import ConditionalPrice, ModelPrice
 from prices.update import ProviderYaml
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 PRICING_MARKDOWN = f"""\
 ## Text and vision models
@@ -137,9 +137,10 @@ models:
 
 
 @pytest.mark.vcr()
-def test_fireworks_main_keeps_the_tracked_models_in_sync(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'fireworks.yml'
-    copyfile(package_dir / 'providers/fireworks.yml', provider_path)
+def test_fireworks_main_keeps_the_tracked_models_in_sync(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('fireworks.yml')
 
     source_fireworks.main(provider_path)
 

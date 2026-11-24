@@ -1,0 +1,1023 @@
+# yaml-language-server: $schema=.schema.json
+name: Anthropic
+id: anthropic
+pricing_urls:
+  - https://www.anthropic.com/pricing#api
+api_pattern: 'https://api\.anthropic\.com'
+price_comments: >-
+  Message Batches API usage is charged at 50% of the standard rates. Prompt caching multipliers stack with
+  the batch discount, so batch cache writes and cache reads are also 50% of standard; on Claude Haiku 5.5 the
+  over-100k-token prompt tier is halved too. Web search ($10 per 1,000 searches) has no published batch rate,
+  so it stays at the standard price. Batch variants cover the active models listed in Anthropic's batch price
+  table as of 2026-10-14; earlier batch history is not modelled. Retired models are skipped.
+  Refs: https://platform.claude.com/docs/en/build-with-claude/batch-processing#pricing,
+  https://platform.claude.com/docs/en/about-claude/pricing#batch-processing
+# see https://github.com/anthropics/anthropic-sdk-python/blob/main/src/anthropic/types/model_param.py for ids
+model_match:
+  contains: claude
+provider_match:
+  contains: anthropic
+# https://github.com/anthropics/anthropic-sdk-python/blob/v0.62.0/src/anthropic/types/usage.py#L12
+extractors:
+  - root: usage
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+        # when Anthropic quotes prices for input tokens, they included all input tokens
+      - path: cache_creation_input_tokens
+        dest: input_tokens
+        required: false
+      - path: cache_read_input_tokens
+        dest: input_tokens
+        required: false
+      - path: cache_creation_input_tokens
+        dest: cache_write_tokens
+        required: false
+      - path: [cache_creation, ephemeral_5m_input_tokens]
+        dest: cache_write_5m_tokens
+        required: false
+      - path: [cache_creation, ephemeral_1h_input_tokens]
+        dest: cache_write_1h_tokens
+        required: false
+      - path: cache_read_input_tokens
+        dest: cache_read_tokens
+        required: false
+      - path: [server_tool_use, web_search_requests]
+        dest: web_searches
+        required: false
+      - path: [output_tokens_details, thinking_tokens]
+        dest: output_reasoning_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
+  # https://platform.claude.com/docs/en/api/openai-sdk#response-fields
+  - api_flavor: chat
+    root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: cached_tokens
+        dest: cache_read_tokens
+        required: false
+      - path: [completion_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
+
+# See https://github.com/anthropics/anthropic-sdk-python/blob/v0.69.0/src/anthropic/types/model.py
+models:
+  - id: claude-2
+    name: Claude 2.0 / 2.1
+    description: >
+      Claude 2 is Anthropic's previous generation model, offering reliable performance
+      for various tasks. This includes Claude 2.0 and Claude 2.1.
+    match:
+      or:
+        - starts_with: claude-2
+        - contains: claude-v2
+    context_window: 200000
+    prices:
+      input_mtok: 8
+      output_mtok: 24
+    prices_checked: 2025-11-06
+
+  - id: claude-3-5-haiku-latest
+    name: Claude Haiku 3.5
+    description: Fastest, most cost-effective model
+    match:
+      or:
+        - starts_with: claude-3-5-haiku
+        - starts_with: claude-3.5-haiku
+    context_window: 200000
+    prices_checked: 2026-10-19
+    price_comments: >-
+      One-hour cache writes cost 2x the base input price.
+      Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+    prices:
+      input_mtok: 0.8
+      cache_write_mtok: 1
+      cache_write_1h_mtok: 1.6
+      cache_read_mtok: 0.08
+      output_mtok: 4
+      web_searches_kcount: 10
+
+  - id: claude-3-5-sonnet
+    name: Claude Sonnet 3.5
+    description: >-
+      Claude 3.5 Sonnet is an ideal balance of intelligence and speed for enterprise workloads.
+      Maximum utility at a lower price, dependable, balanced for scaled deployments.
+    match:
+      or:
+        - starts_with: claude-3-5-sonnet
+        - starts_with: claude-3.5-sonnet
+    context_window: 200000
+    prices_checked: 2026-07-29
+    price_comments: >-
+      One-hour cache writes cost 2x the base input price.
+      Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_write_1h_mtok: 6
+      cache_read_mtok: 0.3
+      output_mtok: 15
+      web_searches_kcount: 10
+
+  - id: claude-3-7-sonnet-latest
+    name: Claude Sonnet 3.7
+    description: >-
+      Claude 3.7 Sonnet is an advanced large language model with improved reasoning, coding, and problem-solving capabilities.
+    match:
+      or:
+        - starts_with: claude-3-7-sonnet
+        - starts_with: claude-3.7-sonnet
+        - starts_with: claude-sonnet-3.7
+        - starts_with: claude-sonnet-3-7
+    context_window: 200000
+    prices_checked: 2026-07-29
+    price_comments: >-
+      One-hour cache writes cost 2x the base input price.
+      Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_write_1h_mtok: 6
+      cache_read_mtok: 0.3
+      output_mtok: 15
+      web_searches_kcount: 10
+
+  - id: claude-3-haiku
+    name: Claude Haiku 3
+    description: Fastest, most cost-effective model
+    match:
+      starts_with: claude-3-haiku
+    context_window: 200000
+    prices_checked: 2026-07-29
+    price_comments: >-
+      One-hour cache writes cost 2x the base input price.
+      Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+    prices:
+      input_mtok: 0.25
+      cache_write_mtok: 0.3
+      cache_write_1h_mtok: 0.5
+      cache_read_mtok: 0.03
+      output_mtok: 1.25
+
+  - id: claude-3-opus-latest
+    name: Claude Opus 3
+    description: >-
+      Claude 3 Opus was Anthropic's most powerful model for highly complex tasks.
+      It boasts top-level performance, intelligence, fluency, and understanding.
+    match:
+      starts_with: claude-3-opus
+    context_window: 200000
+    prices_checked: 2026-07-29
+    price_comments: >-
+      One-hour cache writes cost 2x the base input price.
+      Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+    prices:
+      input_mtok: 15
+      cache_write_mtok: 18.75
+      cache_write_1h_mtok: 30
+      cache_read_mtok: 1.5
+      output_mtok: 75
+
+  - id: claude-3-sonnet
+    name: Claude 3 Sonnet
+    description: >-
+      Claude 3 Sonnet is an ideal balance of intelligence and speed for enterprise workloads.
+      Maximum utility at a lower price, dependable, balanced for scaled deployments.
+    match:
+      starts_with: claude-3-sonnet
+    context_window: 200000
+    prices_checked: 2026-07-29
+    price_comments: >-
+      One-hour cache writes cost 2x the base input price.
+      Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_write_1h_mtok: 6
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: claude-fable-5
+    name: Claude Fable 5
+    description: For demanding reasoning and long-horizon agentic work
+    match:
+      or:
+        - equals: claude-fable-5
+        - regex: ^claude-fable-5-\d{8}$
+    context_window: 1000000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
+      Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+    prices:
+      input_mtok: 10
+      cache_read_mtok: 1.0
+      cache_write_mtok: 12.5
+      cache_write_1h_mtok: 20
+      output_mtok: 50
+      web_searches_kcount: 10
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 5
+          cache_read_mtok: 0.50
+          cache_write_mtok: 6.25
+          cache_write_1h_mtok: 10
+          output_mtok: 25
+
+  - id: claude-fable-5-1
+    name: Claude Fable 5.1
+    description: Anthropic's most capable widely released model for demanding reasoning and long-horizon agentic work
+    match:
+      or:
+        - equals: claude-fable-5-1
+        - regex: ^claude-fable-5-1-\d{8}$
+    context_window: 1000000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1.
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
+      Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+    prices:
+      input_mtok: 10
+      cache_read_mtok: 0.25
+      cache_write_mtok: 12.5
+      cache_write_1h_mtok: 20
+      output_mtok: 50
+      web_searches_kcount: 10
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 5
+          cache_read_mtok: 0.125
+          cache_write_mtok: 6.25
+          cache_write_1h_mtok: 10
+          output_mtok: 25
+
+  - id: claude-fable-5-2
+    name: Claude Fable 5.2
+    description: For demanding reasoning and long-horizon agentic work
+    match:
+      or:
+        - equals: claude-fable-5-2
+        - regex: ^claude-fable-5-2-\d{8}$
+    context_window: 1000000
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Cache hits are 0.025x base input (not the usual 0.1x), as on Mythos 5.2, Fable 5.1 and Mythos 5.1.
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
+      Model ref: https://platform.claude.com/docs/en/models/fable-5-2/overview
+      Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+      Fast mode (`speed: fast`) is $16 input / $80 output across the full context window, and the prompt caching
+      multipliers apply on top. Fast mode refs: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing
+      and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing
+    prices:
+      input_mtok: 8
+      cache_write_mtok: 10
+      cache_read_mtok: 0.2
+      output_mtok: 40
+      cache_write_1h_mtok: 16
+      web_searches_kcount: 10
+    price_variants:
+      - when: { processing: batch }
+        prices:
+          input_mtok: 4
+          cache_read_mtok: 0.10
+          cache_write_mtok: 5
+          cache_write_1h_mtok: 8
+          output_mtok: 20
+      - when: { speed: fast }
+        # Listed on the launch day (2026-11-09):
+        # https://web.archive.org/web/20261109230054/https://platform.claude.com/docs/en/build-with-claude/fast-mode
+        prices:
+          input_mtok: 16
+          cache_read_mtok: 0.40
+          cache_write_mtok: 20
+          cache_write_1h_mtok: 32
+          output_mtok: 80
+    prices_checked: 2026-11-10
+
+  - id: claude-haiku-4-5
+    name: Claude Haiku 4.5
+    description: Fastest and most intelligent Haiku model
+    match:
+      or:
+        - starts_with: claude-haiku-4-5
+        - starts_with: claude-haiku-4.5
+        - starts_with: claude-4-5-haiku
+        - starts_with: claude-4.5-haiku
+    context_window: 200000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      One-hour cache writes cost 2x the base input price.
+      Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+    prices:
+      input_mtok: 1
+      cache_write_mtok: 1.25
+      cache_write_1h_mtok: 2
+      cache_read_mtok: 0.10
+      output_mtok: 5
+      web_searches_kcount: 10
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.50
+          cache_read_mtok: 0.05
+          cache_write_mtok: 0.625
+          cache_write_1h_mtok: 1
+          output_mtok: 2.50
+
+  - id: claude-haiku-5-5
+    name: Claude Haiku 5.5
+    description: For high-volume, latency-sensitive tasks such as classification, extraction, and routing
+    match:
+      or:
+        - equals: claude-haiku-5-5
+        - regex: ^claude-haiku-5-5-\d{8}$
+        - starts_with: claude-haiku-5-5@
+        - starts_with: claude-haiku-5.5
+        - starts_with: claude-5-5-haiku
+        - starts_with: claude-5.5-haiku
+    context_window: 1000000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Priced by prompt length: every token in a request whose prompt exceeds 100,000 tokens is billed
+      at the higher rate (5x). Cache reads are the standard 0.1x of base input.
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
+      Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview
+    prices:
+      input_mtok:
+        base: 0.10
+        tiers:
+          - start: 100000
+            price: 0.50
+      cache_read_mtok:
+        base: 0.01
+        tiers:
+          - start: 100000
+            price: 0.05
+      cache_write_mtok:
+        base: 0.125
+        tiers:
+          - start: 100000
+            price: 0.625
+      cache_write_1h_mtok:
+        base: 0.20
+        tiers:
+          - start: 100000
+            price: 1
+      output_mtok:
+        base: 0.50
+        tiers:
+          - start: 100000
+            price: 2.50
+      web_searches_kcount: 10
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok:
+            base: 0.05
+            tiers:
+              - start: 100000
+                price: 0.25
+          cache_read_mtok:
+            base: 0.005
+            tiers:
+              - start: 100000
+                price: 0.025
+          cache_write_mtok:
+            base: 0.0625
+            tiers:
+              - start: 100000
+                price: 0.3125
+          cache_write_1h_mtok:
+            base: 0.10
+            tiers:
+              - start: 100000
+                price: 0.50
+          output_mtok:
+            base: 0.25
+            tiers:
+              - start: 100000
+                price: 1.25
+
+  - id: claude-instant-1
+    description: Retired, here to match price sources
+    match:
+      equals: claude-instant-1
+    prices:
+      input_mtok: 1.63
+      output_mtok: 55.1
+    removed: true
+
+  - id: claude-instant-1.2
+    description: Retired, here to match price sources
+    match:
+      equals: claude-instant-1.2
+    prices:
+      input_mtok: 1.63
+      output_mtok: 5.51
+    removed: true
+
+  - id: claude-mythos-5-2
+    name: Claude Mythos 5.2
+    description: Same model as Claude Fable 5.2, for organizations verified through Anthropic's verification programs
+    match:
+      or:
+        - equals: claude-mythos-5-2
+        - regex: ^claude-mythos-5-2-\d{8}$
+    context_window: 1000000
+    prices_checked: 2026-11-10
+    price_comments: >-
+      Same model and pricing as Claude Fable 5.2, with limited availability. The Anthropic price importer
+      skips limited-availability rows, so it does not update this entry.
+      Flat pricing across full 1M context window (no tiered pricing).
+      Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.2, Fable 5.1 and Mythos 5.1.
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
+      Model ref: https://platform.claude.com/docs/en/models/mythos-5-2/overview
+      Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+      Fast mode (`speed: fast`) is $16 input / $80 output across the full context window, and the prompt caching
+      multipliers apply on top. Fast mode refs: https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing
+      and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing
+    prices:
+      input_mtok: 8
+      cache_read_mtok: 0.20
+      cache_write_mtok: 10
+      cache_write_1h_mtok: 16
+      output_mtok: 40
+      web_searches_kcount: 10
+    price_variants:
+      - when: { processing: batch }
+        prices:
+          input_mtok: 4
+          cache_read_mtok: 0.10
+          cache_write_mtok: 5
+          cache_write_1h_mtok: 8
+          output_mtok: 20
+      - when: { speed: fast }
+        # Listed on the launch day (2026-11-09):
+        # https://web.archive.org/web/20261109230054/https://platform.claude.com/docs/en/build-with-claude/fast-mode
+        prices:
+          input_mtok: 16
+          cache_read_mtok: 0.40
+          cache_write_mtok: 20
+          cache_write_1h_mtok: 32
+          output_mtok: 80
+
+  - id: claude-opus-4-0
+    name: Claude Opus 4
+    description: Most intelligent model for complex tasks
+    match:
+      or:
+        - starts_with: claude-opus-4-0
+        - starts_with: claude-4-opus
+        - equals: claude-opus-4
+        - equals: claude-opus-4-20250514
+    context_window: 200000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      One-hour cache writes cost 2x the base input price.
+      Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+    prices:
+      input_mtok: 15
+      cache_write_mtok: 18.75
+      cache_write_1h_mtok: 30
+      cache_read_mtok: 1.5
+      output_mtok: 75
+      web_searches_kcount: 10
+
+  - id: claude-opus-4-1
+    name: Claude Opus 4.1
+    description: Most intelligent model for complex tasks
+    match:
+      or:
+        - starts_with: claude-opus-4-1
+        - starts_with: claude-opus-4.1
+    context_window: 200000
+    collapse: true
+    prices_checked: 2026-11-09
+    price_comments: >-
+      One-hour cache writes cost 2x the base input price.
+      Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+    prices:
+      input_mtok: 15
+      cache_write_mtok: 18.75
+      cache_write_1h_mtok: 30
+      cache_read_mtok: 1.5
+      output_mtok: 75
+      web_searches_kcount: 10
+
+  - id: claude-opus-4-5
+    name: Claude Opus 4.5
+    description: Premium model combining maximum intelligence with practical performance
+    match:
+      or:
+        - starts_with: claude-opus-4-5
+        - starts_with: claude-opus-4.5
+        - starts_with: claude-4-5-opus
+        - starts_with: claude-4.5-opus
+    context_window: 200000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      One-hour cache writes cost 2x the base input price.
+      Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+    prices:
+      input_mtok: 5
+      cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
+      cache_read_mtok: 0.50
+      output_mtok: 25
+      web_searches_kcount: 10
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 2.50
+          cache_read_mtok: 0.25
+          cache_write_mtok: 3.125
+          cache_write_1h_mtok: 5
+          output_mtok: 12.50
+
+  - id: claude-opus-4-6
+    name: Claude Opus 4.6
+    description: Our most intelligent model for building agents and coding
+    match:
+      or:
+        - starts_with: claude-opus-4-6
+        - starts_with: claude-opus-4.6
+        - starts_with: claude-4-6-opus
+        - starts_with: claude-4.6-opus
+    context_window: 1000000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      One-hour cache writes cost 2x the base input price.
+      The 1M context window is generally available.
+      Refs: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing,
+      https://platform.claude.com/docs/en/build-with-claude/context-windows#context-window-sizes-by-model
+    prices:
+      - prices:
+          input_mtok:
+            base: 5
+            tiers:
+              - start: 200000
+                price: 10
+          cache_read_mtok:
+            base: 0.50
+            tiers:
+              - start: 200000
+                price: 1
+          cache_write_mtok:
+            base: 6.25
+            tiers:
+              - start: 200000
+                price: 12.50
+          cache_write_1h_mtok:
+            base: 10
+            tiers:
+              - start: 200000
+                price: 20
+          output_mtok:
+            base: 25
+            tiers:
+              - start: 200000
+                price: 37.50
+          web_searches_kcount: 10
+      - constraint:
+          # Long context (>200k) surcharge removed: https://claude.com/blog/1m-context-ga
+          start_date: 2026-03-13
+        prices:
+          input_mtok: 5
+          cache_read_mtok: 0.50
+          cache_write_mtok: 6.25
+          cache_write_1h_mtok: 10
+          output_mtok: 25
+          web_searches_kcount: 10
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 2.50
+          cache_read_mtok: 0.25
+          cache_write_mtok: 3.125
+          cache_write_1h_mtok: 5
+          output_mtok: 12.50
+
+  - id: claude-opus-4-7
+    name: Claude Opus 4.7
+    description: Our most capable model for complex reasoning and agentic coding
+    match:
+      or:
+        - starts_with: claude-opus-4-7
+        - starts_with: claude-opus-4.7
+        - starts_with: claude-4-7-opus
+        - starts_with: claude-4.7-opus
+    context_window: 1000000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
+      Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 0.50
+      cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
+      output_mtok: 25
+      web_searches_kcount: 10
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 2.50
+          cache_read_mtok: 0.25
+          cache_write_mtok: 3.125
+          cache_write_1h_mtok: 5
+          output_mtok: 12.50
+
+  - id: claude-opus-4-8
+    name: Claude Opus 4.8
+    description: Our most capable model for complex reasoning and agentic coding
+    match:
+      or:
+        - starts_with: claude-opus-4-8
+        - starts_with: claude-opus-4.8
+        - starts_with: claude-4-8-opus
+        - starts_with: claude-4.8-opus
+    context_window: 1000000
+    prices_checked: 2026-11-10
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
+      Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+      Fast mode (`speed: fast`, research preview) is $10 input / $50 output across the full context window, and the
+      prompt caching multipliers apply on top. Anthropic removes fast mode from Opus 4.8 on 2026-11-30. Fast mode refs:
+      https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing
+      and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 0.50
+      cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
+      output_mtok: 25
+      web_searches_kcount: 10
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 2.50
+          cache_read_mtok: 0.25
+          cache_write_mtok: 3.125
+          cache_write_1h_mtok: 5
+          output_mtok: 12.50
+      - when: { speed: fast }
+        # Listed on the launch day (2026-05-28):
+        # https://web.archive.org/web/20260528171922/https://platform.claude.com/docs/en/about-claude/pricing
+        prices:
+          input_mtok: 10
+          cache_read_mtok: 1
+          cache_write_mtok: 12.50
+          cache_write_1h_mtok: 20
+          output_mtok: 50
+
+  - id: claude-opus-5
+    name: Claude Opus 5
+    description: For complex agentic coding and enterprise work
+    match:
+      or:
+        - equals: claude-opus-5
+        - equals: claude-opus-5-latest
+        - regex: ^claude-opus-5[-@]\d{8}$
+        - regex: ^claude-opus-5-\d{4}-\d{2}-\d{2}$
+        - starts_with: claude-opus-5.0
+        - starts_with: claude-5-opus
+        - starts_with: claude-5.0-opus
+    context_window: 1000000
+    prices_checked: 2026-11-10
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Refs: https://platform.claude.com/docs/en/about-claude/pricing#long-context-pricing
+      and https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool
+      Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+      Fast mode (`speed: fast`, research preview) is $10 input / $50 output across the full context window, and the
+      prompt caching multipliers apply on top. Fast mode refs:
+      https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing
+      and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 0.50
+      cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
+      output_mtok: 25
+      web_searches_kcount: 10
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 2.50
+          cache_read_mtok: 0.25
+          cache_write_mtok: 3.125
+          cache_write_1h_mtok: 5
+          output_mtok: 12.50
+      - when: { speed: fast }
+        # Listed on the launch day (2026-07-24):
+        # https://web.archive.org/web/20260724234604/https://platform.claude.com/docs/en/about-claude/pricing
+        prices:
+          input_mtok: 10
+          cache_read_mtok: 1
+          cache_write_mtok: 12.50
+          cache_write_1h_mtok: 20
+          output_mtok: 50
+
+  - id: claude-opus-5-5
+    name: Claude Opus 5.5
+    description: For long-running agentic coding and knowledge work
+    match:
+      or:
+        - equals: claude-opus-5-5
+        - regex: ^claude-opus-5-5-\d{8}$
+        - starts_with: claude-opus-5.5
+        - starts_with: claude-5-5-opus
+        - starts_with: claude-5.5-opus
+    context_window: 1000000
+    prices_checked: 2026-11-10
+    price_comments: >-
+      Flat pricing across full 1M context window (no tiered pricing).
+      Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5.
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
+      Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+      Fast mode (`speed: fast`) is $8 input / $40 output across the full context window, and the prompt caching
+      multipliers apply on top. Fast mode refs:
+      https://platform.claude.com/docs/en/about-claude/pricing#fast-mode-pricing
+      and https://platform.claude.com/docs/en/build-with-claude/fast-mode#pricing
+    prices:
+      input_mtok: 4
+      cache_read_mtok: 0.20
+      cache_write_mtok: 5
+      cache_write_1h_mtok: 8
+      output_mtok: 20
+      web_searches_kcount: 10
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 2
+          cache_read_mtok: 0.10
+          cache_write_mtok: 2.50
+          cache_write_1h_mtok: 4
+          output_mtok: 10
+      - when: { speed: fast }
+        # Listed on the launch day (2026-09-22; archived 2026-09-23 05:19 UTC):
+        # https://web.archive.org/web/20260923051915/https://platform.claude.com/docs/en/about-claude/pricing
+        prices:
+          input_mtok: 8
+          cache_read_mtok: 0.40
+          cache_write_mtok: 10
+          cache_write_1h_mtok: 16
+          output_mtok: 40
+
+  - id: claude-sonnet-4-0
+    name: Claude Sonnet 4
+    description: Optimal balance of intelligence, cost, and speed
+    match:
+      or:
+        - starts_with: claude-sonnet-4-2025
+        - starts_with: claude-sonnet-4-0
+        - starts_with: claude-sonnet-4@
+        - equals: claude-sonnet-4
+        - starts_with: claude-4-sonnet
+    context_window: 200000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      One-hour cache writes cost 2x the base input price.
+      Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_write_1h_mtok: 6
+      cache_read_mtok: 0.3
+      output_mtok: 15
+      web_searches_kcount: 10
+
+  - id: claude-sonnet-4-5
+    name: Claude Sonnet 4.5
+    description: Our best combination of speed and intelligence
+    match:
+      or:
+        - starts_with: claude-sonnet-4-5
+        - starts_with: claude-sonnet-4.5
+    context_window: 200000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      One-hour cache writes cost 2x the base input price.
+      The 1M context beta was retired on 2026-04-30; requests over 200k now error.
+      The >200k tiers describe historical usage from before retirement.
+      Refs: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing,
+      https://platform.claude.com/docs/en/release-notes/overview
+    prices:
+      input_mtok:
+        base: 3
+        tiers:
+          - start: 200000
+            price: 6
+      cache_read_mtok:
+        base: 0.30
+        tiers:
+          - start: 200000
+            price: 0.60
+      cache_write_mtok:
+        base: 3.75
+        tiers:
+          - start: 200000
+            price: 7.50
+      cache_write_1h_mtok:
+        base: 6
+        tiers:
+          - start: 200000
+            price: 12
+      output_mtok:
+        base: 15
+        tiers:
+          - start: 200000
+            price: 22.50
+      web_searches_kcount: 10
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok:
+            base: 1.50
+            tiers:
+              - start: 200000
+                price: 3
+          cache_read_mtok:
+            base: 0.15
+            tiers:
+              - start: 200000
+                price: 0.30
+          cache_write_mtok:
+            base: 1.875
+            tiers:
+              - start: 200000
+                price: 3.75
+          cache_write_1h_mtok:
+            base: 3
+            tiers:
+              - start: 200000
+                price: 6
+          output_mtok:
+            base: 7.50
+            tiers:
+              - start: 200000
+                price: 11.25
+
+  - id: claude-sonnet-4-6
+    name: Claude Sonnet 4.6
+    description: Our best combination of speed and intelligence
+    match:
+      or:
+        - starts_with: claude-sonnet-4-6
+        - starts_with: claude-sonnet-4.6
+    context_window: 1000000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      One-hour cache writes cost 2x the base input price.
+      Ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+    prices:
+      - prices:
+          input_mtok:
+            base: 3
+            tiers:
+              - start: 200000
+                price: 6
+          cache_read_mtok:
+            base: 0.30
+            tiers:
+              - start: 200000
+                price: 0.60
+          cache_write_mtok:
+            base: 3.75
+            tiers:
+              - start: 200000
+                price: 7.50
+          cache_write_1h_mtok:
+            base: 6
+            tiers:
+              - start: 200000
+                price: 12
+          output_mtok:
+            base: 15
+            tiers:
+              - start: 200000
+                price: 22.50
+          web_searches_kcount: 10
+      - constraint:
+          # Long context (>200k) surcharge removed: https://claude.com/blog/1m-context-ga
+          start_date: 2026-03-13
+        prices:
+          input_mtok: 3
+          cache_read_mtok: 0.30
+          cache_write_mtok: 3.75
+          cache_write_1h_mtok: 6
+          output_mtok: 15
+          web_searches_kcount: 10
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 1.50
+          cache_read_mtok: 0.15
+          cache_write_mtok: 1.875
+          cache_write_1h_mtok: 3
+          output_mtok: 7.50
+
+  - id: claude-sonnet-5
+    name: Claude Sonnet 5
+    description: Our most agentic Sonnet model, approaching Opus 4.8 capability at lower cost
+    match:
+      or:
+        - equals: claude-sonnet-5
+        - regex: ^claude-sonnet-5-\d{8}$
+        - starts_with: claude-sonnet-5@
+        - starts_with: claude-sonnet-5.0
+        - starts_with: claude-5-sonnet
+        - starts_with: claude-5.0-sonnet
+    context_window: 1000000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Flat pricing across the full 1M context window (no tiered pricing). Anthropic made the introductory
+      $2/$10 per MTok rates permanent and cancelled the previously scheduled 2026-09-01 increase.
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing
+      Prompt caching ref: https://platform.claude.com/docs/en/build-with-claude/prompt-caching#pricing
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.20
+      cache_write_mtok: 2.50
+      cache_write_1h_mtok: 4
+      output_mtok: 10
+      web_searches_kcount: 10
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 1
+          cache_read_mtok: 0.10
+          cache_write_mtok: 1.25
+          cache_write_1h_mtok: 2
+          output_mtok: 5
+
+  - id: claude-sonnet-5-5
+    name: Claude Sonnet 5.5
+    description: The best combination of speed and intelligence
+    match:
+      or:
+        - equals: claude-sonnet-5-5
+        - regex: ^claude-sonnet-5-5-\d{8}$
+        - starts_with: claude-sonnet-5-5@
+        - starts_with: claude-sonnet-5.5
+        - starts_with: claude-5-5-sonnet
+        - starts_with: claude-5.5-sonnet
+    context_window: 1000000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Flat pricing across the full 1M context window (no tiered pricing).
+      Cache hits are 0.05x base input (not the usual 0.1x), as on Opus 5.5.
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
+      Prompt caching ref: https://platform.claude.com/docs/en/about-claude/pricing#prompt-caching
+      Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.10
+      cache_write_mtok: 2.50
+      cache_write_1h_mtok: 4
+      output_mtok: 10
+      web_searches_kcount: 10
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 1
+          cache_read_mtok: 0.05
+          cache_write_mtok: 1.25
+          cache_write_1h_mtok: 2
+          output_mtok: 5
+    # Same rates as Claude Sonnet 5 except cache hits; keep it a separate model so the ids stay distinct.
+    collapse: false
+
+  - id: claude-v1
+    description: Retired, here to match price sources
+    match:
+      equals: claude-v1
+    prices:
+      input_mtok: 8
+      output_mtok: 24

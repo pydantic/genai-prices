@@ -3,8 +3,6 @@ from __future__ import annotations
 import json
 from datetime import date
 from decimal import Decimal
-from pathlib import Path
-from shutil import copyfile
 from typing import Any
 
 import pytest
@@ -12,7 +10,8 @@ from cassetter.cassette import RawResponse
 
 from prices import source_aws
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 
 def keep_priced_models(response: RawResponse) -> RawResponse:  # pragma: no cover - runs only when recording
@@ -134,9 +133,10 @@ def test_aws_keeps_models_it_cannot_price_unchanged(capsys: pytest.CaptureFixtur
 
 
 @pytest.mark.vcr()
-def test_aws_main_fetches_recorded_price_lists(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'aws.yml'
-    copyfile(package_dir / 'providers/aws.yml', provider_path)
+def test_aws_main_fetches_recorded_price_lists(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('aws.yml')
 
     source_aws.main(provider_path)
 

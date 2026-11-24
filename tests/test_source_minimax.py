@@ -2,15 +2,14 @@ from __future__ import annotations
 
 from datetime import date
 from decimal import Decimal
-from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_minimax
 from prices.prices_types import ClauseEquals, ClauseOr, ModelPrice, Tier, TieredPrices
 from prices.update import ProviderYaml
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 M3_HEADER = (
     '| **Model** | **Input** \\$ / M tokens | **Output** \\$ / M tokens | **Prompt caching Read** \\$ / M tokens |\n'
@@ -118,10 +117,9 @@ def test_minimax_rejects_unexpected_pricing_layout(markdown: str, error: str) ->
 
 
 def test_minimax_refuses_conflicting_rates_for_one_shared_model(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+    monkeypatch: pytest.MonkeyPatch, provider_snapshot: ProviderSnapshot
 ) -> None:
-    provider_path = tmp_path / 'minimax.yml'
-    copyfile(package_dir / 'providers/minimax.yml', provider_path)
+    provider_path = provider_snapshot('minimax.yml')
     legacy = (
         M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M9')
         + M27_ROW.replace('MiniMax-M2.7', 'MiniMax-M2.5')
@@ -158,9 +156,10 @@ def test_minimax_reads_context_windows_and_descriptions_from_the_model_tables() 
 
 
 @pytest.mark.vcr()
-def test_minimax_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'minimax.yml'
-    copyfile(package_dir / 'providers/minimax.yml', provider_path)
+def test_minimax_main_fetches_recorded_pricing_page(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('minimax.yml')
 
     source_minimax.main(provider_path)
 

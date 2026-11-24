@@ -3,14 +3,14 @@ from __future__ import annotations
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_xai
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, Tier, TieredPrices
 from prices.update import ProviderYaml
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 PRICING_MARKDOWN = f"""\
 ### Text API Pricing
@@ -108,9 +108,10 @@ models:
 
 
 @pytest.mark.vcr()
-def test_xai_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'x_ai.yml'
-    copyfile(package_dir / 'providers/x_ai.yml', provider_path)
+def test_xai_main_fetches_recorded_pricing_page(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('x_ai.yml')
 
     source_xai.main(provider_path)
 

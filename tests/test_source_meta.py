@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 from datetime import date
-from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_meta
 from prices.prices_types import ModelPrice
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 TABLE = """\
 | Usage        | Standard mode (per 1M tokens) | Contributor mode (per 1M tokens) |
@@ -121,9 +120,10 @@ def test_meta_rejects_unexpected_pricing_layout(markdown: str, error: str) -> No
 
 
 @pytest.mark.vcr()
-def test_meta_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'meta.yml'
-    copyfile(package_dir / 'providers/meta.yml', provider_path)
+def test_meta_main_fetches_recorded_pricing_page(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('meta.yml')
 
     source_meta.main(provider_path)
 

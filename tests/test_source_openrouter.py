@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 import json
-from datetime import UTC, date, datetime, timedelta
+from datetime import UTC, date, datetime
 from decimal import Decimal
 from pathlib import Path
-from shutil import copyfile
 from typing import Any
 
 import httpx2
@@ -30,9 +29,8 @@ from prices.source_openrouter import (
     OpenRouterResponse,
     report_unknown_pricing_fields,
 )
-from prices.utils import package_dir
 
-from .fixtures import load_entries, load_payload
+from .fixtures import ProviderSnapshot, load_entries, load_payload
 
 
 def keep_endpoint_pricing(response: RawResponse) -> RawResponse:  # pragma: no cover - runs only when recording
@@ -857,16 +855,9 @@ models:
 
 @pytest.mark.vcr()
 def test_update_openrouter_provider_fetches_recorded_models(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    class NextDay(date):
-        @classmethod
-        def today(cls) -> date:
-            return date.today() + timedelta(days=1)
-
-    monkeypatch.setattr(source_openrouter, 'date', NextDay)
-    provider_path = tmp_path / 'openrouter.yml'
-    copyfile(package_dir / 'providers/openrouter.yml', provider_path)
+    provider_path = provider_snapshot('openrouter.yml')
 
     source_openrouter.update_openrouter_provider(provider_path)
 

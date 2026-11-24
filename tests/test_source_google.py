@@ -2,15 +2,14 @@ from __future__ import annotations
 
 from datetime import date
 from decimal import Decimal
-from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_google
 from prices.prices_types import ModelPrice, Tier, TieredPrices
 from prices.update import ProviderYaml
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 TODAY = date(2026, 11, 3)
 HEADER = '| Feature | Free Tier | Paid Tier, per 1M tokens in USD |'
@@ -202,7 +201,7 @@ def test_google_rejects_a_table_row_with_missing_cells() -> None:
 
 @pytest.mark.vcr()
 def test_google_main_fetches_recorded_pricing_page(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+    provider_snapshot: ProviderSnapshot, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     class RecordedDay(date):
         @classmethod
@@ -210,8 +209,7 @@ def test_google_main_fetches_recorded_pricing_page(
             return TODAY
 
     monkeypatch.setattr(source_google, 'date', RecordedDay)
-    provider_path = tmp_path / 'google.yml'
-    copyfile(package_dir / 'providers/google.yml', provider_path)
+    provider_path = provider_snapshot('google.yml')
 
     source_google.main(provider_path)
 

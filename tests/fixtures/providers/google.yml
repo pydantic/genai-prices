@@ -1,0 +1,2290 @@
+# yaml-language-server: $schema=.schema.json
+name: Google
+id: google
+pricing_urls:
+  - https://ai.google.dev/gemini-api/docs/pricing
+  - https://cloud.google.com/vertex-ai/generative-ai/pricing
+  # https://cloud.google.com/vertex-ai/generative-ai/pricing#context-caching explains how caching is calculated
+  # Grounding with Google Search (`web_searches_kcount`): Gemini 3.x bills each unique non-empty search query at $14/1k,
+  # Gemini 2.x bills each grounded prompt at $35/1k however many queries it ran, and only when it returned a web source.
+  # Callers report the billed count as `web_searches`. Free monthly/daily allowances are account-wide and not modelled.
+  # https://ai.google.dev/gemini-api/docs/google-search#pricing
+api_pattern: 'https://(.*\.)?googleapis\.com'
+model_match:
+  contains: gemini
+provider_match:
+  or:
+    - contains: google
+    - contains: vertex
+    - contains: gemini
+
+# https://github.com/googleapis/nodejs-vertexai/blob/v1.10.0/src/types/content.ts#L465
+# A previous comment said:
+# > Note, this suggests `promptTokenCount` and `candidatesTokenCount` are optional, but they seem to be always present
+# Then we found a case where `candidatesTokenCount` was missing, so we assume `promptTokenCount` can be missing too.
+extractors:
+  - root: usageMetadata
+    model_path: modelVersion
+    mappings:
+      - path: promptTokenCount
+        dest: input_tokens
+        required: false
+      - path: cachedContentTokenCount
+        dest: cache_read_tokens
+        required: false
+      - path:
+          - cacheTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: TEXT
+          - tokenCount
+        dest: cache_text_read_tokens
+        required: false
+      - path:
+          - cacheTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: AUDIO
+          - tokenCount
+        dest: cache_audio_read_tokens
+        required: false
+      - path:
+          - cacheTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: IMAGE
+          - tokenCount
+        dest: cache_image_read_tokens
+        required: false
+      - path:
+          - cacheTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: DOCUMENT
+          - tokenCount
+        dest: cache_image_read_tokens
+        required: false
+      - path:
+          - cacheTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: VIDEO
+          - tokenCount
+        dest: cache_video_read_tokens
+        required: false
+      - path:
+          - promptTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: TEXT
+          - tokenCount
+        dest: input_text_tokens
+        required: false
+      - path:
+          - promptTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: AUDIO
+          - tokenCount
+        dest: input_audio_tokens
+        required: false
+      - path:
+          - promptTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: IMAGE
+          - tokenCount
+        dest: input_image_tokens
+        required: false
+      - path:
+          - promptTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: DOCUMENT
+          - tokenCount
+        dest: input_image_tokens
+        required: false
+      - path:
+          - promptTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: VIDEO
+          - tokenCount
+        dest: input_video_tokens
+        required: false
+      - path:
+          - candidatesTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: TEXT
+          - tokenCount
+        dest: output_text_tokens
+        required: false
+      - path:
+          - candidatesTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: AUDIO
+          - tokenCount
+        dest: output_audio_tokens
+        required: false
+      - path:
+          - candidatesTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: IMAGE
+          - tokenCount
+        dest: output_image_tokens
+        required: false
+      - path:
+          - candidatesTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: DOCUMENT
+          - tokenCount
+        dest: output_image_tokens
+        required: false
+      - path:
+          - candidatesTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: VIDEO
+          - tokenCount
+        dest: output_video_tokens
+        required: false
+      - path: candidatesTokenCount
+        dest: output_tokens
+        required: false
+      - path: thoughtsTokenCount
+        dest: output_tokens
+        required: false
+      - path: thoughtsTokenCount
+        dest: output_reasoning_tokens
+        required: false
+      - path: toolUsePromptTokenCount
+        dest: input_tokens
+        required: false
+      - path: toolUsePromptTokenCount
+        dest: input_tool_tokens
+        required: false
+      - path:
+          - toolUsePromptTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: TEXT
+          - tokenCount
+        dest: input_text_tokens
+        required: false
+      - path:
+          - toolUsePromptTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: TEXT
+          - tokenCount
+        dest: input_text_tool_tokens
+        required: false
+      - path:
+          - toolUsePromptTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: AUDIO
+          - tokenCount
+        dest: input_audio_tokens
+        required: false
+      - path:
+          - toolUsePromptTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: AUDIO
+          - tokenCount
+        dest: input_audio_tool_tokens
+        required: false
+      - path:
+          - toolUsePromptTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: IMAGE
+          - tokenCount
+        dest: input_image_tokens
+        required: false
+      - path:
+          - toolUsePromptTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: IMAGE
+          - tokenCount
+        dest: input_image_tool_tokens
+        required: false
+      - path:
+          - toolUsePromptTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: DOCUMENT
+          - tokenCount
+        dest: input_image_tokens
+        required: false
+      - path:
+          - toolUsePromptTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: DOCUMENT
+          - tokenCount
+        dest: input_image_tool_tokens
+        required: false
+      - path:
+          - toolUsePromptTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: VIDEO
+          - tokenCount
+        dest: input_video_tokens
+        required: false
+      - path:
+          - toolUsePromptTokensDetails
+          - type: array-match
+            field: modality
+            match:
+              equals: VIDEO
+          - tokenCount
+        dest: input_video_tool_tokens
+        required: false
+  # https://github.com/anthropics/anthropic-sdk-python/blob/v0.62.0/src/anthropic/types/usage.py#L12
+  - root: usage
+    api_flavor: anthropic
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: cache_creation_input_tokens
+        dest: input_tokens
+        required: false
+      - path: cache_read_input_tokens
+        dest: input_tokens
+        required: false
+      - path: cache_creation_input_tokens
+        dest: cache_write_tokens
+        required: false
+      - path: [cache_creation, ephemeral_5m_input_tokens]
+        dest: cache_write_5m_tokens
+        required: false
+      - path: [cache_creation, ephemeral_1h_input_tokens]
+        dest: cache_write_1h_tokens
+        required: false
+      - path: cache_read_input_tokens
+        dest: cache_read_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
+  - api_flavor: chat # openai
+    root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: [prompt_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: [prompt_tokens_details, audio_tokens]
+        dest: input_audio_tokens
+        required: false
+      - path: [completion_tokens_details, audio_tokens]
+        dest: output_audio_tokens
+        required: false
+      - path: [completion_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
+
+fallback_model_providers:
+  - anthropic
+
+models:
+  - id: claude-3-5-haiku
+    canonical_model: anthropic/claude-3-5-haiku-latest
+    match:
+      contains: claude-3-5-haiku
+    context_window: 200000
+    prices_checked: 2025-07-05
+    prices:
+      input_mtok: 0.8
+      cache_write_mtok: 1
+      cache_read_mtok: 0.08
+      output_mtok: 4
+
+  - id: claude-3-5-sonnet
+    canonical_model: anthropic/claude-3-5-sonnet
+    # this model also covers claude-3-5-sonnet-v2
+    match:
+      contains: claude-3-5-sonnet
+    context_window: 200000
+    prices_checked: 2025-07-05
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: claude-3-7-sonnet
+    canonical_model: anthropic/claude-3-7-sonnet-latest
+    match:
+      contains: claude-3-7-sonnet
+    context_window: 200000
+    prices_checked: 2025-07-05
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: claude-3-haiku
+    canonical_model: anthropic/claude-3-haiku
+    match:
+      contains: claude-3-haiku
+    context_window: 200000
+    prices_checked: 2025-07-05
+    prices:
+      input_mtok: 0.25
+      cache_write_mtok: 0.3
+      cache_read_mtok: 0.03
+      output_mtok: 1.25
+
+  - id: claude-3-opus
+    canonical_model: anthropic/claude-3-opus-latest
+    match:
+      contains: claude-3-opus
+    prices_checked: 2025-07-05
+    prices:
+      input_mtok: 15
+      cache_write_mtok: 18.75
+      cache_read_mtok: 1.5
+      output_mtok: 75
+
+  - id: claude-4-opus
+    match:
+      or:
+        - contains: claude-4-opus
+        - contains: claude-opus-4@
+        - contains: claude-opus-4-0
+        - contains: claude-opus-4-1
+        - equals: claude-opus-4
+    context_window: 200000
+    prices_checked: 2025-07-05
+    prices:
+      input_mtok: 15
+      cache_write_mtok: 18.75
+      cache_read_mtok: 1.5
+      output_mtok: 75
+
+  - id: claude-4-sonnet
+    canonical_model: anthropic/claude-sonnet-4-0
+    match:
+      or:
+        - contains: claude-4-sonnet
+        - contains: claude-sonnet-4-0
+        - contains: claude-sonnet-4@
+        - contains: claude-sonnet-4-2025
+        - equals: claude-sonnet-4
+        - equals: anthropic/claude-sonnet-4
+    context_window: 200000
+    prices_checked: 2025-07-05
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: claude-fable-5
+    canonical_model: anthropic/claude-fable-5
+    match:
+      or:
+        - ends_with: claude-fable-5
+        - contains: claude-fable-5@
+    context_window: 1000000
+    prices_checked: 2026-09-25
+    price_comments: >-
+      Flat pricing across full 1M context window.
+      Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models
+      The one-hour cache write rate is the global endpoint's, from the same pricing page.
+    prices:
+      input_mtok: 10
+      cache_read_mtok: 1.0
+      cache_write_mtok: 12.5
+      cache_write_1h_mtok: 20
+      output_mtok: 50
+
+  - id: claude-fable-5-1
+    canonical_model: anthropic/claude-fable-5-1
+    match:
+      or:
+        - ends_with: claude-fable-5-1
+        - contains: claude-fable-5-1@
+    context_window: 1000000
+    prices_checked: 2026-09-25
+    price_comments: >-
+      Flat pricing across full 1M context window. Global endpoint; regional and
+      multi-region endpoints add a 10% premium.
+      Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1.
+      Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models
+      Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai
+      The one-hour cache write rate is the global endpoint's, from the same pricing page.
+    prices:
+      input_mtok: 10
+      cache_read_mtok: 0.25
+      cache_write_mtok: 12.5
+      cache_write_1h_mtok: 20
+      output_mtok: 50
+
+  - id: claude-fable-5-2
+    canonical_model: anthropic/claude-fable-5-2
+    match:
+      or:
+        - ends_with: claude-fable-5-2
+        - contains: claude-fable-5-2@
+    context_window: 1000000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Flat pricing across full 1M context window. Global endpoint; multi-region endpoints add a 10% premium.
+      Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1.
+      Batch rates, including batch cache writes and hits, are 50% of standard. Web search is $10 per 1,000 searches.
+      Ref: https://cloud.google.com/model-garden/partner-models/pricing
+      Web search ref: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/web-search#supported-models
+      Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/google-managed
+    prices:
+      input_mtok: 8
+      cache_read_mtok: 0.20
+      cache_write_mtok: 10
+      cache_write_1h_mtok: 16
+      output_mtok: 40
+      web_searches_kcount: 10
+    price_variants:
+      - when: { processing: batch }
+        prices:
+          input_mtok: 4
+          cache_read_mtok: 0.10
+          cache_write_mtok: 5
+          cache_write_1h_mtok: 8
+          output_mtok: 20
+
+  - id: claude-haiku-4-5
+    canonical_model: anthropic/claude-haiku-4-5
+    match:
+      or:
+        - contains: claude-haiku-4-5
+        - contains: claude-haiku-4.5
+    context_window: 200000
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Vertex AI Global endpoint rates from https://cloud.google.com/vertex-ai/generative-ai/pricing
+      (Claude models, Global tab): input $1 / 1M tokens, output $5 / 1M tokens, 5-minute cache writes
+      $1.25 / 1M tokens, 1-hour cache writes $2 / 1M tokens, cache hits $0.10 / 1M tokens. The Vertex
+      table also publishes batch rates (half of input and output); batch variants are not modelled for
+      Vertex Claude entries in this file.
+    prices:
+      input_mtok: 1
+      cache_read_mtok: 0.1
+      cache_write_mtok: 1.25
+      cache_write_1h_mtok: 2
+      output_mtok: 5
+
+  - id: claude-haiku-5-5
+    canonical_model: anthropic/claude-haiku-5-5
+    match:
+      or:
+        - contains: claude-haiku-5-5
+        - contains: claude-haiku-5.5
+        - contains: claude-5-5-haiku
+        - contains: claude-5.5-haiku
+    context_window: 1000000
+    prices_checked: 2026-10-08
+    price_comments: >-
+      Global endpoint pricing; multi-region and regional endpoints carry a 10% premium.
+      Prompts over 100K input tokens bill every token at the long-context rate.
+      Rates match Anthropic's list price and OpenRouter's Google endpoint.
+      Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models
+      OpenRouter ref: https://openrouter.ai/api/v1/models/anthropic/claude-haiku-5.5/endpoints
+    prices:
+      input_mtok:
+        base: 0.1
+        tiers:
+          - start: 100000
+            price: 0.5
+      cache_write_mtok:
+        base: 0.125
+        tiers:
+          - start: 100000
+            price: 0.625
+      cache_write_1h_mtok:
+        base: 0.2
+        tiers:
+          - start: 100000
+            price: 1
+      cache_read_mtok:
+        base: 0.01
+        tiers:
+          - start: 100000
+            price: 0.05
+      output_mtok:
+        base: 0.5
+        tiers:
+          - start: 100000
+            price: 2.5
+
+  - id: claude-opus-4-5
+    canonical_model: anthropic/claude-opus-4-5
+    match:
+      or:
+        - contains: claude-4-5-opus
+        - contains: claude-opus-4-5
+        - contains: claude-4.5-opus
+        - contains: claude-opus-4.5
+    context_window: 200000
+    prices_checked: 2026-10-12
+    price_comments: >-
+      A 200K context window, so there is no long-context tier.
+      Global endpoint rates; regional and multi-region endpoints carry a 10% premium.
+      Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models
+      Model ID ref: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 0.50
+      cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
+      output_mtok: 25
+
+  - id: claude-opus-4-6
+    canonical_model: anthropic/claude-opus-4-6
+    # Google documents 1M for this exact model: https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude/opus-4-6
+    match:
+      or:
+        - contains: claude-4-6-opus
+        - contains: claude-opus-4-6
+        - contains: claude-4.6-opus
+        - contains: claude-opus-4.6
+    prices_checked: 2026-09-25
+    price_comments: >-
+      Flat pricing across the full 1M context window since the long-context premium was removed on
+      2026-03-13, including on Vertex AI: https://claude.com/blog/1m-context-ga
+      Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models (global endpoint)
+    prices:
+      - prices:
+          input_mtok:
+            base: 5
+            tiers:
+              - start: 200000
+                price: 10
+          cache_read_mtok:
+            base: 0.50
+            tiers:
+              - start: 200000
+                price: 1
+          cache_write_mtok:
+            base: 6.25
+            tiers:
+              - start: 200000
+                price: 12.50
+          output_mtok:
+            base: 25
+            tiers:
+              - start: 200000
+                price: 37.50
+      - constraint:
+          start_date: 2026-03-13
+        prices:
+          input_mtok: 5
+          cache_read_mtok: 0.50
+          cache_write_mtok: 6.25
+          cache_write_1h_mtok: 10
+          output_mtok: 25
+
+  - id: claude-opus-4-7
+    canonical_model: anthropic/claude-opus-4-7
+    match:
+      or:
+        - contains: claude-4-7-opus
+        - contains: claude-opus-4-7
+        - contains: claude-4.7-opus
+        - contains: claude-opus-4.7
+    context_window: 1000000
+    prices_checked: 2026-09-25
+    price_comments: >-
+      Flat pricing across full 1M context window.
+      Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models
+      The one-hour cache write rate is the global endpoint's, from the same pricing page.
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 0.50
+      cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
+      output_mtok: 25
+
+  - id: claude-opus-4-8
+    canonical_model: anthropic/claude-opus-4-8
+    match:
+      or:
+        - contains: claude-4-8-opus
+        - contains: claude-opus-4-8
+        - contains: claude-4.8-opus
+        - contains: claude-opus-4.8
+    context_window: 1000000
+    prices_checked: 2026-09-25
+    price_comments: >-
+      Flat pricing across full 1M context window.
+      Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models
+      The one-hour cache write rate is the global endpoint's, from the same pricing page.
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 0.50
+      cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
+      output_mtok: 25
+
+  - id: claude-opus-5
+    canonical_model: anthropic/claude-opus-5
+    match:
+      or:
+        - contains: claude-5-opus
+        - ends_with: claude-opus-5
+        - contains: claude-opus-5@
+        - contains: claude-5.0-opus
+        - contains: claude-opus-5.0
+    context_window: 1000000
+    prices_checked: 2026-09-25
+    price_comments: >-
+      Global endpoint pricing, flat across the full 1M context window. Multi-region and regional
+      endpoints carry a 10% premium.
+      Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models
+      The one-hour cache write rate is the global endpoint's, from the same pricing page.
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 0.50
+      cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
+      output_mtok: 25
+
+  - id: claude-opus-5-5
+    canonical_model: anthropic/claude-opus-5-5
+    match:
+      or:
+        - contains: claude-5-5-opus
+        - ends_with: claude-opus-5-5
+        - contains: claude-opus-5-5@
+        - contains: claude-5.5-opus
+        - contains: claude-opus-5.5
+    context_window: 1000000
+    prices_checked: 2026-09-25
+    price_comments: >-
+      Global endpoint pricing, flat across the full 1M context window. Multi-region and regional
+      endpoints carry a 10% premium. Google's pricing page renders client-side and could not be read
+      when this entry was added; the rates follow Anthropic's list price, as every other Claude entry
+      in this file does. Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5.
+      Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models
+      Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
+      Model ID ref: https://platform.claude.com/docs/en/models/opus-5-5/overview
+      The one-hour cache write rate is the global endpoint's, from the same pricing page.
+    prices:
+      input_mtok: 4
+      cache_read_mtok: 0.20
+      cache_write_mtok: 5
+      cache_write_1h_mtok: 8
+      output_mtok: 20
+
+  - id: claude-sonnet-4-5
+    canonical_model: anthropic/claude-sonnet-4-5
+    match:
+      or:
+        - contains: claude-sonnet-4-5
+        - contains: claude-sonnet-4.5
+    # Google documents 200K as the GA context and 1M as beta:
+    # https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude/sonnet-4-5
+    context_window: 200000
+    prices_checked: 2026-09-25
+    price_comments: >-
+      Long-context rates apply above 200K input tokens.
+      Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models
+      The one-hour cache write rate is the global endpoint's, from the same pricing page.
+    prices:
+      input_mtok:
+        base: 3
+        tiers:
+          - start: 200000
+            price: 6
+      cache_write_mtok:
+        base: 3.75
+        tiers:
+          - start: 200000
+            price: 7.5
+      cache_write_1h_mtok:
+        base: 6
+        tiers:
+          - start: 200000
+            price: 12
+      cache_read_mtok:
+        base: 0.3
+        tiers:
+          - start: 200000
+            price: 0.6
+      output_mtok:
+        base: 15
+        tiers:
+          - start: 200000
+            price: 22.5
+
+  - id: claude-sonnet-4-6
+    canonical_model: anthropic/claude-sonnet-4-6
+    match:
+      or:
+        - contains: claude-sonnet-4-6
+        - contains: claude-sonnet-4.6
+    # Google documents a 1M context window:
+    # https://docs.cloud.google.com/vertex-ai/generative-ai/docs/partner-models/claude/sonnet-4-6
+    prices_checked: 2026-09-25
+    price_comments: >-
+      Flat pricing across the full 1M context window.
+      Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#partner-models
+      The one-hour cache write rate is the global endpoint's, from the same pricing page.
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_write_1h_mtok: 6
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: claude-sonnet-5-5
+    canonical_model: anthropic/claude-sonnet-5-5
+    match:
+      or:
+        - contains: claude-sonnet-5-5
+        - contains: claude-sonnet-5.5
+        - contains: claude-5-5-sonnet
+        - contains: claude-5.5-sonnet
+    context_window: 1000000
+    prices_checked: 2026-10-08
+    price_comments: >-
+      Global endpoint pricing, flat across the full 1M context window. Multi-region and regional
+      endpoints carry a 10% premium. Rates match Anthropic's list price and OpenRouter's Google endpoint.
+      Cache hits are 0.05x base input (not the usual 0.1x), as on Opus 5.5.
+      Ref: https://cloud.google.com/vertex-ai/generative-ai/pricing#claude-models
+      Anthropic ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
+      OpenRouter ref: https://openrouter.ai/api/v1/models/anthropic/claude-sonnet-5.5/endpoints
+    prices:
+      input_mtok: 2
+      cache_write_mtok: 2.5
+      cache_write_1h_mtok: 4
+      cache_read_mtok: 0.1
+      output_mtok: 10
+
+  - id: gemini-1.0-pro-vision-001
+    name: gemini 1.0 pro vision
+    description: >-
+      Google's first-generation advanced multimodal model that can understand
+      text, code, and images. It provides strong reasoning capabilities and
+      follows instructions effectively.
+    match:
+      equals: gemini-1.0-pro-vision-001
+    context_window: 32768
+    price_comments: I can't find anything about this model or it's pricing, so trusting the original source
+    prices_checked: 2025-07-04
+    prices:
+      input_mtok: 0.125
+      output_mtok: 0.375
+
+  - id: gemini-1.5-flash
+    name: gemini 1.5 flash
+    description: >-
+      A faster, more cost-effective variant of Gemini 1.5 that maintains strong
+      capabilities while optimizing for performance and cost efficiency.
+      Suitable for production deployments requiring high throughput.
+    match:
+      contains: gemini-1.5-flash
+    context_window: 1000000
+    prices_checked: 2025-07-04
+    prices:
+      input_mtok:
+        base: 0.075
+        tiers:
+          - start: 128000
+            price: 0.15
+      output_mtok:
+        base: 0.3
+        tiers:
+          - start: 128000
+            price: 0.6
+      cache_read_mtok:
+        base: 0.01875
+        tiers:
+          - start: 128000
+            price: 0.0375
+
+  - id: gemini-1.5-pro
+    name: gemini 1.5 Pro
+    description: >-
+      Google's most capable multimodal model with an extremely long context
+      window of up to 1 million tokens. It excels at complex reasoning,
+      long-form content processing, and multimodal understanding.
+    match:
+      contains: gemini-1.5-pro
+    context_window: 1000000
+    prices_checked: 2025-06-22
+    prices:
+      input_mtok:
+        base: 1.25
+        tiers:
+          - start: 128000
+            price: 2.50
+      output_mtok:
+        base: 5.00
+        tiers:
+          - start: 128000
+            price: 10.00
+
+  - id: gemini-2.0-flash
+    name: gemini 2.0 flash
+    description: >-
+      The newest generation of Google's Gemini models, featuring improved
+      reasoning, instruction following, and factual accuracy, with the Flash
+      variant optimized for cost-efficiency and performance.
+    match:
+      or:
+        - ends_with: gemini-2.0-flash
+        - contains: gemini-2.0-flash-0
+        - contains: gemini-2.0-flash-exp
+        - contains: gemini-2.0-flash-thinking
+        - contains: gemini-2.0-flash-latest
+    context_window: 1000000
+    deprecated: true
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Listed as "(Shut down)" under "Previous models" in the Gemini API models catalog
+      (https://ai.google.dev/gemini-api/docs/models, catalog last updated 2026-10-13). Checked 2026-10-15;
+      kept for historical usage.
+    prices:
+      input_mtok: 0.1
+      input_audio_mtok: 0.7
+      output_mtok: 0.4
+      cache_read_mtok: 0.025
+      cache_audio_read_mtok: 0.175
+      web_searches_kcount: 35 # per grounded prompt, not per query
+
+  - id: gemini-2.0-flash-lite
+    name: gemini 2.0 flash lite
+    description: >-
+      A lighter, more cost-effective version of Gemini 2.0 Flash, designed for
+      applications requiring high efficiency while maintaining good performance.
+      Ideal for high-volume, cost-sensitive deployments.
+    match:
+      contains: gemini-2.0-flash-lite
+    context_window: 1000000
+    deprecated: true
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Listed as "(Shut down)" under "Previous models" in the Gemini API models catalog
+      (https://ai.google.dev/gemini-api/docs/models, catalog last updated 2026-10-13). Checked 2026-10-15;
+      kept for historical usage.
+    prices:
+      input_mtok: 0.075
+      output_mtok: 0.3
+
+  - id: gemini-2.5-flash
+    name: Gemini 2.5 Flash
+    description: >-
+      Gemini 2.5 Flash is Google's state-of-the-art workhorse model, specifically designed for advanced reasoning, coding,
+      mathematics, and scientific tasks. It includes built-in "thinking" capabilities,
+      enabling it to provide responses with greater accuracy and nuanced context handling.
+    match:
+      or:
+        - equals: gemini-2.5-flash
+        - equals: gemini-2.5-flash-latest
+        - equals: gemini-2.5-flash-preview-09-2025
+    context_window: 1048576
+    prices_checked: 2026-11-03
+    price_comments: >-
+      Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history
+      before then is not modelled. Batch halves input and output; context caching stays at the standard rate.
+    prices:
+      input_mtok: 0.3
+      input_audio_mtok: 1
+      cache_read_mtok: 0.03
+      cache_audio_read_mtok: 0.1
+      output_mtok: 2.5
+      web_searches_kcount: 35 # per grounded prompt, not per query
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.15
+          input_audio_mtok: 0.5
+          output_mtok: 1.25
+
+  - id: gemini-2.5-flash-image
+    name: Gemini 2.5 Flash Image
+    description: >-
+      Google's specialized image generation model optimized for fast, high-quality image generation.
+      Outputs images at 1024x1024 resolution, with each image consuming 1290 output tokens.
+    match:
+      or:
+        - equals: gemini-2.5-flash-image
+        - equals: gemini-2.5-flash-image-preview
+    context_window: 1000000
+    deprecated: true
+    prices_checked: 2026-10-10
+    price_comments: >-
+      Deprecated. Gemini API pricing page announces "Gemini 2.5 Flash Image / Nano Banana (DEPRECATED — shut
+      down Oct 2, 2026); migrate to Gemini 3.1 Flash Image or 3.1 Flash Lite Image."
+      (https://ai.google.dev/gemini-api/docs/pricing). Image output is priced at $30 per 1M tokens, with each
+      1024x1024 image = 1290 tokens = $0.039/image. Cache pricing is not available for this
+      model. Text output uses the Gemini 2.5 Flash $2.50 rate and is the aggregate remainder when modality details omit text.
+    prices:
+      input_mtok: 0.3
+      output_mtok: 2.5
+      output_image_mtok: 30
+
+  - id: gemini-2.5-flash-lite
+    name: Gemini 2.5 Flash Lite
+    description: >-
+      Gemini 2.5 Flash-Lite is a lightweight reasoning model in the Gemini 2.5 family, optimized for ultra-low latency and
+      cost efficiency. It offers improved throughput, faster token generation, and better
+      performance across common benchmarks compared to earlier Flash models. By default, "thinking" (i.e. multi-pass reasoning)
+      is disabled to prioritize speed, but developers can enable it via the Reasoning
+      API parameter to selectively trade off cost for intelligence.
+    match:
+      or:
+        - equals: gemini-2.5-flash-lite
+        - and:
+            - starts_with: gemini-2.5-flash-lite-preview
+            - regex: "^(?!.*-[tT][tT][sS](?:$|-))"
+    context_window: 1000000
+    prices_checked: 2026-11-03
+    price_comments: >-
+      Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history
+      before then is not modelled. Batch halves input and output; context caching stays at the standard rate.
+    prices:
+      input_mtok: 0.1
+      input_audio_mtok: 0.3
+      cache_read_mtok: 0.01
+      cache_audio_read_mtok: 0.03
+      output_mtok: 0.4
+      web_searches_kcount: 35 # per grounded prompt, not per query
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.05
+          input_audio_mtok: 0.15
+          output_mtok: 0.2
+
+  - id: gemini-2.5-flash-lite-preview-tts
+    name: Gemini 2.5 Flash-Lite Preview TTS
+    match:
+      equals: gemini-2.5-flash-lite-preview-tts
+    context_window: 8192
+    prices_checked: 2026-08-26
+    price_comments: See https://cloud.google.com/text-to-speech/pricing#gemini-tts.
+    prices:
+      input_mtok: 0.5
+      output_mtok: 10
+
+  - id: gemini-2.5-flash-preview
+    name: Gemini 2.5 Flash Preview 05-20
+    description: >-
+      Gemini 2.5 Flash May 20th Checkpoint is Google's state-of-the-art workhorse model, specifically designed for advanced
+      reasoning, coding, mathematics, and scientific tasks. It includes built-in "thinking"
+      capabilities, enabling it to provide responses with greater accuracy and nuanced context handling.
+    match:
+      or:
+        - contains: gemini-2.5-flash-preview-05-20
+        - contains: gemini-2.5-flash-preview-04-17
+        - equals: gemini-2.5-flash-preview-05-20:thinking
+        - equals: gemini-2.5-flash-preview
+        - equals: gemini-2.5-flash-preview:thinking
+    price_comments: from https://cloud.google.com/vertex-ai/generative-ai/pricing should be retired 2025-07-15
+    deprecated: true
+    prices_checked: 2026-09-29
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.6
+      web_searches_kcount: 35 # per grounded prompt, not per query
+
+  - id: gemini-2.5-flash-tts
+    name: Gemini 2.5 Flash TTS
+    match:
+      or:
+        - equals: gemini-2.5-flash-tts
+        - equals: gemini-2.5-flash-preview-tts
+    context_window: 8192
+    prices_checked: 2026-11-03
+    price_comments: >-
+      See https://cloud.google.com/text-to-speech/pricing#gemini-tts. Batch rates verified on 2026-10-14 at
+      https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Rates are
+      from the Gemini API gemini-2.5-flash-preview-tts Batch tab.
+    prices:
+      input_mtok: 0.5
+      output_mtok: 10
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.25
+          output_mtok: 5
+
+  - id: gemini-2.5-pro
+    name: Gemini 2.5 Pro
+    description: >-
+      Gemini 2.5 Pro is Google's state-of-the-art AI model designed for advanced reasoning, coding, mathematics, and scientific
+      tasks. It employs "thinking" capabilities, enabling it to reason through responses
+      with enhanced accuracy and nuanced context handling. Gemini 2.5 Pro achieves top-tier performance on multiple benchmarks,
+      including first-place positioning on the LMArena leaderboard, reflecting superior
+      human-preference alignment and complex problem-solving abilities.
+    match:
+      and:
+        - starts_with: gemini-2.5-pro
+        - regex: "^(?!.*-[tT][tT][sS](?:$|-))"
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro. Batch rates verified on 2026-10-14 at
+      https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves
+      input and output in both prompt-size tiers; context caching stays at the standard rate.
+    prices_checked: 2026-11-03
+    prices:
+      input_mtok:
+        base: 1.25
+        tiers:
+          - start: 200000
+            price: 2.5
+      cache_read_mtok:
+        base: 0.125
+        tiers:
+          - start: 200000
+            price: 0.25
+      output_mtok:
+        base: 10
+        tiers:
+          - start: 200000
+            price: 15
+      web_searches_kcount: 35 # per grounded prompt, not per query
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok:
+            base: 0.625
+            tiers:
+              - start: 200000
+                price: 1.25
+          output_mtok:
+            base: 5
+            tiers:
+              - start: 200000
+                price: 7.5
+
+  - id: gemini-2.5-pro-tts
+    name: Gemini 2.5 Pro TTS
+    match:
+      or:
+        - equals: gemini-2.5-pro-tts
+        - equals: gemini-2.5-pro-preview-tts
+    context_window: 8192
+    prices_checked: 2026-11-03
+    price_comments: >-
+      See https://cloud.google.com/text-to-speech/pricing#gemini-tts. Batch rates verified on 2026-10-14 at
+      https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Rates are
+      from the Gemini API gemini-2.5-pro-preview-tts Batch tab.
+    prices:
+      input_mtok: 1
+      output_mtok: 20
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.5
+          output_mtok: 10
+
+  - id: gemini-3-flash-preview
+    name: Gemini 3 Flash Preview
+    description: >-
+      Google's ultra-fast frontier model optimized for speed and efficiency. Delivers state-of-the-art
+      performance while maintaining low latency and cost, with improved reasoning and coding capabilities.
+    match:
+      or:
+        - equals: gemini-3-flash-preview
+        - starts_with: gemini-3-flash-preview-
+    context_window: 1000000
+    prices_checked: 2026-11-03
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing. Standard pricing shown; Batch API offers 50% discount on
+      input/output. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab);
+      batch history before then is not modelled. Batch halves input and output; context caching is "Same as Standard".
+    prices:
+      - prices:
+          input_mtok: 0.5
+          input_audio_mtok: 1
+          cache_read_mtok: 0.05
+          cache_audio_read_mtok: 0.1
+          output_mtok: 3
+      - constraint:
+          # Vertex AI pricing: Gemini 3 grounding "Billing will start January 5, 2026"
+          start_date: 2026-01-05
+        prices:
+          input_mtok: 0.5
+          input_audio_mtok: 1
+          cache_read_mtok: 0.05
+          cache_audio_read_mtok: 0.1
+          output_mtok: 3
+          web_searches_kcount: 14 # per search query
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.25
+          input_audio_mtok: 0.5
+          output_mtok: 1.5
+
+  - id: gemini-3-pro-image-preview
+    name: Gemini 3 Pro Image Preview
+    description: >-
+      Google's image generation model optimized for high-quality image generation.
+      Supports 1K/2K and 4K resolution outputs with flexible pricing based on image dimensions.
+    match:
+      or:
+        - equals: gemini-3-pro-image
+        - starts_with: gemini-3-pro-image-preview
+    context_window: 1000000
+    prices_checked: 2026-11-03
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing#gemini-3-pro-image. Image output is priced at $120 per 1M
+      tokens, with each 1K/2K image = 1120 tokens = $0.134/image and each 4K image = 2000 tokens = $0.24/image. Text and
+      thinking output is $12 per 1M tokens and is the aggregate remainder when modality details omit text. Batch rates
+      verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is
+      not modelled. Batch input is $1 (text) and $0.0006 per 560-token image (~$1/1M); batch image output is listed per
+      image only ($0.067 per 1K/2K image of 1120 tokens, $0.12 per 4K image of 2000 tokens), which is $60 per 1M tokens.
+    prices:
+      - prices:
+          input_mtok: 2
+          output_mtok: 12
+          output_image_mtok: 120
+      - constraint:
+          # Vertex AI pricing: Gemini 3 grounding "Billing will start January 5, 2026"
+          start_date: 2026-01-05
+        prices:
+          input_mtok: 2
+          output_mtok: 12
+          output_image_mtok: 120
+          web_searches_kcount: 14 # per search query
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 1
+          output_mtok: 6
+          output_image_mtok: 60
+
+  - id: gemini-3-pro-preview
+    name: Gemini 3 Pro Preview
+    description: >-
+      The best model in the world for multimodal understanding, and our most powerful agentic and vibe-coding
+      model yet.
+    match:
+      or:
+        - starts_with: gemini-3-pro-preview
+        - equals: gemini-3-pro-text-preview
+    deprecated: true
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Listed as "(Shut down)" under "Previous models" in the Gemini API models catalog
+      (https://ai.google.dev/gemini-api/docs/models, catalog last updated 2026-10-13). Checked 2026-10-15;
+      kept for historical usage.
+    prices:
+      - prices:
+          input_mtok:
+            base: 2
+            tiers:
+              - start: 200000
+                price: 4
+          cache_read_mtok:
+            base: 0.2
+            tiers:
+              - start: 200000
+                price: 0.4
+          output_mtok:
+            base: 12
+            tiers:
+              - start: 200000
+                price: 18
+      - constraint:
+          # Vertex AI pricing: Gemini 3 grounding "Billing will start January 5, 2026"
+          start_date: 2026-01-05
+        prices:
+          input_mtok:
+            base: 2
+            tiers:
+              - start: 200000
+                price: 4
+          cache_read_mtok:
+            base: 0.2
+            tiers:
+              - start: 200000
+                price: 0.4
+          output_mtok:
+            base: 12
+            tiers:
+              - start: 200000
+                price: 18
+          web_searches_kcount: 14 # per search query
+
+  - id: gemini-3.1-flash-image-preview
+    name: Gemini 3.1 Flash Image Preview
+    description: >-
+      Google's latest image generation model (Nano Banana 2) optimized for fast, high-quality image generation.
+      Supports multiple output resolutions from 512px to 4K, with text and thinking output priced separately
+      from image output tokens.
+    match:
+      or:
+        - equals: gemini-3.1-flash-image
+        - starts_with: gemini-3.1-flash-image-preview
+    context_window: 1000000
+    prices_checked: 2026-11-03
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing. Text and thinking output is priced at $3 per 1M tokens and is
+      the aggregate remainder when modality details omit text. Image output is priced at $60 per 1M tokens. Preview
+      model - pricing may change. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing
+      (Batch tab); batch history before then is not modelled. Batch halves input, text output and image output.
+    prices:
+      input_mtok: 0.5
+      output_mtok: 3
+      output_image_mtok: 60
+      web_searches_kcount: 14 # per search query
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.25
+          output_mtok: 1.5
+          output_image_mtok: 30
+
+  - id: gemini-3.1-flash-lite
+    name: Gemini 3.1 Flash Lite
+    description: >-
+      Google's fastest and most cost-efficient Gemini 3 series model, built for intelligence at scale.
+      Optimized for high-volume, low-latency applications while maintaining strong multimodal capabilities.
+    match:
+      or:
+        - equals: gemini-3.1-flash-lite
+        - starts_with: gemini-3.1-flash-lite-preview
+    context_window: 1000000
+    prices_checked: 2026-11-03
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing. Batch rates verified on 2026-10-14 at
+      https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves
+      input, output and context caching.
+    prices:
+      input_mtok: 0.25
+      input_audio_mtok: 0.5
+      cache_read_mtok: 0.025
+      cache_audio_read_mtok: 0.05
+      output_mtok: 1.5
+      web_searches_kcount: 14 # per search query
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.125
+          input_audio_mtok: 0.25
+          cache_read_mtok: 0.0125
+          cache_audio_read_mtok: 0.025
+          output_mtok: 0.75
+
+  - id: gemini-3.1-flash-lite-image
+    name: Gemini 3.1 Flash Lite Image
+    description: >-
+      Google's low-latency, cost-efficient image generation and editing model.
+    match:
+      starts_with: gemini-3.1-flash-lite-image
+    prices_checked: 2026-11-03
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing#gemini-3.1-flash-lite-image. Batch rates verified on 2026-10-14
+      at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch
+      halves input, text output and image output.
+    prices:
+      input_mtok: 0.25
+      output_mtok: 1.5
+      output_image_mtok: 30
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.125
+          output_mtok: 0.75
+          output_image_mtok: 15
+
+  - id: gemini-3.1-flash-live-preview
+    name: Gemini 3.1 Flash Live Preview
+    description: Google's low-latency audio-to-audio model with multimodal input support.
+    match:
+      starts_with: gemini-3.1-flash-live-preview
+    prices_checked: 2026-11-03
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-3.1-flash-live-preview.
+    prices:
+      input_mtok: 0.75
+      input_audio_mtok: 3
+      input_image_mtok: 1
+      input_video_mtok: 1
+      output_mtok: 4.5
+      output_audio_mtok: 12
+      web_searches_kcount: 14 # per search query
+
+  - id: gemini-3.1-flash-tts-preview
+    name: Gemini 3.1 Flash TTS Preview
+    description: Preview token-priced text-to-speech model in the Gemini 3.1 Flash family.
+    match:
+      equals: gemini-3.1-flash-tts-preview
+    prices_checked: 2026-11-03
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing. Token-priced TTS rates; batch is half input and output.
+    prices:
+      input_mtok: 1
+      output_mtok: 20
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-15 }
+        prices:
+          input_mtok: 0.5
+          output_mtok: 10
+
+  - id: gemini-3.1-pro-preview
+    name: Gemini 3.1 Pro Preview
+    description: >-
+      The latest performance, intelligence, and usability improvements to the best model family in the world
+      for multimodal understanding, agentic capabilities, and vibe-coding.
+    match:
+      or:
+        - starts_with: gemini-3.1-pro-preview
+        # Family alias: the Gemini API's `modelVersion` resolved it to this model on 2026-09-29.
+        # Move it when Google points it at a newer model.
+        - equals: gemini-pro-latest
+    prices_checked: 2026-11-03
+    price_comments: >-
+      Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history
+      before then is not modelled. Batch halves input and output in both prompt-size tiers; context caching is "Same as
+      Standard".
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 200000
+            price: 4
+      cache_read_mtok:
+        base: 0.2
+        tiers:
+          - start: 200000
+            price: 0.4
+      output_mtok:
+        base: 12
+        tiers:
+          - start: 200000
+            price: 18
+      web_searches_kcount: 14 # per search query
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok:
+            base: 1
+            tiers:
+              - start: 200000
+                price: 2
+          output_mtok:
+            base: 6
+            tiers:
+              - start: 200000
+                price: 9
+
+  - id: gemini-3.5-flash
+    name: Gemini 3.5 Flash
+    description: >-
+      Google's most intelligent model built for speed, combining frontier intelligence with
+      improved reasoning, coding, and multimodal understanding.
+    match:
+      or:
+        - equals: gemini-3.5-flash
+        - starts_with: gemini-3.5-flash-preview
+        - regex: '^gemini-3\.5-flash-\d'
+    context_window: 1000000
+    prices_checked: 2026-09-29
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers
+      offer 50% discount on input/output.
+    prices:
+      input_mtok: 1.5
+      cache_read_mtok: 0.15
+      output_mtok: 9
+      web_searches_kcount: 14 # per search query
+
+  - id: gemini-3.5-flash-lite
+    name: Gemini 3.5 Flash Lite
+    description: >-
+      Google's fastest and most cost-efficient Gemini 3.5 series model, optimized for high-volume,
+      low-latency applications while maintaining strong multimodal capabilities.
+    match:
+      or:
+        - starts_with: gemini-3.5-flash-lite
+        # Family alias: the Gemini API's `modelVersion` resolved it to this model on 2026-09-29.
+        # Move it when Google points it at a newer model.
+        - equals: gemini-flash-lite-latest
+    context_window: 1000000
+    prices_checked: 2026-11-03
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50%
+      discount. Input rate is unified across text/image/video/audio (no separate audio rate). Batch rates verified on
+      2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not
+      modelled. Batch halves input and output; batch context caching is $0.02, not half of the $0.03 standard rate.
+    prices:
+      input_mtok: 0.3
+      cache_read_mtok: 0.03
+      output_mtok: 2.5
+      web_searches_kcount: 14 # per search query
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.15
+          cache_read_mtok: 0.02
+          output_mtok: 1.25
+
+  - id: gemini-3.6-flash
+    name: Gemini 3.6 Flash
+    description: >-
+      Google's most intelligent model built for speed, combining frontier intelligence with improved
+      reasoning, coding, and multimodal understanding.
+    match:
+      starts_with: gemini-3.6-flash
+    context_window: 1000000
+    prices_checked: 2026-10-14
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50%
+      discount. No separate audio input rate documented. Introductory rates apply through 2026-12-31. The cache storage
+      price ($0.50 per 1M tokens per hour) has no unit in prices/units.yml and is not represented here. Batch rates
+      verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is
+      not modelled. Batch halves input, output and context caching, at both the introductory and the 2027-01-01 rates.
+    prices:
+      - prices:
+          input_mtok: 0.75
+          cache_read_mtok: 0.075
+          output_mtok: 3.75
+          web_searches_kcount: 14 # per search query
+      - constraint:
+          # https://ai.google.dev/gemini-api/docs/pricing - "$1.50 starting January 1, 2027"
+          start_date: 2027-01-01
+        prices:
+          input_mtok: 1.5
+          cache_read_mtok: 0.15
+          output_mtok: 7.5
+          web_searches_kcount: 14 # per search query
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2027-01-01 }
+        prices:
+          input_mtok: 0.75
+          cache_read_mtok: 0.075
+          output_mtok: 3.75
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.375
+          cache_read_mtok: 0.0375
+          output_mtok: 1.875
+
+  - id: gemini-3.7-flash
+    name: Gemini 3.7 Flash
+    description: >-
+      Google's most capable Flash model, built for complex coding, web development, agentic workflows
+      and reliable multi-step execution.
+    match:
+      starts_with: gemini-3.7-flash
+    context_window: 1000000
+    prices_checked: 2026-09-29
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers
+      offer 50% discount, Priority tier is 1.8x. Introductory rates apply through 2026-12-31. The cache storage price
+      ($0.50 per 1M tokens per hour) has no unit in prices/units.yml and is not represented here.
+    prices:
+      - prices:
+          input_mtok: 0.75
+          cache_read_mtok: 0.075
+          output_mtok: 3.75
+          web_searches_kcount: 14 # per search query
+      - constraint:
+          # https://ai.google.dev/gemini-api/docs/pricing - "$1.50 starting January 1, 2027"
+          start_date: 2027-01-01
+        prices:
+          input_mtok: 1.5
+          cache_read_mtok: 0.15
+          output_mtok: 7.5
+          web_searches_kcount: 14 # per search query
+
+  - id: gemini-3.8-flash
+    name: Gemini 3.8 Flash
+    description: >-
+      Google's most intelligent Flash model, engineered for long-horizon software engineering,
+      autonomous agents, and complex enterprise workflows.
+    match:
+      or:
+        # Excludes the token-priced TTS variants, which are separate models priced below.
+        - and:
+            - starts_with: gemini-3.8-flash
+            - regex: "^(?!.*-[tT][tT][sS](?:$|-))"
+        # Family alias: the Gemini API's `modelVersion` resolved it to this model on 2026-09-29.
+        # Move it when Google points it at a newer model.
+        - equals: gemini-flash-latest
+    context_window: 1000000
+    prices_checked: 2026-10-14
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing. Standard tier pricing shown; Batch and Flex tiers offer 50%
+      discount, Priority tier is 1.8x. Introductory rates apply through 2026-12-31. The cache storage price ($0.50 per
+      1M tokens per hour) has no unit in prices/units.yml and is not represented here. Batch rates verified on
+      2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not
+      modelled. Batch halves input, output and context caching, at both the introductory and the 2027-01-01 rates.
+    prices:
+      - prices:
+          input_mtok: 0.75
+          cache_read_mtok: 0.075
+          output_mtok: 3.75
+          web_searches_kcount: 14 # per search query
+      - constraint:
+          # https://ai.google.dev/gemini-api/docs/pricing - "$1.50 starting January 1, 2027"
+          start_date: 2027-01-01
+        prices:
+          input_mtok: 1.5
+          cache_read_mtok: 0.15
+          output_mtok: 7.5
+          web_searches_kcount: 14 # per search query
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2027-01-01 }
+        prices:
+          input_mtok: 0.75
+          cache_read_mtok: 0.075
+          output_mtok: 3.75
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.375
+          cache_read_mtok: 0.0375
+          output_mtok: 1.875
+
+  - id: gemini-3.8-flash-lite-tts
+    name: Gemini 3.8 Flash-Lite TTS
+    description: Token-priced text-to-speech model, the lightest member of the Gemini 3.8 family.
+    match:
+      equals: gemini-3.8-flash-lite-tts
+    prices_checked: 2026-10-15
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing. Token-priced TTS rates; introductory rates apply through
+      2026-12-31. Batch and Flex halve input and output; Priority is 1.8x standard at both rate levels.
+    prices:
+      - prices:
+          input_mtok: 0.5
+          output_mtok: 6
+      - constraint:
+          # https://ai.google.dev/gemini-api/docs/pricing - "$1.00 starting January 1, 2027"
+          start_date: 2027-01-01
+        prices:
+          input_mtok: 1
+          output_mtok: 12
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2027-01-01 }
+        prices:
+          input_mtok: 0.5
+          output_mtok: 6
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-15 }
+        prices:
+          input_mtok: 0.25
+          output_mtok: 3
+      - when: { service_tier: flex }
+        constraint: { start_date: 2027-01-01 }
+        prices:
+          input_mtok: 0.5
+          output_mtok: 6
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-15 }
+        prices:
+          input_mtok: 0.25
+          output_mtok: 3
+      - when: { service_tier: priority }
+        constraint: { start_date: 2027-01-01 }
+        prices:
+          input_mtok: 1.8
+          output_mtok: 21.6
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-15 }
+        prices:
+          input_mtok: 0.9
+          output_mtok: 10.8
+
+  - id: gemini-3.8-flash-tts
+    name: Gemini 3.8 Flash TTS
+    description: Token-priced text-to-speech model in the Gemini 3.8 Flash family.
+    match:
+      equals: gemini-3.8-flash-tts
+    prices_checked: 2026-10-15
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing. Token-priced TTS rates; introductory rates apply through
+      2026-12-31. Batch and Flex halve input and output; Priority is 1.8x standard at both rate levels.
+    prices:
+      - prices:
+          input_mtok: 0.5
+          output_mtok: 9
+      - constraint:
+          # https://ai.google.dev/gemini-api/docs/pricing - "$1.00 starting January 1, 2027"
+          start_date: 2027-01-01
+        prices:
+          input_mtok: 1
+          output_mtok: 18
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2027-01-01 }
+        prices:
+          input_mtok: 0.5
+          output_mtok: 9
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-15 }
+        prices:
+          input_mtok: 0.25
+          output_mtok: 4.5
+      - when: { service_tier: flex }
+        constraint: { start_date: 2027-01-01 }
+        prices:
+          input_mtok: 0.5
+          output_mtok: 9
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-15 }
+        prices:
+          input_mtok: 0.25
+          output_mtok: 4.5
+      - when: { service_tier: priority }
+        constraint: { start_date: 2027-01-01 }
+        prices:
+          input_mtok: 1.8
+          output_mtok: 32.4
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-15 }
+        prices:
+          input_mtok: 0.9
+          output_mtok: 16.2
+
+  - id: gemini-3.8-live
+    name: Gemini 3.8 Live
+    description: >-
+      Google's low-latency audio-to-audio Live API models for real-time voice agents and live dialogue,
+      including Gemini 3.8 Live Extended Thinking, which reasons in the background while it keeps talking.
+    match:
+      # Also covers `gemini-3.8-live-extended-thinking`, which Google prices identically.
+      starts_with: gemini-3.8-live
+    context_window: 131072
+    prices_checked: 2026-11-03
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing - Gemini 3.8 Live and Gemini 3.8 Live Extended
+      Thinking are priced the same as Gemini 3.1 Flash Live Preview, with thinking tokens included in the output price.
+      Audio and image/video are also offered per minute, which has no unit here; the per-token prices are shown.
+    prices:
+      input_mtok: 0.75
+      input_audio_mtok: 3
+      input_image_mtok: 1
+      input_video_mtok: 1
+      output_mtok: 4.5
+      output_audio_mtok: 12
+      web_searches_kcount: 14 # per search query
+
+  - id: gemini-4-argon
+    name: Gemini 4 Argon
+    description: >-
+      Google's frontier model for complex, long-horizon workflows across real-world software engineering,
+      enterprise knowledge work like legal and finance, and cybersecurity defense, with output of up to 1M tokens.
+    match:
+      or:
+        - equals: gemini-4-argon
+        - starts_with: gemini-4-argon-preview
+        - regex: '^gemini-4-argon-\d'
+    context_window: 1048576
+    prices_checked: 2026-11-16
+    price_comments: >-
+      See https://aistudio.google.com/docs/pricing#gemini-4-argon. Standard tier pricing shown. Introductory rates
+      apply through 2026-11-30. Batch and Flex are half of standard; Priority is 1.8x, at both the introductory and
+      the 2026-12-01 rates. No prompt-size tiers or separate audio input rate are documented. Implicit caching only.
+      Batch rates verified on 2026-10-14; Flex and Priority verified on 2026-11-16. Tier history before 2026-10-14 is
+      not modelled.
+    prices:
+      - prices:
+          input_mtok: 2
+          cache_read_mtok: 0.1
+          output_mtok: 10
+          web_searches_kcount: 14 # per search query
+      - constraint:
+          # https://ai.google.dev/gemini-api/docs/pricing - "$4.00 starting December 1, 2026"
+          start_date: 2026-12-01
+        prices:
+          input_mtok: 4
+          cache_read_mtok: 0.2
+          output_mtok: 20
+          web_searches_kcount: 14 # per search query
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-12-01 }
+        prices:
+          input_mtok: 2
+          cache_read_mtok: 0.1
+          output_mtok: 10
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 1
+          cache_read_mtok: 0.05
+          output_mtok: 5
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-12-01 }
+        prices:
+          input_mtok: 2
+          cache_read_mtok: 0.1
+          output_mtok: 10
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 1
+          cache_read_mtok: 0.05
+          output_mtok: 5
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-12-01 }
+        prices:
+          input_mtok: 7.2
+          cache_read_mtok: 0.36
+          output_mtok: 36
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 3.6
+          cache_read_mtok: 0.18
+          output_mtok: 18
+
+  - id: gemini-4-carbon
+    name: Gemini 4 Carbon
+    description: >-
+      Google's most capable reasoning model, for complex software engineering, mathematical and scientific
+      problem solving, high factual accuracy, and autonomous multi-step agents, with output of up to 1M tokens.
+    match:
+      or:
+        - equals: gemini-4-carbon
+        - starts_with: gemini-4-carbon-preview
+        - regex: '^gemini-4-carbon-\d'
+    context_window: 1048576
+    prices_checked: 2026-11-16
+    price_comments: >-
+      See https://aistudio.google.com/docs/pricing#gemini-4-carbon. Standard tier shown. Introductory rates apply
+      through 2026-11-30. Batch and Flex are half of standard; Priority is 1.8x, at both the introductory and the
+      2026-12-01 rates. No prompt-size tiers or separate audio input rate are documented. Implicit caching only;
+      explicit caching is not supported, and Vertex lists no cache-write rate. Vertex global rates match these
+      figures; multi-region endpoints add a 10% premium and are not encoded. Grounding is $14 per 1,000 search
+      queries. Batch, Flex and Priority history before 2026-11-16 is not modelled. The invite-only Contributor
+      tier is not modelled. Vertex ref: https://cloud.google.com/model-garden/pricing
+    prices:
+      - prices:
+          input_mtok: 2
+          cache_read_mtok: 0.1
+          output_mtok: 10
+          web_searches_kcount: 14 # per search query
+      - constraint:
+          # https://aistudio.google.com/docs/pricing#gemini-4-carbon - "$4.00 starting December 1, 2026"
+          start_date: 2026-12-01
+        prices:
+          input_mtok: 4
+          cache_read_mtok: 0.2
+          output_mtok: 20
+          web_searches_kcount: 14 # per search query
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-12-01 }
+        prices:
+          input_mtok: 2
+          cache_read_mtok: 0.1
+          output_mtok: 10
+      - when: { processing: batch }
+        constraint: { start_date: 2026-11-16 }
+        prices:
+          input_mtok: 1
+          cache_read_mtok: 0.05
+          output_mtok: 5
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-12-01 }
+        prices:
+          input_mtok: 2
+          cache_read_mtok: 0.1
+          output_mtok: 10
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-11-16 }
+        prices:
+          input_mtok: 1
+          cache_read_mtok: 0.05
+          output_mtok: 5
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-12-01 }
+        prices:
+          input_mtok: 7.2
+          cache_read_mtok: 0.36
+          output_mtok: 36
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-11-16 }
+        prices:
+          input_mtok: 3.6
+          cache_read_mtok: 0.18
+          output_mtok: 18
+
+  - id: gemini-4-hydrogen
+    name: Gemini 4 Hydrogen
+    description: >-
+      Google's Gemini 4 model for everyday coding and agentic workflows, with a 1M-token context window and
+      output of up to 1M tokens.
+    match:
+      or:
+        - equals: gemini-4-hydrogen
+        - starts_with: gemini-4-hydrogen-preview
+        - regex: '^gemini-4-hydrogen-\d'
+    context_window: 1048576
+    prices_checked: 2026-11-16
+    price_comments: >-
+      See https://aistudio.google.com/docs/pricing#gemini-4-hydrogen. Standard tier shown. No promotional end
+      date is published. Batch and Flex are half of standard; Priority is 1.8x. Batch, Flex and Priority
+      history before 2026-11-16 is not modelled. No prompt-size tiers or separate
+      audio input rate are documented. Implicit caching only; explicit caching is not supported. Vertex lists a
+      global cache-write rate of $1.875 per 1M tokens effective 2027-01-12 (https://cloud.google.com/model-garden/pricing);
+      it is not scheduled here, because this card is shared with the Gemini API, which publishes no cache-write
+      price. Vertex global rates match these figures; multi-region endpoints add a 10% premium and are not encoded.
+      Grounding is $14 per 1,000 search queries. The invite-only Contributor tier is not modelled.
+    prices:
+      input_mtok: 1.5
+      cache_read_mtok: 0.075
+      output_mtok: 7.5
+      web_searches_kcount: 14 # per search query
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-11-16 }
+        prices:
+          input_mtok: 0.75
+          cache_read_mtok: 0.0375
+          output_mtok: 3.75
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-11-16 }
+        prices:
+          input_mtok: 0.75
+          cache_read_mtok: 0.0375
+          output_mtok: 3.75
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-11-16 }
+        prices:
+          input_mtok: 2.7
+          cache_read_mtok: 0.135
+          output_mtok: 13.5
+
+  - id: gemini-4-neon
+    name: Gemini 4 Neon
+    description: >-
+      Google's frontier Gemini 4 model for fast end-to-end task completion across complex software engineering,
+      knowledge work, and science workflows, with a 1M-token context window and output of up to 1M tokens.
+    match:
+      or:
+        - equals: gemini-4-neon
+        - starts_with: gemini-4-neon-preview
+        - regex: '^gemini-4-neon-\d'
+    context_window: 1048576
+    prices_checked: 2026-11-19
+    price_comments: >-
+      See https://aistudio.google.com/docs/pricing#gemini-4-neon. Standard tier shown. Paid tier only; flat across the
+      1M context, with no prompt-size tiers, no promotional period and no separate audio input rate. Batch and Flex
+      are half of standard; Priority is 1.8x. Batch, Flex and Priority rates were verified on 2026-11-19, the day
+      after launch; tier history before then is not modelled. Implicit caching only; explicit caching is not
+      supported. Vertex lists a global cache-write rate of $3.75 per 1M tokens effective 2027-01-12
+      (https://cloud.google.com/vertex-ai/generative-ai/pricing); it is not scheduled here, because this card is
+      shared with the Gemini API, which publishes no cache-write price. Vertex global rates match these figures;
+      multi-region endpoints add a 10% premium and are not encoded. Vertex lists no Flex tier. Grounding is $14 per
+      1,000 search queries.
+    prices:
+      input_mtok: 3
+      cache_read_mtok: 0.15
+      output_mtok: 15
+      web_searches_kcount: 14 # per search query
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-11-19 }
+        prices:
+          input_mtok: 1.5
+          cache_read_mtok: 0.075
+          output_mtok: 7.5
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-11-19 }
+        prices:
+          input_mtok: 1.5
+          cache_read_mtok: 0.075
+          output_mtok: 7.5
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-11-19 }
+        prices:
+          input_mtok: 5.4
+          cache_read_mtok: 0.27
+          output_mtok: 27
+
+  - id: gemini-embedding-001
+    match:
+      equals: gemini-embedding-001
+    prices:
+      input_mtok: 0.15
+    prices_checked: 2026-11-03
+
+  - id: gemini-embedding-2
+    name: Gemini Embedding 2
+    description: Google's multimodal embedding model for text, images, audio, video, and documents.
+    match:
+      or:
+        - equals: gemini-embedding-2
+        - equals: gemini-embedding-2-preview
+    context_window: 8192
+    prices_checked: 2026-11-03
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing#gemini-embedding-2. Batch rates verified on 2026-10-14 at
+      https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves
+      every input modality. The models catalog (https://ai.google.dev/gemini-api/docs/models) names the endpoint
+      `gemini-embedding-2-preview` and the pricing page `gemini-embedding-2`; both were added to the match on
+      2026-10-15 at the published Embedding 2 rates.
+    prices:
+      input_mtok: 0.2
+      input_image_mtok: 0.45
+      input_audio_mtok: 6.5
+      input_video_mtok: 12
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.1
+          input_image_mtok: 0.225
+          input_audio_mtok: 3.25
+          input_video_mtok: 6
+
+  - id: gemini-flash-1.5
+    name: Gemini 1.5 Flash
+    description: >-
+      Gemini 1.5 Flash is a foundation model that performs well at a variety of multimodal tasks such as visual understanding,
+      classification, summarization, and creating content from image, audio and video.
+      It's adept at processing visual and text inputs such as photographs, documents, infographics, and screenshots.
+    match:
+      equals: gemini-flash-1.5
+    prices_checked: 2025-07-05
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-1.5-flash
+    prices:
+      input_mtok:
+        base: 0.075
+        tiers:
+          - start: 128000
+            price: 0.15
+      cache_read_mtok:
+        base: 0.01875
+        tiers:
+          - start: 128000
+            price: 0.0375
+      output_mtok:
+        base: 0.3
+        tiers:
+          - start: 128000
+            price: 0.6
+
+  - id: gemini-flash-1.5-8b
+    name: gemini 1.5 flash
+    description: >-
+      A faster, more cost-effective variant of Gemini 1.5 that maintains strong
+      capabilities while optimizing for performance and cost efficiency.
+      Suitable for production deployments requiring high throughput.
+    match:
+      equals: gemini-flash-1.5-8b
+    context_window: 1000000
+    prices_checked: 2025-07-05
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-1.5-flash-8b
+    prices:
+      input_mtok:
+        base: 0.0375
+        tiers:
+          - start: 128000
+            price: 0.075
+      cache_read_mtok:
+        base: 0.01
+        tiers:
+          - start: 128000
+            price: 0.02
+      output_mtok:
+        base: 0.15
+        tiers:
+          - start: 128000
+            price: 0.3
+
+  - id: gemini-live-2.5-flash
+    name: Gemini Live 2.5 Flash
+    description: >-
+      Google's Live API model for low-latency bidirectional voice and video
+      interactions, GA on Vertex AI (model id `gemini-live-2.5-flash`, served
+      from the `global` location). The prefix match also covers the AI Studio
+      preview ids (`gemini-live-2.5-flash-preview*`).
+    match:
+      or:
+        - starts_with: gemini-live-2.5-flash
+        - starts_with: gemini-2.5-flash-native-audio-preview
+        - equals: gemini-2.5-flash-native-audio-latest
+    price_comments: >-
+      See https://cloud.google.com/vertex-ai/generative-ai/pricing (Live API)
+      and https://ai.google.dev/gemini-api/docs/pricing - GA pricing matches
+      the preview. Both price video input at the $3 audio rate, and Vertex prices image input the same.
+    prices_checked: 2026-11-03
+    prices:
+      input_mtok: 0.5
+      input_audio_mtok: 3
+      input_image_mtok: 3
+      input_video_mtok: 3
+      output_mtok: 2
+      output_audio_mtok: 12
+
+  - id: gemini-nano-banana-2.1
+    name: Gemini Nano Banana 2.1
+    description: >-
+      Google's latest image generation and editing model, with text/thinking output tokens priced
+      separately from image output tokens.
+    match:
+      equals: gemini-nano-banana-2.1
+    prices_checked: 2026-11-03
+    price_comments: >-
+      See https://ai.google.dev/gemini-api/docs/pricing. Image output is $30 per 1M tokens; text and thinking
+      output is $7.50 per 1M tokens and is the aggregate remainder when modality details omit text.
+      Batch halves input, text output and image output. Google Web and Image Search grounding is $14 per
+      1,000 billable search queries; callers supply the count after account-wide free allowances.
+    prices:
+      input_mtok: 1.5
+      output_mtok: 7.5
+      output_image_mtok: 30
+      web_searches_kcount: 14
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-15 }
+        prices:
+          input_mtok: 0.75
+          output_mtok: 3.75
+          output_image_mtok: 15
+
+  - id: gemini-omni-1.1-flash
+    name: Gemini Omni Flash
+    description: Google's video generation and editing model with multimodal input.
+    match:
+      equals: gemini-omni-1.1-flash
+    prices_checked: 2026-11-03
+    price_comments: >-
+      Rates from https://ai.google.dev/gemini-api/docs/pricing (Gemini Omni Flash, GA): input
+      $1.50 / 1M tokens across text, image, video and audio; output $9 / 1M tokens (text) and
+      $17.50 / 1M tokens (video). The models catalog names `gemini-omni-1.1-flash` as the GA endpoint of
+      the Omni Flash family.
+    prices:
+      input_mtok: 1.5
+      output_mtok: 9
+      output_video_mtok: 17.5
+
+  - id: gemini-omni-flash-preview
+    name: Gemini Omni Flash Preview
+    description: Google's video generation and editing model with multimodal input.
+    match:
+      starts_with: gemini-omni-flash-preview
+    prices_checked: 2026-10-19
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-omni-flash-preview.
+    prices:
+      input_mtok: 1.5
+      output_mtok: 9
+      output_video_mtok: 17.5
+
+  - id: gemini-pro
+    name: gemini 1.0 pro
+    description: >-
+      Google's first-generation advanced multimodal model that can understand
+      text, code, and images. It provides strong reasoning capabilities and
+      follows instructions effectively.
+    match:
+      or:
+        - equals: gemini-pro
+        - equals: gemini-1.0-pro
+    context_window: 32768
+    prices_checked: 2025-07-04
+    price_comments: I can't find anything so trusting these prices, not sure the model still exists
+    prices:
+      input_mtok: 0.125
+      output_mtok: 0.375
+
+  - id: gemini-pro-1.5
+    name: Gemini 1.5 Pro
+    description: >-
+      Google's latest multimodal model, supports image and video[0] in text or chat prompts.
+    match:
+      equals: gemini-pro-1.5
+    context_window: 2000000
+    prices_checked: 2025-07-05
+    price_comments: See https://ai.google.dev/gemini-api/docs/pricing#gemini-1.5-pro
+    prices:
+      input_mtok:
+        base: 1.25
+        tiers:
+          - start: 128000
+            price: 2.5
+      cache_read_mtok:
+        base: 0.3125
+        tiers:
+          - start: 128000
+            price: 0.625
+      output_mtok:
+        base: 5
+        tiers:
+          - start: 128000
+            price: 10
+
+  - id: gemini-robotics-er-2-preview
+    match:
+      equals: gemini-robotics-er-2-preview
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Rates from https://ai.google.dev/gemini-api/docs/pricing (Gemini Robotics ER 2): input $1 / 1M tokens
+      and output $5 / 1M tokens through 2026-12-31, rising to $2 and $10 from 2027-01-01. Cache reads are
+      implicit only at $0.10 / 1M tokens through 2026-12-31 and $0.20 from 2027-01-01; the engines do not
+      represent the cache storage fee.
+    prices:
+      - prices:
+          input_mtok: 1
+          cache_read_mtok: 0.1
+          output_mtok: 5
+      - constraint:
+          # https://ai.google.dev/gemini-api/docs/pricing - "$2.00 starting January 1, 2027"
+          start_date: 2027-01-01
+        prices:
+          input_mtok: 2
+          cache_read_mtok: 0.2
+          output_mtok: 10
+
+  - id: gemini-robotics-er-2-streaming-preview
+    match:
+      equals: gemini-robotics-er-2-streaming-preview
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Rates from https://ai.google.dev/gemini-api/docs/pricing (Gemini Robotics ER 2 Streaming): input
+      $1 / 1M tokens and output $5 / 1M tokens through 2026-12-31, rising to $2 and $10 from 2027-01-01.
+      No context-caching section is published for the streaming endpoint.
+    prices:
+      - prices:
+          input_mtok: 1
+          output_mtok: 5
+      - constraint:
+          # https://ai.google.dev/gemini-api/docs/pricing - "$2.00 starting January 1, 2027"
+          start_date: 2027-01-01
+        prices:
+          input_mtok: 2
+          output_mtok: 10
+
+  - id: gemma-2-27b-it
+    name: Gemma 2 27B
+    description: >-
+      Gemma 2 27B by Google is an open model built from the same research and technology used to create the Gemini models.
+      Gemma models are well-suited for a variety of text generation and instruction-following tasks.
+    match:
+      equals: gemma-2-27b-it
+    prices_checked: 2026-06-09
+    price_comments: >-
+      Imported from OpenRouter pricing; verify against Google pricing when native API pricing is
+      published.
+    prices:
+      input_mtok: 0.65
+      output_mtok: 0.65
+
+  - id: gemma-3
+    name: Gemma 3 (free)
+    description: Lightweight, state-of the art, open model built from the same technology that powers our Gemini models.
+    prices_checked: 2025-08-12
+    match:
+      or:
+        - starts_with: gemma-3-
+        - equals: gemma-3
+    prices: {}
+
+  - id: gemma-3n
+    name: Gemma 3n (free)
+    description: >-
+      Our open model built for efficient performance on everyday devices like mobile phones, laptops, and
+      tablets.
+    collapse: false
+    prices_checked: 2025-08-12
+    match:
+      or:
+        - starts_with: gemma-3n
+    prices: {}
+
+  - id: gemma-4-26b-a4b-it
+    name: Gemma 4 26B A4B
+    description: >-
+      Gemma 4 26B A4B IT is an instruction-tuned Mixture-of-Experts (MoE) model from Google DeepMind. Despite 25.2B total
+      parameters, only 3.8B activate per token during inference.
+    match:
+      equals: gemma-4-26b-a4b-it
+    context_window: 262144
+    prices_checked: 2026-08-27
+    price_comments: >-
+      Gemini API model ID. Free of charge on the Gemini API with no paid tier, see
+      https://ai.google.dev/gemini-api/docs/pricing. The Vertex AI Model-as-a-Service offering uses the
+      gemma-4-26b-a4b-it-maas ID and is priced separately. The previous rates were imported from OpenRouter, not Google.
+    prices: {}
+
+  - id: gemma-4-26b-a4b-it-maas
+    name: Gemma 4 26B A4B (Vertex AI MaaS)
+    description: >-
+      Gemma 4 26B A4B IT served by Vertex AI as a managed Model-as-a-Service endpoint.
+    match:
+      equals: gemma-4-26b-a4b-it-maas
+    context_window: 262144
+    prices_checked: 2026-08-27
+    price_comments: >-
+      Vertex AI Model-as-a-Service rates, see https://cloud.google.com/vertex-ai/generative-ai/pricing. Model ID from
+      https://cloud.google.com/vertex-ai/generative-ai/docs/maas/use-open-models.
+    prices:
+      input_mtok: 0.15
+      cache_read_mtok: 0.015
+      output_mtok: 0.6
+
+  - id: gemma-4-31b-it
+    name: Gemma 4 31B
+    description: >-
+      Gemma 4 31B Instruct is Google DeepMind's 30.7B dense multimodal model supporting text and image input with text output.
+      It features a 256K token context window, configurable thinking/reasoning mode, and native function calling.
+    match:
+      equals: gemma-4-31b-it
+    context_window: 262144
+    prices_checked: 2026-08-27
+    price_comments: >-
+      Free of charge on the Gemini API with no paid tier, see https://ai.google.dev/gemini-api/docs/pricing. Not offered
+      as Model-as-a-Service on Vertex AI (only Gemma 4 26B is); there it is self-deployed from Model Garden and billed as
+      endpoint compute, so no per-token price applies. The previous rates were imported from OpenRouter, not Google.
+    prices: {}
