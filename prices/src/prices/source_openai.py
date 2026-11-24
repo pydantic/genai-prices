@@ -31,6 +31,7 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     """Parse the standard-tier text token rates; batch, flex and fast tabs and non-text units stay curated."""
     rates: dict[str, ModelPrice] = {}
     long_context_rows: dict[str, tuple[dict[str, Decimal | TieredPrices], list[str]]] = {}
+    conflicting: set[str] = set()
     for model_column, columns, rows in _standard_tables(markdown):
         for row in rows:
             model_cell, cells = row[model_column], row[model_column + 1 :]
@@ -41,16 +42,18 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
             if match['context'] == 'long':
                 long = _prices(columns, cells, row)
                 if long_context_rows.setdefault(match['id'], (long, row))[0] != long:
-                    raise RuntimeError(f'OpenAI pricing page lists {match["id"]} at conflicting long context rates')
+                    conflicting.add(match['id'])
                 continue
             prices = ModelPrice.model_validate(_prices(columns, cells, row))
             if rates.setdefault(match['id'], prices) != prices:
-                raise RuntimeError(f'OpenAI pricing page lists {match["id"]} at conflicting standard rates')
+                conflicting.add(match['id'])
     for model_id, (long, row) in long_context_rows.items():
-        if long:
+        if long and model_id not in conflicting:
             rates[model_id] = _with_long_context(rates.get(model_id), long, row)
     if not rates:
         raise RuntimeError('OpenAI pricing page has no standard text pricing table')
+    for model_id in sorted(conflicting):
+        print(f'OpenAI: kept {model_id} unchanged, the pricing page lists it at conflicting rates; update it by hand')
     return [
         ModelInfo(
             id=model_id,
@@ -59,6 +62,7 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
             prices_checked=date.today(),
         )
         for model_id, prices in rates.items()
+        if model_id not in conflicting
     ]
 
 
@@ -75,12 +79,12 @@ def get_openai_prices() -> None:  # pragma: no cover - thin CLI alias for main
 
 
 def _standard_tables(markdown: str) -> list[tuple[int, list[tuple[bool, str | None]], list[list[str]]]]:
-    """Yield the text tables outside a Batch, Flex or Fast tab; the tab label is the line before each heading."""
-    sections = re.split(r'^### .*$', markdown, flags=re.MULTILINE)
+    """Yield the text tables outside a Batch, Flex or Fast tab, named by the line before a heading or the heading."""
+    sections = re.split(r'^### (.*)$', markdown, flags=re.MULTILINE)
     tables: list[tuple[int, list[tuple[bool, str | None]], list[list[str]]]] = []
-    for before, section in zip(sections, sections[1:]):
+    for before, heading, section in zip(sections[::2], sections[1::2], sections[2::2]):
         tab = next((line.strip() for line in reversed(before.splitlines()) if line.strip()), '')
-        if tab in NON_STANDARD_TABS:
+        if tab in NON_STANDARD_TABS or heading.partition(' ')[0] in NON_STANDARD_TABS:
             continue
         for header, rows in markdown_tables(section):
             if 'Model' in header[:2] and (columns := _columns(header[header.index('Model') + 1 :])):

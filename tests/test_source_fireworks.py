@@ -76,12 +76,32 @@ def test_fireworks_ultra_fast_row_is_a_router_model() -> None:
         ),
         (PRICING_MARKDOWN.replace('\\$4.50 / ', ''), 'Unexpected Fireworks pricing row'),
         (PRICING_MARKDOWN.replace(' | — |\n| [GLM', ' |\n| [GLM'), 'Unexpected Fireworks pricing row'),
-        (PRICING_MARKDOWN.replace('Kimi K3 Fast', 'Kimi K3'), 'Duplicate Fireworks pricing row'),
     ],
 )
 def test_fireworks_rejects_an_unexpected_pricing_table(markdown: str, error: str) -> None:
     with pytest.raises(RuntimeError, match=error):
         source_fireworks.parse_pricing_markdown(markdown)
+
+
+def test_fireworks_flex_row_is_a_router_model() -> None:
+    url = 'https://app.fireworks.ai/models/fireworks/deepseek-v4p1-flash-1017'
+    row = f'| [DeepSeek V4.1 Flash 1017 Flex]({url}) | \\$0.15 / \\$0.003 / \\$0.60 | — |\n'
+
+    models = source_fireworks.parse_pricing_markdown(f'{source_fireworks.TABLE_HEADER}\n| - | - | - |\n{row}')
+
+    assert [(model.id, model.name) for model in models] == [
+        ('accounts/fireworks/routers/deepseek-v4p1-flash-1017-flex', 'DeepSeek V4.1 Flash 1017 Flex')
+    ]
+
+
+def test_fireworks_keeps_a_model_listed_twice_unchanged(capsys: pytest.CaptureFixture[str]) -> None:
+    models = source_fireworks.parse_pricing_markdown(PRICING_MARKDOWN.replace('Kimi K3 Fast', 'Kimi K3'))
+
+    assert [model.id for model in models] == ['accounts/fireworks/routers/glm-5p3-flash-us']
+    assert capsys.readouterr().out == (
+        'Fireworks: kept accounts/fireworks/models/kimi-k3 unchanged, the pricing page lists it more than once; '
+        'update it by hand\n'
+    )
 
 
 @pytest.mark.vcr()
