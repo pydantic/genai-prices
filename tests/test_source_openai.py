@@ -100,12 +100,6 @@ def test_openai_parses_standard_text_rates_and_skips_other_tabs_and_units() -> N
         (PRICING_MARKDOWN.replace('| $0.20 | $2.50 |', '| $0.20 | - |'), 'without its pair'),
         (PRICING_MARKDOWN.replace('| $0.40 | $5.00 |', '| $0.40 | - |'), 'without its pair'),
         (
-            PRICING_MARKDOWN.replace(
-                '| gpt-7-pro | $30.00 | $180.00 | - |\n', '| gpt-7-pro | $31.00 | $180.00 | - |\n'
-            ),
-            'lists gpt-7-pro at conflicting standard rates',
-        ),
-        (
             PRICING_MARKDOWN.replace('gpt-cyber-preview (long context) | - |', 'gpt-orphan (long context) | $1.00 |'),
             'long context row has rates without a short context rate',
         ),
@@ -113,15 +107,53 @@ def test_openai_parses_standard_text_rates_and_skips_other_tabs_and_units() -> N
             PRICING_MARKDOWN + '| Cyber | gpt-7 (long context) | $9.00 | - | - |\n',
             'long context row repeats a tiered rate for input_mtok',
         ),
-        (
-            PRICING_MARKDOWN + '| Cyber | gpt-cyber (long context) | $41.00 | $4.00 | - |\n',
-            'lists gpt-cyber at conflicting long context rates',
-        ),
     ],
 )
 def test_openai_rejects_an_unexpected_pricing_page(markdown: str, error: str) -> None:
     with pytest.raises(RuntimeError, match=error):
         source_openai.parse_pricing_markdown(markdown)
+
+
+def test_openai_skips_a_tier_named_only_by_its_heading() -> None:
+    promotion = """
+Ultrafast costs 3 times the Standard rate during the promotion.
+
+### Ultrafast promotion pricing data
+
+| Model | Input | Output | Cached input |
+| --- | --- | --- | --- |
+| gpt-bio | $15.00 | $75.00 | $1.50 |
+"""
+
+    models = source_openai.parse_pricing_markdown(
+        PRICING_MARKDOWN.replace('\nStandard\n\n### Grouped', promotion + '\nStandard\n\n### Grouped')
+    )
+
+    assert models == source_openai.parse_pricing_markdown(PRICING_MARKDOWN)
+
+
+@pytest.mark.parametrize(
+    ('markdown', 'model_id'),
+    [
+        (
+            PRICING_MARKDOWN.replace(
+                '| gpt-7-pro | $30.00 | $180.00 | - |\n', '| gpt-7-pro | $31.00 | $180.00 | - |\n'
+            ),
+            'gpt-7-pro',
+        ),
+        (PRICING_MARKDOWN + '| Cyber | gpt-cyber (long context) | $41.00 | $4.00 | - |\n', 'gpt-cyber'),
+    ],
+)
+def test_openai_keeps_a_model_listed_at_conflicting_rates_unchanged(
+    markdown: str, model_id: str, capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_openai.parse_pricing_markdown(markdown)
+
+    expected = [model for model in source_openai.parse_pricing_markdown(PRICING_MARKDOWN) if model.id != model_id]
+    assert models == expected
+    assert capsys.readouterr().out == (
+        f'OpenAI: kept {model_id} unchanged, the pricing page lists it at conflicting rates; update it by hand\n'
+    )
 
 
 @pytest.mark.vcr()

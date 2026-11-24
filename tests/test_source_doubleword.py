@@ -24,15 +24,13 @@ NEW_MODEL_IDS = (
 CATALOG = """\
 ## Model Catalog
 
-### Active Models
-
 | Model | Realtime | Async | Batch (24h) |
 |-------|----------|-------|-------------|
 | [GLM 5.2](/inference-api/models/zai-org-glm-5-2-fp8) | \\$0.93 / \\$0.19 / \\$3.00 | \\$0.70 / \\$0.14 / \\$2.25 | \\$0.47 / \\$0.09 / \\$1.50 |
 | [OCR](/inference-api/models/ocr) | — | \\$0.08 / \\$0.08 / \\$0.08 | \\$0.05 / \\$0.05 / \\$0.05 |
 | [Embedding](/inference-api/models/embedding) | \\$0.04 / \\$0.04 / \\$0.00 | \\$0.03 / \\$0.03 / \\$0.00 | \\$0.02 / \\$0.02 / \\$0.00 |
 
-### Scheduled for Deprecation
+## Retrieve model prices through the API
 """
 
 PAGES = {
@@ -70,7 +68,7 @@ def test_doubleword_parses_realtime_prices_and_api_ids_from_model_pages() -> Non
 @pytest.mark.parametrize(
     'catalog, error',
     [
-        (CATALOG.replace('| Async |', '| Flex |'), 'no Active Models table in the expected shape'),
+        (CATALOG.replace('| Async |', '| Flex |'), 'no model catalog table in the expected shape'),
         (CATALOG.replace('[OCR](/inference-api/models/ocr)', 'OCR'), 'Unexpected Doubleword models row'),
         (CATALOG.replace('\\$0.93 / \\$0.19', '\\$0.93'), 'Unexpected Doubleword Realtime price'),
     ],

@@ -92,7 +92,9 @@ def test_copilot_reads_a_reordered_table_by_column_name() -> None:
     assert [model.id for model in source_github_copilot.parse_pricing_markdown(markdown)] == ['gpt-5.4']
 
 
-def test_copilot_refuses_to_guess_ids_for_unlisted_models(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_copilot_reports_unlisted_models_instead_of_guessing_their_ids(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     provider_path = tmp_path / 'github_copilot.yml'
     copyfile(package_dir / 'providers/github_copilot.yml', provider_path)
     monkeypatch.setattr(
@@ -100,9 +102,15 @@ def test_copilot_refuses_to_guess_ids_for_unlisted_models(monkeypatch: pytest.Mo
         'get_markdown',
         {source_github_copilot.PRICING_URL: HEADER + row('GPT-9 Nova', 'Default', 'Not applicable')}.get,
     )
+    monkeypatch.setattr(source_github_copilot, 'MIN_MODEL_COUNT', 0)
 
-    with pytest.raises(RuntimeError, match='lists models missing from the provider YAML: gpt-9-nova'):
-        source_github_copilot.main(provider_path)
+    source_github_copilot.main(provider_path)
+
+    assert capsys.readouterr().out == (
+        'GitHub Copilot: pricing lists gpt-9-nova, which github_copilot.yml lacks; add it by hand\n'
+        'GitHub Copilot prices updated: 0 added, 0 updated\n'
+    )
+    assert provider_path.read_text() == (package_dir / 'providers/github_copilot.yml').read_text()
 
 
 @pytest.mark.vcr()

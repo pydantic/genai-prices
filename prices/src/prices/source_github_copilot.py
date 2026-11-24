@@ -85,8 +85,10 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
 def main(provider_path: Path | None = None) -> None:
     models = parse_pricing_markdown(get_markdown(PRICING_URL))
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/github_copilot.yml')
-    if unknown := [model.id for model in models if provider_yaml.provider.find_model(model.id) is None]:
-        raise RuntimeError(f'GitHub Copilot pricing lists models missing from the provider YAML: {", ".join(unknown)}')
+    for model in models:
+        if provider_yaml.provider.find_model(model.id) is None:
+            print(f'GitHub Copilot: pricing lists {model.id}, which github_copilot.yml lacks; add it by hand')
+    models = [model for model in models if provider_yaml.provider.find_model(model.id)]
     added, updated = provider_yaml.upsert_models(models, source='GitHub Copilot', min_count=MIN_MODEL_COUNT)
     print(f'GitHub Copilot prices updated: {added} added, {updated} updated')
 

@@ -96,6 +96,7 @@ def test_aws_splits_in_region_and_global_rates_per_model() -> None:
                 ('Claude Haiku 5.5', 'USE1-MP:USE1_input_tokens_standard-Units', '1M tokens', '0.11'),
                 ('Claude Haiku 5.5', 'USE1-MP:USE1_input_tokens_long_ctx_standard-Units', '1M tokens', '0.55'),
                 ('Claude Haiku 5.5', 'USE1-MP:USE1_output_tokens_global_flex-Units', '1M tokens', '0.25'),
+                ('Claude Haiku 5.5', 'USE1-MP:USE1_input_tokens_ultrafast-Units', '1M tokens', '0.66'),
                 ('Claude Haiku 5.5', 'USE1-MP:USE1_cache_write_tokens_1h_global_standard-Units', '1M tokens', '0.2'),
             ],
         )
@@ -113,19 +114,23 @@ def test_aws_splits_in_region_and_global_rates_per_model() -> None:
     ]
 
 
-def test_aws_rejects_conflicting_rates() -> None:
+def test_aws_keeps_models_it_cannot_price_unchanged(capsys: pytest.CaptureFixture[str]) -> None:
     rows = [
         ('Llama 3 8B', 'USE1-Llama3-8B-input-tokens', '1K tokens', '0.0003'),
         ('Llama 3 8B', 'USE1-meta.llama3-8b-instruct-mantle-input-tokens-standard', '1K tokens', '0.0004'),
+        ('Llama 3 70B', 'USE1-Llama3-70B-thinking-tokens', '1K tokens', '0.0003'),
+        ('Llama 3.1 8B', 'USE1-Llama3-1-8B-input-tokens', '1K tokens', '0.00022'),
     ]
-    with pytest.raises(RuntimeError, match='conflicting input_mtok rates for meta.llama3-8b-instruct-v1:0'):
-        source_aws.parse_price_lists(offers(rows, []))
 
+    models = source_aws.parse_price_lists(offers(rows, []))
 
-def test_aws_rejects_an_unrecognised_token_usage_type() -> None:
-    rows = [('Llama 3 8B', 'USE1-Llama3-8B-thinking-tokens', '1K tokens', '0.0003')]
-    with pytest.raises(RuntimeError, match="Unrecognised AWS token usage type 'llama38bthinkingtokens'"):
-        source_aws.parse_price_lists(offers(rows, []))
+    assert models == [model('meta.llama3-1-8b-instruct-v1:0', input_mtok='0.22')]
+    assert capsys.readouterr().out == (
+        'AWS: kept meta.llama3-8b-instruct-v1:0 unchanged, the price list has conflicting input_mtok rates; '
+        'update it by hand\n'
+        'AWS: kept meta.llama3-70b-instruct-v1:0 unchanged, the price list has an unrecognised token usage type '
+        "'llama370bthinkingtokens'; update it by hand\n"
+    )
 
 
 @pytest.mark.vcr()
