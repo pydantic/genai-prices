@@ -6,7 +6,7 @@ from decimal import Decimal
 from pathlib import Path
 from typing import TypeAlias
 
-from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, Tier, TieredPrices
+from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, Provider, StartDateConstraint, Tier, TieredPrices
 from prices.update import ProviderYaml
 from prices.utils import get_markdown, package_dir
 
@@ -53,7 +53,17 @@ class UnreadablePriceError(ValueError):
     """A pricing cell the parser cannot turn into rates without guessing."""
 
 
-def parse_pricing_markdown(markdown: str, today: date | None = None) -> list[ModelInfo]:
+class ScheduledRateError(UnreadablePriceError):
+    """A rate that starts after the day the page is read, so only a dated entry can record it."""
+
+    def __init__(self, start: date) -> None:
+        super().__init__(f'a rate starts on {start}, which a dated entry must record')
+        self.start = start
+
+
+def parse_pricing_markdown(
+    markdown: str, today: date | None = None, provider: Provider | None = None
+) -> list[ModelInfo]:
     today = today or date.today()
     models: list[ModelInfo] = []
     for section in re.split(r'^## ', markdown, flags=re.MULTILINE)[1:]:
@@ -67,8 +77,13 @@ def parse_pricing_markdown(markdown: str, today: date | None = None) -> list[Mod
         if len(header) != 3 or 'per 1M tokens' not in header[2]:
             print(f'Google: skipped {heading}, its prices are not per 1M tokens')
             continue
+        cells = {label: paid for label, _, paid in rows}
         try:
-            prices = _prices({label: paid for label, _, paid in rows}, today)
+            prices = _prices(cells, today)
+        except ScheduledRateError as e:
+            if provider is None or not all(_records(provider.find_model(i), e.start, cells) for i in model_ids):
+                print(f'Google: skipped {heading}, {e}')
+            continue
         except UnreadablePriceError as e:
             print(f'Google: skipped {heading}, {e}')
             continue
@@ -85,7 +100,7 @@ def parse_pricing_markdown(markdown: str, today: date | None = None) -> list[Mod
 def main(provider_path: Path | None = None) -> None:
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/google.yml')
     models: list[ModelInfo] = []
-    for model in parse_pricing_markdown(get_markdown(PRICING_URL)):
+    for model in parse_pricing_markdown(get_markdown(PRICING_URL), provider=provider_yaml.provider):
         if provider_yaml.provider.find_model(model.id) is None:
             print(f'Google: skipped {model.id}, it is not in google.yml yet')
         else:
@@ -97,6 +112,20 @@ def main(provider_path: Path | None = None) -> None:
 def get_google_prices() -> None:  # pragma: no cover - thin CLI alias for main
     """Download and update Gemini API prices."""
     main()
+
+
+def _records(model: ModelInfo | None, start: date, cells: dict[str, str]) -> bool:
+    try:
+        scheduled = {key: rate for key, rate in _prices(cells, start) if rate is not None}
+    except UnreadablePriceError:
+        return False
+    entries = model.prices if model is not None and isinstance(model.prices, list) else []
+    return any(
+        isinstance(entry.constraint, StartDateConstraint)
+        and entry.constraint.start_date == start
+        and all(dict(entry.prices).get(key) == rate for key, rate in scheduled.items())
+        for entry in entries
+    )
 
 
 def _markdoc_rows(table: str) -> list[list[str]]:
@@ -151,7 +180,7 @@ def _cell_rates(row: str, cell: str, today: date) -> dict[str, Rate]:
             continue
         if match['when'] == 'starting':
             if (start := datetime.strptime(match['date'], '%B %d, %Y').date()) > today:
-                raise UnreadablePriceError(f'a rate starts on {start}, which a dated entry must record')
+                raise ScheduledRateError(start)
             current += pending
         pending = []
     current += pending

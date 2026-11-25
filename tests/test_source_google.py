@@ -8,7 +8,7 @@ from shutil import copyfile
 import pytest
 
 from prices import source_google
-from prices.prices_types import ModelPrice, Tier, TieredPrices
+from prices.prices_types import ModelPrice, Provider, Tier, TieredPrices
 from prices.update import ProviderYaml
 from prices.utils import package_dir
 
@@ -30,6 +30,16 @@ def section(heading: str, ids: str, rows: str, table_header: str = HEADER) -> st
         f'{table("| Input price | x | $9 |")}\n  {{% /tab %}}\n{{% /tabs %}}\n'
     )
 
+
+ARGON = (
+    '## Argon\n\n*[`gemini-argon-x`](https://x)*\n\n{% table %}\n'
+    '  * Feature\n  * Free Tier\n  * Paid Tier, per 1M tokens in USD\n\n  ---\n\n'
+    '  * Input price\n  * Not available\n  * $2.00 through November 30, 2026. \\\\\n  $4.00 starting December 1, 2026.\n'
+    '\n  ---\n\n'
+    '  * Context caching price\n  * Not available\n  * $0.10 through November 30, 2026.   \n'
+    '  $0.20 starting December 1, 2026.   \n  Implicit caching only (explicit caching is not supported).\n'
+    '{% /table %}\n'
+)
 
 PRICING_MARKDOWN = '\n'.join(
     [
@@ -85,13 +95,7 @@ PRICING_MARKDOWN = '\n'.join(
             '| Image input price | Free | $0.45 ($0.00012 per image) |\n'
             '| Audio input price | Free | $6.50 ($0.00016 per second) |',
         ),
-        '## Argon\n\n*[`gemini-argon-x`](https://x)*\n\n{% table %}\n'
-        '  * Feature\n  * Free Tier\n  * Paid Tier, per 1M tokens in USD\n\n  ---\n\n'
-        '  * Input price\n  * Not available\n  * $2.00 through November 30, 2026. \\\\\n  $4.00 starting December 1, 2026.\n'
-        '\n  ---\n\n'
-        '  * Context caching price\n  * Not available\n  * $0.10 through November 30, 2026.   \n'
-        '  $0.20 starting December 1, 2026.   \n  Implicit caching only (explicit caching is not supported).\n'
-        '{% /table %}\n',
+        ARGON,
         section(
             'Old image',
             '[`gemini-old-image-x`](https://x)',
@@ -191,6 +195,59 @@ def test_google_skips_a_model_whose_prices_it_cannot_read(
 
     assert source_google.parse_pricing_markdown(markdown, today=TODAY) == []
     assert capsys.readouterr().out == f'Google: skipped Odd, {reason}\n'
+
+
+def argon_provider(model_id: str, input_mtok: float) -> Provider:
+    return Provider.model_validate(
+        {
+            'id': 'google',
+            'name': 'Google',
+            'api_pattern': 'x',
+            'models': [
+                {
+                    'id': model_id,
+                    'match': {'equals': model_id},
+                    'prices': [
+                        {'prices': {'input_mtok': 2, 'cache_read_mtok': 0.1}},
+                        {
+                            'constraint': {'start_date': '2026-12-01'},
+                            'prices': {'input_mtok': input_mtok, 'cache_read_mtok': 0.2},
+                        },
+                    ],
+                }
+            ],
+        }
+    )
+
+
+def test_google_skips_a_future_rate_that_google_yml_already_records_without_a_note(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    assert source_google.parse_pricing_markdown(ARGON, TODAY, argon_provider('gemini-argon-x', 4)) == []
+    assert capsys.readouterr().out == ''
+
+
+@pytest.mark.parametrize(
+    ('markdown', 'provider'),
+    [
+        (ARGON, argon_provider('gemini-argon-x', 5)),
+        (ARGON, argon_provider('gemini-other-x', 4)),
+        (
+            ARGON.replace(
+                '$4.00 starting December 1, 2026.', '$4.00 starting December 1, 2026. $5.00 starting January 1, 2027.'
+            ),
+            argon_provider('gemini-argon-x', 4),
+        ),
+    ],
+)
+def test_google_notes_a_future_rate_that_google_yml_does_not_record(
+    markdown: str, provider: Provider, capsys: pytest.CaptureFixture[str]
+) -> None:
+    assert source_google.parse_pricing_markdown(markdown, TODAY, provider) == []
+    assert (
+        capsys.readouterr().out
+        == 'Google: skipped Argon, a rate starts on 2026-12-01, which a dated entry must record\n'
+    )
 
 
 def test_google_rejects_a_table_row_with_missing_cells() -> None:
