@@ -148,6 +148,7 @@ function allowedPath(filePath) {
       'packages/python/genai_prices/data.py',
       'packages/js/src/data.ts',
       'packages/go/internal/data/prices.json',
+      'packages/rust/data/prices.json',
       'tests/dataset/usages.json',
     ].includes(filePath)
   )
@@ -196,7 +197,7 @@ function parseRawDiff(output) {
   const fields = output.toString('utf8').split('\0')
   if (fields.pop() !== '') fail('could not parse staged path metadata')
   const entries = []
-  for (let index = 0; index < fields.length; ) {
+  for (let index = 0; index < fields.length;) {
     const metadata = fields[index++]
     const match = /^:([0-7]{6}) ([0-7]{6}) [0-9a-f]+ [0-9a-f]+ ([A-Z])$/.exec(metadata)
     if (!match || index >= fields.length) fail('could not parse staged path metadata')
@@ -288,4 +289,4 @@ function applyPatch({ directory, patchPath, reportPath, expected }) {
   }
 }
 
-module.exports = { validateAssessment, applyPatch }
+module.exports = { validateAssessment, applyPatch, allowedPath }
