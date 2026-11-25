@@ -9,6 +9,7 @@ from urllib.parse import urlparse
 import pytest
 from ruamel.yaml import YAML
 
+from prices.update import MANUAL_UPDATE_NOTES_ENV
 from scripts.price_check_sources import load_provider_sources, official_source_hosts
 
 WORKFLOWS = Path(__file__).resolve().parents[1] / '.github/workflows'
@@ -1087,22 +1088,29 @@ def test_hourly_update_lists_rates_that_need_a_manual_update(
     )
 
 
-def test_hourly_importer_failure_still_fails_the_step_when_its_output_is_saved(tmp_path: Path) -> None:
+@pytest.mark.parametrize('exit_code', [0, 1])
+def test_hourly_importer_step_collects_manual_update_notes_and_fails_with_its_importer(
+    tmp_path: Path, exit_code: int
+) -> None:
+    note = 'OpenAI: kept gpt-x unchanged, the pricing page lists it at conflicting rates; update it by hand'
     fake_make = tmp_path / 'make'
-    fake_make.write_text('#!/bin/bash\necho "Cursor pricing returned only 0 priced models"\nexit 1\n')
+    fake_make.write_text(f'#!/bin/bash\necho "{note}" >> "$PRICE_UPDATE_NOTES"\nexit {exit_code}\n')
     fake_make.chmod(0o755)
     steps = read_workflow('update-prices.yml')['jobs']['import']['steps']
-    script = next(step['run'] for step in steps if 'importer.log' in step.get('run', '') and '-get' in step['run'])
+    step = next(step for step in steps if '-get' in step.get('run', ''))
+    assert step['env'][MANUAL_UPDATE_NOTES_ENV] == '${{ runner.temp }}/patches/${{ matrix.importer }}.notes'
+    notes = tmp_path / 'patches' / 'openai.notes'
 
     result = subprocess.run(
-        ['bash', '-e', '-c', script],
+        ['bash', '-e', '-c', step['run']],
         env={
             **os.environ,
             'PATH': f'{tmp_path}:{os.environ["PATH"]}',
             'RUNNER_TEMP': str(tmp_path),
-            'IMPORTER': 'cursor',
+            'IMPORTER': 'openai',
+            MANUAL_UPDATE_NOTES_ENV: str(notes),
         },
     )
 
-    assert result.returncode != 0
-    assert (tmp_path / 'importer.log').read_text() == 'Cursor pricing returned only 0 priced models\n'
+    assert result.returncode == exit_code
+    assert notes.read_text() == f'{note}\n'

@@ -70,17 +70,32 @@ def test_zai_parses_token_tables_and_skips_free_and_non_token_models() -> None:
     assert models[3].prices_checked == date.today()
 
 
-@pytest.mark.parametrize(
-    ('markdown', 'error'),
-    [
-        ('| Model | Input | Output |\n| :- | :- | :- |\n', 'Unexpected Z.ai token pricing columns'),
-        (HEADER + '| GLM-5 | \\$1 | \\$0.2 | Free | \\$3.2 |\n' * 2, 'Duplicate Z.ai model in pricing data: GLM-5'),
-        (HEADER + '| GLM-5 | $1 | \\$0.2 | Free | \\$3.2 |\n', r'Unexpected Z.ai price cell: \$1'),
-    ],
-)
-def test_zai_rejects_unexpected_pricing_tables(markdown: str, error: str) -> None:
-    with pytest.raises(RuntimeError, match=error):
-        source_zai.parse_pricing_markdown(markdown)
+def test_zai_rejects_unexpected_token_pricing_columns() -> None:
+    with pytest.raises(RuntimeError, match='Unexpected Z.ai token pricing columns'):
+        source_zai.parse_pricing_markdown('| Model | Input | Output |\n| :- | :- | :- |\n')
+
+
+def test_zai_reports_an_unreadable_price_and_reads_the_other_rows(capsys: pytest.CaptureFixture[str]) -> None:
+    models = source_zai.parse_pricing_markdown(
+        HEADER + '| GLM-5 | $1 | \\$0.2 | Free | \\$3.2 |\n| GLM-5.1 | \\$1 | \\$0.2 | Free | \\$3.2 |\n'
+    )
+
+    assert [model.id for model in models] == ['GLM-5.1']
+    assert (
+        capsys.readouterr().out
+        == 'Z.ai: skipped a row it cannot read; update it by hand. Unexpected Z.ai price cell for GLM-5: $1\n'
+    )
+
+
+def test_zai_keeps_a_duplicated_model_unchanged_and_reports_it(capsys: pytest.CaptureFixture[str]) -> None:
+    models = source_zai.parse_pricing_markdown(
+        HEADER + '| GLM-5 | \\$1 | \\$0.2 | Free | \\$3.2 |\n' * 2 + '| GLM-5.1 | \\$1 | \\$0.2 | Free | \\$3.2 |\n'
+    )
+
+    assert [model.id for model in models] == ['GLM-5.1']
+    assert capsys.readouterr().out == (
+        'Z.ai: kept GLM-5 unchanged, the pricing page lists it more than once; update it by hand\n'
+    )
 
 
 @pytest.mark.vcr()

@@ -60,17 +60,40 @@ def test_groq_parses_token_hourly_and_character_prices_and_skips_contact_sales_r
     [
         (MODELS_MARKDOWN.split('## [Preview')[0], 'no Preview models table in the expected shape'),
         (MODELS_MARKDOWN.replace('| MAX FILE SIZE |', '|', 1), 'no Production models table in the expected shape'),
-        (MODELS_MARKDOWN.replace('openai/gpt-oss-120b |', 'openai/gpt-oss-20b |'), 'Unexpected Groq model row'),
-        (MODELS_MARKDOWN.replace('| 65,536 | \\- |', '|', 1), 'Unexpected Groq model row'),
-        (
-            MODELS_MARKDOWN.replace('$0.111 per hour', '$0.111 per minute'),
-            "Unexpected Groq price '\\$0.111 per minute'",
-        ),
     ],
 )
 def test_groq_rejects_an_unexpected_models_page(markdown: str, error: str) -> None:
     with pytest.raises(RuntimeError, match=error):
         source_groq.parse_models_markdown(markdown)
+
+
+@pytest.mark.parametrize(
+    ('markdown', 'error', 'model_ids'),
+    [
+        (
+            MODELS_MARKDOWN.replace('openai/gpt-oss-120b |', 'openai/gpt-oss-20b |'),
+            'Unexpected Groq model row',
+            ['whisper-large-v3', 'canopylabs/orpheus-v1-english'],
+        ),
+        (
+            MODELS_MARKDOWN.replace('| 65,536 | \\- |', '|', 1),
+            'Unexpected Groq model row',
+            ['openai/gpt-oss-120b', 'whisper-large-v3', 'canopylabs/orpheus-v1-english'],
+        ),
+        (
+            MODELS_MARKDOWN.replace('$0.111 per hour', '$0.111 per minute'),
+            "Unexpected Groq price '$0.111 per minute'",
+            ['openai/gpt-oss-120b', 'canopylabs/orpheus-v1-english'],
+        ),
+    ],
+)
+def test_groq_reports_an_unreadable_row_and_reads_the_others(
+    markdown: str, error: str, model_ids: list[str], capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_groq.parse_models_markdown(markdown)
+
+    assert [model.id for model in models] == model_ids
+    assert capsys.readouterr().out.startswith(f'Groq: skipped a row it cannot read; update it by hand. {error}')
 
 
 @pytest.mark.vcr()

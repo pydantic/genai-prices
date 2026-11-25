@@ -67,23 +67,51 @@ def row(model: str, tier: str, threshold: str, input_price: str = '$1.00', cache
     ('markdown', 'error'),
     [
         ('| Model | Price |\n| - | - |\n| A | $1 |\n', r"Unexpected GitHub Copilot pricing columns: \['Price'\]"),
-        (HEADER + row('Claude (beta)', 'Default', 'Not applicable'), 'Cannot map GitHub Copilot model name'),
-        (HEADER + row('A', 'Default', '≤ 1K') * 2, 'Duplicate GitHub Copilot model in pricing data: a'),
-        (HEADER + row('A', 'Batch', 'Not applicable'), 'Unexpected GitHub Copilot tier for a: Batch'),
-        (HEADER + row('A', 'Long context', '> 1K'), 'long-context rates but no default rates: a'),
-        (HEADER + row('A', 'Default', '≤ 1K') + row('A', 'Long context', '> 2K'), 'thresholds do not line up for a'),
-        (
-            HEADER + row('A', 'Default', '≤ 1K') + row('A', 'Long context', '> 1K', cache_write='Not applicable'),
-            'long-context tier is missing cache_write_mtok for a',
-        ),
-        (HEADER + row('A', 'Default', 'Not applicable', input_price='1.00'), 'Unexpected GitHub Copilot price cell'),
-        (HEADER + row('A', 'Default', '≤ 1M'), 'Unexpected GitHub Copilot threshold: ≤ 1M'),
         (HEADER + '| A | GA |\n', 'Table row has 2 cells, header has 9'),
     ],
 )
-def test_copilot_rejects_unexpected_pricing_rows(markdown: str, error: str) -> None:
+def test_copilot_rejects_an_unexpected_pricing_table(markdown: str, error: str) -> None:
     with pytest.raises((RuntimeError, ValueError), match=error):
         source_github_copilot.parse_pricing_markdown(markdown)
+
+
+@pytest.mark.parametrize(
+    ('rows', 'error'),
+    [
+        (
+            row('Claude (beta)', 'Default', 'Not applicable'),
+            'Cannot map GitHub Copilot model name to an id: Claude (beta)',
+        ),
+        (row('A', 'Batch', 'Not applicable'), 'Unexpected GitHub Copilot tier for a: Batch Not applicable'),
+        (row('A', 'Long context', '> 1K'), 'GitHub Copilot model has long-context rates but no default rates: a'),
+        (
+            row('A', 'Default', '≤ 1K') + row('A', 'Long context', '> 2K'),
+            'GitHub Copilot tier thresholds do not line up for a',
+        ),
+        (
+            row('A', 'Default', '≤ 1K') + row('A', 'Long context', '> 1K', cache_write='Not applicable'),
+            'GitHub Copilot long-context tier is missing cache_write_mtok for a',
+        ),
+        (row('A', 'Default', 'Not applicable', input_price='1.00'), 'Unexpected GitHub Copilot price cell: 1.00'),
+        (row('A', 'Default', '≤ 1K') + row('A', 'Long context', '> 1M'), 'Unexpected GitHub Copilot threshold: > 1M'),
+    ],
+)
+def test_copilot_reports_an_unreadable_model_and_reads_the_others(
+    rows: str, error: str, capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_github_copilot.parse_pricing_markdown(HEADER + rows + row('B', 'Default', 'Not applicable'))
+
+    assert [model.id for model in models] == ['b']
+    assert capsys.readouterr().out == f'GitHub Copilot: skipped a row it cannot read; update it by hand. {error}\n'
+
+
+def test_copilot_keeps_a_model_listed_twice_unchanged(capsys: pytest.CaptureFixture[str]) -> None:
+    markdown = HEADER + row('A', 'Default', '≤ 1K') * 2 + row('B', 'Default', 'Not applicable')
+
+    assert [model.id for model in source_github_copilot.parse_pricing_markdown(markdown)] == ['b']
+    assert capsys.readouterr().out == (
+        'GitHub Copilot: kept a unchanged, the pricing page lists it more than once; update it by hand\n'
+    )
 
 
 def test_copilot_reads_a_reordered_table_by_column_name() -> None:

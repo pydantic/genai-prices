@@ -8,7 +8,7 @@ from pathlib import Path
 import httpx2
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, UnreadableRowError, skipping_unreadable_row
 from prices.utils import package_dir
 
 # The Markdown export renders this page's DocTables empty, so the prices are read from the page's compiled MDX.
@@ -42,23 +42,24 @@ def parse_pricing_page(page: str) -> list[ModelInfo]:
             raise RuntimeError(f'Moonshot AI pricing table has no context window: {columns}')
         context_window = int(windows[-1].replace(',', ''))
         for row in table.group(2).split('],['):
-            cells = [cell for cell in re.findall(r'href:`[^`]*`|`([^`]*)`', row) if cell]
-            if len(cells) != len(columns) or not re.fullmatch(r'[a-z0-9][a-z0-9.-]*', cells[0]):
-                raise RuntimeError(f'Unexpected Moonshot AI pricing row: {row}')
-            prices: dict[str, Decimal] = {}
-            for column, cell in zip(columns[1:], cells[1:]):
-                if not (price := re.fullmatch(r'\$([0-9]+(?:\.[0-9]+)?) / MTok', cell)):
-                    raise RuntimeError(f'Unexpected Moonshot AI {column} for {cells[0]}: {cell}')
-                prices[PRICE_COLUMNS[column]] = Decimal(price.group(1))
-            models.append(
-                ModelInfo(
-                    id=cells[0],
-                    match=ClauseEquals(equals=cells[0]),
-                    context_window=context_window,
-                    prices=ModelPrice(**prices),
-                    prices_checked=date.today(),
+            with skipping_unreadable_row('Moonshot AI'):
+                cells = [cell for cell in re.findall(r'href:`[^`]*`|`([^`]*)`', row) if cell]
+                if len(cells) != len(columns) or not re.fullmatch(r'[a-z0-9][a-z0-9.-]*', cells[0]):
+                    raise UnreadableRowError(f'Unexpected Moonshot AI pricing row: {row}')
+                prices: dict[str, Decimal] = {}
+                for column, cell in zip(columns[1:], cells[1:]):
+                    if not (price := re.fullmatch(r'\$([0-9]+(?:\.[0-9]+)?) / MTok', cell)):
+                        raise UnreadableRowError(f'Unexpected Moonshot AI {column} for {cells[0]}: {cell}')
+                    prices[PRICE_COLUMNS[column]] = Decimal(price.group(1))
+                models.append(
+                    ModelInfo(
+                        id=cells[0],
+                        match=ClauseEquals(equals=cells[0]),
+                        context_window=context_window,
+                        prices=ModelPrice(**prices),
+                        prices_checked=date.today(),
+                    )
                 )
-            )
     return models
 
 

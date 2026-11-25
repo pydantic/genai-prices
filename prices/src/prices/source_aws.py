@@ -9,7 +9,7 @@ from typing import Any
 import httpx2
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, report_manual_update
 from prices.utils import package_dir
 
 OFFER_URL = 'https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/{offer}/current/us-east-1/index.json'
@@ -132,7 +132,7 @@ def parse_price_lists(offers: dict[str, dict[str, Any]]) -> list[ModelInfo]:
                     elif model_rates.setdefault(key, price) != price:
                         unhandled.setdefault(model_id, f'conflicting {key} rates')
     for model_id, problem in unhandled.items():
-        print(f'AWS: kept {model_id} unchanged, the price list has {problem}; update it by hand')
+        report_manual_update(f'AWS: kept {model_id} unchanged, the price list has {problem}; update it by hand')
     return [
         ModelInfo(
             id=model_id,
@@ -148,7 +148,7 @@ def parse_price_lists(offers: dict[str, dict[str, Any]]) -> list[ModelInfo]:
 def main(provider_path: Path | None = None) -> None:
     offers: dict[str, dict[str, Any]] = {}
     for offer_code in MODEL_IDS:
-        response = httpx2.get(OFFER_URL.format(offer=offer_code), timeout=30.0)
+        response = httpx2.get(OFFER_URL.format(offer=offer_code), timeout=30.0, follow_redirects=True)
         response.raise_for_status()
         offers[offer_code] = response.json()
     models = parse_price_lists(offers)

@@ -13,7 +13,7 @@ root_dir = package_dir.parent
 
 
 def get_markdown(url: str) -> str:
-    response = httpx2.get(url, timeout=30.0)
+    response = httpx2.get(url, timeout=30.0, follow_redirects=True)
     response.raise_for_status()
     if response.headers.get('content-type', '').lower().startswith('text/html'):
         raise RuntimeError(f'{url} returned HTML instead of markdown')

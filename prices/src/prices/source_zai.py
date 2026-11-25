@@ -6,7 +6,7 @@ from decimal import Decimal
 from pathlib import Path
 
 from prices.prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, UnreadableRowError, report_manual_update, skipping_unreadable_row
 from prices.utils import get_markdown, markdown_tables, package_dir
 
 PRICING_URL = 'https://docs.z.ai/guides/overview/pricing.md'
@@ -18,6 +18,7 @@ UNPRICED_CELLS = {'Free', '-', '\\\\'}
 def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     models: list[ModelInfo] = []
     seen: set[str] = set()
+    duplicates: set[str] = set()
     for header, rows in markdown_tables(markdown):
         if header[:2] != ['Model', 'Input']:
             continue
@@ -25,25 +26,33 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
             raise RuntimeError(f'Unexpected Z.ai token pricing columns: {header}')
         for name, input_cell, cache_read_cell, _storage, output_cell in rows:
             if name in seen:
-                raise RuntimeError(f'Duplicate Z.ai model in pricing data: {name}')
-            seen.add(name)
-            prices = ModelPrice(
-                input_mtok=_price(input_cell), cache_read_mtok=_price(cache_read_cell), output_mtok=_price(output_cell)
-            )
-            if prices.input_mtok is None and prices.output_mtok is None:
+                duplicates.add(name)
                 continue
-            models.append(
-                ModelInfo(
-                    id=name,
-                    name=name,
-                    match=ClauseOr.model_validate(
-                        {'or': [ClauseEquals(equals=name), ClauseEquals(equals=name.lower())]}
-                    ),
-                    prices=prices,
-                    prices_checked=date.today(),
+            seen.add(name)
+            with skipping_unreadable_row('Z.ai'):
+                prices = ModelPrice(
+                    input_mtok=_price(input_cell, name),
+                    cache_read_mtok=_price(cache_read_cell, name),
+                    output_mtok=_price(output_cell, name),
                 )
-            )
-    return models
+                if prices.input_mtok is None and prices.output_mtok is None:
+                    continue
+                models.append(
+                    ModelInfo(
+                        id=name,
+                        name=name,
+                        match=ClauseOr.model_validate(
+                            {'or': [ClauseEquals(equals=name), ClauseEquals(equals=name.lower())]}
+                        ),
+                        prices=prices,
+                        prices_checked=date.today(),
+                    )
+                )
+    for name in sorted(duplicates):
+        report_manual_update(
+            f'Z.ai: kept {name} unchanged, the pricing page lists it more than once; update it by hand'
+        )
+    return [model for model in models if model.id not in duplicates]
 
 
 def main(provider_path: Path | None = None) -> None:
@@ -58,9 +67,9 @@ def get_zai_prices() -> None:  # pragma: no cover - thin CLI alias for main
     main()
 
 
-def _price(cell: str) -> Decimal | None:
+def _price(cell: str, name: str) -> Decimal | None:
     if cell in UNPRICED_CELLS:
         return None
     if not re.fullmatch(r'\\\$[0-9]+(?:\.[0-9]+)?', cell):
-        raise RuntimeError(f'Unexpected Z.ai price cell: {cell}')
+        raise UnreadableRowError(f'Unexpected Z.ai price cell for {name}: {cell}')
     return Decimal(cell[2:])

@@ -7,7 +7,7 @@ from itertools import takewhile
 from pathlib import Path
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, UnreadableRowError, skipping_unreadable_row
 from prices.utils import get_markdown, package_dir
 
 MODELS_URL = 'https://console.groq.com/docs/models.md'
@@ -33,33 +33,34 @@ def parse_models_markdown(markdown: str) -> list[ModelInfo]:
         if not lines or [cell.strip() for cell in lines[0].strip('|').split('|')] != TABLE_HEADER:
             raise RuntimeError(f'Groq models page has no {section} models table in the expected shape')
         for line in takewhile(lambda line: line.startswith('|'), lines[2:]):
-            cells = [cell.strip() for cell in line.strip('|').split('|')]
-            model = MODEL_CELL.fullmatch(cells[0]) if len(cells) == len(TABLE_HEADER) else None
-            if model is None:
-                raise RuntimeError(f'Unexpected Groq model row: {line}')
-            price = cells[2]
-            if price == 'ContactSales':
-                continue
-            # Cached rates are left to the YAML: model pages round them to 3 decimals ($0.037 for $0.0375).
-            if tokens := re.fullmatch(f'{PRICE} input{PRICE} output', price):
-                prices = ModelPrice(input_mtok=Decimal(tokens[1]), output_mtok=Decimal(tokens[2]))
-            elif hourly := re.fullmatch(f'{PRICE} per hour', price):
-                prices = ModelPrice.model_validate({'audio_hours': hourly[1], 'input_audio_hours': hourly[1]})
-            elif characters := re.fullmatch(f'{PRICE} per 1M characters', price):
-                prices = ModelPrice.model_validate({'input_mchars': characters[1]})
-            else:
-                raise RuntimeError(f'Unexpected Groq price {price!r} in row: {line}')
-            context = cells[4].replace(',', '')
-            models.append(
-                ModelInfo(
-                    id=model['id'],
-                    name=model['name'].strip(),
-                    match=ClauseEquals(equals=model['id']),
-                    context_window=int(context) if context.isdigit() else None,
-                    prices=prices,
-                    prices_checked=date.today(),
+            with skipping_unreadable_row('Groq'):
+                cells = [cell.strip() for cell in line.strip('|').split('|')]
+                model = MODEL_CELL.fullmatch(cells[0]) if len(cells) == len(TABLE_HEADER) else None
+                if model is None:
+                    raise UnreadableRowError(f'Unexpected Groq model row: {line}')
+                price = cells[2]
+                if price == 'ContactSales':
+                    continue
+                # Cached rates are left to the YAML: model pages round them to 3 decimals ($0.037 for $0.0375).
+                if tokens := re.fullmatch(f'{PRICE} input{PRICE} output', price):
+                    prices = ModelPrice(input_mtok=Decimal(tokens[1]), output_mtok=Decimal(tokens[2]))
+                elif hourly := re.fullmatch(f'{PRICE} per hour', price):
+                    prices = ModelPrice.model_validate({'audio_hours': hourly[1], 'input_audio_hours': hourly[1]})
+                elif characters := re.fullmatch(f'{PRICE} per 1M characters', price):
+                    prices = ModelPrice.model_validate({'input_mchars': characters[1]})
+                else:
+                    raise UnreadableRowError(f'Unexpected Groq price {price!r} in row: {line}')
+                context = cells[4].replace(',', '')
+                models.append(
+                    ModelInfo(
+                        id=model['id'],
+                        name=model['name'].strip(),
+                        match=ClauseEquals(equals=model['id']),
+                        context_window=int(context) if context.isdigit() else None,
+                        prices=prices,
+                        prices_checked=date.today(),
+                    )
                 )
-            )
     return models
 
 

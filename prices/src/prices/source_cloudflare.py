@@ -8,7 +8,7 @@ from pathlib import Path
 import httpx2
 
 from prices.prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, report_manual_update
 from prices.utils import package_dir
 
 PRICING_URL = 'https://developers.cloudflare.com/workers-ai/platform/pricing/index.md'
@@ -23,6 +23,7 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     )
     models: list[ModelInfo] = []
     model_ids: set[str] = set()
+    duplicates: set[str] = set()
     for section in sections:
         for line in section.splitlines():
             if not line.startswith('| @cf/'):
@@ -38,7 +39,8 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
             if not rates:
                 continue
             if model_id in model_ids:
-                raise RuntimeError(f'Duplicate Cloudflare model in pricing data: {model_id}')
+                duplicates.add(model_id)
+                continue
             model_ids.add(model_id)
             models.append(
                 ModelInfo(
@@ -57,7 +59,11 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
                     prices_checked=date.today(),
                 )
             )
-    return models
+    for model_id in sorted(duplicates):
+        report_manual_update(
+            f'Cloudflare: kept {model_id} unchanged, the pricing page lists it more than once; update it by hand'
+        )
+    return [model for model in models if model.id not in duplicates]
 
 
 def update_cloudflare_provider(provider_yaml: ProviderYaml, models: list[ModelInfo]) -> tuple[int, int]:
@@ -79,7 +85,7 @@ def update_cloudflare_provider(provider_yaml: ProviderYaml, models: list[ModelIn
 
 
 def main(provider_path: Path | None = None) -> None:
-    response = httpx2.get(PRICING_URL, timeout=30.0)
+    response = httpx2.get(PRICING_URL, timeout=30.0, follow_redirects=True)
     response.raise_for_status()
     models = parse_pricing_markdown(response.text)
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/cloudflare.yml')

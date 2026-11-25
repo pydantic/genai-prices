@@ -101,7 +101,7 @@ models:
     prices:
       input_mtok: 0.31
       output_mtok: 1.25
-    prices_checked: 2026-11-24
+    prices_checked: 2026-11-25
 
   - id: Llama-3.1-8B-Instruct
     name: Llama-3.1-8B-Instruct
@@ -124,7 +124,7 @@ models:
     prices:
       input_mtok: 0.74
       output_mtok: 0.74
-    prices_checked: 2026-11-24
+    prices_checked: 2026-11-25
 
   - id: Mistral-7B-Instruct-v0.3
     name: Mistral-7B-Instruct-v0.3
@@ -159,7 +159,7 @@ models:
     prices:
       input_mtok: 0.1
       output_mtok: 0.31
-    prices_checked: 2026-11-24
+    prices_checked: 2026-11-25
 
   - id: Mixtral-8x7B-Instruct-v0.1
     name: Mixtral-8x7B-Instruct-v0.1
@@ -182,7 +182,7 @@ models:
     prices:
       input_mtok: 1.01
       output_mtok: 1.01
-    prices_checked: 2026-11-24
+    prices_checked: 2026-11-25
 
   - id: Qwen3-32B
     name: Qwen3-32B
@@ -215,7 +215,7 @@ models:
     context_window: 32768
     prices:
       input_mtok: 0.12
-    prices_checked: 2026-11-24
+    prices_checked: 2026-11-25
 
   - id: Qwen3.5-397B-A17B
     name: Qwen3.5-397B-A17B
@@ -227,7 +227,7 @@ models:
     prices:
       input_mtok: 0.71
       output_mtok: 4.25
-    prices_checked: 2026-11-24
+    prices_checked: 2026-11-25
 
   - id: Qwen3.5-9B
     name: Qwen3.5-9B
@@ -239,7 +239,7 @@ models:
     prices:
       input_mtok: 0.12
       output_mtok: 0.18
-    prices_checked: 2026-11-24
+    prices_checked: 2026-11-25
 
   - id: Qwen3.6-27B
     name: Qwen3.6-27B
@@ -251,7 +251,7 @@ models:
     prices:
       input_mtok: 0.47
       output_mtok: 3.19
-    prices_checked: 2026-11-24
+    prices_checked: 2026-11-25
 
   - id: Qwen3.8-27B
     name: Qwen3.8-27B
@@ -263,7 +263,7 @@ models:
     prices:
       input_mtok: 0.47
       output_mtok: 3.19
-    prices_checked: 2026-11-24
+    prices_checked: 2026-11-25
 
   - id: bge-base-en-v1.5
     name: bge-base-en-v1.5
@@ -280,7 +280,7 @@ models:
     context_window: 8192
     prices:
       input_mtok: 0.01
-    prices_checked: 2026-11-24
+    prices_checked: 2026-11-25
 
   - id: bge-multilingual-gemma2
     name: bge-multilingual-gemma2
@@ -289,7 +289,7 @@ models:
     context_window: 8192
     prices:
       input_mtok: 0.01
-    prices_checked: 2026-11-24
+    prices_checked: 2026-11-25
 
   - id: clef-flash
     name: clef-flash
@@ -298,7 +298,7 @@ models:
     context_window: 16384
     prices:
       input_mtok: 0.04
-    prices_checked: 2026-11-24
+    prices_checked: 2026-11-25
 
   - id: gemma-4-26b-a4b
     name: gemma-4-26b-a4b
@@ -308,7 +308,7 @@ models:
     prices:
       input_mtok: 0.1
       output_mtok: 0.41
-    prices_checked: 2026-11-24
+    prices_checked: 2026-11-25
 
   - id: gpt-oss-120b
     name: gpt-oss-120b
@@ -318,7 +318,7 @@ models:
     prices:
       input_mtok: 0.09
       output_mtok: 0.47
-    prices_checked: 2026-11-24
+    prices_checked: 2026-11-25
 
   - id: gpt-oss-20b
     name: gpt-oss-20b
@@ -328,7 +328,7 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.18
-    prices_checked: 2026-11-24
+    prices_checked: 2026-11-25
 
   - id: laguna-xs-2.1
     name: laguna-xs-2.1
@@ -338,7 +338,7 @@ models:
     prices:
       input_mtok: 0.06
       output_mtok: 0.12
-    prices_checked: 2026-11-24
+    prices_checked: 2026-11-25
 
   - id: nemotron3-nano-30b
     name: nemotron3-nano-30b
@@ -348,7 +348,7 @@ models:
     prices:
       input_mtok: 0.06
       output_mtok: 0.23
-    prices_checked: 2026-11-24
+    prices_checked: 2026-11-25
 
   - id: nemotron3-omni-30b
     name: nemotron3-omni-30b
@@ -358,7 +358,7 @@ models:
     prices:
       input_mtok: 0.19
       output_mtok: 0.57
-    prices_checked: 2026-11-24
+    prices_checked: 2026-11-25
 
   - id: qwen3-vl-30b-a3b
     name: qwen3-vl-30b-a3b
@@ -368,7 +368,7 @@ models:
     prices:
       input_mtok: 0.15
       output_mtok: 0.58
-    prices_checked: 2026-11-24
+    prices_checked: 2026-11-25
 
   - id: qwen3.6-35b-a3b
     name: qwen3.6-35b-a3b
@@ -378,4 +378,4 @@ models:
     prices:
       input_mtok: 0.2
       output_mtok: 1.33
-    prices_checked: 2026-11-24
+    prices_checked: 2026-11-25

@@ -90,27 +90,58 @@ def test_openai_parses_standard_text_rates_and_skips_other_tabs_and_units() -> N
     ]
 
 
+def test_openai_rejects_a_page_without_a_standard_text_pricing_table() -> None:
+    with pytest.raises(RuntimeError, match='OpenAI pricing page has no standard text pricing table'):
+        source_openai.parse_pricing_markdown('# Pricing\n')
+
+
 @pytest.mark.parametrize(
-    ('markdown', 'error'),
+    ('markdown', 'error', 'model_id'),
     [
-        ('# Pricing\n', 'OpenAI pricing page has no standard text pricing table'),
-        (PRICING_MARKDOWN.replace('| gpt-bio |', '| GPT Bio |'), 'Unexpected OpenAI pricing row'),
-        (PRICING_MARKDOWN.replace('$25.00', 'TBD'), "Unexpected OpenAI price 'TBD'"),
-        (PRICING_MARKDOWN.replace('| $0.20 | $2.50 |', '| $0.20 | - |'), 'without its pair'),
-        (PRICING_MARKDOWN.replace('| $0.40 | $5.00 |', '| $0.40 | - |'), 'without its pair'),
+        (PRICING_MARKDOWN.replace('| gpt-bio |', '| GPT Bio |'), 'Unexpected OpenAI pricing row: ', 'gpt-bio'),
+        (PRICING_MARKDOWN.replace('$25.00', 'TBD'), "Unexpected OpenAI price 'TBD' in row: ", 'gpt-bio'),
+        (
+            PRICING_MARKDOWN.replace('| $0.20 | $2.50 |', '| $0.20 | - |'),
+            'OpenAI pricing row has a short or long context rate without its pair: ',
+            'gpt-7',
+        ),
+        (
+            PRICING_MARKDOWN.replace('| $0.40 | $5.00 |', '| $0.40 | - |'),
+            'OpenAI pricing row has a short or long context rate without its pair: ',
+            'gpt-7',
+        ),
         (
             PRICING_MARKDOWN.replace('gpt-cyber-preview (long context) | - |', 'gpt-orphan (long context) | $1.00 |'),
-            'long context row has rates without a short context rate',
+            "OpenAI long context row has rates without a short context rate (['input_mtok']): ",
+            None,
         ),
         (
             PRICING_MARKDOWN + '| Cyber | gpt-7 (long context) | $9.00 | - | - |\n',
-            'long context row repeats a tiered rate for input_mtok',
+            'OpenAI long context row repeats a tiered rate for input_mtok: ',
+            'gpt-7',
+        ),
+        # An unreadable short or long context row keeps the model unchanged rather than dropping or misplacing its tier.
+        (
+            PRICING_MARKDOWN.replace('gpt-cyber (long context) | $40.00 |', 'gpt-cyber (long context) | TBD |'),
+            "Unexpected OpenAI price 'TBD' in row: ",
+            'gpt-cyber',
+        ),
+        (
+            PRICING_MARKDOWN.replace('gpt-cyber (short context) | $20.00 |', 'gpt-cyber (short context) | TBD |'),
+            "Unexpected OpenAI price 'TBD' in row: ",
+            'gpt-cyber',
         ),
     ],
 )
-def test_openai_rejects_an_unexpected_pricing_page(markdown: str, error: str) -> None:
-    with pytest.raises(RuntimeError, match=error):
-        source_openai.parse_pricing_markdown(markdown)
+def test_openai_reports_an_unreadable_row_and_reads_the_others(
+    markdown: str, error: str, model_id: str | None, capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_openai.parse_pricing_markdown(markdown)
+
+    expected = [model for model in source_openai.parse_pricing_markdown(PRICING_MARKDOWN) if model.id != model_id]
+    assert models == expected
+    [note] = capsys.readouterr().out.splitlines()
+    assert note.startswith(f'OpenAI: skipped a row it cannot read; update it by hand. {error}')
 
 
 def test_openai_skips_a_tier_named_only_by_its_heading() -> None:
