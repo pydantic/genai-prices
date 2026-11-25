@@ -373,7 +373,7 @@ test('a repair request keeps the attempt count of an in-flight repair', async ()
 })
 
 async function recordAfterPush({ staleReads }) {
-  const { options, github, comments, pr } = fixture()
+  const { options, github, calls, comments, pr } = fixture()
   await watchOne({ ...options, assess: () => ({ state: 'repair', reason: 'finding', findings: [] }) })
   const published = 'f'.repeat(40)
   let reads = 0
@@ -407,18 +407,25 @@ async function recordAfterPush({ staleReads }) {
     publishedHead: published,
     sleep: async (ms) => delays.push(ms),
   })
-  return { result, delays, comments }
+  return { result, delays, calls, comments }
 }
 
 test('recording a repair waits for the pulls API to report the pushed head', async () => {
-  const { result, delays, comments } = await recordAfterPush({ staleReads: 2 })
+  const { result, delays, calls, comments } = await recordAfterPush({ staleReads: 2 })
   await result
   assert.deepEqual(delays, [1000, 2000])
+  assert.equal(calls.find(([kind]) => kind === 'reaction')[1].content, '+1')
+  assert.match(calls.find(([kind]) => kind === 'reply')[1].body, /result at f{40}/)
+  assert.equal(calls.find(([kind]) => kind === 'resolve')[1].id, 'one')
   assert.equal(readState(comments).status, 'assessed')
 })
 
 test('recording a repair fails when the pushed head never appears', async () => {
-  const { result, delays } = await recordAfterPush({ staleReads: Infinity })
+  const { result, delays, calls } = await recordAfterPush({ staleReads: Infinity })
   await assert.rejects(result, /identity or head changed/)
   assert.deepEqual(delays, [1000, 2000, 4000, 8000])
+  assert.equal(
+    calls.some(([kind]) => ['reaction', 'reply', 'resolve'].includes(kind)),
+    false,
+  )
 })
