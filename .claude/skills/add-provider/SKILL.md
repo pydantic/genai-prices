@@ -68,12 +68,17 @@ JSON embedded in the official pricing page. Treat an HTML fallback served for a 
 
 Add `prices/src/prices/source_<provider>.py`, following `source_novita.py` (JSON) or `source_cloudflare.py` (Markdown):
 
-- fetch with `httpx2` and parse prices as `Decimal`
+- fetch with `httpx2`, passing `follow_redirects=True`, and parse prices as `Decimal`
 - return `ModelInfo` entries from a public `parse_*` function and write them with `ProviderYaml.upsert_models`, which adds new
   models, appends changed rates as dated conditional prices, and keeps curated keys the source does not report
 - emit only the keys the source reports, and parse tiers when the source has them instead of flattening them
 - set a `MIN_MODEL_COUNT` so an empty or truncated response refuses to write
-- fail loudly when the source is unreadable or changes shape
+- fail with `RuntimeError` when the page, a table or its columns are missing or changed, because then no row can be
+  trusted
+- raise `UnreadableRowError` inside `skipping_unreadable_row(...)` for a problem confined to one row, such as a new price
+  format or a duplicated model. The importer then reports that row for manual review and still updates the other models
+- report every other change a person must apply with `report_manual_update`, not `print`. Only its notes reach the
+  manual review issue
 
 Expose `get_<provider>_prices` through `prices.__main__`. Add `<provider>-get` to `Makefile`, include it in `get-all-prices`,
 and add `<provider>` to the `matrix.importer` list in `.github/workflows/update-prices.yml`, which runs every importer hourly

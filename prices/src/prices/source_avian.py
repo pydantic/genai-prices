@@ -40,7 +40,7 @@ def parse_models(models: list[dict[str, Any]]) -> list[ModelInfo]:
 
 
 def main(provider_path: Path | None = None) -> None:
-    response = httpx2.get(MODELS_URL, timeout=30.0)
+    response = httpx2.get(MODELS_URL, timeout=30.0, follow_redirects=True)
     response.raise_for_status()
     models = parse_models(response.json()['data'])
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/avian.yml')

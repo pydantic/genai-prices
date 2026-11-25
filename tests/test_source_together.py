@@ -2,14 +2,13 @@ from __future__ import annotations
 
 from datetime import date
 from decimal import Decimal
-from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_together
 from prices.prices_types import ModelPrice
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 MODELS_MARKDOWN = f"""\
 ## Chat models
@@ -52,9 +51,6 @@ def test_together_parses_chat_models_and_skips_free_ones() -> None:
     [
         ('## Image models\n', 'no chat models table in the expected shape'),
         (MODELS_MARKDOWN.replace('| Structured outputs |', '|'), 'no chat models table in the expected shape'),
-        (MODELS_MARKDOWN.replace('| FP8 | Yes | Yes |', '| FP8 |'), 'Unexpected Together chat model row'),
-        (MODELS_MARKDOWN.replace('\\$1.20', '\\$1.20 per M'), "Unexpected Together price '"),
-        (MODELS_MARKDOWN.replace('| 1000000 |', '| 1M |'), "Unexpected Together context length '1M'"),
     ],
 )
 def test_together_rejects_an_unexpected_models_page(markdown: str, error: str) -> None:
@@ -62,10 +58,28 @@ def test_together_rejects_an_unexpected_models_page(markdown: str, error: str) -
         source_together.parse_models_markdown(markdown)
 
 
+@pytest.mark.parametrize(
+    ('markdown', 'error'),
+    [
+        (MODELS_MARKDOWN.replace('| FP8 | Yes | Yes |', '| FP8 |'), 'Unexpected Together chat model row'),
+        (MODELS_MARKDOWN.replace('\\$1.20', '\\$1.20 per M'), "Unexpected Together price '\\\\$1.20 per M'"),
+        (MODELS_MARKDOWN.replace('| 1000000 |', '| 1M |'), "Unexpected Together context length '1M'"),
+    ],
+)
+def test_together_reports_an_unreadable_row_and_reads_the_others(
+    markdown: str, error: str, capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_together.parse_models_markdown(markdown)
+
+    assert [model.id for model in models] == ['Qwen/Qwen3.7-Max', 'together/Tev1-4B']
+    assert capsys.readouterr().out.startswith(f'Together: skipped a row it cannot read; update it by hand. {error}')
+
+
 @pytest.mark.vcr()
-def test_together_main_fetches_recorded_models_page(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'together.yml'
-    copyfile(package_dir / 'providers/together.yml', provider_path)
+def test_together_main_fetches_recorded_models_page(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('together.yml')
 
     source_together.main(provider_path)
 

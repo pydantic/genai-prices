@@ -3,14 +3,14 @@ from __future__ import annotations
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_avian
 from prices.prices_types import ModelPrice, StartDateConstraint
 from prices.update import ProviderYaml
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 FLASH = {
     'id': 'deepseek/deepseek-v4-flash',
@@ -70,18 +70,18 @@ models:
     assert all(line == line.rstrip() for line in saved.splitlines())
 
 
-def test_avian_refuses_a_suspiciously_small_catalog(tmp_path: Path) -> None:
-    provider_path = tmp_path / 'avian.yml'
-    copyfile(package_dir / 'providers/avian.yml', provider_path)
+def test_avian_refuses_a_suspiciously_small_catalog(provider_snapshot: ProviderSnapshot) -> None:
+    provider_path = provider_snapshot('avian.yml')
 
     with pytest.raises(RuntimeError, match='Avian returned only 0 priced models; expected at least 10'):
         ProviderYaml(provider_path).upsert_models([], source='Avian', min_count=source_avian.MIN_MODEL_COUNT)
 
 
 @pytest.mark.vcr()
-def test_avian_main_fetches_recorded_models(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'avian.yml'
-    copyfile(package_dir / 'providers/avian.yml', provider_path)
+def test_avian_main_fetches_recorded_models(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('avian.yml')
 
     source_avian.main(provider_path)
 

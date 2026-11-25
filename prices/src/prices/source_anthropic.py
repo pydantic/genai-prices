@@ -7,7 +7,7 @@ from itertools import takewhile
 from pathlib import Path
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, Tier, TieredPrices
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, UnreadableRowError, report_manual_update, skipping_unreadable_row
 from prices.utils import get_markdown, package_dir
 
 PRICING_URL = 'https://platform.claude.com/docs/en/about-claude/pricing.md'
@@ -43,48 +43,68 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
 
     base_rows: dict[str, tuple[int | None, list[Decimal]]] = {}
     long_context_rows: dict[str, tuple[int, list[Decimal]]] = {}
+    duplicates: set[str] = set()
+    unreadable: set[str] = set()
     for line in rows:
-        cells = _cells(line)
-        match = MODEL_CELL.fullmatch(cells[0]) if len(cells) == len(TABLE_HEADER) else None
-        if match is None:
-            raise RuntimeError(f'Unexpected Anthropic pricing row: {line}')
-        if match['note'] and match['note'].startswith('[limited availability'):
-            continue
-        model_id = re.sub(r'[ .]', '-', match['name'].lower())
-        model_id = MODEL_IDS.get(model_id, model_id)
-        threshold = int(match['threshold'].replace(',', '')) if match['threshold'] else None
-        rates = [_dollars(cell, line) for cell in cells[1:]]
-        target = long_context_rows if match['op'] == 'over' else base_rows
-        if model_id in target:
-            raise RuntimeError(f'Duplicate Anthropic pricing row: {line}')
-        if match['op'] == 'over':
-            assert threshold is not None
-            long_context_rows[model_id] = (threshold, rates)
-        else:
-            base_rows[model_id] = (threshold, rates)
+        with skipping_unreadable_row('Anthropic', unreadable) as row:
+            cells = _cells(line)
+            if not (match := MODEL_CELL.fullmatch(cells[0])):
+                raise UnreadableRowError(f'Unexpected Anthropic pricing row: {line}')
+            model_id = re.sub(r'[ .]', '-', match['name'].lower())
+            model_id = MODEL_IDS.get(model_id, model_id)
+            # Named before the cell count check, so a malformed row of a model still holds the model.
+            row.model_ids.add(model_id)
+            if len(cells) != len(TABLE_HEADER):
+                raise UnreadableRowError(f'Unexpected Anthropic pricing row: {line}')
+            if match['note'] and match['note'].startswith('[limited availability'):
+                continue
+            threshold = int(match['threshold'].replace(',', '')) if match['threshold'] else None
+            rates = [_dollars(cell, line) for cell in cells[1:]]
+            target = long_context_rows if match['op'] == 'over' else base_rows
+            if model_id in target:
+                duplicates.add(model_id)
+                continue
+            if match['op'] == 'over':
+                assert threshold is not None
+                long_context_rows[model_id] = (threshold, rates)
+            else:
+                base_rows[model_id] = (threshold, rates)
+    for model_id in sorted(duplicates):
+        report_manual_update(
+            f'Anthropic: kept {model_id} unchanged, the pricing page lists it more than once; update it by hand'
+        )
+    # A model with an unreadable row keeps its prices, rather than taking them from its other rows alone.
+    for model_id in duplicates | unreadable:
+        base_rows.pop(model_id, None)
+        long_context_rows.pop(model_id, None)
 
     models: list[ModelInfo] = []
     for model_id, (threshold, rates) in base_rows.items():
-        long_context = long_context_rows.pop(model_id, None)
-        if (long_context[0] if long_context else None) != threshold:
-            raise RuntimeError(f'Anthropic pricing rows for {model_id} do not pair a base and a long-context rate')
-        prices: list[Decimal | TieredPrices] = list(rates)
-        if long_context:
-            # Every token of a prompt over the threshold is billed at the higher rate.
-            prices = [
-                TieredPrices(base=base, tiers=[Tier(start=long_context[0], price=price)])
-                for base, price in zip(rates, long_context[1])
-            ]
-        models.append(
-            ModelInfo(
-                id=model_id,
-                match=ClauseEquals(equals=model_id),
-                prices=ModelPrice.model_validate(dict(zip(PRICE_KEYS, prices))),
-                prices_checked=date.today(),
+        with skipping_unreadable_row('Anthropic') as row:
+            row.model_ids.add(model_id)
+            long_context = long_context_rows.pop(model_id, None)
+            if (long_context[0] if long_context else None) != threshold:
+                raise UnreadableRowError(
+                    f'Anthropic pricing rows for {model_id} do not pair a base and a long-context rate'
+                )
+            prices: list[Decimal | TieredPrices] = list(rates)
+            if long_context:
+                # Every token of a prompt over the threshold is billed at the higher rate.
+                prices = [
+                    TieredPrices(base=base, tiers=[Tier(start=long_context[0], price=price)])
+                    for base, price in zip(rates, long_context[1])
+                ]
+            models.append(
+                ModelInfo(
+                    id=model_id,
+                    match=ClauseEquals(equals=model_id),
+                    prices=ModelPrice.model_validate(dict(zip(PRICE_KEYS, prices))),
+                    prices_checked=date.today(),
+                )
             )
-        )
-    if long_context_rows:
-        raise RuntimeError(f'Anthropic long-context rows without a base row: {", ".join(long_context_rows)}')
+    with skipping_unreadable_row('Anthropic'):
+        if long_context_rows:
+            raise UnreadableRowError(f'Anthropic long-context rows without a base row: {", ".join(long_context_rows)}')
     return models
 
 
@@ -106,5 +126,5 @@ def _cells(line: str) -> list[str]:
 
 def _dollars(cell: str, line: str) -> Decimal:
     if not (match := PRICE_CELL.fullmatch(cell)):
-        raise RuntimeError(f'Unexpected Anthropic price {cell!r} in row: {line}')
+        raise UnreadableRowError(f'Unexpected Anthropic price {cell!r} in row: {line}')
     return Decimal(match[1])

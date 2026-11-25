@@ -2,15 +2,14 @@ from __future__ import annotations
 
 from datetime import date
 from decimal import Decimal
-from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_doubleword
 from prices.prices_types import ModelPrice
 from prices.update import ProviderYaml
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 NEW_MODEL_IDS = (
     'Qwen/Qwen3.5-35B-A3B-FP8-dottxt',
@@ -24,15 +23,13 @@ NEW_MODEL_IDS = (
 CATALOG = """\
 ## Model Catalog
 
-### Active Models
-
 | Model | Realtime | Async | Batch (24h) |
 |-------|----------|-------|-------------|
 | [GLM 5.2](/inference-api/models/zai-org-glm-5-2-fp8) | \\$0.93 / \\$0.19 / \\$3.00 | \\$0.70 / \\$0.14 / \\$2.25 | \\$0.47 / \\$0.09 / \\$1.50 |
 | [OCR](/inference-api/models/ocr) | — | \\$0.08 / \\$0.08 / \\$0.08 | \\$0.05 / \\$0.05 / \\$0.05 |
 | [Embedding](/inference-api/models/embedding) | \\$0.04 / \\$0.04 / \\$0.00 | \\$0.03 / \\$0.03 / \\$0.00 | \\$0.02 / \\$0.02 / \\$0.00 |
 
-### Scheduled for Deprecation
+## Retrieve model prices through the API
 """
 
 PAGES = {
@@ -70,9 +67,7 @@ def test_doubleword_parses_realtime_prices_and_api_ids_from_model_pages() -> Non
 @pytest.mark.parametrize(
     'catalog, error',
     [
-        (CATALOG.replace('| Async |', '| Flex |'), 'no Active Models table in the expected shape'),
-        (CATALOG.replace('[OCR](/inference-api/models/ocr)', 'OCR'), 'Unexpected Doubleword models row'),
-        (CATALOG.replace('\\$0.93 / \\$0.19', '\\$0.93'), 'Unexpected Doubleword Realtime price'),
+        (CATALOG.replace('| Async |', '| Flex |'), 'no model catalog table in the expected shape'),
     ],
 )
 def test_doubleword_rejects_unexpected_catalog_shapes(catalog: str, error: str) -> None:
@@ -80,15 +75,43 @@ def test_doubleword_rejects_unexpected_catalog_shapes(catalog: str, error: str) 
         source_doubleword.parse_models(catalog, PAGES.__getitem__)
 
 
-def test_doubleword_rejects_a_model_page_without_an_api_id() -> None:
-    with pytest.raises(RuntimeError, match='has no playground model ID'):
-        source_doubleword.parse_models(CATALOG, lambda url: 'no playground here')
+@pytest.mark.parametrize(
+    'catalog, pages, error, model_ids',
+    [
+        (
+            CATALOG.replace('[OCR](/inference-api/models/ocr)', 'OCR'),
+            PAGES,
+            'Unexpected Doubleword models row',
+            ['zai-org/GLM-5.2-FP8', 'Qwen/Qwen3-Embedding-8B'],
+        ),
+        (
+            CATALOG.replace('\\$0.93 / \\$0.19', '\\$0.93'),
+            PAGES,
+            'Unexpected Doubleword Realtime price for GLM 5.2: \\$0.93 / \\$3.00',
+            ['Qwen/Qwen3-Embedding-8B'],
+        ),
+        (
+            CATALOG,
+            PAGES | {'https://docs.doubleword.ai/inference-api/models/embedding.md': 'no playground here'},
+            'Doubleword model page /inference-api/models/embedding has no playground model ID',
+            ['zai-org/GLM-5.2-FP8'],
+        ),
+    ],
+)
+def test_doubleword_reports_an_unreadable_row_and_reads_the_others(
+    catalog: str, pages: dict[str, str], error: str, model_ids: list[str], capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_doubleword.parse_models(catalog, pages.__getitem__)
+
+    assert [model.id for model in models] == model_ids
+    assert capsys.readouterr().out.startswith(f'Doubleword: skipped a row it cannot read; update it by hand. {error}')
 
 
 @pytest.mark.vcr()
-def test_doubleword_main_fetches_recorded_catalog(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'doubleword.yml'
-    copyfile(package_dir / 'providers/doubleword.yml', provider_path)
+def test_doubleword_main_fetches_recorded_catalog(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('doubleword.yml')
     provider_yaml = ProviderYaml(provider_path)
     for model_id in NEW_MODEL_IDS:
         provider_yaml.remove_model(model_id)

@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 import json
-from datetime import UTC, date, datetime, timedelta
+from datetime import UTC, date, datetime
 from decimal import Decimal
 from pathlib import Path
-from shutil import copyfile
 from typing import Any
 
 import httpx2
@@ -30,9 +29,8 @@ from prices.source_openrouter import (
     OpenRouterResponse,
     report_unknown_pricing_fields,
 )
-from prices.utils import package_dir
 
-from .fixtures import load_entries, load_payload
+from .fixtures import ProviderSnapshot, load_entries, load_payload
 
 
 def keep_endpoint_pricing(response: RawResponse) -> RawResponse:  # pragma: no cover - runs only when recording
@@ -699,14 +697,21 @@ def test_openrouter_batch_routes_take_cache_writes_at_their_input_discount() -> 
     [
         ([{'min_prompt_tokens': 1, 'internal_reasoning': '0.1'}], 'Unexpected OpenRouter price override'),
         ([{'region': 'eu', 'prompt': '0.1'}], 'Unexpected OpenRouter price override'),
-        ([{'min_prompt_tokens': 1, 'input_cache_write': '0.1'}], 'overrides input_cache_write for vendor/m without'),
+        (
+            [{'min_prompt_tokens': 1, 'input_cache_write': '0.1'}],
+            'OpenRouter overrides input_cache_write for vendor/m without a base rate',
+        ),
     ],
 )
-def test_openrouter_provider_models_reject_overrides_they_cannot_tier(overrides: object, error: str) -> None:
+def test_openrouter_provider_models_report_overrides_they_cannot_tier_and_read_the_others(
+    overrides: object, error: str, capsys: pytest.CaptureFixture[str]
+) -> None:
     model = openrouter_model('vendor/m', pricing=pricing_with_extras({'overrides': overrides}))
 
-    with pytest.raises(RuntimeError, match=error):
-        source_openrouter.parse_provider_models([model])
+    models = source_openrouter.parse_provider_models([model, openrouter_model('vendor/n')])
+
+    assert [model.id for model in models] == ['vendor/n']
+    assert capsys.readouterr().out.startswith(f'OpenRouter: skipped a row it cannot read; update it by hand. {error}')
 
 
 def test_upsert_keeps_a_curated_tier_when_the_source_reports_only_its_base(
@@ -857,16 +862,9 @@ models:
 
 @pytest.mark.vcr()
 def test_update_openrouter_provider_fetches_recorded_models(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    class NextDay(date):
-        @classmethod
-        def today(cls) -> date:
-            return date.today() + timedelta(days=1)
-
-    monkeypatch.setattr(source_openrouter, 'date', NextDay)
-    provider_path = tmp_path / 'openrouter.yml'
-    copyfile(package_dir / 'providers/openrouter.yml', provider_path)
+    provider_path = provider_snapshot('openrouter.yml')
 
     source_openrouter.update_openrouter_provider(provider_path)
 

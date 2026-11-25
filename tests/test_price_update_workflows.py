@@ -9,6 +9,7 @@ from urllib.parse import urlparse
 import pytest
 from ruamel.yaml import YAML
 
+from prices.update import MANUAL_UPDATE_NOTES_ENV
 from scripts.price_check_sources import load_provider_sources, official_source_hosts
 
 WORKFLOWS = Path(__file__).resolve().parents[1] / '.github/workflows'
@@ -744,11 +745,14 @@ const run = new (async () => {}).constructor('require', 'process', 'core', scrip
 def test_hourly_importer_failures_alert_slack_once() -> None:
     workflow = read_workflow('update-prices-failure.yml')
     assert workflow['on'] == {
-        'workflow_run': {'workflows': ['Update prices'], 'types': ['completed'], 'branches': ['main']}
+        'workflow_run': {'workflows': ['Update prices'], 'types': ['completed'], 'branches': ['main']},
+        'schedule': [{'cron': '41 13 * * *'}],
+        'workflow_dispatch': None,
     }
     check = workflow['jobs']['importer-failure']
     assert check['if'] == (
-        "${{ github.event.workflow_run.event == 'schedule'"
+        "${{ github.event_name == 'workflow_run'"
+        " && github.event.workflow_run.event == 'schedule'"
         ' && contains(fromJSON(\'["failure", "startup_failure"]\'), github.event.workflow_run.conclusion) }}'
     )
     assert check['permissions'] == {'actions': 'read'}
@@ -849,6 +853,127 @@ def test_importer_failure_lookup_error_fails_instead_of_alerting(tmp_path: Path)
 
     assert result.returncode != 0
     assert not output.exists()
+
+
+def test_still_failing_jobs_get_a_daily_slack_reminder() -> None:
+    workflow = read_workflow('update-prices-failure.yml')
+    digest = workflow['jobs']['still-failing']
+    assert digest['if'] == "${{ github.event_name != 'workflow_run' }}"
+    assert digest['permissions'] == {'actions': 'read'}
+    notify = workflow['jobs']['notify-still-failing']
+    assert notify['if'] == "${{ needs.still-failing.outputs.message != '' }}"
+    assert notify['uses'] == './.github/workflows/price-update-slack.yml'
+    assert notify['with'] == {
+        'pr-url': '${{ needs.still-failing.outputs.run-url }}',
+        'message': '${{ needs.still-failing.outputs.message }}',
+    }
+
+
+def scheduled_run(run_id: int, created: str, conclusion: str = 'failure') -> dict[str, object]:
+    url = f'https://github.com/pydantic/genai-prices/actions/runs/{run_id}'
+    return {'databaseId': run_id, 'createdAt': created, 'url': url, 'conclusion': conclusion}
+
+
+def run_still_failing(
+    tmp_path: Path, runs: list[dict[str, object]], jobs: dict[int, str]
+) -> subprocess.CompletedProcess[str]:
+    fake_gh = tmp_path / 'gh'
+    fake_gh.write_text(
+        '#!/bin/bash\n'
+        'if [ "$2" = list ]; then json="$RUNS"; else jobs="JOBS_$3"; json="${!jobs:?unknown run}"; fi\n'
+        'while [ "$1" != --jq ]; do shift; done\n'
+        'jq -r "$2" <<< "$json"\n'
+    )
+    fake_gh.chmod(0o755)
+    script = read_workflow('update-prices-failure.yml')['jobs']['still-failing']['steps'][0]['run']
+    return subprocess.run(
+        ['bash', '-e', '-c', script],
+        env={
+            **os.environ,
+            'PATH': f'{tmp_path}:{os.environ["PATH"]}',
+            'GITHUB_OUTPUT': str(tmp_path / 'output'),
+            'GITHUB_REPOSITORY': 'pydantic/genai-prices',
+            'RUNNER_TEMP': str(tmp_path),
+            'LOOKBACK_RUNS': '168',
+            'RUNS': json.dumps(runs),
+            **{f'JOBS_{run_id}': run_jobs for run_id, run_jobs in jobs.items()},
+        },
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+
+WEEKLY_JOBS = json.dumps(
+    {
+        'jobs': [
+            {'name': 'import huggingface', 'conclusion': 'success'},
+            {'name': 'pull-request', 'conclusion': 'success'},
+        ]
+    }
+)
+CANCELLED_JOBS = json.dumps({'jobs': [{'name': 'import openai', 'conclusion': 'cancelled'}]})
+
+
+@pytest.mark.parametrize(
+    ('runs', 'jobs', 'message'),
+    [
+        ([], {}, None),
+        ([scheduled_run(3, '2026-11-24T17:18:44Z', 'success')], {3: run_jobs()}, None),
+        (
+            [
+                scheduled_run(3, '2026-11-24T19:18:44Z'),
+                scheduled_run(2, '2026-11-24T18:18:44Z'),
+                scheduled_run(1, '2026-11-24T17:18:44Z', 'success'),
+            ],
+            {3: run_jobs('import openai'), 2: run_jobs('import openai'), 1: run_jobs()},
+            'import openai (since 2026-11-24 18:18 UTC)',
+        ),
+        (
+            [scheduled_run(3, '2026-11-24T19:18:44Z'), scheduled_run(2, '2026-11-24T18:18:44Z')],
+            {3: run_jobs('import openai', 'pull-request'), 2: run_jobs('import openai')},
+            'import openai (since 2026-11-24 18:18 UTC or earlier), pull-request (since 2026-11-24 19:18 UTC)',
+        ),
+        (
+            [
+                scheduled_run(4, '2026-11-24T20:18:44Z', 'cancelled'),
+                scheduled_run(3, '2026-11-24T19:18:44Z'),
+                scheduled_run(2, '2026-11-24T18:18:44Z', 'success'),
+                scheduled_run(1, '2026-11-24T17:18:44Z'),
+                scheduled_run(0, '2026-11-24T16:18:44Z', 'success'),
+            ],
+            {3: run_jobs('import openai'), 2: WEEKLY_JOBS, 1: CANCELLED_JOBS, 0: run_jobs()},
+            'import openai (since 2026-11-24 19:18 UTC)',
+        ),
+        (
+            [scheduled_run(3, '2026-11-24T19:18:44Z'), scheduled_run(2, '2026-11-24T18:18:44Z', 'success')],
+            {3: NO_IMPORT_JOBS, 2: run_jobs()},
+            'import: no job started (since 2026-11-24 19:18 UTC)',
+        ),
+    ],
+    ids=['no runs', 'passing', 'since', 'whole window', 'cancelled and weekly runs', 'no import job'],
+)
+def test_still_failing_lists_each_failing_job_with_when_it_started_failing(
+    tmp_path: Path, runs: list[dict[str, object]], jobs: dict[int, str], message: str | None
+) -> None:
+    result = run_still_failing(tmp_path, runs, jobs)
+
+    assert result.returncode == 0, result.stderr
+    output = tmp_path / 'output'
+    if message is None:
+        assert not output.exists()
+    else:
+        latest = next(run for run in runs if run['conclusion'] != 'cancelled')
+        assert output.read_text() == (
+            f'message=GenAI Prices jobs still failing: {message}. Latest run:\nrun-url={latest["url"]}\n'
+        )
+
+
+def test_still_failing_lookup_error_fails_instead_of_staying_quiet(tmp_path: Path) -> None:
+    result = run_still_failing(tmp_path, [scheduled_run(3, '2026-11-24T19:18:44Z')], {})
+
+    assert result.returncode != 0
+    assert not (tmp_path / 'output').exists()
 
 
 def test_aggregators_update_weekly_on_their_own_proposal() -> None:
@@ -963,22 +1088,29 @@ def test_hourly_update_lists_rates_that_need_a_manual_update(
     )
 
 
-def test_hourly_importer_failure_still_fails_the_step_when_its_output_is_saved(tmp_path: Path) -> None:
+@pytest.mark.parametrize('exit_code', [0, 1])
+def test_hourly_importer_step_collects_manual_update_notes_and_fails_with_its_importer(
+    tmp_path: Path, exit_code: int
+) -> None:
+    note = 'OpenAI: kept gpt-x unchanged, the pricing page lists it at conflicting rates; update it by hand'
     fake_make = tmp_path / 'make'
-    fake_make.write_text('#!/bin/bash\necho "Cursor pricing returned only 0 priced models"\nexit 1\n')
+    fake_make.write_text(f'#!/bin/bash\necho "{note}" >> "$PRICE_UPDATE_NOTES"\nexit {exit_code}\n')
     fake_make.chmod(0o755)
     steps = read_workflow('update-prices.yml')['jobs']['import']['steps']
-    script = next(step['run'] for step in steps if 'importer.log' in step.get('run', '') and '-get' in step['run'])
+    step = next(step for step in steps if '-get' in step.get('run', ''))
+    assert step['env'][MANUAL_UPDATE_NOTES_ENV] == '${{ runner.temp }}/patches/${{ matrix.importer }}.notes'
+    notes = tmp_path / 'patches' / 'openai.notes'
 
     result = subprocess.run(
-        ['bash', '-e', '-c', script],
+        ['bash', '-e', '-c', step['run']],
         env={
             **os.environ,
             'PATH': f'{tmp_path}:{os.environ["PATH"]}',
             'RUNNER_TEMP': str(tmp_path),
-            'IMPORTER': 'cursor',
+            'IMPORTER': 'openai',
+            MANUAL_UPDATE_NOTES_ENV: str(notes),
         },
     )
 
-    assert result.returncode != 0
-    assert (tmp_path / 'importer.log').read_text() == 'Cursor pricing returned only 0 priced models\n'
+    assert result.returncode == exit_code
+    assert notes.read_text() == f'{note}\n'
