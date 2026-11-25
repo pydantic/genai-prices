@@ -9,7 +9,7 @@ from pathlib import Path
 import httpx2
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, UnreadableRowError, report_manual_update, skipping_unreadable_row
 from prices.utils import package_dir
 
 PRICING_URL = 'https://elevenlabs.io/pricing/api'
@@ -40,25 +40,32 @@ def parse_pricing_page(page: str) -> list[ModelInfo]:
         while row + 3 < len(lines) and lines[row].startswith('~'):
             rates.add(tuple(lines[row + 1 : row + 4]))
             row += 4
+        if len(rates) > 1:
+            report_manual_update(
+                f'ElevenLabs: kept {model_id} unchanged, the pricing page lists it at {len(rates)} different rates; '
+                'update it by hand'
+            )
+            continue
         if len(rates) != 1:
             raise RuntimeError(f'ElevenLabs {name} has {len(rates)} distinct rate rows; expected 1')
-        minute, input_mtok, output_mtok = (_parse_price(value) for value in rates.pop())
-        models.append(
-            ModelInfo(
-                id=model_id,
-                name=name,
-                match=ClauseEquals(equals=model_id),
-                prices=ModelPrice.model_validate(
-                    {'audio_hours': minute * 60, 'input_mtok': input_mtok, 'output_mtok': output_mtok}
-                ),
-                prices_checked=date.today(),
+        with skipping_unreadable_row('ElevenLabs'):
+            minute, input_mtok, output_mtok = (_parse_price(value, model_id) for value in rates.pop())
+            models.append(
+                ModelInfo(
+                    id=model_id,
+                    name=name,
+                    match=ClauseEquals(equals=model_id),
+                    prices=ModelPrice.model_validate(
+                        {'audio_hours': minute * 60, 'input_mtok': input_mtok, 'output_mtok': output_mtok}
+                    ),
+                    prices_checked=date.today(),
+                )
             )
-        )
     return models
 
 
 def main(provider_path: Path | None = None) -> None:
-    response = httpx2.get(PRICING_URL, timeout=30.0)
+    response = httpx2.get(PRICING_URL, timeout=30.0, follow_redirects=True)
     response.raise_for_status()
     models = parse_pricing_page(response.text)
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/elevenlabs.yml')
@@ -71,9 +78,9 @@ def get_elevenlabs_prices() -> None:  # pragma: no cover - thin CLI alias for ma
     main()
 
 
-def _parse_price(value: str) -> Decimal:
+def _parse_price(value: str, model_id: str) -> Decimal:
     if re.fullmatch(r'\$[0-9]+(?:\.[0-9]+)?', value) is None:
-        raise RuntimeError(f'Invalid ElevenLabs price: {value}')
+        raise UnreadableRowError(f'Invalid ElevenLabs price for {model_id}: {value}')
     return Decimal(value.removeprefix('$'))
 
 

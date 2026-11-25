@@ -1,26 +1,27 @@
 from __future__ import annotations
 
 from decimal import Decimal
-from pathlib import Path
-from shutil import copyfile
 from typing import Any
 
 import pytest
 
 from prices import source_modal
 from prices.prices_types import ModelPrice
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 
 def svelte_data(values: list[Any]) -> dict[str, Any]:
     return {'type': 'data', 'nodes': [{'type': 'data', 'data': [{}]}, {'type': 'data', 'data': values}]}
 
 
-def model_page(rates: dict[str, str] | None, *, shared: bool = True) -> dict[str, Any]:
+def model_page(
+    rates: dict[str, str] | None, *, shared: bool = True, model_id: str = 'moonshotai/Kimi-K3'
+) -> dict[str, Any]:
     values: list[Any] = [
         {'model': 1},
         {'baseModelRepoId': 2, 'displayName': 3, 'hasSharedEndpoint': 4, 'tokenRates': 5 if rates else -1},
-        'moonshotai/Kimi-K3',
+        model_id,
         'Kimi K3',
         shared,
     ]
@@ -39,51 +40,98 @@ def test_modal_library_lists_model_pages() -> None:
     assert source_modal.parse_library_data(data) == ['/library/moonshot/kimi-k3']
 
 
-@pytest.mark.parametrize(
-    ('data', 'error'),
-    [
-        (svelte_data([{'title': 1}, 'Model Library']), 'Modal library page has no models'),
-        (svelte_data([{'models': 1}, [2], {'href': 3}, 'https://example.com']), 'Unexpected Modal library model links'),
-    ],
-)
-def test_modal_rejects_an_unexpected_library(data: dict[str, Any], error: str) -> None:
-    with pytest.raises(RuntimeError, match=error):
-        source_modal.parse_library_data(data)
+def test_modal_rejects_a_library_without_models() -> None:
+    with pytest.raises(RuntimeError, match='Modal library page has no models'):
+        source_modal.parse_library_data(svelte_data([{'title': 1}, 'Model Library']))
+
+
+def test_modal_reports_an_unreadable_library_link_and_reads_the_others(capsys: pytest.CaptureFixture[str]) -> None:
+    data = svelte_data(
+        [
+            {'models': 1},
+            [2, 3, 4, 6],
+            {'href': 5},
+            {'name': 6},
+            {'href': 7},
+            'https://example.com',
+            'Kimi K3',
+            '/library/k3',
+        ]
+    )
+
+    assert source_modal.parse_library_data(data) == ['/library/k3']
+    assert capsys.readouterr().out == (
+        "Modal: skipped a row it cannot read; update it by hand. Unexpected Modal library model link: 'https://example.com'\n"
+        'Modal: skipped a row it cannot read; update it by hand. Unexpected Modal library model link: None\n'
+        "Modal: skipped a row it cannot read; update it by hand. Unexpected Modal library model entry: 'Kimi K3'\n"
+    )
 
 
 def test_modal_shared_endpoint_token_rates() -> None:
-    model = source_modal.parse_model_data(model_page(RATES))
+    model = source_modal.parse_model_data('/library/kimi-k3', model_page(RATES))
 
     assert model is not None
     assert (model.id, model.name) == ('moonshotai/Kimi-K3', 'Kimi K3')
     assert model.prices == ModelPrice(
         input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')
     )
-    assert source_modal.parse_model_data(model_page(RATES | {'reasoningMtok': '15.00'})) is not None
+    assert source_modal.parse_model_data('/library/kimi-k3', model_page(RATES | {'reasoningMtok': '15.00'})) is not None
 
 
 def test_modal_skips_models_without_a_shared_endpoint() -> None:
-    assert source_modal.parse_model_data(model_page(None, shared=False)) is None
+    assert source_modal.parse_model_data('/library/kimi-k3', model_page(None, shared=False)) is None
 
 
 @pytest.mark.parametrize(
     ('data', 'error'),
     [
-        (svelte_data([{'title': 1}, 'Not found']), 'Modal model page has no model'),
-        (model_page(None), 'Modal Shared Endpoint model has no token rates'),
-        (model_page(RATES | {'promptMtok': 'TBD'}), "Unexpected Modal promptMtok rate 'TBD'"),
-        (model_page(RATES | {'reasoningMtok': '20.00'}), 'Modal prices reasoning tokens separately'),
+        (svelte_data([{'title': 1}, 'Not found']), 'Modal model page /library/b has no model'),
+        (model_page(None), 'Modal Shared Endpoint model on /library/b has no token rates'),
+        (model_page(RATES | {'promptMtok': 'TBD'}), "Unexpected Modal promptMtok rate 'TBD' for moonshotai/Kimi-K3"),
+        (
+            model_page(RATES | {'reasoningMtok': '20.00'}),
+            'Modal prices reasoning tokens separately for moonshotai/Kimi-K3',
+        ),
+        # Malformed page data: a root that is not an object, a reference past the end, a reference that is not an index.
+        (svelte_data(['Kimi K3']), "Unexpected Modal model page data on /library/b: 'Kimi K3'"),
+        (svelte_data([{'model': 9}]), 'IndexError: list index out of range'),
+        (svelte_data([{'model': 'Kimi K3'}]), "TypeError: '>=' not supported between instances of 'str' and 'int'"),
     ],
 )
-def test_modal_rejects_an_unexpected_model_page(data: dict[str, Any], error: str) -> None:
-    with pytest.raises(RuntimeError, match=error):
-        source_modal.parse_model_data(data)
+def test_modal_reports_an_unreadable_model_page_and_reads_the_others(
+    data: dict[str, Any],
+    error: str,
+    monkeypatch: pytest.MonkeyPatch,
+    provider_snapshot: ProviderSnapshot,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    provider_path = provider_snapshot('modal.yml')
+    pages = {
+        '/library/__data.json': svelte_data(
+            [{'models': 1}, [2, 3, 4], {'href': 5}, {'href': 6}, {'href': 7}, '/library/a', '/library/b', '/library/c']
+        ),
+        '/library/a/__data.json': model_page(RATES, model_id='zai-org/GLM-5.3'),
+        '/library/b/__data.json': data,
+        '/library/c/__data.json': model_page(RATES, model_id='zai-org/GLM-5.3-Flash'),
+    }
+
+    def get_json(_client: object, path: str) -> dict[str, Any]:
+        return pages[path]
+
+    monkeypatch.setattr(source_modal, '_get_json', get_json)
+
+    source_modal.main(provider_path)
+
+    assert capsys.readouterr().out == (
+        f'Modal: skipped a row it cannot read; update it by hand. {error}\nModal prices updated: 0 added, 2 updated\n'
+    )
 
 
 @pytest.mark.vcr()
-def test_modal_main_fetches_recorded_library(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'modal.yml'
-    copyfile(package_dir / 'providers/modal.yml', provider_path)
+def test_modal_main_fetches_recorded_library(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('modal.yml')
 
     source_modal.main(provider_path)
 

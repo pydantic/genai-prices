@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=.schema.json
+name: TypeSafe
+id: typesafe
+pricing_urls:
+  - https://docs.typesafe.ai/models
+api_pattern: 'https://api\.typesafe\.ai'
+model_match:
+  starts_with: "jev-"
+provider_match:
+  contains: typesafe
+extractors:
+  # https://docs.typesafe.ai/api: `POST /v1/systemone` answers with `model` and `usage.input_tokens` / `usage.output_tokens`
+  - root: usage
+    model_path: model
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: output_tokens
+        dest: output_tokens
+price_comments: >-
+  TypeSafe bills Jev per input token only; output tokens are free. `jev-latest` and `jev-preview` are aliases that
+  move with releases; each model's `match` follows the Aliases table on https://docs.typesafe.ai/models, which
+  `make typesafe-get` keeps in sync. The `regex` clauses match the served ids OpenRouter returns for each version,
+  such as `typesafe/jev-1.14-20261014`, with or without the `typesafe/` prefix, and the importer keeps them.
+
+models:
+  - id: jev-1.13.0
+    name: Jev 1.13.0
+    match:
+      or:
+        - equals: jev-1.13.0
+        - regex: ^(typesafe/)?jev-1\.13(-\d{8})?$
+    context_window: 32000
+    prices_checked: 2026-10-27
+    prices:
+      input_mtok: 0.042
+
+  - id: jev-1.14.0
+    name: Jev 1.14.0
+    match:
+      or:
+        - equals: jev-1.14.0
+        - regex: ^(typesafe/)?jev-1\.14(-\d{8})?$
+        - equals: jev-preview
+        # openrouter.yml also matches jev-latest; move both when a new Jev ships.
+        - equals: jev-latest
+    context_window: 32000
+    prices_checked: 2026-10-27
+    price_comments: >-
+      Available from October 14, 2026. https://docs.typesafe.ai/models lists `jev-1.14.0` at the same $0.042
+      input rate as every Jev version. The default context limit is 32k for state plus one question, within the
+      64k per-request limit.
+    prices:
+      input_mtok: 0.042

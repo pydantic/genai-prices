@@ -6,7 +6,7 @@ from decimal import Decimal
 from pathlib import Path
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, Tier, TieredPrices
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, UnreadableRowError, report_manual_update, skipping_unreadable_row
 from prices.utils import get_markdown, markdown_tables, package_dir
 
 PRICING_URL = 'https://developers.openai.com/api/docs/pricing.md'
@@ -32,28 +32,42 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     rates: dict[str, ModelPrice] = {}
     long_context_rows: dict[str, tuple[dict[str, Decimal | TieredPrices], list[str]]] = {}
     conflicting: set[str] = set()
+    # A model's rates can span a short and a long context row, so one unreadable row keeps the whole model unchanged.
+    unreadable: set[str] = set()
     for model_column, columns, rows in _standard_tables(markdown):
         for row in rows:
-            model_cell, cells = row[model_column], row[model_column + 1 :]
-            if cells[0] == 'Free':
-                continue
-            if not (match := MODEL_CELL.fullmatch(model_cell)):
-                raise RuntimeError(f'Unexpected OpenAI pricing row: {row}')
-            if match['context'] == 'long':
-                long = _prices(columns, cells, row)
-                if long_context_rows.setdefault(match['id'], (long, row))[0] != long:
+            with skipping_unreadable_row('OpenAI'):
+                model_cell, cells = row[model_column], row[model_column + 1 :]
+                if cells[0] == 'Free':
+                    continue
+                if not (match := MODEL_CELL.fullmatch(model_cell)):
+                    raise UnreadableRowError(f'Unexpected OpenAI pricing row: {row}')
+                try:
+                    row_prices = _prices(columns, cells, row)
+                except UnreadableRowError:
+                    unreadable.add(match['id'])
+                    raise
+                if match['context'] == 'long':
+                    if long_context_rows.setdefault(match['id'], (row_prices, row))[0] != row_prices:
+                        conflicting.add(match['id'])
+                    continue
+                prices = ModelPrice.model_validate(row_prices)
+                if rates.setdefault(match['id'], prices) != prices:
                     conflicting.add(match['id'])
-                continue
-            prices = ModelPrice.model_validate(_prices(columns, cells, row))
-            if rates.setdefault(match['id'], prices) != prices:
-                conflicting.add(match['id'])
     for model_id, (long, row) in long_context_rows.items():
-        if long and model_id not in conflicting:
-            rates[model_id] = _with_long_context(rates.get(model_id), long, row)
+        if long and model_id not in conflicting | unreadable:
+            with skipping_unreadable_row('OpenAI'):
+                try:
+                    rates[model_id] = _with_long_context(rates.get(model_id), long, row)
+                except UnreadableRowError:
+                    unreadable.add(model_id)
+                    raise
     if not rates:
         raise RuntimeError('OpenAI pricing page has no standard text pricing table')
     for model_id in sorted(conflicting):
-        print(f'OpenAI: kept {model_id} unchanged, the pricing page lists it at conflicting rates; update it by hand')
+        report_manual_update(
+            f'OpenAI: kept {model_id} unchanged, the pricing page lists it at conflicting rates; update it by hand'
+        )
     return [
         ModelInfo(
             id=model_id,
@@ -62,7 +76,7 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
             prices_checked=date.today(),
         )
         for model_id, prices in rates.items()
-        if model_id not in conflicting
+        if model_id not in conflicting | unreadable
     ]
 
 
@@ -112,7 +126,7 @@ def _prices(
         if key and (price := _dollars(cell, row)) is not None:
             (long if is_long else short)[key] = price
     if long and short.keys() != long.keys():
-        raise RuntimeError(f'OpenAI pricing row has a short or long context rate without its pair: {row}')
+        raise UnreadableRowError(f'OpenAI pricing row has a short or long context rate without its pair: {row}')
     return {
         key: TieredPrices(base=base, tiers=[Tier(start=LONG_CONTEXT_START, price=long[key])]) if long else base
         for key, base in short.items()
@@ -126,10 +140,12 @@ def _with_long_context(short: ModelPrice | None, long: dict[str, Decimal | Tiere
     """
     base = short.model_dump(exclude_none=True) if short else {}
     if missing := long.keys() - base.keys():
-        raise RuntimeError(f'OpenAI long context row has rates without a short context rate ({sorted(missing)}): {row}')
+        raise UnreadableRowError(
+            f'OpenAI long context row has rates without a short context rate ({sorted(missing)}): {row}'
+        )
     for key, price in long.items():
         if not isinstance(base[key], Decimal) or not isinstance(price, Decimal):
-            raise RuntimeError(f'OpenAI long context row repeats a tiered rate for {key}: {row}')
+            raise UnreadableRowError(f'OpenAI long context row repeats a tiered rate for {key}: {row}')
         base[key] = TieredPrices(base=base[key], tiers=[Tier(start=LONG_CONTEXT_START, price=price)])
     return ModelPrice.model_validate(base)
 
@@ -138,5 +154,5 @@ def _dollars(cell: str, row: list[str]) -> Decimal | None:
     if cell == '-':
         return None
     if not (match := re.fullmatch(r'\$(\d+(?:\.\d+)?)', cell)):
-        raise RuntimeError(f'Unexpected OpenAI price {cell!r} in row: {row}')
+        raise UnreadableRowError(f'Unexpected OpenAI price {cell!r} in row: {row}')
     return Decimal(match[1])

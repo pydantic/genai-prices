@@ -3,14 +3,14 @@ from __future__ import annotations
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_cursor
 from prices.prices_types import ModelPrice, StartDateConstraint, Tier, TieredPrices
 from prices.update import ProviderYaml
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 PRICING_MARKDOWN = """\
 # Models & Pricing
@@ -70,11 +70,67 @@ def test_parse_pricing_markdown_folds_500k_rows_into_long_context_tiers() -> Non
     )
 
 
-def test_parse_pricing_markdown_rejects_duplicate_models() -> None:
-    markdown = PRICING_MARKDOWN.replace('Grok 4.5 |', 'Grok 4.6 |', 1)
+@pytest.mark.parametrize(
+    ('markdown', 'note', 'model_ids'),
+    [
+        (
+            PRICING_MARKDOWN.replace('Grok 4.5 |', 'Grok 4.6 |', 1),
+            'Cursor: kept grok-4.6 unchanged, the pricing page lists grok-4.6 more than once; update it by hand\n',
+            ['grok-4.7', 'grok-4.6-fast', 'grok-4.5-fast', 'composer-2.5', 'composer-2.5-fast'],
+        ),
+        (
+            PRICING_MARKDOWN.replace(
+                '| Grok 4.6 |', '| Grok 4.7 500k | Cursor | $5 | - | $1 | $15 | Long context |\n| Grok 4.6 |', 1
+            ),
+            'Cursor: kept grok-4.7 unchanged, the pricing page lists grok-4.7-500k more than once; update it by hand\n',
+            ['grok-4.6', 'grok-4.6-fast', 'grok-4.5', 'grok-4.5-fast', 'composer-2.5', 'composer-2.5-fast'],
+        ),
+    ],
+)
+def test_parse_pricing_markdown_reports_a_duplicate_model_and_reads_the_others(
+    markdown: str, note: str, model_ids: list[str], capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_cursor.parse_pricing_markdown(markdown)
 
-    with pytest.raises(RuntimeError, match='Duplicate Cursor model in pricing data: grok-4.6'):
-        source_cursor.parse_pricing_markdown(markdown)
+    assert [model.id for model in models] == model_ids
+    assert capsys.readouterr().out == note
+
+
+UNREADABLE_GROK_4_6 = '| Grok 4.6 | Cursor | Contact sales | - | $0.5 | $6 | Jointly trained |'
+
+
+@pytest.mark.parametrize(
+    ('markdown', 'note', 'model_ids'),
+    [
+        (
+            PRICING_MARKDOWN.replace('| Grok 4.6 | Cursor | $2 |', '| Grok 4.6 | Cursor | Contact sales |'),
+            "Cursor: skipped a row it cannot read for grok-4.6; update it by hand. Unexpected Cursor price 'Contact "
+            f"sales' in row: {UNREADABLE_GROK_4_6}\n",
+            ['grok-4.7', 'grok-4.6-fast', 'grok-4.5', 'grok-4.5-fast', 'composer-2.5', 'composer-2.5-fast'],
+        ),
+        (
+            # A readable row after an unreadable one for the same model still leaves the model unchanged.
+            PRICING_MARKDOWN.replace('| Grok 4.6 |', f'{UNREADABLE_GROK_4_6}\n| Grok 4.6 |', 1),
+            "Cursor: skipped a row it cannot read for grok-4.6; update it by hand. Unexpected Cursor price 'Contact "
+            f"sales' in row: {UNREADABLE_GROK_4_6}\n",
+            ['grok-4.7', 'grok-4.6-fast', 'grok-4.5', 'grok-4.5-fast', 'composer-2.5', 'composer-2.5-fast'],
+        ),
+        (
+            # An unreadable long-context row leaves its model unchanged rather than priced without the tier.
+            PRICING_MARKDOWN.replace('| Grok 4.7 500k | Cursor | $4 |', '| Grok 4.7 500k | Cursor | TBD |'),
+            "Cursor: skipped a row it cannot read for grok-4.7-500k; update it by hand. Unexpected Cursor price 'TBD' "
+            'in row: | Grok 4.7 500k | Cursor | TBD | - | $1 | $12 | Long context |\n',
+            ['grok-4.6', 'grok-4.6-fast', 'grok-4.5', 'grok-4.5-fast', 'composer-2.5', 'composer-2.5-fast'],
+        ),
+    ],
+)
+def test_parse_pricing_markdown_reports_an_unreadable_price_and_reads_the_others(
+    markdown: str, note: str, model_ids: list[str], capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_cursor.parse_pricing_markdown(markdown)
+
+    assert [model.id for model in models] == model_ids
+    assert capsys.readouterr().out == note
 
 
 def test_cursor_updater_preserves_existing_metadata(tmp_path: Path) -> None:
@@ -138,9 +194,10 @@ def test_cursor_updater_adds_new_models(tmp_path: Path) -> None:
 
 
 @pytest.mark.vcr()
-def test_cursor_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'cursor.yml'
-    copyfile(package_dir / 'providers/cursor.yml', provider_path)
+def test_cursor_main_fetches_recorded_pricing_page(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('cursor.yml')
 
     source_cursor.main(provider_path)
 

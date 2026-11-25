@@ -54,26 +54,25 @@ jobs:
           enable-cache: false
       - run: uv sync --all-packages
       - run: |
-          set -o pipefail
-          make "${IMPORTER}-get" | tee "$RUNNER_TEMP/importer.log"
+          mkdir -p "$RUNNER_TEMP/patches"
+          : > "$PRICE_UPDATE_NOTES"
+          make "${IMPORTER}-get"
         env:
           IMPORTER: ${{ matrix.importer }}
+          # `report_manual_update` appends each rate the importer saw change but couldn't write, for a person to apply.
+          PRICE_UPDATE_NOTES: ${{ runner.temp }}/patches/${{ matrix.importer }}.notes
       - name: Keep the diff unless it only bumps prices_checked
         id: patch
         env:
           IMPORTER: ${{ matrix.importer }}
           EXPECTED_COUNT: ${{ strategy.job-total }}
         run: |
-          mkdir -p "$RUNNER_TEMP/patches"
           : > "$RUNNER_TEMP/patches/$IMPORTER.patch"
           git add --intent-to-add prices/providers
           if git diff -U0 -- prices/providers | grep -E '^[-+] ' | grep -qvE '^[-+] +prices_checked: '; then
             git diff --binary -- prices/providers > "$RUNNER_TEMP/patches/$IMPORTER.patch"
           fi
           echo "expected-count=$EXPECTED_COUNT" >> "$GITHUB_OUTPUT"
-          # Rates the importer saw change but couldn't write, listed on the price update PR for a person to apply.
-          grep -E 'by hand|kept .+ unchanged|reports others' "$RUNNER_TEMP/importer.log" \
-            > "$RUNNER_TEMP/patches/$IMPORTER.notes" || true
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: patch-${{ matrix.importer }}

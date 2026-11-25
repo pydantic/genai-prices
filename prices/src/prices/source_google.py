@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import TypeAlias
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice, Provider, StartDateConstraint, Tier, TieredPrices
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, report_manual_update
 from prices.utils import get_markdown, package_dir
 
 PRICING_URL = 'https://aistudio.google.com/docs/pricing.md'
@@ -82,10 +82,10 @@ def parse_pricing_markdown(
             prices = _prices(cells, today)
         except ScheduledRateError as e:
             if provider is None or not all(_records(provider.find_model(i), e.start, cells) for i in model_ids):
-                print(f'Google: skipped {heading}, {e}')
+                report_manual_update(f'Google: skipped {heading}, {e}; update it by hand')
             continue
         except UnreadablePriceError as e:
-            print(f'Google: skipped {heading}, {e}')
+            report_manual_update(f'Google: skipped {heading}, {e}; update it by hand')
             continue
         if prices.input_mtok is None:
             print(f'Google: skipped {heading}, it has no paid input price')
@@ -102,7 +102,7 @@ def main(provider_path: Path | None = None) -> None:
     models: list[ModelInfo] = []
     for model in parse_pricing_markdown(get_markdown(PRICING_URL), provider=provider_yaml.provider):
         if provider_yaml.provider.find_model(model.id) is None:
-            print(f'Google: skipped {model.id}, it is not in google.yml yet')
+            report_manual_update(f'Google: skipped {model.id}, it is not in google.yml yet; add it by hand')
         else:
             models.append(model)
     added, updated = provider_yaml.upsert_models(models, source='Google', min_count=MIN_MODEL_COUNT)

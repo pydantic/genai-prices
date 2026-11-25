@@ -45,7 +45,7 @@ def get_model_infos(models: list[dict[str, Any]], provider: str):
 
 def main(providers_dir: Path | None = None) -> None:
     providers_dir = providers_dir or package_dir / 'providers'
-    response = httpx2.get(MODELS_URL, timeout=30.0)
+    response = httpx2.get(MODELS_URL, timeout=30.0, follow_redirects=True)
     response.raise_for_status()
     models = response.json()['data']
     providers = sorted({p['provider'] for model in models for p in model['providers']})

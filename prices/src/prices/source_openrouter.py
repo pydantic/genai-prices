@@ -11,7 +11,7 @@ from pydantic import BaseModel
 
 from . import source_prices
 from .prices_types import ClauseEquals, ClauseOr, ModelInfo, ModelPrice, Tier, TieredPrices
-from .update import ProviderYaml, get_providers_yaml
+from .update import ProviderYaml, UnreadableRowError, get_providers_yaml, skipping_unreadable_row
 from .utils import distinct_mtok, mtok, package_dir
 from .variants import rate_pairs, shape
 
@@ -303,39 +303,42 @@ def parse_provider_models(models: list[OpenRouterModel]) -> list[ModelInfo]:
     by_id = {model.id: model for model in models}
     model_infos: list[ModelInfo] = []
     for model in models:
-        if not model.has_fixed_price():
-            continue
-        if (base := by_id.get(model.id.removesuffix(':batch'))) and model.id.endswith(':batch'):
-            model = with_batch_cache_writes(model, base)
-        overrides: list[dict[str, Any]] = (model.pricing.model_extra or {}).get('overrides') or []
-        if any(key.startswith('utc_') for override in overrides for key in override):
-            # Time-of-day rates can't be expressed as one dated price; leave these models curated by hand.
-            continue
-        for override in overrides:
-            if 'min_prompt_tokens' not in override or 'internal_reasoning' in override:
-                raise RuntimeError(f'Unexpected OpenRouter price override for {model.id}: {override}')
-        model_info = model.model_info(inc_description=False, strip_provider=False, include_context_window=True)
-        if ':' in model.id:
-            # A `:batch` or `:free` route shares its base model's canonical slug, which must match only the base.
-            model_info = model_info.model_copy(update={'match': ClauseEquals(equals=model.id)})
-        prices = model_info.prices
-        assert isinstance(prices, ModelPrice)
-        tiered: dict[str, TieredPrices] = {}
-        for key, field in TIERED_PRICE_FIELDS.items():
-            tiers = [
-                Tier(start=override['min_prompt_tokens'], price=Decimal(override[field]) * 1_000_000)
-                for override in overrides
-                if field in override
-            ]
-            if not tiers:
+        with skipping_unreadable_row('OpenRouter'):
+            if not model.has_fixed_price():
                 continue
-            base = dict(prices).get(key)
-            if base is None:
-                raise RuntimeError(f'OpenRouter overrides {field} for {model.id} without a base rate')
-            tiered[key] = TieredPrices(base=base, tiers=sorted(tiers, key=lambda tier: tier.start))
-        model_infos.append(
-            model_info.model_copy(update={'prices': prices.model_copy(update=tiered), 'prices_checked': date.today()})
-        )
+            if (base := by_id.get(model.id.removesuffix(':batch'))) and model.id.endswith(':batch'):
+                model = with_batch_cache_writes(model, base)
+            overrides: list[dict[str, Any]] = (model.pricing.model_extra or {}).get('overrides') or []
+            if any(key.startswith('utc_') for override in overrides for key in override):
+                # Time-of-day rates can't be expressed as one dated price; leave these models curated by hand.
+                continue
+            for override in overrides:
+                if 'min_prompt_tokens' not in override or 'internal_reasoning' in override:
+                    raise UnreadableRowError(f'Unexpected OpenRouter price override for {model.id}: {override}')
+            model_info = model.model_info(inc_description=False, strip_provider=False, include_context_window=True)
+            if ':' in model.id:
+                # A `:batch` or `:free` route shares its base model's canonical slug, which must match only the base.
+                model_info = model_info.model_copy(update={'match': ClauseEquals(equals=model.id)})
+            prices = model_info.prices
+            assert isinstance(prices, ModelPrice)
+            tiered: dict[str, TieredPrices] = {}
+            for key, field in TIERED_PRICE_FIELDS.items():
+                tiers = [
+                    Tier(start=override['min_prompt_tokens'], price=Decimal(override[field]) * 1_000_000)
+                    for override in overrides
+                    if field in override
+                ]
+                if not tiers:
+                    continue
+                base = dict(prices).get(key)
+                if base is None:
+                    raise UnreadableRowError(f'OpenRouter overrides {field} for {model.id} without a base rate')
+                tiered[key] = TieredPrices(base=base, tiers=sorted(tiers, key=lambda tier: tier.start))
+            model_infos.append(
+                model_info.model_copy(
+                    update={'prices': prices.model_copy(update=tiered), 'prices_checked': date.today()}
+                )
+            )
     return model_infos
 
 
@@ -365,7 +368,7 @@ def with_batch_cache_writes(batch: OpenRouterModel, base: OpenRouterModel) -> Op
 
 def update_openrouter_provider(provider_path: Path | None = None) -> None:
     """Update only the `openrouter` provider's prices, keeping a dated entry for every rate change."""
-    with httpx2.Client(timeout=30.0) as client:
+    with httpx2.Client(timeout=30.0, follow_redirects=True) as client:
         response = client.get(MODELS_URL)
         response.raise_for_status()
         listed: list[OpenRouterModel] = []
