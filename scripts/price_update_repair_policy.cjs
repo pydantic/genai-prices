@@ -148,6 +148,7 @@ function allowedPath(filePath) {
       'packages/python/genai_prices/data.py',
       'packages/js/src/data.ts',
       'packages/go/internal/data/prices.json',
+      'packages/rust/data/prices.json',
       'tests/dataset/usages.json',
     ].includes(filePath)
   )
@@ -288,4 +289,4 @@ function applyPatch({ directory, patchPath, reportPath, expected }) {
   }
 }
 
-module.exports = { validateAssessment, applyPatch }
+module.exports = { validateAssessment, applyPatch, allowedPath }
