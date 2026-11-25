@@ -14775,7 +14775,7 @@ export const data: Provider[] = [
           equals: 'gemini-robotics-er-2-preview',
         },
         price_comments:
-          'Rates from https://ai.google.dev/gemini-api/docs/pricing (Gemini Robotics ER 2): input $1 / 1M tokens and output $5 / 1M tokens through 2026-12-31, rising to $2 and $10 from 2027-01-01. Cache reads are implicit only at $0.10 / 1M tokens through 2026-12-31 and $0.20 from 2027-01-01; the engines do not represent the cache storage fee. Grounding with Google Search is $14 per 1,000 search requests at both rate levels, added on 2026-11-25.',
+          'Rates from https://ai.google.dev/gemini-api/docs/pricing (Gemini Robotics ER 2): input $1 / 1M tokens and output $5 / 1M tokens through 2026-12-31, rising to $2 and $10 from 2027-01-01. Cache reads are implicit only at $0.10 / 1M tokens through 2026-12-31 and $0.20 from 2027-01-01; the engines do not represent the cache storage fee. Grounding with Google Search is $14 per 1,000 search requests at both rate levels; the page lists it undated, at the rate shared by all Gemini 3 and newer models, so it is not a rate change. First recorded here on 2026-11-25.',
         prices: [
           {
             prices: {
@@ -14805,7 +14805,7 @@ export const data: Provider[] = [
           equals: 'gemini-robotics-er-2-streaming-preview',
         },
         price_comments:
-          'Rates from https://ai.google.dev/gemini-api/docs/pricing (Gemini Robotics ER 2 Streaming): input $1 / 1M tokens and output $5 / 1M tokens through 2026-12-31, rising to $2 and $10 from 2027-01-01. No context-caching section is published for the streaming endpoint. Grounding with Google Search is $14 per 1,000 search requests at both rate levels, added on 2026-11-25.',
+          'Rates from https://ai.google.dev/gemini-api/docs/pricing (Gemini Robotics ER 2 Streaming): input $1 / 1M tokens and output $5 / 1M tokens through 2026-12-31, rising to $2 and $10 from 2027-01-01. No context-caching section is published for the streaming endpoint. Grounding with Google Search is $14 per 1,000 search requests at both rate levels; the page lists it undated, at the rate shared by all Gemini 3 and newer models, so it is not a rate change. First recorded here on 2026-11-25.',
         prices: [
           {
             prices: {
