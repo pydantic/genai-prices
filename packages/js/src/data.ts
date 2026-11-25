@@ -49643,6 +49643,35 @@ export const data: Provider[] = [
     ],
   },
   {
+    id: 'oruk',
+    name: 'Oruk',
+    pricing_urls: ['https://oruk.ai/pricing', 'https://speech-api.oruk.ai/openapi.json'],
+    api_pattern: 'https://speech-api\\.oruk\\.ai(?:/|$)',
+    price_comments:
+      'Hosted Oruk Speech API (`POST https://speech-api.oruk.ai/v1/audio/transcriptions`, OpenAI-compatible multipart REST). Per https://speech-api.oruk.ai/openapi.json and https://oruk.ai/pricing, `oruk-fourier-2b` carries a reference task rate of $0.0080 per audio minute ($0.48 per audio hour) with a 1-second billing minimum; monthly subscription plans also include shared speech understanding minutes.',
+    model_match: {
+      starts_with: 'oruk-',
+    },
+    provider_match: {
+      contains: 'oruk',
+    },
+    models: [
+      {
+        id: 'oruk-fourier-2b',
+        name: 'Oruk Fourier 2B',
+        match: {
+          equals: 'oruk-fourier-2b',
+        },
+        price_comments:
+          '$0.0080 per audio minute ($0.48 per audio hour) reference rate per https://speech-api.oruk.ai/openapi.json and https://oruk.ai/pricing (English-only Qwen3-ASR 2.04B checkpoint; open weights under CC BY-NC 4.0 at https://huggingface.co/oruk/oruk-fourier-2b).',
+        prices: {
+          audio_hours: 0.48,
+          input_audio_hours: 0.48,
+        },
+      },
+    ],
+  },
+  {
     id: 'ovhcloud',
     name: 'OVHcloud AI Endpoints',
     pricing_urls: ['https://oai.endpoints.kepler.ai.cloud.ovh.net/v1/models'],

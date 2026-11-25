@@ -45,12 +45,14 @@ network:
     - open.bigmodel.cn
     - openai.com
     - openrouter.ai
+    - oruk.ai
     - platform.claude.com
     - platform.kimi.ai
     - platform.minimax.io
     - platform.openai.com
     - quicksilverpro.io
     - router.huggingface.co
+    - speech-api.oruk.ai
     - www.anthropic.com
     - www.baseten.co
     - www.cerebras.ai

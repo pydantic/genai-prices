@@ -309,6 +309,47 @@ def test_elevenlabs_does_not_price_other_models_in_its_namespace():
         calc_price(Usage(input_tokens=1), 'eleven_multilingual_v2', provider_id='elevenlabs')
 
 
+def test_oruk_fourier_2b_prices():
+    by_provider_id = calc_price(Usage(audio_seconds=60), 'oruk-fourier-2b', provider_id='oruk')
+    by_model_namespace = calc_price(Usage(audio_seconds=60), 'oruk-fourier-2b')
+    by_input_audio = calc_price(Usage(audio_seconds=60, input_audio_seconds=60), 'oruk-fourier-2b', provider_id='oruk')
+
+    for price in (by_provider_id, by_model_namespace, by_input_audio):
+        assert price.provider.id == 'oruk'
+        assert price.model.id == 'oruk-fourier-2b'
+        assert price.total_price == Decimal('0.008')
+
+    one_hour = calc_price(Usage(audio_seconds=3600), 'oruk-fourier-2b', provider_id='oruk')
+    assert one_hour.total_price == Decimal('0.48')
+
+
+@pytest.mark.parametrize(
+    'provider_api_url',
+    [
+        'https://speech-api.oruk.ai',
+        'https://speech-api.oruk.ai/v1/audio/transcriptions',
+    ],
+)
+def test_oruk_selected_by_api_url(provider_api_url: str):
+    price = calc_price(Usage(audio_seconds=60), 'oruk-fourier-2b', provider_api_url=provider_api_url)
+    assert price.provider.id == 'oruk'
+    assert price.total_price == Decimal('0.008')
+
+
+@pytest.mark.parametrize(
+    'provider_api_url',
+    ['https://speech-api.oruk.ai.evil.example/v1', 'https://speech-api.oruk.aievil.example/v1'],
+)
+def test_oruk_api_url_requires_the_real_host(provider_api_url: str):
+    with pytest.raises(LookupError, match='Unable to find provider'):
+        calc_price(Usage(audio_seconds=60), 'oruk-fourier-2b', provider_api_url=provider_api_url)
+
+
+def test_oruk_does_not_price_other_models_in_its_namespace():
+    with pytest.raises(LookupError, match='Unable to find model'):
+        calc_price(Usage(audio_seconds=60), 'oruk-unknown-model', provider_id='oruk')
+
+
 @pytest.mark.parametrize(
     ('model_ref', 'expected_total_price'),
     [
