@@ -108,6 +108,7 @@ safe-outputs:
       - prices/providers/openai.yml
       - prices/providers/openai_decisions.yml
       - prices/providers/openrouter.yml
+      - prices/providers/oruk.yml
       - prices/providers/ovhcloud.yml
       - prices/providers/perplexity.yml
       - prices/providers/quicksilverpro.yml
