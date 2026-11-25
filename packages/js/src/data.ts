@@ -29266,6 +29266,8 @@ export const data: Provider[] = [
         match: {
           equals: 'gpt-6-astra-healthcare',
         },
+        price_comments:
+          'Healthcare configurations have no per-model docs page; standard and Fast rates are published in the grouped pricing tables at https://developers.openai.com/api/docs/pricing (verified 2026-11-25). Fast is 2x Standard for input, cached input and output; no cache-write rates are published for this configuration. Above 272K input tokens, input and cache cost 2x and output 1.5x; tier starts use 272000 because the engines select a tier when token count exceeds start.',
         prices: {
           input_mtok: {
             base: 10,
@@ -29295,6 +29297,42 @@ export const data: Provider[] = [
             ],
           },
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: {
+                base: 20,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 40,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 100,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 150,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'gpt-6-astra-law',
@@ -30242,6 +30280,8 @@ export const data: Provider[] = [
         match: {
           equals: 'gpt-6.1-sol-healthcare',
         },
+        price_comments:
+          'Healthcare configurations have no per-model docs page; standard and Fast rates are published in the grouped pricing tables at https://developers.openai.com/api/docs/pricing (verified 2026-11-25). Fast is 2x Standard for input, cached input and output; no cache-write rates are published for this configuration. Above 272K input tokens, input and cache cost 2x and output 1.5x; tier starts use 272000 because the engines select a tier when token count exceeds start.',
         prices: {
           input_mtok: {
             base: 2,
@@ -30271,6 +30311,42 @@ export const data: Provider[] = [
             ],
           },
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: {
+                base: 4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 8,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 20,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 30,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'gpt-6.1-terra',
@@ -30800,6 +30876,8 @@ export const data: Provider[] = [
         match: {
           equals: 'gpt-6.2-astra-healthcare',
         },
+        price_comments:
+          'Healthcare configurations have no per-model docs page; standard and Fast rates are published in the grouped pricing tables at https://developers.openai.com/api/docs/pricing (verified 2026-11-25). Fast is 2x Standard for input, cached input and output; no Fast cache-write rate is published, so Fast cache writes fall back to the Standard rates. Above 272K input tokens, input and cache cost 2x and output 1.5x; tier starts use 272000 because the engines select a tier when token count exceeds start.',
         prices: {
           input_mtok: {
             base: 8,
@@ -30838,6 +30916,42 @@ export const data: Provider[] = [
             ],
           },
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: {
+                base: 16,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 32,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.8,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 1.6,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 80,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 120,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'gpt-6.2-astra-law',
@@ -31173,6 +31287,8 @@ export const data: Provider[] = [
         match: {
           equals: 'gpt-6.2-sol-healthcare',
         },
+        price_comments:
+          'Healthcare configurations have no per-model docs page; standard and Fast rates are published in the grouped pricing tables at https://developers.openai.com/api/docs/pricing (verified 2026-11-25). Fast is 2x Standard for input, cached input and output; no Fast cache-write rate is published, so Fast cache writes fall back to the Standard rates. Above 272K input tokens, input and cache cost 2x and output 1.5x; tier starts use 272000 because the engines select a tier when token count exceeds start.',
         prices: {
           input_mtok: {
             base: 2,
@@ -31211,6 +31327,42 @@ export const data: Provider[] = [
             ],
           },
         },
+        price_variants: [
+          {
+            when: {
+              service_tier: 'fast',
+            },
+            prices: {
+              input_mtok: {
+                base: 4,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 8,
+                  },
+                ],
+              },
+              cache_read_mtok: {
+                base: 0.2,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 0.4,
+                  },
+                ],
+              },
+              output_mtok: {
+                base: 20,
+                tiers: [
+                  {
+                    start: 272000,
+                    price: 30,
+                  },
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         id: 'gpt-audio',

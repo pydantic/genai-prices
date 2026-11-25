@@ -16595,11 +16595,28 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gpt-6-astra-healthcare',
                 match=ClauseEquals(equals='gpt-6-astra-healthcare'),
+                price_comments='Healthcare configurations have no per-model docs page; standard and Fast rates are published in the grouped pricing tables at https://developers.openai.com/api/docs/pricing (verified 2026-11-25). Fast is 2x Standard for input, cached input and output; no cache-write rates are published for this configuration. Above 272K input tokens, input and cache cost 2x and output 1.5x; tier starts use 272000 because the engines select a tier when token count exceeds start.',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('20'))]),
                     cache_read_mtok=TieredPrices(base=Decimal('1'), tiers=[Tier(start=272000, price=Decimal('2'))]),
                     output_mtok=TieredPrices(base=Decimal('50'), tiers=[Tier(start=272000, price=Decimal('75'))]),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'fast'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('20'), tiers=[Tier(start=272000, price=Decimal('40'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('100'), tiers=[Tier(start=272000, price=Decimal('150'))]
+                            ),
+                        ),
+                    )
+                ],
             ),
             ModelInfo(
                 id='gpt-6-astra-law',
@@ -16948,11 +16965,26 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gpt-6.1-sol-healthcare',
                 match=ClauseEquals(equals='gpt-6.1-sol-healthcare'),
+                price_comments='Healthcare configurations have no per-model docs page; standard and Fast rates are published in the grouped pricing tables at https://developers.openai.com/api/docs/pricing (verified 2026-11-25). Fast is 2x Standard for input, cached input and output; no cache-write rates are published for this configuration. Above 272K input tokens, input and cache cost 2x and output 1.5x; tier starts use 272000 because the engines select a tier when token count exceeds start.',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
                     cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]),
                     output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('15'))]),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'fast'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('4'), tiers=[Tier(start=272000, price=Decimal('8'))]),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('20'), tiers=[Tier(start=272000, price=Decimal('30'))]
+                            ),
+                        ),
+                    )
+                ],
             ),
             ModelInfo(
                 id='gpt-6.1-terra',
@@ -17157,12 +17189,29 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gpt-6.2-astra-healthcare',
                 match=ClauseEquals(equals='gpt-6.2-astra-healthcare'),
+                price_comments='Healthcare configurations have no per-model docs page; standard and Fast rates are published in the grouped pricing tables at https://developers.openai.com/api/docs/pricing (verified 2026-11-25). Fast is 2x Standard for input, cached input and output; no Fast cache-write rate is published, so Fast cache writes fall back to the Standard rates. Above 272K input tokens, input and cache cost 2x and output 1.5x; tier starts use 272000 because the engines select a tier when token count exceeds start.',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('8'), tiers=[Tier(start=272000, price=Decimal('16'))]),
                     cache_write_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('20'))]),
                     cache_read_mtok=TieredPrices(base=Decimal('0.4'), tiers=[Tier(start=272000, price=Decimal('0.8'))]),
                     output_mtok=TieredPrices(base=Decimal('40'), tiers=[Tier(start=272000, price=Decimal('60'))]),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'fast'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('16'), tiers=[Tier(start=272000, price=Decimal('32'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.8'), tiers=[Tier(start=272000, price=Decimal('1.6'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('80'), tiers=[Tier(start=272000, price=Decimal('120'))]
+                            ),
+                        ),
+                    )
+                ],
             ),
             ModelInfo(
                 id='gpt-6.2-astra-law',
@@ -17276,12 +17325,27 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gpt-6.2-sol-healthcare',
                 match=ClauseEquals(equals='gpt-6.2-sol-healthcare'),
+                price_comments='Healthcare configurations have no per-model docs page; standard and Fast rates are published in the grouped pricing tables at https://developers.openai.com/api/docs/pricing (verified 2026-11-25). Fast is 2x Standard for input, cached input and output; no Fast cache-write rate is published, so Fast cache writes fall back to the Standard rates. Above 272K input tokens, input and cache cost 2x and output 1.5x; tier starts use 272000 because the engines select a tier when token count exceeds start.',
                 prices=ModelPrice(
                     input_mtok=TieredPrices(base=Decimal('2'), tiers=[Tier(start=272000, price=Decimal('4'))]),
                     cache_write_mtok=TieredPrices(base=Decimal('2.5'), tiers=[Tier(start=272000, price=Decimal('5'))]),
                     cache_read_mtok=TieredPrices(base=Decimal('0.1'), tiers=[Tier(start=272000, price=Decimal('0.2'))]),
                     output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=272000, price=Decimal('15'))]),
                 ),
+                price_variants=[
+                    PriceVariant(
+                        when={'service_tier': 'fast'},
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(base=Decimal('4'), tiers=[Tier(start=272000, price=Decimal('8'))]),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.2'), tiers=[Tier(start=272000, price=Decimal('0.4'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('20'), tiers=[Tier(start=272000, price=Decimal('30'))]
+                            ),
+                        ),
+                    )
+                ],
             ),
             ModelInfo(
                 id='gpt-audio',
