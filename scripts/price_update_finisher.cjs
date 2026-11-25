@@ -53,6 +53,17 @@ async function assertHead(github, repo, prNumber, expectedHead) {
   return pr
 }
 
+// For a few seconds after a push, the pulls API can still report the head the push replaced.
+async function assertPublishedHead(github, repo, prNumber, previousHead, publishedHead, sleep) {
+  for (const delay of [1000, 2000, 4000, 8000]) {
+    if (publishedHead === previousHead) break
+    const pr = await priceProposal(github, repo, prNumber)
+    if (pr?.head.sha !== previousHead) break
+    await sleep(delay)
+  }
+  return assertHead(github, repo, prNumber, publishedHead)
+}
+
 async function repairInFlight(github, repo, state, now) {
   if (state.status !== 'repair-requested') return false
   if (now() - state.requestedAt < 120_000) return true
@@ -293,11 +304,19 @@ function loadExpected(directory) {
   return JSON.parse(fs.readFileSync(path.join(directory, 'context.json'), 'utf8')).expected
 }
 
-async function recordResult({ github, context, core, expected, report, publishedHead }) {
+async function recordResult({
+  github,
+  context,
+  core,
+  expected,
+  report,
+  publishedHead,
+  sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+}) {
   const repo = context.repo
   const { validateAssessment } = require('./price_update_repair_policy.cjs')
   validateAssessment(report, expected)
-  await assertHead(github, repo, expected.prNumber, publishedHead)
+  await assertPublishedHead(github, repo, expected.prNumber, expected.headSha, publishedHead, sleep)
   const state = readState(
     await github.paginate(github.rest.issues.listComments, {
       ...repo,

@@ -371,3 +371,54 @@ test('a repair request keeps the attempt count of an in-flight repair', async ()
   assert.equal(readState(comments).requestId, '123-861-1')
   assert.equal(calls.filter(([kind]) => kind === 'dispatch').length, 1)
 })
+
+async function recordAfterPush({ staleReads }) {
+  const { options, github, comments, pr } = fixture()
+  await watchOne({ ...options, assess: () => ({ state: 'repair', reason: 'finding', findings: [] }) })
+  const published = 'f'.repeat(40)
+  let reads = 0
+  github.rest.pulls.get = async () => ({
+    data: { ...pr, head: { ...pr.head, sha: reads++ < staleReads ? head : published } },
+  })
+  const expected = {
+    prNumber: 861,
+    headSha: head,
+    requestId: '123-861-1',
+    findings: [{ id: 'thread:one', kind: 'thread', threadId: 'one', commentId: 7 }],
+  }
+  const report = {
+    ...expected,
+    assessments: [
+      {
+        id: 'thread:one',
+        action: 'fixed',
+        verdict: 'net-positive → do',
+        evidence: 'The repair dates the new rate and the price tests cover it.',
+      },
+    ],
+  }
+  const delays = []
+  const result = recordResult({
+    github,
+    context: { repo },
+    core,
+    expected,
+    report,
+    publishedHead: published,
+    sleep: async (ms) => delays.push(ms),
+  })
+  return { result, delays, comments }
+}
+
+test('recording a repair waits for the pulls API to report the pushed head', async () => {
+  const { result, delays, comments } = await recordAfterPush({ staleReads: 2 })
+  await result
+  assert.deepEqual(delays, [1000, 2000])
+  assert.equal(readState(comments).status, 'assessed')
+})
+
+test('recording a repair fails when the pushed head never appears', async () => {
+  const { result, delays } = await recordAfterPush({ staleReads: Infinity })
+  await assert.rejects(result, /identity or head changed/)
+  assert.deepEqual(delays, [1000, 2000, 4000, 8000])
+})
