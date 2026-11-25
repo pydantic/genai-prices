@@ -372,13 +372,13 @@ test('a repair request keeps the attempt count of an in-flight repair', async ()
   assert.equal(calls.filter(([kind]) => kind === 'dispatch').length, 1)
 })
 
-async function recordAfterPush({ staleReads }) {
+// The pulls API reports the replaced head for the first `staleReads` reads, then `current`.
+async function recordAfterPush({ staleReads = 0, published = 'f'.repeat(40), current = published }) {
   const { options, github, calls, comments, pr } = fixture()
   await watchOne({ ...options, assess: () => ({ state: 'repair', reason: 'finding', findings: [] }) })
-  const published = 'f'.repeat(40)
   let reads = 0
   github.rest.pulls.get = async () => ({
-    data: { ...pr, head: { ...pr.head, sha: reads++ < staleReads ? head : published } },
+    data: { ...pr, head: { ...pr.head, sha: reads++ < staleReads ? head : current } },
   })
   const expected = {
     prNumber: 861,
@@ -428,4 +428,17 @@ test('recording a repair fails when the pushed head never appears', async () => 
     calls.some(([kind]) => ['reaction', 'reply', 'resolve'].includes(kind)),
     false,
   )
+})
+
+test('recording a repair fails at once when another push replaced the head', async () => {
+  const { result, delays } = await recordAfterPush({ current: 'c'.repeat(40) })
+  await assert.rejects(result, /identity or head changed/)
+  assert.deepEqual(delays, [])
+})
+
+test('recording a repair that changed no code does not wait', async () => {
+  const { result, delays, comments } = await recordAfterPush({ published: head })
+  await result
+  assert.deepEqual(delays, [])
+  assert.equal(readState(comments).status, 'assessed')
 })
