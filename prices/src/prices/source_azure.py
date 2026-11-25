@@ -9,7 +9,7 @@ from typing import Any
 import httpx2
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, UnreadableRowError, report_manual_update, skipping_unreadable_row
 from prices.utils import package_dir
 
 PRICES_URL = 'https://prices.azure.com/api/retail/prices'
@@ -75,27 +75,41 @@ METERS: dict[str, dict[str, str]] = {
 
 def parse_retail_prices(items: list[dict[str, Any]]) -> list[ModelInfo]:
     per_mtok: dict[str, Decimal] = {}
+    # A meter listed twice holds its models unchanged, even when one of its rows cannot be read.
+    seen: set[str] = set()
+    duplicates: set[str] = set()
     for item in items:
-        meter = item['meterName']
-        if meter in per_mtok:
-            raise RuntimeError(f'Azure retail prices list meter {meter!r} more than once')
-        if (scale := UNIT_SCALES.get(item['unitOfMeasure'])) is None:
-            raise RuntimeError(f'Unexpected Azure unit {item["unitOfMeasure"]!r} for meter {meter!r}')
-        rate = Decimal(str(item['retailPrice'])) * scale
-        per_mtok[meter] = rate.quantize(Decimal(1)) if rate == rate.to_integral_value() else rate.normalize()
+        with skipping_unreadable_row('Azure'):
+            meter = item['meterName']
+            if meter in seen:
+                duplicates.add(meter)
+                continue
+            seen.add(meter)
+            if (scale := UNIT_SCALES.get(item['unitOfMeasure'])) is None:
+                raise UnreadableRowError(f'Unexpected Azure unit {item["unitOfMeasure"]!r} for meter {meter!r}')
+            rate = Decimal(str(item['retailPrice'])) * scale
+            per_mtok[meter] = rate.quantize(Decimal(1)) if rate == rate.to_integral_value() else rate.normalize()
 
     models: list[ModelInfo] = []
     for model_id, meters in METERS.items():
-        if missing := [meter for meter in meters.values() if meter not in per_mtok]:
-            raise RuntimeError(f'Azure retail prices have no meter {missing[0]!r} for {model_id}')
-        models.append(
-            ModelInfo(
-                id=model_id,
-                match=ClauseEquals(equals=model_id),
-                prices=ModelPrice(**{key: per_mtok[meter] for key, meter in meters.items()}),
-                prices_checked=date.today(),
+        with skipping_unreadable_row('Azure') as row:
+            row.model_ids.add(model_id)
+            if repeated := [meter for meter in meters.values() if meter in duplicates]:
+                report_manual_update(
+                    f'Azure: kept {model_id} unchanged, the retail prices list meter {repeated[0]!r} more than once; '
+                    'update it by hand'
+                )
+                continue
+            if missing := [meter for meter in meters.values() if meter not in per_mtok]:
+                raise UnreadableRowError(f'Azure retail prices have no meter {missing[0]!r} for {model_id}')
+            models.append(
+                ModelInfo(
+                    id=model_id,
+                    match=ClauseEquals(equals=model_id),
+                    prices=ModelPrice(**{key: per_mtok[meter] for key, meter in meters.items()}),
+                    prices_checked=date.today(),
+                )
             )
-        )
     return models
 
 
@@ -111,13 +125,13 @@ def main(provider_path: Path | None = None) -> None:
             f"and type eq 'Consumption' and ({meter_filter})"
         }
         while url:
-            response = httpx2.get(url, params=params, timeout=30.0)
+            response = httpx2.get(url, params=params, timeout=30.0, follow_redirects=True)
             # The API throttles sporadically, below its stated per-minute quota, and answers 429 with Retry-After.
             for _ in range(RATE_LIMIT_RETRIES):
                 if response.status_code != 429:
                     break
                 time.sleep(int(response.headers.get('Retry-After', '60')))
-                response = httpx2.get(url, params=params, timeout=30.0)
+                response = httpx2.get(url, params=params, timeout=30.0, follow_redirects=True)
             response.raise_for_status()
             page = response.json()
             items += page['Items']

@@ -53,13 +53,32 @@ def test_elevenlabs_parses_realtime_rates_per_model() -> None:
     [
         (PAGE.replace('Eleven Realtime v1 Max', 'Eleven Realtime v2'), 'no Eleven Realtime v1 Max rate table'),
         (PAGE.replace('Input tokens (per 1M)', 'Input (per 1M)', 1), 'no Eleven Realtime v1 Mini rate table'),
-        (PAGE.replace('$6.00', '$7.00', 1), 'has 2 distinct rate rows'),
-        (PAGE.replace('$9.00', 'Contact sales'), 'Invalid ElevenLabs price: Contact sales'),
+        (PAGE.replace('~12 min', '12 min'), 'Eleven Realtime v1 Max has 0 distinct rate rows'),
     ],
 )
 def test_elevenlabs_rejects_unexpected_page_shapes(page: str, error: str) -> None:
     with pytest.raises(RuntimeError, match=error):
         source_elevenlabs.parse_pricing_page(page)
+
+
+def test_elevenlabs_keeps_a_model_listed_at_different_rates_unchanged(capsys: pytest.CaptureFixture[str]) -> None:
+    models = source_elevenlabs.parse_pricing_page(PAGE.replace('$6.00', '$7.00', 1))
+
+    assert [model.id for model in models] == ['eleven_realtime_v1_max']
+    assert capsys.readouterr().out == (
+        'ElevenLabs: kept eleven_realtime_v1_mini unchanged, the pricing page lists it at 2 different rates; '
+        'update it by hand\n'
+    )
+
+
+def test_elevenlabs_reports_an_unreadable_price_and_reads_the_other_model(capsys: pytest.CaptureFixture[str]) -> None:
+    models = source_elevenlabs.parse_pricing_page(PAGE.replace('$9.00', 'Contact sales'))
+
+    assert [model.id for model in models] == ['eleven_realtime_v1_mini']
+    assert capsys.readouterr().out == (
+        'ElevenLabs: skipped a row it cannot read; update it by hand. '
+        'Invalid ElevenLabs price for eleven_realtime_v1_max: Contact sales\n'
+    )
 
 
 PROVIDER_YAML = """\

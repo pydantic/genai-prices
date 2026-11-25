@@ -77,7 +77,7 @@ def get_model_infos(models: list[dict[str, object]]):
 
 
 def main(provider_path: Path | None = None) -> None:
-    response = httpx2.get(CATALOG_URL, timeout=30.0)
+    response = httpx2.get(CATALOG_URL, timeout=30.0, follow_redirects=True)
     response.raise_for_status()
     models = list(get_model_infos(response.json()['models']))
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/quicksilverpro.yml')

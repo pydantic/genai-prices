@@ -2,15 +2,14 @@ from __future__ import annotations
 
 from datetime import date
 from decimal import Decimal
-from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_google
-from prices.prices_types import ModelPrice, Tier, TieredPrices
+from prices.prices_types import ModelPrice, Provider, Tier, TieredPrices
 from prices.update import ProviderYaml
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 TODAY = date(2026, 11, 3)
 HEADER = '| Feature | Free Tier | Paid Tier, per 1M tokens in USD |'
@@ -30,6 +29,16 @@ def section(heading: str, ids: str, rows: str, table_header: str = HEADER) -> st
         f'{table("| Input price | x | $9 |")}\n  {{% /tab %}}\n{{% /tabs %}}\n'
     )
 
+
+ARGON = (
+    '## Argon\n\n*[`gemini-argon-x`](https://x)*\n\n{% table %}\n'
+    '  * Feature\n  * Free Tier\n  * Paid Tier, per 1M tokens in USD\n\n  ---\n\n'
+    '  * Input price\n  * Not available\n  * $2.00 through November 30, 2026. \\\\\n  $4.00 starting December 1, 2026.\n'
+    '\n  ---\n\n'
+    '  * Context caching price\n  * Not available\n  * $0.10 through November 30, 2026.   \n'
+    '  $0.20 starting December 1, 2026.   \n  Implicit caching only (explicit caching is not supported).\n'
+    '{% /table %}\n'
+)
 
 PRICING_MARKDOWN = '\n'.join(
     [
@@ -85,13 +94,7 @@ PRICING_MARKDOWN = '\n'.join(
             '| Image input price | Free | $0.45 ($0.00012 per image) |\n'
             '| Audio input price | Free | $6.50 ($0.00016 per second) |',
         ),
-        '## Argon\n\n*[`gemini-argon-x`](https://x)*\n\n{% table %}\n'
-        '  * Feature\n  * Free Tier\n  * Paid Tier, per 1M tokens in USD\n\n  ---\n\n'
-        '  * Input price\n  * Not available\n  * $2.00 through November 30, 2026. \\\\\n  $4.00 starting December 1, 2026.\n'
-        '\n  ---\n\n'
-        '  * Context caching price\n  * Not available\n  * $0.10 through November 30, 2026.   \n'
-        '  $0.20 starting December 1, 2026.   \n  Implicit caching only (explicit caching is not supported).\n'
-        '{% /table %}\n',
+        ARGON,
         section(
             'Old image',
             '[`gemini-old-image-x`](https://x)',
@@ -160,8 +163,8 @@ def test_google_parses_standard_rates_by_modality_and_prompt_size(capsys: pytest
     }
     assert {model.prices_checked for model in models} == {TODAY}
     assert capsys.readouterr().out == (
-        'Google: skipped Argon, a rate starts on 2026-12-01, which a dated entry must record\n'
-        "Google: skipped Old image, unreadable price '$0.039 per image{% sup %}*{% /sup %}'\n"
+        'Google: skipped Argon, a rate starts on 2026-12-01, which a dated entry must record; update it by hand\n'
+        "Google: skipped Old image, unreadable price '$0.039 per image{% sup %}*{% /sup %}'; update it by hand\n"
         'Google: skipped Output only, it has no paid input price\n'
         'Google: skipped Veo, its prices are not per 1M tokens\n'
     )
@@ -190,7 +193,60 @@ def test_google_skips_a_model_whose_prices_it_cannot_read(
     markdown = section('Odd', '[`gemini-odd-x`](https://x)', rows)
 
     assert source_google.parse_pricing_markdown(markdown, today=TODAY) == []
-    assert capsys.readouterr().out == f'Google: skipped Odd, {reason}\n'
+    assert capsys.readouterr().out == f'Google: skipped Odd, {reason}; update it by hand\n'
+
+
+def argon_provider(model_id: str, input_mtok: float) -> Provider:
+    return Provider.model_validate(
+        {
+            'id': 'google',
+            'name': 'Google',
+            'api_pattern': 'x',
+            'models': [
+                {
+                    'id': model_id,
+                    'match': {'equals': model_id},
+                    'prices': [
+                        {'prices': {'input_mtok': 2, 'cache_read_mtok': 0.1}},
+                        {
+                            'constraint': {'start_date': '2026-12-01'},
+                            'prices': {'input_mtok': input_mtok, 'cache_read_mtok': 0.2},
+                        },
+                    ],
+                }
+            ],
+        }
+    )
+
+
+def test_google_skips_a_future_rate_that_google_yml_already_records_without_a_note(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    assert source_google.parse_pricing_markdown(ARGON, TODAY, argon_provider('gemini-argon-x', 4)) == []
+    assert capsys.readouterr().out == ''
+
+
+@pytest.mark.parametrize(
+    ('markdown', 'provider'),
+    [
+        (ARGON, argon_provider('gemini-argon-x', 5)),
+        (ARGON, argon_provider('gemini-other-x', 4)),
+        (
+            ARGON.replace(
+                '$4.00 starting December 1, 2026.', '$4.00 starting December 1, 2026. $5.00 starting January 1, 2027.'
+            ),
+            argon_provider('gemini-argon-x', 4),
+        ),
+    ],
+)
+def test_google_notes_a_future_rate_that_google_yml_does_not_record(
+    markdown: str, provider: Provider, capsys: pytest.CaptureFixture[str]
+) -> None:
+    assert source_google.parse_pricing_markdown(markdown, TODAY, provider) == []
+    assert (
+        capsys.readouterr().out
+        == 'Google: skipped Argon, a rate starts on 2026-12-01, which a dated entry must record; update it by hand\n'
+    )
 
 
 def test_google_rejects_a_table_row_with_missing_cells() -> None:
@@ -202,7 +258,7 @@ def test_google_rejects_a_table_row_with_missing_cells() -> None:
 
 @pytest.mark.vcr()
 def test_google_main_fetches_recorded_pricing_page(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+    provider_snapshot: ProviderSnapshot, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     class RecordedDay(date):
         @classmethod
@@ -210,13 +266,12 @@ def test_google_main_fetches_recorded_pricing_page(
             return TODAY
 
     monkeypatch.setattr(source_google, 'date', RecordedDay)
-    provider_path = tmp_path / 'google.yml'
-    copyfile(package_dir / 'providers/google.yml', provider_path)
+    provider_path = provider_snapshot('google.yml')
 
     source_google.main(provider_path)
 
     out = capsys.readouterr().out.splitlines()
-    assert 'Google: skipped gemini-3.5-transcribe, it is not in google.yml yet' in out
+    assert 'Google: skipped gemini-3.5-transcribe, it is not in google.yml yet; add it by hand' in out
     assert out[-1] == 'Google prices updated: 0 added, 20 updated'
     record = ProviderYaml(provider_path).provider.find_model('gemini-2.5-pro')
     assert record is not None and record.prices_checked == TODAY

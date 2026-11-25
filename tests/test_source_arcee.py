@@ -3,14 +3,14 @@ from __future__ import annotations
 from datetime import date
 from decimal import Decimal
 from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_arcee
 from prices.prices_types import ModelPrice, StartDateConstraint
 from prices.update import ProviderYaml
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 PRICING_MARKDOWN = """\
 # Pricing
@@ -45,18 +45,87 @@ def test_parse_pricing_markdown_returns_empty_without_text_models() -> None:
     assert source_arcee.parse_pricing_markdown('# Pricing\n') == []
 
 
-def test_parse_pricing_markdown_rejects_duplicate_models() -> None:
+def test_parse_pricing_markdown_reports_a_duplicate_model_and_reads_the_others(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
     duplicate = PRICING_MARKDOWN.replace('deepseek/deepseek-v4-pro', 'deepseek/deepseek-v4-flash-latest')
 
-    with pytest.raises(RuntimeError, match='Duplicate Arcee model in pricing data: deepseek/deepseek-v4-flash-latest'):
-        source_arcee.parse_pricing_markdown(duplicate)
+    models = source_arcee.parse_pricing_markdown(duplicate)
+
+    assert [model.id for model in models] == [
+        'moonshotai/kimi-k3',
+        'thinkingmachines/inkling-small',
+        'trinity-large-thinking',
+        'zai-org/glm-5.2',
+    ]
+    assert capsys.readouterr().out == (
+        'Arcee: kept deepseek/deepseek-v4-flash-latest unchanged, the pricing page lists it more than once; '
+        'update it by hand\n'
+    )
 
 
-def test_parse_pricing_markdown_rejects_invalid_prices() -> None:
-    invalid = PRICING_MARKDOWN.replace('$0.14', 'Contact Sales')
+SKIPPED_FLASH = 'Arcee: skipped a row it cannot read for deepseek/deepseek-v4-flash-latest; update it by hand. '
 
-    with pytest.raises(RuntimeError, match='Invalid Arcee price: Contact Sales'):
-        source_arcee.parse_pricing_markdown(invalid)
+
+@pytest.mark.parametrize(
+    ('markdown', 'error'),
+    [
+        (PRICING_MARKDOWN.replace('$0.14', 'Contact Sales'), 'Invalid Arcee price: Contact Sales'),
+        (
+            PRICING_MARKDOWN.replace('<td>$0.028</td>', ''),
+            'Unexpected Arcee pricing row: <td>deepseek/deepseek-v4-flash-latest</td><td>$0.14</td><td>$0.28</td>',
+        ),
+    ],
+)
+def test_parse_pricing_markdown_reports_an_unreadable_row_and_reads_the_others(
+    markdown: str, error: str, capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_arcee.parse_pricing_markdown(markdown)
+
+    assert [model.id for model in models] == [
+        'deepseek/deepseek-v4-pro',
+        'moonshotai/kimi-k3',
+        'thinkingmachines/inkling-small',
+        'trinity-large-thinking',
+        'zai-org/glm-5.2',
+    ]
+    assert capsys.readouterr().out == f'{SKIPPED_FLASH}{error}\n'
+
+
+@pytest.mark.parametrize(
+    ('markdown', 'notes'),
+    [
+        (
+            # A readable later copy of the model's row does not price it.
+            PRICING_MARKDOWN.replace('$0.14', 'Contact Sales').replace(
+                'deepseek/deepseek-v4-pro', 'deepseek/deepseek-v4-flash-latest'
+            ),
+            f'{SKIPPED_FLASH}Invalid Arcee price: Contact Sales\n'
+            'Arcee: kept deepseek/deepseek-v4-flash-latest unchanged, the pricing page lists it more than once; '
+            'update it by hand\n',
+        ),
+        (
+            # Nor does a readable earlier copy.
+            PRICING_MARKDOWN.replace(
+                '<td>deepseek/deepseek-v4-pro</td><td>$1.74</td>', '<td>deepseek/deepseek-v4-flash-latest</td>'
+            ),
+            f'{SKIPPED_FLASH}Unexpected Arcee pricing row: '
+            '<td>deepseek/deepseek-v4-flash-latest</td><td>$3.48</td><td>$0.20</td>\n',
+        ),
+    ],
+)
+def test_parse_pricing_markdown_keeps_a_model_with_an_unreadable_row_unchanged(
+    markdown: str, notes: str, capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_arcee.parse_pricing_markdown(markdown)
+
+    assert [model.id for model in models] == [
+        'moonshotai/kimi-k3',
+        'thinkingmachines/inkling-small',
+        'trinity-large-thinking',
+        'zai-org/glm-5.2',
+    ]
+    assert capsys.readouterr().out == notes
 
 
 def test_parse_pricing_markdown_accepts_unpriced_units() -> None:
@@ -149,9 +218,10 @@ def test_arcee_updater_rejects_sharp_catalog_drop(monkeypatch: pytest.MonkeyPatc
 
 
 @pytest.mark.vcr()
-def test_arcee_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'arcee.yml'
-    copyfile(package_dir / 'providers/arcee.yml', provider_path)
+def test_arcee_main_fetches_recorded_pricing_page(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('arcee.yml')
 
     source_arcee.main(provider_path)
 

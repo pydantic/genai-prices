@@ -1,0 +1,3980 @@
+# yaml-language-server: $schema=.schema.json
+name: OpenAI
+id: openai
+pricing_urls:
+  - https://developers.openai.com/api/docs/pricing
+  - https://developers.openai.com/api/docs/guides/prompt-caching
+  - https://platform.openai.com/docs/pricing
+  - https://openai.com/api/pricing/
+  - https://platform.openai.com/docs/models
+  - https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost
+api_pattern: 'https://api\.openai\.com'
+model_match:
+  or:
+    - starts_with: "gpt-"
+    - equals: whisper-1
+    - starts_with: "tts-1"
+    - regex: "^o[134]"
+provider_match:
+  contains: openai
+extractors:
+  # https://github.com/openai/openai-python/blob/f16fbbd2bd25dc1ff150b5f78dbd15ff6bab6d91/src/openai/types/completion_usage.py
+  - api_flavor: chat
+    root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: [prompt_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: [prompt_tokens_details, cache_write_tokens]
+        dest: cache_write_tokens
+        required: false
+      - path: [prompt_tokens_details, audio_tokens]
+        dest: input_audio_tokens
+        required: false
+      - path: [completion_tokens_details, audio_tokens]
+        dest: output_audio_tokens
+        required: false
+      - path: [completion_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
+        required: false
+      - path: completion_tokens
+        dest: output_tokens
+  # https://github.com/openai/openai-python/blob/f16fbbd2bd25dc1ff150b5f78dbd15ff6bab6d91/src/openai/types/responses/response_usage.py
+  - api_flavor: responses
+    root: usage
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: [input_tokens_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: [input_tokens_details, cache_write_tokens]
+        dest: cache_write_tokens
+        required: false
+      - path: [output_tokens_details, reasoning_tokens]
+        dest: output_reasoning_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
+  # https://platform.openai.com/docs/api-reference/realtime-server-events/response/done
+  - api_flavor: realtime
+    root: [response, usage]
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+        required: false
+      - path: [input_token_details, text_tokens]
+        dest: input_text_tokens
+        required: false
+      - path: [input_token_details, audio_tokens]
+        dest: input_audio_tokens
+        required: false
+      - path: [input_token_details, image_tokens]
+        dest: input_image_tokens
+        required: false
+      - path: [input_token_details, cached_tokens]
+        dest: cache_read_tokens
+        required: false
+      - path: [input_token_details, cached_tokens_details, text_tokens]
+        dest: cache_text_read_tokens
+        required: false
+      - path: [input_token_details, cached_tokens_details, audio_tokens]
+        dest: cache_audio_read_tokens
+        required: false
+      - path: [input_token_details, cached_tokens_details, image_tokens]
+        dest: cache_image_read_tokens
+        required: false
+      - path: [output_token_details, text_tokens]
+        dest: output_text_tokens
+        required: false
+      - path: [output_token_details, audio_tokens]
+        dest: output_audio_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
+        required: false
+  # https://developers.openai.com/api/reference/resources/images#imagesresponse
+  - api_flavor: images
+    root: usage
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+      - path: [input_tokens_details, text_tokens]
+        dest: input_text_tokens
+      - path: [input_tokens_details, image_tokens]
+        dest: input_image_tokens
+      - path: output_tokens
+        dest: output_tokens
+      - path: [output_tokens_details, text_tokens]
+        dest: output_text_tokens
+        required: false
+      - path: [output_tokens_details, image_tokens]
+        dest: output_image_tokens
+        required: false
+  # https://github.com/openai/openai-python/blob/v2.3.0/src/openai/types/create_embedding_response.py
+  - api_flavor: embeddings
+    root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+  # GPT-Live voice sessions report their duration, in `session.usage.updated` and `session.closed`:
+  # https://developers.openai.com/api/reference/resources/live/primary-websocket
+  # It is a running total, not an increment: price the latest report (or the final one on
+  # `session.closed`), or the difference between two, never each report in turn.
+  - api_flavor: live
+    root: usage
+    mappings:
+      - path: seconds
+        dest: audio_seconds
+models:
+  - id: ada
+    match:
+      or:
+        - equals: ada
+        - equals: text-ada-001
+    prices:
+      input_mtok: 0.4
+      output_mtok: 0.4
+
+  - id: babbage
+    match:
+      equals: babbage
+    prices:
+      input_mtok: 0.5
+      output_mtok: 0.5
+
+  - id: babbage-002
+    match:
+      equals: babbage-002
+    prices_checked: 2026-10-19
+    price_comments: >-
+      Listed on the standard pricing table at https://developers.openai.com/api/docs/pricing.
+    prices:
+      input_mtok: 0.4
+      output_mtok: 0.4
+
+  - id: chatgpt-4o-latest
+    name: ChatGPT-4o
+    description: >-
+      OpenAI ChatGPT 4o is continually updated by OpenAI to point to the current version of GPT-4o used by ChatGPT. It therefore
+      differs slightly from the API version of GPT-4o in that it has additional
+      RLHF. It is intended for research and evaluation.
+    match:
+      equals: chatgpt-4o-latest
+    context_window: 128000
+    prices:
+      input_mtok: 5
+      output_mtok: 15
+
+  - id: chatgpt-image-latest
+    match:
+      equals: chatgpt-image-latest
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Rates from https://developers.openai.com/api/docs/pricing (image generation, Standard table):
+      text input $5 / 1M tokens, cached text input $1.25 / 1M tokens, text output $10 / 1M tokens, image
+      input $8 / 1M image tokens, cached image input $2 / 1M image tokens, image output $32 / 1M image
+      tokens. Model ID confirmed in the models catalog at https://developers.openai.com/api/docs/models.
+    prices:
+      input_mtok: 5
+      input_image_mtok: 8
+      cache_read_mtok: 1.25
+      cache_image_read_mtok: 2
+      output_mtok: 10
+      output_image_mtok: 32
+
+  - id: codex-mini
+    name: Codex Mini
+    description: >-
+      codex-mini-latest is a fine-tuned version of o4-mini specifically for use in Codex CLI. For direct use in the API, we
+      recommend starting with gpt-4.1.
+    match:
+      or:
+        - equals: codex-mini
+        - equals: codex-mini-latest
+    context_window: 200000
+    prices:
+      input_mtok: 1.5
+      cache_read_mtok: 0.375
+      output_mtok: 6
+
+  - id: computer-use
+    name: Computer use
+    match:
+      starts_with: computer-use
+    context_window: 8192
+    prices:
+      input_mtok: 3
+      output_mtok: 12
+
+  - id: curie
+    match:
+      or:
+        - equals: curie
+        - equals: text-curie-001
+    prices:
+      input_mtok: 2
+      output_mtok: 2
+
+  - id: davinci
+    match:
+      or:
+        - equals: davinci
+        - equals: text-davinci-001
+    prices:
+      input_mtok: 20
+      output_mtok: 20
+
+  - id: davinci-002
+    match:
+      equals: davinci-002
+    prices_checked: 2026-10-19
+    price_comments: >-
+      Listed on the standard pricing table at https://developers.openai.com/api/docs/pricing.
+    prices:
+      input_mtok: 2
+      output_mtok: 2
+
+  - id: "ft:gpt-3.5-turbo-"
+    description: GPT-3.5 Turbo fine tuned.
+    match:
+      starts_with: "ft:gpt-3.5-turbo"
+    price_comments: >-
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+    prices_checked: 2026-10-14
+    prices:
+      input_mtok: 3
+      output_mtok: 6
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 1.5
+          output_mtok: 3
+
+  - id: "ft:gpt-4o"
+    description: GPT-4o fine tuned.
+    match:
+      starts_with: "ft:gpt-4o-2024-"
+    price_comments: >-
+      No batch variant: on 2026-10-14 the pricing page listed batch rates of $2.225/$12.50, which are not the documented
+      50% discount and could not be confirmed. https://developers.openai.com/api/docs/pricing
+    prices:
+      input_mtok: 3.75
+      output_mtok: 15
+
+  - id: "ft:gpt-4o-mini"
+    description: GPT-4o Mini fine tuned.
+    match:
+      starts_with: "ft:gpt-4o-mini-2024-"
+    price_comments: >-
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+    prices_checked: 2026-10-14
+    prices:
+      input_mtok: 0.3
+      output_mtok: 1.2
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.15
+          output_mtok: 0.6
+
+  - id: gpt-3.5-0301
+    match:
+      or:
+        - equals: gpt-3.5-turbo-0301
+        - equals: gpt-3.5-0301
+    prices:
+      input_mtok: 1.5
+      output_mtok: 2
+
+  - id: gpt-3.5-turbo
+    name: gpt 3.5 turbo
+    description: GPT-3.5 Turbo offers a balance between cost and performance.
+    match:
+      or:
+        - equals: gpt-3.5-turbo
+        - equals: gpt-35-turbo
+        - equals: gpt-3.5-turbo-0125
+    context_window: 16385
+    prices_checked: 2026-11-02
+    price_comments: >-
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+    prices:
+      input_mtok: 0.5
+      output_mtok: 1.5
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.25
+          output_mtok: 0.75
+
+  - id: gpt-3.5-turbo-0613
+    match:
+      equals: gpt-3.5-turbo-0613
+    context_window: 16385
+    prices_checked: 2025-11-07
+    prices:
+      input_mtok: 1.5
+      output_mtok: 2
+
+  - id: gpt-3.5-turbo-1106
+    match:
+      equals: gpt-3.5-turbo-1106
+    context_window: 16385
+    prices_checked: 2026-10-19
+    price_comments: >-
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing. The Batch table lists
+      the same rates as standard.
+    prices:
+      input_mtok: 1
+      output_mtok: 2
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices: {}
+
+  - id: gpt-3.5-turbo-16k
+    name: GPT-3.5 Turbo 16k
+    description: >-
+      This model offers four times the context length of gpt-3.5-turbo, allowing it to support approximately 20 pages of text
+      in a single request at a higher cost. Training data: up to Sep 2021.
+    match:
+      or:
+        - equals: gpt-3.5-turbo-16k
+        - equals: gpt-3.5-turbo-16k-0613
+        - equals: gpt-35-turbo-16k-0613
+        - equals: gpt-35-turbo-16k
+    context_window: 16385
+    prices_checked: 2025-07-04
+    prices:
+      input_mtok: 3
+      output_mtok: 4
+
+  - id: gpt-3.5-turbo-instruct
+    name: gpt 3.5 turbo instruct
+    description: GPT-3.5 Turbo offers a balance between cost and performance.
+    match:
+      # these are tautologous but still helpful to document known names
+      or:
+        - starts_with: gpt-3.5-turbo-instruct
+        - equals: gpt-3.5-turbo-instruct-0914
+    context_window: 16385
+    prices_checked: 2026-10-19
+    prices:
+      input_mtok: 1.5
+      output_mtok: 2
+
+  - id: gpt-4
+    name: gpt 4
+    description: >-
+      GPT-4 is the latest and most advanced model in the GPT series,
+      demonstrating sophisticated capabilities in complex reasoning, theory of
+      mind, and narrative understanding.
+    match:
+      or:
+        - equals: gpt-4
+        - equals: gpt-4-0314
+        - equals: gpt-4-0613
+        - starts_with: ft:gpt-4-0
+    context_window: 8192
+    prices_checked: 2026-11-02
+    price_comments: >-
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+    prices:
+      input_mtok: 30
+      output_mtok: 60
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 15
+          output_mtok: 30
+
+  - id: gpt-4-32k
+    name: gpt 4
+    description: >-
+      GPT-4 is the latest and most advanced model in the GPT series,
+      demonstrating sophisticated capabilities in complex reasoning, theory of
+      mind, and narrative understanding.
+    match:
+      or:
+        - equals: gpt-4-32k
+        - equals: gpt-4-32k-0314
+        - equals: gpt-4-32k-0613
+    price_comments: see https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost
+    context_window: 32000
+    prices_checked: 2025-07-04
+    prices:
+      input_mtok: 60
+      output_mtok: 120
+
+  - id: gpt-4-turbo
+    name: gpt 4 turbo
+    description: GPT-4 Turbo offers a balance between cost and performance.
+    match:
+      or:
+        - equals: gpt-4-turbo
+        - equals: gpt-4-turbo-2024-04-09
+        - equals: gpt-4-turbo-0125-preview
+        - equals: gpt-4-0125-preview
+        - equals: gpt-4-1106-preview
+        - equals: gpt-4-turbo-preview
+    context_window: 128000
+    prices_checked: 2026-11-02
+    price_comments: >-
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+    prices:
+      input_mtok: 10
+      output_mtok: 30
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 5
+          output_mtok: 15
+
+  - id: gpt-4-vision-preview
+    name: gpt 4 vision
+    description: GPT-4 Vision is a model that offers a balance between cost and performance.
+    match:
+      or:
+        - equals: gpt-4-vision-preview
+        - equals: gpt-4-1106-vision-preview
+    context_window: 128000
+    prices:
+      input_mtok: 10
+      output_mtok: 30
+
+  - id: gpt-4.1
+    name: gpt 4.1
+    description: >-
+      GPT-4.1 is OpenAI's latest flagship model, offering major improvements in
+      coding, instruction following, and long context understanding with up to 1
+      million tokens of context.
+    match:
+      or:
+        - equals: gpt-4.1
+        - equals: gpt-4.1-2025-04-14
+    context_window: 1000000
+    prices_checked: 2026-11-09
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.5
+      output_mtok: 8
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing. The Batch table
+      publishes no cached-input rate, so cached input keeps the standard rate.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 3.50
+          cache_read_mtok: 0.875
+          output_mtok: 14.00
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 3.50
+          cache_read_mtok: 0.875
+          output_mtok: 14.00
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 1
+          output_mtok: 4
+
+  - id: gpt-4.1-mini
+    name: gpt 4.1 mini
+    description: >-
+      GPT-4.1 Mini is a significant leap in small model performance, matching or
+      exceeding GPT-4o in many benchmarks while reducing latency by nearly half
+      and cost by 83%.
+    match:
+      or:
+        - equals: gpt-4.1-mini
+        - equals: gpt-4.1-mini-2025-04-14
+    context_window: 1000000
+    prices_checked: 2026-11-09
+    prices:
+      input_mtok: 0.4
+      cache_read_mtok: 0.1
+      output_mtok: 1.6
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing. The Batch table
+      publishes no cached-input rate, so cached input keeps the standard rate.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 0.70
+          cache_read_mtok: 0.175
+          output_mtok: 2.80
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 0.70
+          cache_read_mtok: 0.175
+          output_mtok: 2.80
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.2
+          output_mtok: 0.8
+
+  - id: gpt-4.1-nano
+    name: gpt 4.1 nano
+    description: >-
+      GPT-4.1 Nano is OpenAI's fastest and cheapest model, delivering
+      exceptional performance for its size with a 1 million token context
+      window, ideal for classification and autocompletion tasks.
+    match:
+      or:
+        - equals: gpt-4.1-nano
+        - equals: gpt-4.1-nano-2025-04-14
+    context_window: 1000000
+    prices_checked: 2026-11-02
+    prices:
+      input_mtok: 0.1
+      cache_read_mtok: 0.025
+      output_mtok: 0.4
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing. The Batch table
+      publishes no cached-input rate, so cached input keeps the standard rate.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 0.20
+          cache_read_mtok: 0.05
+          output_mtok: 0.80
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 0.20
+          cache_read_mtok: 0.05
+          output_mtok: 0.80
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.05
+          output_mtok: 0.2
+
+  - id: gpt-4.5-preview
+    name: GPT-4.5 (Preview)
+    description: >-
+      GPT-4.5 (Preview) is a research preview of OpenAI's latest language model, designed to advance capabilities in reasoning,
+      creativity, and multi-turn conversation. It builds on previous iterations
+      with improvements in world knowledge, contextual coherence, and the ability to follow user intent more effectively.
+    match:
+      starts_with: gpt-4.5-preview
+    prices_checked: 2025-07-04
+    prices:
+      input_mtok: 75
+      cache_read_mtok: 37.5
+      output_mtok: 150
+
+  - id: gpt-4o
+    name: gpt 4o
+    description: >-
+      GPT-4 Optimized (GPT-4o) is designed for high performance in reasoning,
+      creativity, and technical tasks while maintaining consistent output
+      quality.
+    match:
+      or:
+        - equals: gpt-4o
+        - equals: gpt-4o-2024-08-06
+        - equals: gpt-4o-2024-11-20
+    context_window: 128000
+    prices_checked: 2026-11-09
+    prices:
+      input_mtok: 2.5
+      cache_read_mtok: 1.25
+      output_mtok: 10
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing. The Batch table
+      publishes no cached-input rate, so cached input keeps the standard rate.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 4.25
+          cache_read_mtok: 2.125
+          output_mtok: 17.00
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 4.25
+          cache_read_mtok: 2.125
+          output_mtok: 17.00
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 1.25
+          output_mtok: 5
+
+  - id: gpt-4o-2024-05-13
+    name: gpt 4o (2024-05-13)
+    description: >-
+      Original GPT-4o snapshot, retained at its launch rates, which are higher than later gpt-4o snapshots and have
+      no cached-input discount.
+    match:
+      equals: gpt-4o-2024-05-13
+    context_window: 128000
+    prices_checked: 2026-11-02
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+      Split out of the shared gpt-4o entry: OpenAI lists this snapshot separately at $5/$15 with no cached-input
+      price. Ref: https://developers.openai.com/api/docs/pricing.md
+    prices:
+      input_mtok: 5
+      output_mtok: 15
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 8.75
+          output_mtok: 26.25
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 8.75
+          output_mtok: 26.25
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 2.5
+          output_mtok: 7.5
+
+  - id: gpt-4o-audio-preview
+    name: gpt 4o audio preview
+    description: Audio model for gpt-4o
+    match:
+      starts_with: gpt-4o-audio-preview
+    context_window: 128000
+    prices_checked: 2025-07-22
+    prices:
+      # prompt_tokens includes audio_tokens; OpenAI lists the same price for
+      # text and audio input, so the catch-all covers both.
+      input_mtok: 2.5
+      output_mtok: 10
+
+  - id: gpt-4o-mini
+    name: gpt 4o mini
+    description: >-
+      GPT-4o Mini is a cost-optimized variant of GPT-4o, designed for
+      high-efficiency processing while maintaining strong performance. It excels
+      in rapid inference and resource-efficient operations, making it ideal for
+      production deployments requiring a balance of cost and capability.
+    match:
+      or:
+        - equals: gpt-4o-mini
+        - equals: gpt-4o-mini-2024-07-18
+        - equals: gpt-4o-mini-search-preview
+        - equals: gpt-4o-mini-search-preview-2025-03-11
+    context_window: 128000
+    prices_checked: 2026-11-09
+    prices:
+      input_mtok: 0.15
+      cache_read_mtok: 0.075
+      output_mtok: 0.6
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing. The Batch table
+      publishes no cached-input rate, so cached input keeps the standard rate.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 0.25
+          cache_read_mtok: 0.125
+          output_mtok: 1.00
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 0.25
+          cache_read_mtok: 0.125
+          output_mtok: 1.00
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.075
+          output_mtok: 0.3
+
+  - id: gpt-4o-mini-2024-07-18.ft-
+    description: GPT-4o Mini fine tuned.
+    match:
+      starts_with: gpt-4o-mini-2024-07-18.ft-
+    price_comments: >-
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+    prices_checked: 2026-10-14
+    prices:
+      input_mtok: 0.3
+      output_mtok: 1.2
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.15
+          output_mtok: 0.6
+
+  - id: gpt-4o-mini-audio-preview
+    name: gpt 4o mini audio preview
+    description: Audio model for gpt-4o mini
+    match:
+      starts_with: gpt-4o-mini-audio
+    context_window: 128000
+    prices_checked: 2025-07-22
+    prices:
+      # prompt_tokens includes audio_tokens; OpenAI lists the same price for
+      # text and audio input, so the catch-all covers both.
+      input_mtok: 0.15
+      output_mtok: 0.6
+
+  - id: gpt-4o-mini-realtime-preview
+    match:
+      starts_with: gpt-4o-mini-realtime
+    context_window: 16000
+    prices_checked: 2025-07-04
+    prices:
+      input_mtok: 0.6
+      cache_read_mtok: 0.3
+      output_mtok: 2.4
+      input_audio_mtok: 10
+      cache_audio_read_mtok: 0.3
+      output_audio_mtok: 20
+
+  - id: gpt-4o-mini-transcribe
+    match:
+      equals: gpt-4o-mini-transcribe
+    context_window: 16000
+    prices:
+      input_mtok: 1.25
+      input_audio_mtok: 3
+      output_mtok: 5
+
+  - id: gpt-4o-mini-tts
+    match:
+      equals: gpt-4o-mini-tts
+    prices:
+      input_mtok: 0.6
+      # completion_tokens includes audio_tokens; OpenAI lists the same price
+      # for text and audio output, so the catch-all covers both.
+      output_mtok: 12
+
+  - id: gpt-4o-realtime-preview
+    match:
+      starts_with: gpt-4o-realtime
+    context_window: 32000
+    prices_checked: 2025-07-04
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 2.5
+      output_mtok: 20
+      input_audio_mtok: 40
+      cache_audio_read_mtok: 2.5
+      output_audio_mtok: 80
+
+  - id: gpt-4o-search-preview
+    name: GPT-4o Search Preview
+    description: >-
+      GPT-4o Search Previewis a specialized model for web search in Chat Completions.
+      It is trained to understand and execute web search queries.
+    match:
+      or:
+        - equals: gpt-4o-search-preview
+        - equals: gpt-4o-search-preview-2025-03-11
+    context_window: 128000
+    prices:
+      input_mtok: 2.5
+      output_mtok: 10
+
+  - id: gpt-4o-transcribe
+    match:
+      or:
+        - equals: gpt-4o-transcribe
+        - equals: gpt-4o-transcribe-diarize
+    context_window: 16000
+    prices_checked: 2026-08-24
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-4o-transcribe-diarize.
+    prices:
+      input_mtok: 2.5
+      input_audio_mtok: 6
+      output_mtok: 10
+
+  - id: gpt-4o:extended
+    name: GPT-4o (extended)
+    description: >-
+      GPT-4o ("o" for "omni") is OpenAI's latest AI model, supporting both text and image inputs with text outputs.
+      It maintains the intelligence level of GPT-4 Turbo while being twice as fast and 50% more cost-effective.
+      GPT-4o also offers improved performance in processing non-English languages and enhanced visual capabilities.
+    match:
+      equals: gpt-4o:extended
+    prices:
+      input_mtok: 6
+      output_mtok: 18
+
+  - id: gpt-5
+    name: GPT-5
+    description: GPT-5 is OpenAI's flagship model for coding, reasoning, and agentic tasks across domains.
+    match:
+      or:
+        - equals: gpt-5
+        - equals: gpt-5-2025-08-07
+        - equals: gpt-5-chat
+        - equals: gpt-5-chat-latest
+        - equals: gpt-5-codex
+    context_window: 400000
+    prices_checked: 2026-11-09
+    prices:
+      input_mtok: 1.25
+      cache_read_mtok: 0.125
+      output_mtok: 10
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 0.625
+          cache_read_mtok: 0.0625
+          output_mtok: 5.00
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 2.50
+          cache_read_mtok: 0.25
+          output_mtok: 20.00
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 2.50
+          cache_read_mtok: 0.25
+          output_mtok: 20.00
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.625
+          cache_read_mtok: 0.0625
+          output_mtok: 5
+
+  - id: gpt-5-image
+    match:
+      equals: gpt-5-image
+    price_comments: Seen on OpenRouter before OpenAI
+    prices:
+      input_mtok: 10
+      cache_read_mtok: 1.25
+      output_mtok: 10
+
+  - id: gpt-5-image-mini
+    match:
+      equals: gpt-5-image-mini
+    price_comments: Seen on OpenRouter before OpenAI
+    prices:
+      input_mtok: 2.5
+      cache_read_mtok: 0.25
+      output_mtok: 2
+
+  - id: gpt-5-mini
+    name: GPT-5 mini
+    description: GPT-5 mini is a faster, more cost-efficient version of GPT-5. It's great for well-defined tasks and
+      precise prompts.
+    match:
+      or:
+        - equals: gpt-5-mini
+        - equals: gpt-5-mini-2025-08-07
+    context_window: 400000
+    prices_checked: 2026-11-09
+    prices:
+      input_mtok: 0.25
+      cache_read_mtok: 0.025
+      output_mtok: 2
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 0.125
+          cache_read_mtok: 0.0125
+          output_mtok: 1.00
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 0.45
+          cache_read_mtok: 0.045
+          output_mtok: 3.60
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 0.45
+          cache_read_mtok: 0.045
+          output_mtok: 3.60
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.125
+          cache_read_mtok: 0.0125
+          output_mtok: 1
+
+  - id: gpt-5-nano
+    name: GPT-5 nano
+    description: >-
+      GPT-5 Nano is OpenAI's fastest, cheapest version of GPT-5. It's great for summarization and classification
+      tasks.
+    match:
+      or:
+        - equals: gpt-5-nano
+        - starts_with: gpt-5-nano-
+    context_window: 400000
+    prices_checked: 2026-11-09
+    prices:
+      input_mtok: 0.05
+      cache_read_mtok: 0.005
+      output_mtok: 0.4
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 0.025
+          cache_read_mtok: 0.0025
+          output_mtok: 0.20
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.025
+          cache_read_mtok: 0.0025
+          output_mtok: 0.2
+
+  - id: gpt-5-pro
+    match:
+      or:
+        - equals: gpt-5-pro
+        - equals: gpt-5-pro-2025-10-06
+    context_window: 400000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+    prices:
+      input_mtok: 15
+      output_mtok: 120
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 7.5
+          output_mtok: 60
+
+  - id: gpt-5-search-api
+    match:
+      equals: gpt-5-search-api
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Rates from https://developers.openai.com/api/docs/pricing (Specialized models, Standard):
+      input $1.25 / 1M tokens, cached input $0.125 / 1M tokens, output $10 / 1M tokens. The pricing page
+      names this exact model ID; it has no dedicated page in the models catalog.
+    prices:
+      input_mtok: 1.25
+      cache_read_mtok: 0.125
+      output_mtok: 10
+
+  - id: gpt-5.1
+    name: GPT-5.1
+    description: The best model for coding and agentic tasks across industries
+    collapse: false
+    match:
+      # see https://github.com/openai/openai-python/blob/9b8c7e3e84e3e7bb8b0d88bb7d0538c39bb47a40/src/openai/types/shared/chat_model.py#L8-L12
+      or:
+        - equals: gpt-5.1
+        - equals: gpt-5.1-2025-11-13
+        - equals: gpt-5.1-codex
+        - equals: gpt-5.1-codex-max
+        - equals: gpt-5.1-chat
+        - equals: gpt-5.1-chat-latest
+        - equals: gpt-5-1
+        - equals: gpt-5-1-2025-11-13
+        - equals: gpt-5-1-codex
+        - equals: gpt-5-1-codex-max
+        - equals: gpt-5-1-chat
+        - equals: gpt-5-1-chat-latest
+    context_window: 400000
+    prices_checked: 2026-11-09
+    prices:
+      input_mtok: 1.25
+      cache_read_mtok: 0.125
+      output_mtok: 10
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 0.625
+          cache_read_mtok: 0.0625
+          output_mtok: 5.00
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 2.50
+          cache_read_mtok: 0.25
+          output_mtok: 20.00
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 2.50
+          cache_read_mtok: 0.25
+          output_mtok: 20.00
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.625
+          cache_read_mtok: 0.0625
+          output_mtok: 5
+
+  - id: gpt-5.1-codex-mini
+    name: GPT-5.1 Codex Mini
+    collapse: false
+    match:
+      # see https://github.com/openai/openai-python/blob/9b8c7e3e84e3e7bb8b0d88bb7d0538c39bb47a40/src/openai/types/shared/chat_model.py#L8-L12
+      or:
+        - equals: gpt-5.1-codex-mini
+        - equals: gpt-5.1-mini
+        - equals: gpt-5-1-codex-mini
+        - equals: gpt-5-1-mini
+    context_window: 400000
+    prices_checked: 2025-11-13
+    prices:
+      input_mtok: 0.25
+      cache_read_mtok: 0.025
+      output_mtok: 2
+
+  - id: gpt-5.2
+    name: GPT-5.2
+    description: The best model for coding and agentic tasks across industries
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.2
+        - equals: gpt-5.2-2025-12-11
+        - equals: gpt-5-2
+        - equals: gpt-5-2-2025-12-11
+        - equals: gpt-5.2-chat
+        - equals: gpt-5.2-chat-latest
+        - equals: gpt-5-2-chat
+        - equals: gpt-5-2-chat-latest
+        - equals: gpt-5.2-codex
+        - equals: gpt-5-2-codex
+    context_window: 400000
+    prices_checked: 2026-11-09
+    prices:
+      input_mtok: 1.75
+      cache_read_mtok: 0.175
+      output_mtok: 14
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 0.875
+          cache_read_mtok: 0.0875
+          output_mtok: 7.00
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 3.50
+          cache_read_mtok: 0.35
+          output_mtok: 28.00
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 3.50
+          cache_read_mtok: 0.35
+          output_mtok: 28.00
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.875
+          cache_read_mtok: 0.0875
+          output_mtok: 7
+
+  - id: gpt-5.2-pro
+    description: Version of GPT-5.2 that produces smarter and more precise responses.
+    match:
+      or:
+        - equals: gpt-5.2-pro
+        - equals: gpt-5.2-pro-2025-12-11
+        - equals: gpt-5-2-pro-2025-12-11
+    context_window: 400000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+    prices:
+      input_mtok: 21
+      output_mtok: 168
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 10.5
+          output_mtok: 84
+
+  - id: gpt-5.3
+    name: GPT-5.3 Chat
+    description: GPT-5.3 Instant model used in ChatGPT
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.3
+        - equals: gpt-5-3
+        - equals: gpt-5.3-chat
+        - equals: gpt-5.3-chat-latest
+        - equals: gpt-5-3-chat
+        - equals: gpt-5-3-chat-latest
+    context_window: 128000
+    prices_checked: 2026-05-07
+    prices:
+      input_mtok: 1.75
+      cache_read_mtok: 0.175
+      output_mtok: 14
+
+  - id: gpt-5.3-codex
+    name: GPT-5.3-Codex
+    description: The most capable agentic coding model
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.3-codex
+        - equals: gpt-5-3-codex
+    context_window: 400000
+    prices_checked: 2026-11-09
+    prices:
+      input_mtok: 1.75
+      cache_read_mtok: 0.175
+      output_mtok: 14
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 3.5
+          cache_read_mtok: 0.35
+          output_mtok: 28
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 3.5
+          cache_read_mtok: 0.35
+          output_mtok: 28
+
+  - id: gpt-5.4
+    name: GPT-5.4
+    description: OpenAI's most capable model with a 1.05M token context window.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.4
+        - equals: gpt-5.4-2026-03-05
+        - equals: gpt-5-4
+        - equals: gpt-5-4-2026-03-05
+    context_window: 1050000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing. Batch cached rates use
+      the published rounded values.
+      Tier history before this verification is not modeled. Flex cached input uses the published $0.13/MTok rate.
+      The long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the
+      pricing engines select a tier when the token count is greater than start. Ref:
+      https://developers.openai.com/api/docs/models/gpt-5.4
+    prices:
+      input_mtok:
+        base: 2.5
+        tiers:
+          - start: 272000
+            price: 5
+      cache_read_mtok:
+        base: 0.25
+        tiers:
+          - start: 272000
+            price: 0.5
+      output_mtok:
+        base: 15
+        tiers:
+          - start: 272000
+            price: 22.5
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 1.25
+            tiers:
+              - start: 272000
+                price: 2.50
+          cache_read_mtok:
+            base: 0.13
+            tiers:
+              - start: 272000
+                price: 0.25
+          output_mtok:
+            base: 7.50
+            tiers:
+              - start: 272000
+                price: 11.25
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 5.00
+          cache_read_mtok: 0.50
+          output_mtok: 30.00
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 5.00
+          cache_read_mtok: 0.50
+          output_mtok: 30.00
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok:
+            base: 1.25
+            tiers:
+              - start: 272000
+                price: 2.5
+          cache_read_mtok:
+            base: 0.13
+            tiers:
+              - start: 272000
+                price: 0.25
+          output_mtok:
+            base: 7.5
+            tiers:
+              - start: 272000
+                price: 11.25
+
+  - id: gpt-5.4-image-2
+    name: GPT-5.4 Image 2
+    description: >-
+      GPT-5.4 Image 2 combines OpenAI's GPT-5.4 model with state-of-the-art image generation capabilities from GPT Image 2.
+      It enables rich multimodal workflows across reasoning, coding, and image generation.
+    match:
+      equals: gpt-5.4-image-2
+    prices_checked: 2026-06-09
+    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is
+      published.
+    prices:
+      input_mtok: 8
+      cache_read_mtok: 2
+      output_mtok: 15
+
+  - id: gpt-5.4-mini
+    name: GPT-5.4 mini
+    description: Our strongest mini model yet for coding, computer use, and subagents.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.4-mini
+        - equals: gpt-5.4-mini-2026-03-17
+        - equals: gpt-5-4-mini
+        - equals: gpt-5-4-mini-2026-03-17
+    context_window: 400000
+    prices_checked: 2026-11-09
+    prices:
+      input_mtok: 0.75
+      cache_read_mtok: 0.075
+      output_mtok: 4.5
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 0.375
+          cache_read_mtok: 0.0375
+          output_mtok: 2.25
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 1.50
+          cache_read_mtok: 0.15
+          output_mtok: 9.00
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 1.50
+          cache_read_mtok: 0.15
+          output_mtok: 9.00
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.375
+          cache_read_mtok: 0.0375
+          output_mtok: 2.25
+
+  - id: gpt-5.4-nano
+    name: GPT-5.4 nano
+    description: Our cheapest GPT-5.4-class model for simple high-volume tasks.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.4-nano
+        - equals: gpt-5.4-nano-2026-03-17
+        - equals: gpt-5-4-nano
+        - equals: gpt-5-4-nano-2026-03-17
+    context_window: 400000
+    prices_checked: 2026-11-09
+    prices:
+      input_mtok: 0.2
+      cache_read_mtok: 0.02
+      output_mtok: 1.25
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 0.10
+          cache_read_mtok: 0.01
+          output_mtok: 0.625
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.1
+          cache_read_mtok: 0.01
+          output_mtok: 0.625
+
+  - id: gpt-5.4-pro
+    name: GPT-5.4 Pro
+    description: Version of GPT-5.4 that produces smarter and more precise responses.
+    match:
+      or:
+        - equals: gpt-5.4-pro
+        - equals: gpt-5.4-pro-2026-03-05
+        - equals: gpt-5-4-pro
+        - equals: gpt-5-4-pro-2026-03-05
+    context_window: 1050000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+      The long-context rates apply to prompts with more than 272K input tokens. Tier starts use 272000 because the
+      pricing engines select a tier when the token count is greater than start. Ref:
+      https://developers.openai.com/api/docs/models/gpt-5.4-pro
+    prices:
+      input_mtok:
+        base: 30
+        tiers:
+          - start: 272000
+            price: 60
+      output_mtok:
+        base: 180
+        tiers:
+          - start: 272000
+            price: 270
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 15.00
+            tiers:
+              - start: 272000
+                price: 30.00
+          output_mtok:
+            base: 90.00
+            tiers:
+              - start: 272000
+                price: 135.00
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok:
+            base: 15
+            tiers:
+              - start: 272000
+                price: 30
+          output_mtok:
+            base: 90
+            tiers:
+              - start: 272000
+                price: 135
+
+  - id: gpt-5.5
+    name: GPT-5.5
+    description: The best model for coding and agentic tasks across industries
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.5
+        - equals: gpt-5.5-2026-04-23
+        - equals: gpt-5.5-2026-04-24
+        - equals: gpt-5-5
+        - equals: gpt-5-5-2026-04-23
+        - equals: gpt-5-5-2026-04-24
+        - equals: gpt-5.5-chat
+        - equals: gpt-5.5-chat-latest
+        - equals: gpt-5-5-chat
+        - equals: gpt-5-5-chat-latest
+        - equals: gpt-5.5-codex
+        - equals: gpt-5-5-codex
+    context_window: 1000000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+      Prompts with more than 272K input tokens bill the full request at 2x input and cached input and 1.5x output. Tier
+      starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref:
+      https://developers.openai.com/api/docs/models/gpt-5.5
+    prices:
+      input_mtok:
+        base: 5
+        tiers:
+          - start: 272000
+            price: 10
+      cache_read_mtok:
+        base: 0.5
+        tiers:
+          - start: 272000
+            price: 1
+      output_mtok:
+        base: 30
+        tiers:
+          - start: 272000
+            price: 45
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 2.50
+            tiers:
+              - start: 272000
+                price: 5.00
+          cache_read_mtok:
+            base: 0.25
+            tiers:
+              - start: 272000
+                price: 0.50
+          output_mtok:
+            base: 15.00
+            tiers:
+              - start: 272000
+                price: 22.50
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 12.50
+          cache_read_mtok: 1.25
+          output_mtok: 75.00
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 12.50
+          cache_read_mtok: 1.25
+          output_mtok: 75.00
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok:
+            base: 2.5
+            tiers:
+              - start: 272000
+                price: 5
+          cache_read_mtok:
+            base: 0.25
+            tiers:
+              - start: 272000
+                price: 0.5
+          output_mtok:
+            base: 15
+            tiers:
+              - start: 272000
+                price: 22.5
+
+  - id: gpt-5.5-cyber
+    match:
+      equals: gpt-5.5-cyber
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Rates from https://developers.openai.com/api/docs/pricing (Cyber models, Standard): input
+      $12.50 / 1M tokens, output $75 / 1M tokens. The page published no cached-input rate on 2026-10-15; it
+      lists $1.25 / 1M tokens from 2026-10-19. It publishes no cache-write rate for this model.
+    prices:
+      - prices:
+          input_mtok: 12.5
+          output_mtok: 75
+      - constraint:
+          start_date: 2026-10-19
+        prices:
+          input_mtok: 12.5
+          cache_read_mtok: 1.25
+          output_mtok: 75
+
+  - id: gpt-5.5-pro
+    name: GPT-5.5 Pro
+    description: Version of GPT-5.5 that produces smarter and more precise responses.
+    match:
+      or:
+        - equals: gpt-5.5-pro
+        - equals: gpt-5.5-pro-2026-04-23
+        - equals: gpt-5-5-pro
+        - equals: gpt-5-5-pro-2026-04-23
+    context_window: 1000000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing. The Batch table
+      publishes only base rates; no long-context Batch surcharge is modeled.
+      Tier history before this verification is not modeled.
+      The table publishes only base Flex rates; no long-context Flex surcharge is modeled.
+      Standard prompts with more than 272K input tokens bill the full request at 2x input and 1.5x output.
+      Tier starts use 272000 because the pricing engines select a tier when the token count is greater than start. Ref:
+      https://developers.openai.com/api/docs/pricing
+    prices:
+      input_mtok:
+        base: 30
+        tiers:
+          - start: 272000
+            price: 60
+      output_mtok:
+        base: 180
+        tiers:
+          - start: 272000
+            price: 270
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 15.00
+          output_mtok: 90.00
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 15
+          output_mtok: 90
+
+  - id: gpt-5.6-cyber
+    match:
+      equals: gpt-5.6-cyber
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Rates from https://developers.openai.com/api/docs/pricing (Cyber models, Standard): input
+      $12.50 / 1M tokens, cached input $1.25 / 1M tokens, cache writes $15.625 / 1M tokens (1.25x input),
+      output $75 / 1M tokens. The page publishes no long-context rates for this model.
+    prices:
+      input_mtok: 12.5
+      cache_read_mtok: 1.25
+      cache_write_mtok: 15.625
+      output_mtok: 75
+
+  - id: gpt-5.6-luna
+    name: GPT-5.6 Luna
+    description: GPT-5.6 model optimized for cost-sensitive workloads.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.6-luna
+        - equals: gpt-5-6-luna
+        - regex: ^gpt-5\.6-luna-\d{4}-\d{2}-\d{2}$
+        - regex: ^gpt-5-6-luna-\d{4}-\d{2}-\d{2}$
+    context_window: 1050000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+      Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to
+      prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when
+      the token count is greater than start. OpenAI reduced Luna prices by 80% on 2026-07-30. Refs:
+      https://developers.openai.com/api/docs/models/gpt-5.6-luna, https://developers.openai.com/api/docs/changelog
+    prices:
+      - prices:
+          input_mtok:
+            base: 1
+            tiers:
+              - start: 272000
+                price: 2
+          cache_write_mtok:
+            base: 1.25
+            tiers:
+              - start: 272000
+                price: 2.5
+          cache_read_mtok:
+            base: 0.1
+            tiers:
+              - start: 272000
+                price: 0.2
+          output_mtok:
+            base: 6
+            tiers:
+              - start: 272000
+                price: 9
+          web_searches_kcount: 10
+          storage_searches_kcount: 2.5
+      - constraint:
+          start_date: 2026-07-30
+        prices:
+          input_mtok:
+            base: 0.2
+            tiers:
+              - start: 272000
+                price: 0.4
+          cache_write_mtok:
+            base: 0.25
+            tiers:
+              - start: 272000
+                price: 0.5
+          cache_read_mtok:
+            base: 0.02
+            tiers:
+              - start: 272000
+                price: 0.04
+          output_mtok:
+            base: 1.2
+            tiers:
+              - start: 272000
+                price: 1.8
+          web_searches_kcount: 10
+          storage_searches_kcount: 2.5
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 0.10
+            tiers:
+              - start: 272000
+                price: 0.20
+          cache_read_mtok:
+            base: 0.01
+            tiers:
+              - start: 272000
+                price: 0.02
+          cache_write_mtok:
+            base: 0.125
+            tiers:
+              - start: 272000
+                price: 0.25
+          output_mtok:
+            base: 0.60
+            tiers:
+              - start: 272000
+                price: 0.90
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 0.40
+            tiers:
+              - start: 272000
+                price: 0.80
+          cache_read_mtok:
+            base: 0.04
+            tiers:
+              - start: 272000
+                price: 0.08
+          cache_write_mtok:
+            base: 0.50
+            tiers:
+              - start: 272000
+                price: 1.00
+          output_mtok:
+            base: 2.40
+            tiers:
+              - start: 272000
+                price: 3.60
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 0.40
+            tiers:
+              - start: 272000
+                price: 0.80
+          cache_read_mtok:
+            base: 0.04
+            tiers:
+              - start: 272000
+                price: 0.08
+          cache_write_mtok:
+            base: 0.50
+            tiers:
+              - start: 272000
+                price: 1.00
+          output_mtok:
+            base: 2.40
+            tiers:
+              - start: 272000
+                price: 3.60
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok:
+            base: 0.1
+            tiers:
+              - start: 272000
+                price: 0.2
+          cache_read_mtok:
+            base: 0.01
+            tiers:
+              - start: 272000
+                price: 0.02
+          cache_write_mtok:
+            base: 0.125
+            tiers:
+              - start: 272000
+                price: 0.25
+          output_mtok:
+            base: 0.6
+            tiers:
+              - start: 272000
+                price: 0.9
+
+  - id: gpt-5.6-sol
+    name: GPT-5.6 Sol
+    description: Frontier model for complex professional work.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.6-sol
+        - equals: gpt-5-6-sol
+        - equals: gpt-5.6
+        - equals: gpt-5-6
+        - regex: ^gpt-5\.6-sol-\d{4}-\d{2}-\d{2}$
+        - regex: ^gpt-5-6-sol-\d{4}-\d{2}-\d{2}$
+    context_window: 1050000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+      Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to
+      prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when
+      the token count is greater than start. OpenAI reduced Sol input prices by 20% and output prices by 33% on
+      2026-08-21. Refs: https://developers.openai.com/api/docs/models/gpt-5.6-sol,
+      https://developers.openai.com/api/docs/changelog
+    prices:
+      - prices:
+          input_mtok:
+            base: 5
+            tiers:
+              - start: 272000
+                price: 10
+          cache_write_mtok:
+            base: 6.25
+            tiers:
+              - start: 272000
+                price: 12.5
+          cache_read_mtok:
+            base: 0.5
+            tiers:
+              - start: 272000
+                price: 1
+          output_mtok:
+            base: 30
+            tiers:
+              - start: 272000
+                price: 45
+          web_searches_kcount: 10
+          storage_searches_kcount: 2.5
+      - constraint:
+          # https://developers.openai.com/api/docs/changelog
+          start_date: 2026-08-21
+        prices:
+          input_mtok:
+            base: 4
+            tiers:
+              - start: 272000
+                price: 8
+          cache_write_mtok:
+            base: 5
+            tiers:
+              - start: 272000
+                price: 10
+          cache_read_mtok:
+            base: 0.4
+            tiers:
+              - start: 272000
+                price: 0.8
+          output_mtok:
+            base: 20
+            tiers:
+              - start: 272000
+                price: 30
+          web_searches_kcount: 10
+          storage_searches_kcount: 2.5
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 2.00
+            tiers:
+              - start: 272000
+                price: 4.00
+          cache_read_mtok:
+            base: 0.20
+            tiers:
+              - start: 272000
+                price: 0.40
+          cache_write_mtok:
+            base: 2.50
+            tiers:
+              - start: 272000
+                price: 5.00
+          output_mtok:
+            base: 10.00
+            tiers:
+              - start: 272000
+                price: 15.00
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 8.00
+            tiers:
+              - start: 272000
+                price: 16.00
+          cache_read_mtok:
+            base: 0.80
+            tiers:
+              - start: 272000
+                price: 1.60
+          cache_write_mtok:
+            base: 10.00
+            tiers:
+              - start: 272000
+                price: 20.00
+          output_mtok:
+            base: 40.00
+            tiers:
+              - start: 272000
+                price: 60.00
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 8.00
+            tiers:
+              - start: 272000
+                price: 16.00
+          cache_read_mtok:
+            base: 0.80
+            tiers:
+              - start: 272000
+                price: 1.60
+          cache_write_mtok:
+            base: 10.00
+            tiers:
+              - start: 272000
+                price: 20.00
+          output_mtok:
+            base: 40.00
+            tiers:
+              - start: 272000
+                price: 60.00
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok:
+            base: 2
+            tiers:
+              - start: 272000
+                price: 4
+          cache_read_mtok:
+            base: 0.2
+            tiers:
+              - start: 272000
+                price: 0.4
+          cache_write_mtok:
+            base: 2.5
+            tiers:
+              - start: 272000
+                price: 5
+          output_mtok:
+            base: 10
+            tiers:
+              - start: 272000
+                price: 15
+
+  - id: gpt-5.6-terra
+    name: GPT-5.6 Terra
+    description: GPT-5.6 model that balances intelligence and cost.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-5.6-terra
+        - equals: gpt-5-6-terra
+        - regex: ^gpt-5\.6-terra-\d{4}-\d{2}-\d{2}$
+        - regex: ^gpt-5-6-terra-\d{4}-\d{2}-\d{2}$
+    context_window: 1050000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+      Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to
+      prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when
+      the token count is greater than start. OpenAI reduced Terra prices by 20% on 2026-07-30. Refs:
+      https://developers.openai.com/api/docs/models/gpt-5.6-terra, https://developers.openai.com/api/docs/changelog
+    prices:
+      - prices:
+          input_mtok:
+            base: 2.5
+            tiers:
+              - start: 272000
+                price: 5
+          cache_write_mtok:
+            base: 3.125
+            tiers:
+              - start: 272000
+                price: 6.25
+          cache_read_mtok:
+            base: 0.25
+            tiers:
+              - start: 272000
+                price: 0.5
+          output_mtok:
+            base: 15
+            tiers:
+              - start: 272000
+                price: 22.5
+          web_searches_kcount: 10
+          storage_searches_kcount: 2.5
+      - constraint:
+          start_date: 2026-07-30
+        prices:
+          input_mtok:
+            base: 2
+            tiers:
+              - start: 272000
+                price: 4
+          cache_write_mtok:
+            base: 2.5
+            tiers:
+              - start: 272000
+                price: 5
+          cache_read_mtok:
+            base: 0.2
+            tiers:
+              - start: 272000
+                price: 0.4
+          output_mtok:
+            base: 12
+            tiers:
+              - start: 272000
+                price: 18
+          web_searches_kcount: 10
+          storage_searches_kcount: 2.5
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 1.00
+            tiers:
+              - start: 272000
+                price: 2.00
+          cache_read_mtok:
+            base: 0.10
+            tiers:
+              - start: 272000
+                price: 0.20
+          cache_write_mtok:
+            base: 1.25
+            tiers:
+              - start: 272000
+                price: 2.50
+          output_mtok:
+            base: 6.00
+            tiers:
+              - start: 272000
+                price: 9.00
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 4.00
+            tiers:
+              - start: 272000
+                price: 8.00
+          cache_read_mtok:
+            base: 0.40
+            tiers:
+              - start: 272000
+                price: 0.80
+          cache_write_mtok:
+            base: 5.00
+            tiers:
+              - start: 272000
+                price: 10.00
+          output_mtok:
+            base: 24.00
+            tiers:
+              - start: 272000
+                price: 36.00
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 4.00
+            tiers:
+              - start: 272000
+                price: 8.00
+          cache_read_mtok:
+            base: 0.40
+            tiers:
+              - start: 272000
+                price: 0.80
+          cache_write_mtok:
+            base: 5.00
+            tiers:
+              - start: 272000
+                price: 10.00
+          output_mtok:
+            base: 24.00
+            tiers:
+              - start: 272000
+                price: 36.00
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok:
+            base: 1
+            tiers:
+              - start: 272000
+                price: 2
+          cache_read_mtok:
+            base: 0.1
+            tiers:
+              - start: 272000
+                price: 0.2
+          cache_write_mtok:
+            base: 1.25
+            tiers:
+              - start: 272000
+                price: 2.5
+          output_mtok:
+            base: 6
+            tiers:
+              - start: 272000
+                price: 9
+
+  - id: gpt-6-astra
+    name: GPT-6 Astra
+    description: Our most capable model, built for the hardest end-to-end work.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-6-astra
+        - regex: ^gpt-6-astra-\d{4}-\d{2}-\d{2}$
+    context_window: 1050000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+      Cache writes are billed at 1.25x the uncached input rate. The 2x input and 1.5x output long-context rates apply to
+      prompts with more than 272K input tokens. Tier starts use 272000 because the pricing engines select a tier when
+      the token count is greater than start. Refs: https://developers.openai.com/api/docs/models/gpt-6-astra,
+      https://developers.openai.com/api/docs/pricing
+    prices:
+      input_mtok:
+        base: 10
+        tiers:
+          - start: 272000
+            price: 20
+      cache_write_mtok:
+        base: 12.5
+        tiers:
+          - start: 272000
+            price: 25
+      cache_read_mtok:
+        base: 1
+        tiers:
+          - start: 272000
+            price: 2
+      output_mtok:
+        base: 50
+        tiers:
+          - start: 272000
+            price: 75
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 5.00
+            tiers:
+              - start: 272000
+                price: 10.00
+          cache_read_mtok:
+            base: 0.50
+            tiers:
+              - start: 272000
+                price: 1.00
+          cache_write_mtok:
+            base: 6.25
+            tiers:
+              - start: 272000
+                price: 12.50
+          output_mtok:
+            base: 25.00
+            tiers:
+              - start: 272000
+                price: 37.50
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 20.00
+            tiers:
+              - start: 272000
+                price: 40.00
+          cache_read_mtok:
+            base: 2.00
+            tiers:
+              - start: 272000
+                price: 4.00
+          cache_write_mtok:
+            base: 25.00
+            tiers:
+              - start: 272000
+                price: 50.00
+          output_mtok:
+            base: 100.00
+            tiers:
+              - start: 272000
+                price: 150.00
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 20.00
+            tiers:
+              - start: 272000
+                price: 40.00
+          cache_read_mtok:
+            base: 2.00
+            tiers:
+              - start: 272000
+                price: 4.00
+          cache_write_mtok:
+            base: 25.00
+            tiers:
+              - start: 272000
+                price: 50.00
+          output_mtok:
+            base: 100.00
+            tiers:
+              - start: 272000
+                price: 150.00
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok:
+            base: 5
+            tiers:
+              - start: 272000
+                price: 10
+          cache_read_mtok:
+            base: 0.5
+            tiers:
+              - start: 272000
+                price: 1
+          cache_write_mtok:
+            base: 6.25
+            tiers:
+              - start: 272000
+                price: 12.5
+          output_mtok:
+            base: 25
+            tiers:
+              - start: 272000
+                price: 37.5
+
+  - id: gpt-6-cyber
+    match:
+      equals: gpt-6-cyber
+    prices:
+      input_mtok: 20
+      cache_write_mtok: 25
+      cache_read_mtok: 2
+      output_mtok: 100
+    prices_checked: 2026-11-09
+
+  - id: gpt-6-luna
+    name: GPT-6 Luna
+    description: Efficient model for focused, high-volume tasks.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-6-luna
+        - regex: ^gpt-6-luna-\d{4}-\d{2}-\d{2}$
+    context_window: 1050000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+      Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens
+      cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing
+      engines select a tier when token count exceeds start. Ref:
+      https://developers.openai.com/api/docs/models/gpt-6-luna
+    prices:
+      input_mtok:
+        base: 0.1
+        tiers:
+          - start: 272000
+            price: 0.2
+      cache_write_mtok:
+        base: 0.125
+        tiers:
+          - start: 272000
+            price: 0.25
+      cache_read_mtok:
+        base: 0.01
+        tiers:
+          - start: 272000
+            price: 0.02
+      output_mtok:
+        base: 0.5
+        tiers:
+          - start: 272000
+            price: 0.75
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 0.05
+            tiers:
+              - start: 272000
+                price: 0.10
+          cache_read_mtok:
+            base: 0.005
+            tiers:
+              - start: 272000
+                price: 0.01
+          cache_write_mtok:
+            base: 0.0625
+            tiers:
+              - start: 272000
+                price: 0.125
+          output_mtok:
+            base: 0.25
+            tiers:
+              - start: 272000
+                price: 0.375
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 0.20
+            tiers:
+              - start: 272000
+                price: 0.40
+          cache_read_mtok:
+            base: 0.02
+            tiers:
+              - start: 272000
+                price: 0.04
+          cache_write_mtok:
+            base: 0.25
+            tiers:
+              - start: 272000
+                price: 0.50
+          output_mtok:
+            base: 1.00
+            tiers:
+              - start: 272000
+                price: 1.50
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 0.20
+            tiers:
+              - start: 272000
+                price: 0.40
+          cache_read_mtok:
+            base: 0.02
+            tiers:
+              - start: 272000
+                price: 0.04
+          cache_write_mtok:
+            base: 0.25
+            tiers:
+              - start: 272000
+                price: 0.50
+          output_mtok:
+            base: 1.00
+            tiers:
+              - start: 272000
+                price: 1.50
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok:
+            base: 0.05
+            tiers:
+              - start: 272000
+                price: 0.1
+          cache_read_mtok:
+            base: 0.005
+            tiers:
+              - start: 272000
+                price: 0.01
+          cache_write_mtok:
+            base: 0.0625
+            tiers:
+              - start: 272000
+                price: 0.125
+          output_mtok:
+            base: 0.25
+            tiers:
+              - start: 272000
+                price: 0.375
+
+  - id: gpt-6-rosalind
+    match:
+      equals: gpt-6-rosalind
+    prices:
+      input_mtok:
+        base: 15
+        tiers:
+          - start: 272000
+            price: 30
+      cache_write_mtok:
+        base: 18.75
+        tiers:
+          - start: 272000
+            price: 37.5
+      cache_read_mtok:
+        base: 1.5
+        tiers:
+          - start: 272000
+            price: 3
+      output_mtok:
+        base: 75
+        tiers:
+          - start: 272000
+            price: 112.5
+    prices_checked: 2026-11-09
+
+  - id: gpt-6-sol
+    name: GPT-6 Sol
+    description: Model for complex coding and agentic workflows.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-6-sol
+        - regex: ^gpt-6-sol-\d{4}-\d{2}-\d{2}$
+    context_window: 1050000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+      Cache reads cost 10% of input; cache writes cost 1.25x. Prompts with more than 272K input tokens
+      cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the pricing
+      engines select a tier when token count exceeds start. Ref:
+      https://developers.openai.com/api/docs/models/gpt-6-sol
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 272000
+            price: 4
+      cache_write_mtok:
+        base: 2.5
+        tiers:
+          - start: 272000
+            price: 5
+      cache_read_mtok:
+        base: 0.2
+        tiers:
+          - start: 272000
+            price: 0.4
+      output_mtok:
+        base: 10
+        tiers:
+          - start: 272000
+            price: 15
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 1.00
+            tiers:
+              - start: 272000
+                price: 2.00
+          cache_read_mtok:
+            base: 0.10
+            tiers:
+              - start: 272000
+                price: 0.20
+          cache_write_mtok:
+            base: 1.25
+            tiers:
+              - start: 272000
+                price: 2.50
+          output_mtok:
+            base: 5.00
+            tiers:
+              - start: 272000
+                price: 7.50
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 4.00
+            tiers:
+              - start: 272000
+                price: 8.00
+          cache_read_mtok:
+            base: 0.40
+            tiers:
+              - start: 272000
+                price: 0.80
+          cache_write_mtok:
+            base: 5.00
+            tiers:
+              - start: 272000
+                price: 10.00
+          output_mtok:
+            base: 20.00
+            tiers:
+              - start: 272000
+                price: 30.00
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 4.00
+            tiers:
+              - start: 272000
+                price: 8.00
+          cache_read_mtok:
+            base: 0.40
+            tiers:
+              - start: 272000
+                price: 0.80
+          cache_write_mtok:
+            base: 5.00
+            tiers:
+              - start: 272000
+                price: 10.00
+          output_mtok:
+            base: 20.00
+            tiers:
+              - start: 272000
+                price: 30.00
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok:
+            base: 1
+            tiers:
+              - start: 272000
+                price: 2
+          cache_read_mtok:
+            base: 0.1
+            tiers:
+              - start: 272000
+                price: 0.2
+          cache_write_mtok:
+            base: 1.25
+            tiers:
+              - start: 272000
+                price: 2.5
+          output_mtok:
+            base: 5
+            tiers:
+              - start: 272000
+                price: 7.5
+
+  - id: gpt-6.1-sol
+    name: GPT-6.1 Sol
+    description: Model for complex coding and professional work at a lower cost than GPT-6 Astra.
+    match:
+      or:
+        - equals: gpt-6.1-sol
+        - regex: ^gpt-6\.1-sol-\d{4}-\d{2}-\d{2}$
+    context_window: 1050000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+      Released 2026-09-29. Cache reads cost 5% of input; cache writes cost 1.25x. Prompts with more than 272K
+      input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000 because the
+      pricing engines select a tier when token count exceeds start. Refs:
+      https://developers.openai.com/api/docs/models/gpt-6.1-sol, https://developers.openai.com/api/docs/changelog
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 272000
+            price: 4
+      cache_write_mtok:
+        base: 2.5
+        tiers:
+          - start: 272000
+            price: 5
+      cache_read_mtok:
+        base: 0.1
+        tiers:
+          - start: 272000
+            price: 0.2
+      output_mtok:
+        base: 10
+        tiers:
+          - start: 272000
+            price: 15
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 1.00
+            tiers:
+              - start: 272000
+                price: 2.00
+          cache_read_mtok:
+            base: 0.05
+            tiers:
+              - start: 272000
+                price: 0.10
+          cache_write_mtok:
+            base: 1.25
+            tiers:
+              - start: 272000
+                price: 2.50
+          output_mtok:
+            base: 5.00
+            tiers:
+              - start: 272000
+                price: 7.50
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 4.00
+            tiers:
+              - start: 272000
+                price: 8.00
+          cache_read_mtok:
+            base: 0.20
+            tiers:
+              - start: 272000
+                price: 0.40
+          cache_write_mtok:
+            base: 5.00
+            tiers:
+              - start: 272000
+                price: 10.00
+          output_mtok:
+            base: 20.00
+            tiers:
+              - start: 272000
+                price: 30.00
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok:
+            base: 4.00
+            tiers:
+              - start: 272000
+                price: 8.00
+          cache_read_mtok:
+            base: 0.20
+            tiers:
+              - start: 272000
+                price: 0.40
+          cache_write_mtok:
+            base: 5.00
+            tiers:
+              - start: 272000
+                price: 10.00
+          output_mtok:
+            base: 20.00
+            tiers:
+              - start: 272000
+                price: 30.00
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok:
+            base: 1
+            tiers:
+              - start: 272000
+                price: 2
+          cache_read_mtok:
+            base: 0.05
+            tiers:
+              - start: 272000
+                price: 0.1
+          cache_write_mtok:
+            base: 1.25
+            tiers:
+              - start: 272000
+                price: 2.5
+          output_mtok:
+            base: 5
+            tiers:
+              - start: 272000
+                price: 7.5
+
+  - id: gpt-6.1-terra
+    name: GPT-6.1 Terra
+    description: Fast, efficient model for visual reasoning, precise computer use, and clear, natural writing.
+    match:
+      or:
+        - equals: gpt-6.1-terra
+        - regex: ^gpt-6\.1-terra-\d{4}-\d{2}-\d{2}$
+    context_window: 1050000
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-26 at https://developers.openai.com/api/docs/pricing.
+      Batch and flex are 50% of standard; fast (formerly priority) is 2x. Cache reads cost 5% of input; cache writes
+      are the 30-minute retention rate (1.25x input). The 12-hour retention rate ($2.50) is not modeled. Prompts with
+      more than 272K input tokens cost 2x for input and cache tokens and 1.5x for output. Tier starts use 272000
+      because the pricing engines select a tier when token count exceeds start. Refs:
+      https://developers.openai.com/api/docs/models/gpt-6.1-terra, https://developers.openai.com/api/docs/changelog
+    prices:
+      input_mtok:
+        base: 1
+        tiers:
+          - start: 272000
+            price: 2
+      cache_write_mtok:
+        base: 1.25
+        tiers:
+          - start: 272000
+            price: 2.5
+      cache_read_mtok:
+        base: 0.05
+        tiers:
+          - start: 272000
+            price: 0.1
+      output_mtok:
+        base: 5
+        tiers:
+          - start: 272000
+            price: 7.5
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: flex }
+        prices:
+          input_mtok:
+            base: 0.50
+            tiers:
+              - start: 272000
+                price: 1.00
+          cache_read_mtok:
+            base: 0.025
+            tiers:
+              - start: 272000
+                price: 0.05
+          cache_write_mtok:
+            base: 0.625
+            tiers:
+              - start: 272000
+                price: 1.25
+          output_mtok:
+            base: 2.50
+            tiers:
+              - start: 272000
+                price: 3.75
+      - when: { service_tier: priority }
+        prices:
+          input_mtok:
+            base: 2.00
+            tiers:
+              - start: 272000
+                price: 4.00
+          cache_read_mtok:
+            base: 0.10
+            tiers:
+              - start: 272000
+                price: 0.20
+          cache_write_mtok:
+            base: 2.50
+            tiers:
+              - start: 272000
+                price: 5.00
+          output_mtok:
+            base: 10.00
+            tiers:
+              - start: 272000
+                price: 15.00
+      - when: { service_tier: fast }
+        prices:
+          input_mtok:
+            base: 2.00
+            tiers:
+              - start: 272000
+                price: 4.00
+          cache_read_mtok:
+            base: 0.10
+            tiers:
+              - start: 272000
+                price: 0.20
+          cache_write_mtok:
+            base: 2.50
+            tiers:
+              - start: 272000
+                price: 5.00
+          output_mtok:
+            base: 10.00
+            tiers:
+              - start: 272000
+                price: 15.00
+      - when: { processing: batch }
+        prices:
+          input_mtok:
+            base: 0.5
+            tiers:
+              - start: 272000
+                price: 1
+          cache_read_mtok:
+            base: 0.025
+            tiers:
+              - start: 272000
+                price: 0.05
+          cache_write_mtok:
+            base: 0.625
+            tiers:
+              - start: 272000
+                price: 1.25
+          output_mtok:
+            base: 2.5
+            tiers:
+              - start: 272000
+                price: 3.75
+
+  - id: gpt-6.2-astra
+    name: GPT-6.2 Astra
+    description: A frontier reasoning model for coding and professional work.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-6.2-astra
+        - regex: ^gpt-6\.2-astra-\d{4}-\d{2}-\d{2}$
+    context_window: 1050000
+    prices_checked: 2026-11-17
+    price_comments: >-
+      Released 2026-11-17. Announced: 20% off GPT-6 Astra input and output ($8/$40) and 60% off cached input ($0.40).
+      Official rates match. Cache writes are the 30-minute rate (1.25x input); the 12-hour rate (2x input) is not
+      modeled. Above 272K input tokens, input and cache cost 2x and output 1.5x; tier starts use 272000 because the
+      engines select a tier when token count exceeds start. Batch is 0.5x; fast (formerly priority) is 2x; ultrafast is
+      3x through 2027-02-28 and 6x from 2027-03-01 Pacific time (applied by UTC date). No Flex rate is published, so
+      flex is not modeled; background completion-window discounts are not modeled. Refs:
+      https://developers.openai.com/api/docs/models/gpt-6.2-astra, https://developers.openai.com/api/docs/pricing,
+      https://developers.openai.com/api/docs/changelog
+    prices:
+      input_mtok:
+        base: 8
+        tiers:
+          - start: 272000
+            price: 16
+      cache_write_mtok:
+        base: 10
+        tiers:
+          - start: 272000
+            price: 20
+      cache_read_mtok:
+        base: 0.4
+        tiers:
+          - start: 272000
+            price: 0.8
+      output_mtok:
+        base: 40
+        tiers:
+          - start: 272000
+            price: 60
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: priority }
+        prices:
+          input_mtok:
+            base: 16
+            tiers:
+              - start: 272000
+                price: 32
+          cache_read_mtok:
+            base: 0.8
+            tiers:
+              - start: 272000
+                price: 1.6
+          cache_write_mtok:
+            base: 20
+            tiers:
+              - start: 272000
+                price: 40
+          output_mtok:
+            base: 80
+            tiers:
+              - start: 272000
+                price: 120
+      - when: { service_tier: fast }
+        prices:
+          input_mtok:
+            base: 16
+            tiers:
+              - start: 272000
+                price: 32
+          cache_read_mtok:
+            base: 0.8
+            tiers:
+              - start: 272000
+                price: 1.6
+          cache_write_mtok:
+            base: 20
+            tiers:
+              - start: 272000
+                price: 40
+          output_mtok:
+            base: 80
+            tiers:
+              - start: 272000
+                price: 120
+      - when: { service_tier: ultrafast }
+        # OpenAI: 6x Standard from 2027-03-01 Pacific time. Constraints resolve by UTC date, so this starts
+        # 8 hours before OpenAI's cutover.
+        constraint: { start_date: 2027-03-01 }
+        prices:
+          input_mtok:
+            base: 48
+            tiers:
+              - start: 272000
+                price: 96
+          cache_read_mtok:
+            base: 2.4
+            tiers:
+              - start: 272000
+                price: 4.8
+          cache_write_mtok:
+            base: 60
+            tiers:
+              - start: 272000
+                price: 120
+          output_mtok:
+            base: 240
+            tiers:
+              - start: 272000
+                price: 360
+      - when: { service_tier: ultrafast }
+        prices:
+          input_mtok:
+            base: 24
+            tiers:
+              - start: 272000
+                price: 48
+          cache_read_mtok:
+            base: 1.2
+            tiers:
+              - start: 272000
+                price: 2.4
+          cache_write_mtok:
+            base: 30
+            tiers:
+              - start: 272000
+                price: 60
+          output_mtok:
+            base: 120
+            tiers:
+              - start: 272000
+                price: 180
+      - when: { processing: batch }
+        prices:
+          input_mtok:
+            base: 4
+            tiers:
+              - start: 272000
+                price: 8
+          cache_read_mtok:
+            base: 0.2
+            tiers:
+              - start: 272000
+                price: 0.4
+          cache_write_mtok:
+            base: 5
+            tiers:
+              - start: 272000
+                price: 10
+          output_mtok:
+            base: 20
+            tiers:
+              - start: 272000
+                price: 30
+
+  - id: gpt-6.2-sol
+    name: GPT-6.2 Sol
+    description: A reasoning model for text, images, and tool use.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-6.2-sol
+        - regex: ^gpt-6\.2-sol-\d{4}-\d{2}-\d{2}$
+    context_window: 1050000
+    prices_checked: 2026-11-17
+    price_comments: >-
+      Released 2026-11-17. Announced: carries forward GPT-6.1 Sol's rates ($2 input, $0.10 cached input, $10 output).
+      Official rates match. Cache writes are the 30-minute rate (1.25x input); the 12-hour rate (2x input) is not
+      modeled. Above 272K input tokens, input and cache cost 2x and output 1.5x; tier starts use 272000 because the
+      engines select a tier when token count exceeds start. Batch is 0.5x; fast (formerly priority) is 2x; ultrafast is
+      3x through 2027-02-28 and 6x from 2027-03-01 Pacific time (applied by UTC date). No Flex rate is published, so
+      flex is not modeled; background completion-window discounts are not modeled. Refs:
+      https://developers.openai.com/api/docs/models/gpt-6.2-sol, https://developers.openai.com/api/docs/pricing,
+      https://developers.openai.com/api/docs/changelog
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 272000
+            price: 4
+      cache_write_mtok:
+        base: 2.5
+        tiers:
+          - start: 272000
+            price: 5
+      cache_read_mtok:
+        base: 0.1
+        tiers:
+          - start: 272000
+            price: 0.2
+      output_mtok:
+        base: 10
+        tiers:
+          - start: 272000
+            price: 15
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: priority }
+        prices:
+          input_mtok:
+            base: 4
+            tiers:
+              - start: 272000
+                price: 8
+          cache_read_mtok:
+            base: 0.2
+            tiers:
+              - start: 272000
+                price: 0.4
+          cache_write_mtok:
+            base: 5
+            tiers:
+              - start: 272000
+                price: 10
+          output_mtok:
+            base: 20
+            tiers:
+              - start: 272000
+                price: 30
+      - when: { service_tier: fast }
+        prices:
+          input_mtok:
+            base: 4
+            tiers:
+              - start: 272000
+                price: 8
+          cache_read_mtok:
+            base: 0.2
+            tiers:
+              - start: 272000
+                price: 0.4
+          cache_write_mtok:
+            base: 5
+            tiers:
+              - start: 272000
+                price: 10
+          output_mtok:
+            base: 20
+            tiers:
+              - start: 272000
+                price: 30
+      - when: { service_tier: ultrafast }
+        # OpenAI: 6x Standard from 2027-03-01 Pacific time. Constraints resolve by UTC date, so this starts
+        # 8 hours before OpenAI's cutover.
+        constraint: { start_date: 2027-03-01 }
+        prices:
+          input_mtok:
+            base: 12
+            tiers:
+              - start: 272000
+                price: 24
+          cache_read_mtok:
+            base: 0.6
+            tiers:
+              - start: 272000
+                price: 1.2
+          cache_write_mtok:
+            base: 15
+            tiers:
+              - start: 272000
+                price: 30
+          output_mtok:
+            base: 60
+            tiers:
+              - start: 272000
+                price: 90
+      - when: { service_tier: ultrafast }
+        prices:
+          input_mtok:
+            base: 6
+            tiers:
+              - start: 272000
+                price: 12
+          cache_read_mtok:
+            base: 0.3
+            tiers:
+              - start: 272000
+                price: 0.6
+          cache_write_mtok:
+            base: 7.5
+            tiers:
+              - start: 272000
+                price: 15
+          output_mtok:
+            base: 30
+            tiers:
+              - start: 272000
+                price: 45
+      - when: { processing: batch }
+        prices:
+          input_mtok:
+            base: 1
+            tiers:
+              - start: 272000
+                price: 2
+          cache_read_mtok:
+            base: 0.05
+            tiers:
+              - start: 272000
+                price: 0.1
+          cache_write_mtok:
+            base: 1.25
+            tiers:
+              - start: 272000
+                price: 2.5
+          output_mtok:
+            base: 5
+            tiers:
+              - start: 272000
+                price: 7.5
+
+  - id: gpt-audio
+    name: GPT Audio
+    description: >-
+      The gpt-audio model is OpenAI's first generally available audio model. The new snapshot features an upgraded decoder
+      for more natural-sounding voices and maintains better voice consistency.
+    match:
+      or:
+        - equals: gpt-audio
+        - equals: gpt-audio-2025-08-28
+        - equals: gpt-audio-1.5
+    context_window: 128000
+    prices_checked: 2026-06-26
+    prices:
+      input_mtok: 2.5
+      input_audio_mtok: 32
+      output_mtok: 10
+      output_audio_mtok: 64
+
+  - id: gpt-audio-mini
+    name: GPT Audio Mini
+    description: >-
+      A cost-efficient version of GPT Audio. The new snapshot features an upgraded decoder for more natural sounding voices
+      and maintains better voice consistency.
+    match:
+      or:
+        - equals: gpt-audio-mini
+        - equals: gpt-audio-mini-2025-10-06
+        - equals: gpt-audio-mini-2025-12-15
+    context_window: 128000
+    prices_checked: 2026-06-26
+    prices:
+      input_mtok: 0.6
+      input_audio_mtok: 10
+      output_mtok: 2.4
+      output_audio_mtok: 20
+
+  - id: gpt-chat-latest
+    name: GPT Chat Latest
+    description: >-
+      GPT Chat Latest points to OpenAI's stable API alias `chat-latest` that always resolves to the latest Instant chat model
+      used in ChatGPT.
+    match:
+      or:
+        - equals: gpt-chat-latest
+        - equals: chat-latest
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is published.
+      Verified against OpenAI on 2026-10-15: the official Model ID is `chat-latest`
+      (https://developers.openai.com/api/docs/models/chat-latest) and the published rates match this entry's
+      $5 / $0.50 cached / $30 output per 1M tokens.
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 0.5
+      output_mtok: 30
+
+  - id: gpt-image-1
+    name: GPT Image 1
+    description: OpenAI's previous image generation model.
+    match:
+      equals: gpt-image-1
+    prices_checked: 2026-10-14
+    price_comments: >-
+      See https://developers.openai.com/api/docs/models/gpt-image-1.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing. Batch cached rates use
+      the published rounded values.
+    prices:
+      input_mtok: 5
+      input_image_mtok: 10
+      cache_read_mtok: 1.25
+      cache_image_read_mtok: 2.5
+      # The model's sole supported output modality is image, so the aggregate
+      # catch-all carries that modality's rate.
+      output_mtok: 40
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 2.5
+          input_image_mtok: 5
+          cache_read_mtok: 0.63
+          cache_image_read_mtok: 1.25
+          output_mtok: 20
+
+  - id: gpt-image-1-mini
+    name: GPT Image 1 Mini
+    description: >-
+      A cost-efficient image generation model from OpenAI with text input pricing.
+    match:
+      or:
+        - equals: gpt-image-1-mini
+    prices_checked: 2026-10-14
+    price_comments: >-
+      See https://developers.openai.com/api/docs/models/gpt-image-1-mini.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing. Batch cached rates use
+      the published rounded values.
+    prices:
+      input_mtok: 2
+      input_image_mtok: 2.5
+      cache_read_mtok: 0.2
+      cache_image_read_mtok: 0.25
+      # The model's sole supported output modality is image, so the aggregate
+      # catch-all carries that modality's rate.
+      output_mtok: 8
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 1
+          input_image_mtok: 1.25
+          cache_read_mtok: 0.1
+          cache_image_read_mtok: 0.13
+          output_mtok: 4
+
+  - id: gpt-image-1.5
+    name: GPT Image 1.5
+    description: >-
+      An improved image generation model from OpenAI supporting text input and output pricing.
+    match:
+      or:
+        - equals: gpt-image-1.5
+        - equals: gpt-image-1.5-2025-12-16
+    prices_checked: 2026-10-14
+    price_comments: >-
+      See https://developers.openai.com/api/docs/models/gpt-image-1.5.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing. Batch cached rates use
+      the published rounded values.
+    prices:
+      input_mtok: 5
+      input_image_mtok: 8
+      cache_read_mtok: 1.25
+      cache_image_read_mtok: 2
+      output_mtok: 10
+      output_image_mtok: 32
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 2.5
+          input_image_mtok: 4
+          cache_read_mtok: 0.63
+          cache_image_read_mtok: 1
+          output_mtok: 5
+          output_image_mtok: 16
+
+  - id: gpt-image-2
+    name: GPT Image 2
+    description: >-
+      OpenAI's latest image generation model with text input pricing.
+    match:
+      or:
+        - equals: gpt-image-2
+        - equals: gpt-image-2-2026-04-21
+    prices_checked: 2026-10-14
+    price_comments: >-
+      See https://developers.openai.com/api/docs/models/gpt-image-2.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+    prices:
+      input_mtok: 5
+      input_image_mtok: 8
+      cache_read_mtok: 1.25
+      cache_image_read_mtok: 2
+      # The model's sole supported output modality is image, so the aggregate
+      # catch-all carries that modality's rate.
+      output_mtok: 30
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 2.5
+          input_image_mtok: 4
+          cache_read_mtok: 0.625
+          cache_image_read_mtok: 1
+          output_mtok: 15
+
+  - id: gpt-image-2.5-flare
+    name: GPT Image 2.5 Flare
+    description: >-
+      OpenAI's GPT Image 2.5 model for most applications, faster than GPT Image 2.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-image-2.5-flare
+        - equals: gpt-image-2.5-flare-2026-09-08
+    prices_checked: 2026-10-14
+    price_comments: >-
+      See https://developers.openai.com/api/docs/models/gpt-image-2.5-flare.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+    prices:
+      input_mtok: 5
+      input_image_mtok: 8
+      cache_read_mtok: 1.25
+      cache_image_read_mtok: 2
+      # The model's sole supported output modality is image, so the aggregate
+      # catch-all carries that modality's rate.
+      output_mtok: 30
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 2.5
+          input_image_mtok: 4
+          cache_read_mtok: 0.625
+          cache_image_read_mtok: 1
+          output_mtok: 15
+
+  - id: gpt-image-2.5-sunburst
+    name: GPT Image 2.5 Sunburst
+    description: >-
+      OpenAI's GPT Image 2.5 model for premium visual work, with tighter control across edits.
+    collapse: false
+    match:
+      or:
+        - equals: gpt-image-2.5-sunburst
+        - equals: gpt-image-2.5-sunburst-2026-09-08
+    prices_checked: 2026-10-14
+    price_comments: >-
+      See https://developers.openai.com/api/docs/models/gpt-image-2.5-sunburst.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+    prices:
+      input_mtok: 5
+      input_image_mtok: 8
+      cache_read_mtok: 1.25
+      cache_image_read_mtok: 2
+      # The model's sole supported output modality is image, so the aggregate
+      # catch-all carries that modality's rate.
+      output_mtok: 30
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 2.5
+          input_image_mtok: 4
+          cache_read_mtok: 0.625
+          cache_image_read_mtok: 1
+          output_mtok: 15
+
+  - id: gpt-live-1
+    match:
+      equals: gpt-live-1
+    prices_checked: 2026-09-24
+    price_comments: >-
+      Voice sessions are billed per second of session duration, covering both input and output audio. The
+      Responses backend a session delegates to is billed separately, at that model's own prices. See
+      https://developers.openai.com/api/docs/models/gpt-live-1.
+    prices:
+      audio_hours: 3
+
+  - id: gpt-live-transcribe
+    match:
+      equals: gpt-live-transcribe
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Live transcription sessions are billed per minute of realtime audio at $0.017/minute =
+      $1.02/hour (0.017 x 60). See https://developers.openai.com/api/docs/models/gpt-live-transcribe.
+    prices:
+      audio_hours: 1.02
+
+  - id: gpt-oss-120b
+    name: gpt-oss-120b
+    description: >-
+      gpt-oss-120b is an open-weight, 117B-parameter Mixture-of-Experts (MoE) language model from OpenAI designed for high-reasoning,
+      agentic, and general-purpose production use cases.
+    match:
+      equals: gpt-oss-120b
+    context_window: 131072
+    prices_checked: 2026-06-09
+    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is
+      published.
+    prices:
+      input_mtok: 0.039
+      output_mtok: 0.18
+
+  - id: gpt-oss-20b
+    name: gpt-oss-20b
+    description: >-
+      gpt-oss-20b is an open-weight 21B parameter model released by OpenAI under the Apache 2.0 license. It uses a Mixture-of-Experts
+      (MoE) architecture with 3.6B active parameters per forward pass.
+    match:
+      equals: gpt-oss-20b
+    context_window: 131072
+    prices_checked: 2026-06-09
+    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is
+      published.
+    prices:
+      input_mtok: 0.029
+      output_mtok: 0.14
+
+  - id: gpt-oss-safeguard-20b
+    name: gpt-oss-safeguard-20b
+    description: >-
+      gpt-oss-safeguard-20b is a safety reasoning model from OpenAI built upon gpt-oss-20b. This open-weight, 21B-parameter
+      Mixture-of-Experts (MoE) model offers lower latency for safety tasks.
+    match:
+      equals: gpt-oss-safeguard-20b
+    context_window: 131072
+    prices_checked: 2026-06-09
+    price_comments: Imported from OpenRouter pricing; verify against OpenAI pricing when native API pricing is
+      published.
+    prices:
+      input_mtok: 0.075
+      cache_read_mtok: 0.037
+      output_mtok: 0.3
+
+  - id: gpt-realtime
+    match:
+      or:
+        - equals: gpt-realtime
+        - equals: gpt-realtime-2025-08-28
+        - equals: gpt-realtime-1.5
+    context_window: 32000
+    prices_checked: 2026-07-22
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-realtime.
+    prices:
+      input_mtok: 4
+      cache_read_mtok: 0.4
+      input_audio_mtok: 32
+      cache_audio_read_mtok: 0.4
+      input_image_mtok: 5
+      cache_image_read_mtok: 0.5
+      output_mtok: 16
+      output_audio_mtok: 64
+
+  - id: gpt-realtime-2
+    match:
+      or:
+        - equals: gpt-realtime-2
+        - equals: gpt-realtime-2.1
+    context_window: 128000
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-realtime-2.1.
+    prices_checked: 2026-07-22
+    prices:
+      input_mtok: 4
+      cache_read_mtok: 0.4
+      output_mtok: 24
+      input_audio_mtok: 32
+      cache_audio_read_mtok: 0.4
+      input_image_mtok: 5
+      cache_image_read_mtok: 0.5
+      output_audio_mtok: 64
+
+  - id: gpt-realtime-mini
+    match:
+      or:
+        - equals: gpt-realtime-mini
+        - equals: gpt-realtime-2.1-mini
+        - equals: gpt-realtime-mini-2025-12-15
+        - equals: gpt-realtime-mini-2025-10-06
+    prices_checked: 2026-07-22
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-realtime-2.1-mini.
+    # No context_window: this record also matches gpt-realtime-2.1-mini (128,000) while
+    # gpt-realtime-mini is 32,000 — no single value is true for every ref it matches
+    prices:
+      input_mtok: 0.6
+      cache_read_mtok: 0.06
+      input_audio_mtok: 10
+      cache_audio_read_mtok: 0.3
+      input_image_mtok: 0.8
+      cache_image_read_mtok: 0.08
+      output_mtok: 2.4
+      output_audio_mtok: 20
+
+  - id: gpt-realtime-translate
+    match:
+      equals: gpt-realtime-translate
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Realtime translation sessions are billed per minute at $0.034/minute = $2.04/hour (0.034 x 60).
+      See https://developers.openai.com/api/docs/models/gpt-realtime-translate.
+    prices:
+      audio_hours: 2.04
+
+  - id: gpt-realtime-whisper
+    match:
+      equals: gpt-realtime-whisper
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Realtime transcription sessions are billed per minute of realtime audio at $0.017/minute =
+      $1.02/hour (0.017 x 60). See https://developers.openai.com/api/docs/models/gpt-realtime-whisper.
+    prices:
+      audio_hours: 1.02
+
+  - id: gpt-rosalind-discovery
+    match:
+      equals: gpt-rosalind-discovery
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 0.5
+      output_mtok: 25
+    prices_checked: 2026-11-09
+
+  - id: gpt-rosalind-research
+    match:
+      equals: gpt-rosalind-research
+    prices:
+      input_mtok: 5
+      cache_read_mtok: 0.5
+      output_mtok: 25
+    prices_checked: 2026-11-09
+
+  - id: gpt-transcribe
+    match:
+      equals: gpt-transcribe
+    prices_checked: 2026-08-24
+    price_comments: See https://developers.openai.com/api/docs/models/gpt-transcribe.
+    prices:
+      audio_hours: 0.27
+      input_audio_hours: 0.27
+
+  - id: moderation
+    description: All OpenAI moderation models and endpoints are free of charge
+    match:
+      contains: moderation
+    prices: {}
+
+  # Keep o1 and o1-preview separate even though their prices match: OpenAI documents different context windows
+  # (200,000 vs 128,000 tokens):
+  # https://developers.openai.com/api/docs/models/o1
+  # https://developers.openai.com/api/docs/models/o1-preview
+  - id: o1
+    name: o1
+    description: O1 is a model that offers a balance between cost and performance.
+    match:
+      or:
+        - equals: o1
+        - equals: o1-2024-12-17
+    # https://developers.openai.com/api/docs/models/o1
+    context_window: 200000
+    prices_checked: 2026-11-02
+    price_comments: >-
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing. The Batch table
+      publishes no cached-input rate, so cached input keeps the standard rate.
+    prices:
+      input_mtok: 15
+      cache_read_mtok: 7.5
+      output_mtok: 60
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 7.5
+          output_mtok: 30
+
+  - id: o1-mini
+    name: o1 mini
+    description: O1 Mini is a model that offers a balance between cost and performance.
+    match:
+      or:
+        - equals: o1-mini
+        - equals: o1-mini-2024-09-12
+    # https://developers.openai.com/api/docs/models/o1-mini
+    context_window: 128000
+    prices_checked: 2025-07-04
+    prices:
+      input_mtok: 1.1
+      cache_read_mtok: 0.55
+      output_mtok: 4.4
+
+  - id: o1-preview
+    name: o1 preview
+    description: Preview release of OpenAI's first reasoning model.
+    # Prevent `collapse-models` from merging this into o1: its ID has the o1 prefix and its prices match.
+    collapse: false
+    match:
+      or:
+        - equals: o1-preview
+        - equals: o1-preview-2024-09-12
+    # https://developers.openai.com/api/docs/models/o1-preview
+    context_window: 128000
+    prices_checked: 2025-07-04
+    prices:
+      input_mtok: 15
+      cache_read_mtok: 7.5
+      output_mtok: 60
+
+  - id: o1-pro
+    name: o1-pro
+    description: >-
+      The o1 series of models are trained with reinforcement learning to think before they answer and perform complex reasoning.
+      The o1-pro model uses more compute to think harder and provide consistently better answers.
+    match:
+      or:
+        - equals: o1-pro
+        - equals: o1-pro-2025-03-19
+    context_window: 200000
+    prices_checked: 2026-11-02
+    price_comments: >-
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+    prices:
+      input_mtok: 150
+      output_mtok: 600
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 75
+          output_mtok: 300
+
+  - id: o3
+    name: o3
+    description: >-
+      o3 is a well-rounded and powerful model across domains. It sets a new standard for math, science, coding, and visual
+      reasoning tasks. It also excels at technical writing and instruction-following.
+      Use it to think through multi-step problems that involve analysis across text, code, and images. Note that BYOK is required
+      for this model. Set up here: https://openrouter.ai/settings/integrations
+    match:
+      or:
+        - equals: o3
+        - equals: o3-2025-04-16
+    # https://developers.openai.com/api/docs/models/o3
+    context_window: 200000
+    prices_checked: 2026-11-09
+    prices:
+      - prices:
+          input_mtok: 10
+          cache_read_mtok: 0.5
+          output_mtok: 40
+          web_searches_kcount: 10
+          storage_searches_kcount: 2.5
+      - constraint:
+          # See https://community.openai.com/t/o3-is-80-cheaper-and-introducing-o3-pro/1284925
+          start_date: 2025-06-10
+        prices:
+          input_mtok: 2
+          cache_read_mtok: 0.5
+          output_mtok: 8
+          web_searches_kcount: 10
+          storage_searches_kcount: 2.5
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing. The Batch table
+      publishes no cached-input rate, so cached input keeps the standard rate.
+      Tier history before this verification is not modeled. Flex cached rates retain half-rate precision.
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 1.00
+          cache_read_mtok: 0.25
+          output_mtok: 4.00
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 3.50
+          cache_read_mtok: 0.875
+          output_mtok: 14.00
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 3.50
+          cache_read_mtok: 0.875
+          output_mtok: 14.00
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 1
+          output_mtok: 4
+
+  - id: o3-deep-research
+    match:
+      or:
+        - equals: o3-deep-research
+        - equals: o3-deep-research-2025-06-26
+    context_window: 200000
+    prices_checked: 2026-09-25
+    price_comments: >-
+      Deep research supports web search and Responses file search. Reasoning-model web search (including preview)
+      costs $10/1k calls; Responses file search costs $2.50/1k calls.
+      See https://developers.openai.com/api/docs/guides/deep-research and https://developers.openai.com/api/docs/pricing.
+    prices:
+      input_mtok: 10
+      cache_read_mtok: 2.5
+      output_mtok: 40
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+
+  - id: o3-mini
+    name: o3 Mini
+    description: >-
+      OpenAI o3-mini is a cost-efficient language model optimized for STEM reasoning tasks, particularly excelling in science,
+      mathematics, and coding.
+    match:
+      or:
+        - equals: o3-mini
+        - equals: o3-mini-2025-01-31
+        - equals: o3-mini-high
+    # https://developers.openai.com/api/docs/models/o3-mini
+    context_window: 200000
+    prices_checked: 2026-11-02
+    price_comments: >-
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing. The Batch table
+      publishes no cached-input rate, so cached input keeps the standard rate.
+    prices:
+      input_mtok: 1.1
+      cache_read_mtok: 0.55
+      output_mtok: 4.4
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.55
+          output_mtok: 2.2
+
+  - id: o3-pro
+    name: o3 Pro
+    description: >-
+      The o-series of models are trained with reinforcement learning to think before they answer and perform complex reasoning.
+      The o3-pro model uses more compute to think harder and provide consistently better answers.
+    match:
+      or:
+        - equals: o3-pro
+        - equals: o3-pro-2025-06-10
+    context_window: 200000
+    price_comments: >-
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing.
+    prices_checked: 2026-11-09
+    prices:
+      input_mtok: 20
+      output_mtok: 80
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 10
+          output_mtok: 40
+
+  - id: o4-mini
+    name: o4 Mini High
+    description: >-
+      OpenAI o4-mini-high is the same model as o4-mini with reasoning_effort set to high.
+    match:
+      or:
+        - equals: o4-mini-2025-04-16
+        - equals: o4-mini-high
+        - equals: o4-mini
+    # https://developers.openai.com/api/docs/models/o4-mini
+    context_window: 200000
+    prices_checked: 2026-11-02
+    prices:
+      input_mtok: 1.1
+      cache_read_mtok: 0.275
+      output_mtok: 4.4
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+    price_comments: >-
+      Flex/priority/fast rates verified on 2026-10-12 at https://developers.openai.com/api/docs/pricing.
+      Batch rates verified on 2026-10-14 at https://developers.openai.com/api/docs/pricing. The Batch table
+      publishes no cached-input rate, so cached input keeps the standard rate.
+      Tier history before this verification is not modeled. Flex cached input uses the published $0.138/MTok rate.
+    price_variants:
+      - when: { service_tier: default }
+        prices: {}
+      - when: { service_tier: flex }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 0.55
+          cache_read_mtok: 0.138
+          output_mtok: 2.20
+      - when: { service_tier: priority }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 2.00
+          cache_read_mtok: 0.50
+          output_mtok: 8.00
+      - when: { service_tier: fast }
+        constraint: { start_date: 2026-10-12 }
+        prices:
+          input_mtok: 2.00
+          cache_read_mtok: 0.50
+          output_mtok: 8.00
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.55
+          output_mtok: 2.2
+
+  - id: o4-mini-deep-research
+    match:
+      or:
+        - equals: o4-mini-deep-research
+        - equals: o4-mini-deep-research-2025-06-26
+    context_window: 200000
+    prices_checked: 2026-09-25
+    price_comments: >-
+      Deep research supports web search and Responses file search. Reasoning-model web search (including preview)
+      costs $10/1k calls; Responses file search costs $2.50/1k calls.
+      See https://developers.openai.com/api/docs/guides/deep-research and https://developers.openai.com/api/docs/pricing.
+    prices:
+      input_mtok: 2
+      cache_read_mtok: 0.5
+      output_mtok: 8
+      web_searches_kcount: 10
+      storage_searches_kcount: 2.5
+
+  - id: text-davinci-002
+    match:
+      equals: text-davinci-002
+    prices:
+      input_mtok: 20
+      output_mtok: 20
+
+  - id: text-davinci-003
+    match:
+      equals: text-davinci-003
+    prices:
+      input_mtok: 20
+      output_mtok: 20
+
+  - id: text-embedding-3-large
+    name: text embedding 3
+    description: Text Embedding 3 is a model that offers a balance between cost and performance.
+    match:
+      equals: text-embedding-3-large
+    context_window: 8192
+    prices_checked: 2026-11-09
+    prices:
+      input_mtok: 0.13
+
+  - id: text-embedding-3-small
+    name: text embedding 3
+    description: Text Embedding 3 is a model that offers a balance between cost and performance.
+    match:
+      equals: text-embedding-3-small
+    context_window: 8192
+    prices_checked: 2026-11-09
+    prices:
+      input_mtok: 0.02
+
+  - id: text-embedding-ada-002
+    name: text embedding ada
+    description: Text Embedding Ada is a model that offers a balance between cost and performance.
+    match:
+      or:
+        - equals: text-embedding-ada
+        - equals: text-embedding-ada-002
+        - equals: text-embedding-ada-002-v2
+    context_window: 8192
+    prices_checked: 2026-11-09
+    prices:
+      input_mtok: 0.1
+
+  - id: tts-1
+    match:
+      equals: tts-1
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Text-to-speech input is billed per 1M characters: $15 / 1M characters
+      (https://developers.openai.com/api/docs/pricing, Text-to-speech models).
+    prices:
+      input_mchars: 15
+
+  - id: tts-1-hd
+    match:
+      equals: tts-1-hd
+    prices_checked: 2026-10-15
+    price_comments: >-
+      Text-to-speech input is billed per 1M characters: $30 / 1M characters
+      (https://developers.openai.com/api/docs/pricing, Text-to-speech models).
+    prices:
+      input_mchars: 30
+
+  - id: whisper-1
+    match:
+      equals: whisper-1
+    prices_checked: 2026-08-24
+    price_comments: See https://developers.openai.com/api/docs/models/whisper-1.
+    prices:
+      audio_hours: 0.36
+      input_audio_hours: 0.36

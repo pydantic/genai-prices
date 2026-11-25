@@ -1,0 +1,412 @@
+# yaml-language-server: $schema=.schema.json
+name: Groq
+id: groq
+pricing_urls:
+  - https://console.groq.com/docs/models
+api_pattern: 'https://api\.groq\.com'
+
+# https://github.com/groq/groq-python/blob/v0.31.0/src/groq/types/completion_usage.py
+extractors:
+  - root: usage
+    mappings:
+      - path: prompt_tokens
+        dest: input_tokens
+      - path: completion_tokens
+        dest: output_tokens
+      - path:
+          - prompt_tokens_details
+          - cached_tokens
+        dest: cache_read_tokens
+        required: false
+      - path:
+          - prompt_tokens_details
+          - audio_tokens
+        dest: input_audio_tokens
+        required: false
+      - path:
+          - completion_tokens_details
+          - audio_tokens
+        dest: output_audio_tokens
+        required: false
+      - path:
+          - completion_tokens_details
+          - reasoning_tokens
+        dest: output_reasoning_tokens
+        required: false
+
+models:
+  - id: canopylabs/orpheus-arabic-saudi
+    name: Orpheus Arabic Saudi (Canopy Labs)
+    match:
+      equals: canopylabs/orpheus-arabic-saudi
+    context_window: 4000
+    prices_checked: 2026-10-19
+    price_comments: "https://console.groq.com/docs/models#canopylabs/orpheus-arabic-saudi"
+    prices:
+      input_mchars: 40
+
+  - id: canopylabs/orpheus-v1-english
+    name: Orpheus V1 English (Canopy Labs)
+    match:
+      equals: canopylabs/orpheus-v1-english
+    context_window: 4000
+    prices_checked: 2026-10-19
+    price_comments: "https://console.groq.com/docs/models#canopylabs/orpheus-v1-english"
+    prices:
+      input_mchars: 22
+
+  - id: deepseek-r1-distill-llama-70b
+    name: DeepSeek R1 Distill Llama 70B
+    context_window: 131072
+    match:
+      equals: deepseek-r1-distill-llama-70b
+    prices_checked: 2025-08-12
+    prices:
+      input_mtok: 0.75
+      output_mtok: 0.99
+
+  - id: gemma-7b-it
+    match:
+      equals: gemma-7b-it
+    prices:
+      input_mtok: 0.07
+      output_mtok: 0.07
+
+  - id: gemma2-9b-it
+    name: Gemma 2 9B 8k
+    match:
+      or:
+        - equals: gemma2-9b-it
+        - equals: gemma2-9b
+    prices_checked: 2025-08-12
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+
+  - id: llama-3.1-405b-reasoning
+    match:
+      equals: llama-3.1-405b-reasoning
+    prices:
+      input_mtok: 0.59
+      output_mtok: 0.79
+
+  - id: llama-3.1-70b-versatile
+    match:
+      equals: llama-3.1-70b-versatile
+    prices:
+      input_mtok: 0.59
+      output_mtok: 0.79
+
+  - id: llama-3.1-8b-instant
+    name: Llama 3.1 8B Instant 128k
+    match:
+      equals: llama-3.1-8b-instant
+    prices_checked: 2025-08-12
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.08
+
+  - id: llama-3.2-11b-text-preview
+    match:
+      equals: llama-3.2-11b-text-preview
+    prices:
+      input_mtok: 0.18
+      output_mtok: 0.18
+
+  - id: llama-3.2-11b-vision-preview
+    match:
+      equals: llama-3.2-11b-vision-preview
+    prices:
+      input_mtok: 0.18
+      output_mtok: 0.18
+
+  - id: llama-3.2-1b-preview
+    match:
+      equals: llama-3.2-1b-preview
+    prices:
+      input_mtok: 0.04
+      output_mtok: 0.04
+
+  - id: llama-3.2-3b-preview
+    match:
+      equals: llama-3.2-3b-preview
+    prices:
+      input_mtok: 0.06
+      output_mtok: 0.06
+
+  - id: llama-3.2-90b-text-preview
+    match:
+      equals: llama-3.2-90b-text-preview
+    prices:
+      input_mtok: 0.9
+      output_mtok: 0.9
+
+  - id: llama-3.2-90b-vision-preview
+    match:
+      equals: llama-3.2-90b-vision-preview
+    prices:
+      input_mtok: 0.9
+      output_mtok: 0.9
+
+  - id: llama-3.3-70b-specdec
+    match:
+      equals: llama-3.3-70b-specdec
+    prices:
+      input_mtok: 0.59
+      output_mtok: 0.99
+
+  - id: llama-3.3-70b-versatile
+    name: Llama 3.3 70B Versatile 128k
+    match:
+      equals: llama-3.3-70b-versatile
+    prices_checked: 2025-08-12
+    prices:
+      input_mtok: 0.59
+      output_mtok: 0.79
+
+  - id: llama-guard-3-8b
+    match:
+      equals: llama-guard-3-8b
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+
+  - id: llama2-70b-4096
+    match:
+      equals: llama2-70b-4096
+    prices:
+      input_mtok: 0.7
+      output_mtok: 0.8
+
+  - id: llama3-70b-8192
+    match:
+      equals: llama3-70b-8192
+    prices:
+      input_mtok: 0.59
+      output_mtok: 0.79
+
+  - id: llama3-8b-8192
+    match:
+      equals: llama3-8b-8192
+    prices:
+      input_mtok: 0.05
+      output_mtok: 0.08
+
+  - id: llama3-groq-70b-8192-tool-use-preview
+    match:
+      equals: llama3-groq-70b-8192-tool-use-preview
+    prices:
+      input_mtok: 0.89
+      output_mtok: 0.89
+
+  - id: llama3-groq-8b-8192-tool-use-preview
+    match:
+      equals: llama3-groq-8b-8192-tool-use-preview
+    prices:
+      input_mtok: 0.19
+      output_mtok: 0.19
+
+  - id: meta-llama/llama-4-maverick-17b-128e-instruct
+    name: Llama 4 Maverick 17B 128E
+    context_window: 131072
+    match:
+      equals: meta-llama/llama-4-maverick-17b-128e-instruct
+    prices_checked: 2025-08-12
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.6
+
+  - id: meta-llama/llama-4-scout-17b-16e-instruct
+    name: Llama 4 Scout (17Bx16E) 128k
+    match:
+      equals: meta-llama/llama-4-scout-17b-16e-instruct
+    prices_checked: 2025-08-12
+    prices:
+      input_mtok: 0.11
+      output_mtok: 0.34
+
+  - id: meta-llama/llama-guard-4-12b
+    name: Llama Guard 4 12B
+    context_window: 131072
+    match:
+      equals: meta-llama/llama-guard-4-12b
+    prices_checked: 2025-08-12
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+
+  - id: meta-llama/llama-prompt-guard-2-22m
+    name: Llama Prompt Guard 2 22M
+    match:
+      equals: meta-llama/llama-prompt-guard-2-22m
+    context_window: 512
+    prices_checked: 2026-10-19
+    price_comments: "https://console.groq.com/docs/models#meta-llama/llama-prompt-guard-2-22m"
+    prices:
+      input_mtok: 0.03
+      output_mtok: 0.03
+
+  - id: meta-llama/llama-prompt-guard-2-86m
+    name: Llama Prompt Guard 2 86M
+    match:
+      equals: meta-llama/llama-prompt-guard-2-86m
+    context_window: 512
+    prices_checked: 2026-10-19
+    price_comments: "https://console.groq.com/docs/models#meta-llama/llama-prompt-guard-2-86m"
+    prices:
+      input_mtok: 0.04
+      output_mtok: 0.04
+
+  - id: mistral-saba-24b
+    match:
+      equals: mistral-saba-24b
+    prices:
+      input_mtok: 0.79
+      output_mtok: 0.79
+
+  - id: mixtral-8x7b-32768
+    match:
+      equals: mixtral-8x7b-32768
+    prices:
+      input_mtok: 0.24
+      output_mtok: 0.24
+
+  - id: moonshotai/kimi-k2-instruct
+    name: Kimi K2 1T 128k
+    context_window: 131072
+    match:
+      or:
+        - equals: moonshotai/kimi-k2-instruct
+        - equals: moonshotai/kimi-k2-instruct-0905
+    prices_checked: 2025-08-12
+    prices:
+      input_mtok: 1
+      cache_read_mtok: 0.5
+      output_mtok: 3
+
+  # https://console.groq.com/docs/model/openai/gpt-oss-120b
+  - id: openai/gpt-oss-120b
+    name: GPT OSS 120B
+    description: |
+      GPT-OSS 120B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with
+      120 billion parameters and 128 experts.
+    match:
+      equals: openai/gpt-oss-120b
+    context_window: 131072
+    prices_checked: 2026-10-19
+    price_comments: >-
+      Batch API is 50% of the synchronous rates and does not stack with prompt caching: cached input is billed
+      at the halved input rate. See https://console.groq.com/docs/batch.
+    prices:
+      input_mtok: 0.15
+      cache_read_mtok: 0.075
+      output_mtok: 0.6
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.075
+          cache_read_mtok: 0.075
+          output_mtok: 0.3
+
+  # https://console.groq.com/docs/model/openai/gpt-oss-20b
+  - id: openai/gpt-oss-20b
+    name: GPT OSS 20B
+    description: |
+      GPT-OSS 20B is OpenAI's flagship open source model, built on a Mixture-of-Experts (MoE) architecture with
+      20 billion parameters and 32 experts.
+    match:
+      equals: openai/gpt-oss-20b
+    context_window: 131072
+    prices_checked: 2026-10-19
+    price_comments: >-
+      Batch API is 50% of the synchronous rates and does not stack with prompt caching: cached input is billed
+      at the halved input rate. See https://console.groq.com/docs/batch.
+    prices:
+      input_mtok: 0.075
+      cache_read_mtok: 0.0375
+      output_mtok: 0.30
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          input_mtok: 0.0375
+          cache_read_mtok: 0.0375
+          output_mtok: 0.15
+
+  # https://console.groq.com/docs/model/openai/gpt-oss-safeguard-20b
+  - id: openai/gpt-oss-safeguard-20b
+    name: GPT-OSS Safeguard 20B
+    description: |
+      GPT-OSS Safeguard 20B is OpenAI's open-weight safety model. It classifies content against a policy supplied
+      in the prompt.
+    match:
+      equals: openai/gpt-oss-safeguard-20b
+    context_window: 131072
+    prices_checked: 2026-10-19
+    prices:
+      input_mtok: 0.075
+      cache_read_mtok: 0.0375
+      output_mtok: 0.30
+
+  - id: qwen/qwen3-32b
+    name: Qwen3 32B 131k
+    match:
+      equals: qwen/qwen3-32b
+    context_window: 131072
+    prices_checked: 2025-08-12
+    prices:
+      input_mtok: 0.29
+      output_mtok: 0.59
+
+  # https://console.groq.com/docs/model/qwen/qwen3.8-27b
+  - id: qwen/qwen3.8-27b
+    name: Qwen 3.8 27B
+    match:
+      equals: qwen/qwen3.8-27b
+    context_window: 131072
+    prices_checked: 2026-10-19
+    price_comments: Preview model. Groq lists no cached-input rate.
+    prices:
+      input_mtok: 0.80
+      output_mtok: 4.00
+
+  - id: whisper-large-v3
+    name: Whisper Large V3
+    match:
+      equals: whisper-large-v3
+    # No context_window: Groq's catalog reports 448 here, but that is the audio decoder's
+    # token limit, not a text context window
+    prices_checked: 2026-10-19
+    price_comments: >-
+      See https://console.groq.com/docs/model/whisper-large-v3. Batch API is 50% of the synchronous rate, see
+      https://console.groq.com/docs/batch.
+    prices:
+      audio_hours: 0.111
+      input_audio_hours: 0.111
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          audio_hours: 0.0555
+          input_audio_hours: 0.0555
+
+  - id: whisper-large-v3-turbo
+    name: Whisper Large V3 Turbo
+    match:
+      equals: whisper-large-v3-turbo
+    # No context_window: Groq's catalog reports 448 here, but that is the audio decoder's
+    # token limit, not a text context window
+    prices_checked: 2026-10-19
+    price_comments: >-
+      See https://console.groq.com/docs/model/whisper-large-v3-turbo. Batch API is 50% of the synchronous rate, see
+      https://console.groq.com/docs/batch.
+    prices:
+      audio_hours: 0.04
+      input_audio_hours: 0.04
+    price_variants:
+      - when: { processing: batch }
+        constraint: { start_date: 2026-10-14 }
+        prices:
+          audio_hours: 0.02
+          input_audio_hours: 0.02

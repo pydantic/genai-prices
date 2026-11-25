@@ -9,13 +9,13 @@ from typing import Any
 import httpx2
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, report_manual_update
 from prices.utils import package_dir
 
 OFFER_URL = 'https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/{offer}/current/us-east-1/index.json'
 MIN_MODEL_COUNT = 50
 UNIT_SCALES = {'1K tokens': Decimal(1000), '1M tokens': Decimal(1)}
-SKIPPED_USAGE = re.compile(r'batch|flex|priority|latencyoptimized|longctx|image|video|custom')
+SKIPPED_USAGE = re.compile(r'batch|flex|priority|ultrafast|latencyoptimized|longctx|image|video|custom')
 
 # Price-list model name -> (Bedrock id billed at the us-east-1 rate, Bedrock id billed at the global cross-Region rate).
 MODEL_IDS: dict[str, dict[str, tuple[str, str | None]]] = {
@@ -108,6 +108,7 @@ MODEL_IDS: dict[str, dict[str, tuple[str, str | None]]] = {
 
 def parse_price_lists(offers: dict[str, dict[str, Any]]) -> list[ModelInfo]:
     rates: dict[str, dict[str, Decimal]] = {}
+    unhandled: dict[str, str] = {}
     for offer_code, model_ids in MODEL_IDS.items():
         offer = offers[offer_code]
         for sku, terms in offer['terms']['OnDemand'].items():
@@ -126,8 +127,12 @@ def parse_price_lists(offers: dict[str, dict[str, Any]]) -> list[ModelInfo]:
                     key = _price_key(usage)
                     price = (price * scale).normalize()
                     model_rates = rates.setdefault(model_id, {})
-                    if model_rates.setdefault(key, price) != price:
-                        raise RuntimeError(f'AWS price list has conflicting {key} rates for {model_id}')
+                    if key is None:
+                        unhandled.setdefault(model_id, f'an unrecognised token usage type {usage!r}')
+                    elif model_rates.setdefault(key, price) != price:
+                        unhandled.setdefault(model_id, f'conflicting {key} rates')
+    for model_id, problem in unhandled.items():
+        report_manual_update(f'AWS: kept {model_id} unchanged, the price list has {problem}; update it by hand')
     return [
         ModelInfo(
             id=model_id,
@@ -136,13 +141,14 @@ def parse_price_lists(offers: dict[str, dict[str, Any]]) -> list[ModelInfo]:
             prices_checked=date.today(),
         )
         for model_id, model_rates in rates.items()
+        if model_id not in unhandled
     ]
 
 
 def main(provider_path: Path | None = None) -> None:
     offers: dict[str, dict[str, Any]] = {}
     for offer_code in MODEL_IDS:
-        response = httpx2.get(OFFER_URL.format(offer=offer_code), timeout=30.0)
+        response = httpx2.get(OFFER_URL.format(offer=offer_code), timeout=30.0, follow_redirects=True)
         response.raise_for_status()
         offers[offer_code] = response.json()
     models = parse_price_lists(offers)
@@ -156,7 +162,7 @@ def get_aws_prices() -> None:  # pragma: no cover - thin CLI alias for main
     main()
 
 
-def _price_key(usage: str) -> str:
+def _price_key(usage: str) -> str | None:
     if 'cacheread' in usage:
         return 'cache_read_mtok'
     if 'cachewrite' in usage:
@@ -169,4 +175,4 @@ def _price_key(usage: str) -> str:
         return 'input_mtok'
     if 'output' in usage:
         return 'output_mtok'
-    raise RuntimeError(f'Unrecognised AWS token usage type {usage!r}')
+    return None

@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, cast
 
 from prices.prices_types import ClauseEquals, ClauseOr, MatchLogic, ModelInfo, ModelPrice
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, UnreadableRowError, report_manual_update, skipping_unreadable_row
 from prices.utils import get_markdown, package_dir
 
 MODELS_URL = 'https://docs.typesafe.ai/models.md'
@@ -16,45 +16,53 @@ MIN_MODEL_COUNT = 1
 
 def parse_models_markdown(markdown: str) -> list[ModelInfo]:
     current = {row[0]: row[1:] for row in _table(markdown, 'Current models')}
-    aliases = {row[0].strip('`'): row[1].strip('`') for row in _table(markdown, 'Aliases')}
+    aliases = _aliases(markdown)
     if 'Model ID' not in current or 'Price (per Btok / per Mtok)' not in current:
         raise RuntimeError('TypeSafe current models table is missing the Model ID or Price row')
     model_ids = [cell.strip('`') for cell in current['Model ID']]
+    duplicates = sorted({model_id for model_id in model_ids if model_ids.count(model_id) > 1})
+    for model_id in duplicates:
+        report_manual_update(
+            f'TypeSafe: kept {model_id} unchanged, the models page lists it more than once; update it by hand'
+        )
     unknown = set(aliases.values()) - set(model_ids)
-    if unknown:
-        raise RuntimeError(f'TypeSafe aliases point at models missing from the current models table: {unknown}')
+    with skipping_unreadable_row('TypeSafe'):
+        if unknown:
+            raise UnreadableRowError(
+                f'TypeSafe aliases point at models missing from the current models table: {unknown}'
+            )
     contexts = current.get('Context length', [''] * len(model_ids))
     models: list[ModelInfo] = []
     for model_id, price, context in zip(model_ids, current['Price (per Btok / per Mtok)'], contexts, strict=True):
-        rate = re.fullmatch(r'\\?\$[0-9.]+ / \\?\$([0-9]+(?:\.[0-9]+)?)', price)
-        if not model_id.startswith('jev-') or rate is None:
-            raise RuntimeError(f'Unexpected TypeSafe model column: {model_id} {price}')
-        clauses: list[MatchLogic] = [ClauseEquals(equals=model_id)]
-        clauses += [ClauseEquals(equals=alias) for alias, target in aliases.items() if target == model_id]
-        per_question = re.search(r'(\d+)k per-question', context)
-        models.append(
-            ModelInfo(
-                id=model_id,
-                name=model_id.replace('jev-', 'Jev '),
-                match=ClauseOr.model_validate({'or': clauses}) if len(clauses) > 1 else clauses[0],
-                context_window=int(per_question.group(1)) * 1000 if per_question else None,
-                prices=ModelPrice(input_mtok=Decimal(rate.group(1))),
-                prices_checked=date.today(),
+        if model_id in duplicates:
+            continue
+        with skipping_unreadable_row('TypeSafe'):
+            rate = re.fullmatch(r'\\?\$[0-9.]+ / \\?\$([0-9]+(?:\.[0-9]+)?)', price)
+            if not model_id.startswith('jev-') or rate is None:
+                raise UnreadableRowError(f'Unexpected TypeSafe model column: {model_id} {price}')
+            clauses: list[MatchLogic] = [ClauseEquals(equals=model_id)]
+            clauses += [ClauseEquals(equals=alias) for alias, target in aliases.items() if target == model_id]
+            per_question = re.search(r'(\d+)k per-question', context)
+            models.append(
+                ModelInfo(
+                    id=model_id,
+                    name=model_id.replace('jev-', 'Jev '),
+                    match=ClauseOr.model_validate({'or': clauses}) if len(clauses) > 1 else clauses[0],
+                    context_window=int(per_question.group(1)) * 1000 if per_question else None,
+                    prices=ModelPrice(input_mtok=Decimal(rate.group(1))),
+                    prices_checked=date.today(),
+                )
             )
-        )
     return models
 
 
 def main(provider_path: Path | None = None) -> None:
-    models = parse_models_markdown(get_markdown(MODELS_URL))
+    markdown = get_markdown(MODELS_URL)
+    models = parse_models_markdown(markdown)
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/typesafe.yml')
-    targets = {
-        clause.equals: model.id
-        for model in models
-        if isinstance(model.match, ClauseOr)
-        for clause in model.match.or_
-        if isinstance(clause, ClauseEquals)
-    }
+    targets = _aliases(markdown)
+    # An alias of a model the importer skipped stays where it is until that model is updated by hand.
+    unread = set(targets.values()) - {model.id for model in models}
     for yaml_model in provider_yaml.data['models']:
         model_id = cast(str, yaml_model['id'])
         clauses = cast(list[dict[str, Any]], cast(dict[str, Any], yaml_model['match']).get('or', []))
@@ -64,7 +72,7 @@ def main(provider_path: Path | None = None) -> None:
             kept = [
                 c
                 for c in clauses
-                if 'equals' not in c or c['equals'] == model_id or targets.get(c['equals']) == model_id
+                if 'equals' not in c or c['equals'] == model_id or targets.get(c['equals']) in {model_id, *unread}
             ]
             yaml_model['match'] = kept[0] if len(kept) == 1 else {'or': kept}
     added, updated = provider_yaml.upsert_models(models, source='TypeSafe', min_count=MIN_MODEL_COUNT)
@@ -74,6 +82,10 @@ def main(provider_path: Path | None = None) -> None:
 def get_typesafe_prices() -> None:  # pragma: no cover - thin CLI alias for main
     """Download and update TypeSafe prices."""
     main()
+
+
+def _aliases(markdown: str) -> dict[str, str]:
+    return {row[0].strip('`'): row[1].strip('`') for row in _table(markdown, 'Aliases')}
 
 
 def _table(markdown: str, title: str) -> list[list[str]]:

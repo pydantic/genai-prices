@@ -1,15 +1,13 @@
 from __future__ import annotations
 
-from datetime import date
 from decimal import Decimal
-from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_novita
 from prices.prices_types import ModelPrice, Tier, TieredPrices
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 
 def rates(prompt: str, completion: str, cache_read: str | None = None) -> dict[str, object]:
@@ -68,19 +66,9 @@ def test_novita_billing_bands_become_tiers_only_where_a_base_rate_exists() -> No
 
 @pytest.mark.vcr()
 def test_novita_main_fetches_recorded_models(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    # The price update job applies today's importer patch before running the tests. If Novita changed a rate
-    # today, the patched YAML already has an entry dated today, and replaying the older cassette would be a
-    # second change on that date, which the importer refuses. Importing as of tomorrow avoids the clash.
-    class NextDay(date):
-        @classmethod
-        def today(cls) -> date:
-            return date.fromordinal(date.today().toordinal() + 1)
-
-    monkeypatch.setattr(source_novita, 'date', NextDay)
-    provider_path = tmp_path / 'novita.yml'
-    copyfile(package_dir / 'providers/novita.yml', provider_path)
+    provider_path = provider_snapshot('novita.yml')
 
     source_novita.main(provider_path)
 

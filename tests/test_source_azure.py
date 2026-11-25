@@ -3,8 +3,6 @@ from __future__ import annotations
 import time
 from datetime import date
 from decimal import Decimal
-from pathlib import Path
-from shutil import copyfile
 from typing import Any
 
 import httpx2
@@ -12,7 +10,8 @@ import pytest
 
 from prices import source_azure
 from prices.prices_types import ModelPrice
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 
 def _items() -> list[dict[str, Any]]:
@@ -39,23 +38,45 @@ def test_azure_parses_mapped_meters_into_per_million_rates() -> None:
     assert models[0].prices_checked == date.today()
 
 
+SKIPPED = 'Azure: skipped a row it cannot read; update it by hand. '
+NO_ADA_METER = (
+    'Azure: skipped a row it cannot read for ada; update it by hand. Azure retail prices have no meter '
+    "'embedding-ada-glbl Tokens' for ada\n"
+)
+ADA_UNIT = f"{SKIPPED}Unexpected Azure unit '1/Hour' for meter 'embedding-ada-glbl Tokens'\n"
+ADA_METER_TWICE = (
+    "Azure: kept ada unchanged, the retail prices list meter 'embedding-ada-glbl Tokens' more than once; "
+    'update it by hand\n'
+)
+UNREADABLE_ADA = {**_items()[0], 'unitOfMeasure': '1/Hour'}
+UNPRICED_ADA = {key: value for key, value in _items()[0].items() if key != 'retailPrice'}
+
+
 @pytest.mark.parametrize(
-    ('items', 'error'),
+    ('items', 'notes'),
     [
-        (_items()[1:], "no meter 'embedding-ada-glbl Tokens' for ada"),
-        ([*_items(), _items()[0]], "meter 'embedding-ada-glbl Tokens' more than once"),
-        ([{**_items()[0], 'unitOfMeasure': '1/Hour'}, *_items()[1:]], "Unexpected Azure unit '1/Hour'"),
+        (_items()[1:], NO_ADA_METER),
+        ([*_items(), _items()[0]], ADA_METER_TWICE),
+        ([UNREADABLE_ADA, *_items()[1:]], f'{ADA_UNIT}{NO_ADA_METER}'),
+        ([UNREADABLE_ADA, *_items()], f'{ADA_UNIT}{ADA_METER_TWICE}'),
+        ([*_items(), UNREADABLE_ADA], ADA_METER_TWICE),
+        ([UNPRICED_ADA, *_items()[1:]], f"{SKIPPED}KeyError: 'retailPrice'\n{NO_ADA_METER}"),
     ],
 )
-def test_azure_rejects_unexpected_retail_prices(items: list[dict[str, Any]], error: str) -> None:
-    with pytest.raises(RuntimeError, match=error):
-        source_azure.parse_retail_prices(items)
+def test_azure_reports_an_unreadable_meter_and_reads_the_other_models(
+    items: list[dict[str, Any]], notes: str, capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_azure.parse_retail_prices(items)
+
+    assert [model.id for model in models] == list(source_azure.METERS)[1:]
+    assert capsys.readouterr().out == notes
 
 
 @pytest.mark.vcr()
-def test_azure_main_fetches_recorded_retail_prices(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'azure.yml'
-    copyfile(package_dir / 'providers/azure.yml', provider_path)
+def test_azure_main_fetches_recorded_retail_prices(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('azure.yml')
 
     source_azure.main(provider_path)
 
@@ -64,10 +85,9 @@ def test_azure_main_fetches_recorded_retail_prices(tmp_path: Path, capsys: pytes
 
 @pytest.mark.parametrize(('throttled', 'error'), [(2, None), (3, '429 Too Many Requests')])
 def test_azure_main_retries_throttled_requests(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, throttled: int, error: str | None
+    monkeypatch: pytest.MonkeyPatch, provider_snapshot: ProviderSnapshot, throttled: int, error: str | None
 ) -> None:
-    provider_path = tmp_path / 'azure.yml'
-    copyfile(package_dir / 'providers/azure.yml', provider_path)
+    provider_path = provider_snapshot('azure.yml')
     responses = [
         httpx2.Response(429, headers={'Retry-After': '60'}, request=httpx2.Request('GET', source_azure.PRICES_URL))
     ] * throttled

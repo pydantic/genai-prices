@@ -1,15 +1,14 @@
 from __future__ import annotations
 
 from decimal import Decimal
-from pathlib import Path
-from shutil import copyfile
 from typing import Any
 
 import pytest
 
 from prices import source_databricks
 from prices.prices_types import ModelPrice
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 TABLE = (
     '<h2>Foundation Model Serving DBU rates</h2><h3>Pay Per Token</h3><table><thead><tr><th>Model</th>'
@@ -58,7 +57,9 @@ def test_databricks_converts_dbu_rates_to_usd(capsys: pytest.CaptureFixture[str]
         ),
         'databricks-bge-large-en': ModelPrice(input_mtok=Decimal('0.100')),
     }
-    assert capsys.readouterr().out == "Databricks: skipped 'Brand New Model', it has no known serving endpoint\n"
+    assert capsys.readouterr().out == (
+        "Databricks: skipped 'Brand New Model', it has no known serving endpoint; add it to MODEL_IDS by hand\n"
+    )
 
 
 @pytest.mark.parametrize(
@@ -66,8 +67,6 @@ def test_databricks_converts_dbu_rates_to_usd(capsys: pytest.CaptureFixture[str]
     [
         (page_data(clouds=['azure']), 'Expected one Databricks AWS pay-per-token table, found 0'),
         (page_data(TABLE.replace('<tbody>', '<tbody >')), 'Databricks pay-per-token table has no body'),
-        (page_data(TABLE.replace('<td>-</td><td>-</td>', '<td>-</td>')), 'Unexpected Databricks pricing row'),
-        (page_data(TABLE.replace('20.000', '20 DBU')), "Unexpected Databricks DBU rate '20 DBU'"),
     ],
 )
 def test_databricks_rejects_an_unexpected_pricing_table(data: dict[str, Any], error: str) -> None:
@@ -75,10 +74,35 @@ def test_databricks_rejects_an_unexpected_pricing_table(data: dict[str, Any], er
         source_databricks.parse_page_data(data)
 
 
+@pytest.mark.parametrize(
+    ('data', 'error', 'model_ids'),
+    [
+        (
+            page_data(TABLE.replace('<td>-</td><td>-</td>', '<td>-</td>')),
+            'Unexpected Databricks pricing row',
+            ['databricks-kimi-k3', 'databricks-glm-5-2', 'databricks-glm-5-3'],
+        ),
+        (
+            page_data(TABLE.replace('20.000', '20 DBU')),
+            "Unexpected Databricks DBU rate '20 DBU'",
+            ['databricks-kimi-k3', 'databricks-bge-large-en'],
+        ),
+    ],
+)
+def test_databricks_reports_an_unreadable_row_and_reads_the_others(
+    data: dict[str, Any], error: str, model_ids: list[str], capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_databricks.parse_page_data(data)
+
+    assert [model.id for model in models] == model_ids
+    assert capsys.readouterr().out.startswith(f'Databricks: skipped a row it cannot read; update it by hand. {error}')
+
+
 @pytest.mark.vcr()
-def test_databricks_main_fetches_recorded_page_data(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'databricks.yml'
-    copyfile(package_dir / 'providers/databricks.yml', provider_path)
+def test_databricks_main_fetches_recorded_page_data(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('databricks.yml')
 
     source_databricks.main(provider_path)
 

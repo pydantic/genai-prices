@@ -2,15 +2,14 @@ from __future__ import annotations
 
 from datetime import date
 from decimal import Decimal
-from pathlib import Path
-from shutil import copyfile
 
 import pytest
 
 from prices import source_moonshotai
 from prices.prices_types import ClauseStartsWith, ModelPrice
 from prices.update import ProviderYaml
-from prices.utils import package_dir
+
+from .fixtures import ProviderSnapshot
 
 
 def tooltip(label: str) -> str:
@@ -84,15 +83,6 @@ def test_moonshot_maps_columns_by_title_and_reads_each_sections_context_window()
             'Unexpected Moonshot AI pricing columns',
         ),
         (section('262,144', K2_COLUMNS, K2_ROW).replace('All models support', 'All models have'), 'no context window'),
-        (section('262,144', K2_COLUMNS, K2_ROW.replace(',`$0.16 / MTok`', '')), 'Unexpected Moonshot AI pricing row'),
-        (
-            section('262,144', K2_COLUMNS, K2_ROW.replace('`kimi-k2.6`', '`Kimi K2.6`')),
-            'Unexpected Moonshot AI pricing row',
-        ),
-        (
-            section('262,144', K2_COLUMNS, K2_ROW.replace('`$4.00 / MTok`', '`-`')),
-            'Unexpected Moonshot AI Output for kimi-k2.6: -',
-        ),
     ],
 )
 def test_moonshot_rejects_unexpected_tables(page: str, error: str) -> None:
@@ -100,10 +90,30 @@ def test_moonshot_rejects_unexpected_tables(page: str, error: str) -> None:
         source_moonshotai.parse_pricing_page(page)
 
 
+@pytest.mark.parametrize(
+    ('row', 'error'),
+    [
+        (K2_ROW.replace(',`$0.16 / MTok`', ''), 'Unexpected Moonshot AI pricing row: '),
+        (K2_ROW.replace('`kimi-k2.6`', '`Kimi K2.6`'), 'Unexpected Moonshot AI pricing row: '),
+        (K2_ROW.replace('`$4.00 / MTok`', '`-`'), 'Unexpected Moonshot AI Output for kimi-k2.6: -'),
+    ],
+)
+def test_moonshot_reports_an_unreadable_row_and_reads_the_others(
+    row: str, error: str, capsys: pytest.CaptureFixture[str]
+) -> None:
+    models = source_moonshotai.parse_pricing_page(
+        section('262,144', K2_COLUMNS, row, K2_ROW.replace('kimi-k2.6', 'kimi-k2.5'))
+    )
+
+    assert [model.id for model in models] == ['kimi-k2.5']
+    assert capsys.readouterr().out.startswith(f'Moonshot AI: skipped a row it cannot read; update it by hand. {error}')
+
+
 @pytest.mark.vcr()
-def test_moonshot_main_fetches_recorded_pricing_page(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    provider_path = tmp_path / 'moonshotai.yml'
-    copyfile(package_dir / 'providers/moonshotai.yml', provider_path)
+def test_moonshot_main_fetches_recorded_pricing_page(
+    provider_snapshot: ProviderSnapshot, capsys: pytest.CaptureFixture[str]
+) -> None:
+    provider_path = provider_snapshot('moonshotai.yml')
 
     source_moonshotai.main(provider_path)
 

@@ -7,7 +7,7 @@ const os = require('node:os')
 const path = require('node:path')
 const { test } = require('node:test')
 
-const { applyPatch, validateAssessment } = require('./price_update_repair_policy.cjs')
+const { allowedPath, applyPatch, validateAssessment } = require('./price_update_repair_policy.cjs')
 
 const ACTION_VERDICTS = {
   fixed: 'net-positive → do',
@@ -295,4 +295,25 @@ test('rejects symlinked patch and report artifacts', (t) => {
   fs.unlinkSync(value.reportPath)
   fs.symlinkSync(reportTarget, value.reportPath)
   assert.throws(() => applyPatch(value), /assessment report must be a regular non-symlink file/)
+})
+
+test('repairs may change the bundled price data of every package', () => {
+  // `make build` rewrites each package's price data, so a repair that misses one is rejected after the agent's work.
+  const generated = fs
+    .readFileSync(path.join(__dirname, '..', '.gitattributes'), 'utf8')
+    .split('\n')
+    .filter((line) => line.includes('linguist-generated'))
+    .map((line) => line.split(/\s+/)[0])
+  // Unit registries are excluded on purpose: a repair must not add a unit.
+  const priceData = generated.filter((filePath) => filePath.startsWith('packages/') && !/units/i.test(filePath))
+  assert.deepEqual(priceData.sort(), [
+    'packages/go/internal/data/prices.json',
+    'packages/js/src/data.ts',
+    'packages/python/genai_prices/data.py',
+    'packages/rust/data/prices.json',
+  ])
+  assert.deepEqual(
+    priceData.filter((filePath) => !allowedPath(filePath)),
+    [],
+  )
 })

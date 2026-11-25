@@ -6,7 +6,7 @@ from decimal import Decimal
 from pathlib import Path
 
 from prices.prices_types import ClauseEquals, ModelInfo, ModelPrice
-from prices.update import ProviderYaml
+from prices.update import ProviderYaml, UnreadableRowError, skipping_unreadable_row
 from prices.utils import get_markdown, markdown_tables, package_dir
 
 PRICING_URL = 'https://docs.perplexity.ai/docs/getting-started/pricing.md'
@@ -27,11 +27,16 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
     decisions = [row for header, rows in tables if header == DECISIONS_HEADER for row in rows]
     if not embeddings or not decisions:
         raise RuntimeError('Perplexity pricing page no longer has its Embeddings and Decisions price tables')
-    if bad := next((row for row in decisions if row[2:] != ['Free', 'None']), None):
-        raise RuntimeError(f'Perplexity now bills Decisions output tokens or requests: {bad}')
-    return [_input_priced_model(row[0], row[2]) for row in embeddings] + [
-        _input_priced_model(row[0], row[1]) for row in decisions
-    ]
+    models: list[ModelInfo] = []
+    for row in embeddings:
+        with skipping_unreadable_row('Perplexity'):
+            models.append(_input_priced_model(row[0], row[2]))
+    for row in decisions:
+        with skipping_unreadable_row('Perplexity'):
+            if row[2:] != ['Free', 'None']:
+                raise UnreadableRowError(f'Perplexity now bills Decisions output tokens or requests: {row}')
+            models.append(_input_priced_model(row[0], row[1]))
+    return models
 
 
 def parse_agent_models_markdown(markdown: str) -> list[ModelInfo]:
@@ -47,21 +52,22 @@ def parse_agent_models_markdown(markdown: str) -> list[ModelInfo]:
         raise RuntimeError('Perplexity Agent API models page no longer lists Perplexity-hosted models')
     models: list[ModelInfo] = []
     for model_cell, *rate_cells, tiers, _ in rows:
-        model_id = re.fullmatch(r'`([^`]+)`', model_cell)
-        rates = [re.fullmatch(r'[0-9]+(?:\.[0-9]+)?', cell) for cell in rate_cells]
-        if model_id is None or not all(rates) or tiers != '—':
-            raise RuntimeError(
-                f'Unexpected Perplexity Agent API model row: {model_cell} | {" | ".join(rate_cells)} | {tiers}'
+        with skipping_unreadable_row('Perplexity'):
+            model_id = re.fullmatch(r'`([^`]+)`', model_cell)
+            rates = [re.fullmatch(r'[0-9]+(?:\.[0-9]+)?', cell) for cell in rate_cells]
+            if model_id is None or not all(rates) or tiers != '—':
+                raise UnreadableRowError(
+                    f'Unexpected Perplexity Agent API model row: {model_cell} | {" | ".join(rate_cells)} | {tiers}'
+                )
+            input_mtok, output_mtok, cache_read_mtok = (Decimal(cell) for cell in rate_cells)
+            models.append(
+                ModelInfo(
+                    id=model_id.group(1),
+                    match=ClauseEquals(equals=model_id.group(1)),
+                    prices=ModelPrice(input_mtok=input_mtok, cache_read_mtok=cache_read_mtok, output_mtok=output_mtok),
+                    prices_checked=date.today(),
+                )
             )
-        input_mtok, output_mtok, cache_read_mtok = (Decimal(cell) for cell in rate_cells)
-        models.append(
-            ModelInfo(
-                id=model_id.group(1),
-                match=ClauseEquals(equals=model_id.group(1)),
-                prices=ModelPrice(input_mtok=input_mtok, cache_read_mtok=cache_read_mtok, output_mtok=output_mtok),
-                prices_checked=date.today(),
-            )
-        )
     return models
 
 
@@ -83,7 +89,7 @@ def _input_priced_model(model_cell: str, price_cell: str) -> ModelInfo:
     model_id = re.fullmatch(r'`([^`]+)`', model_cell)
     price = re.fullmatch(r'\$([0-9]+(?:\.[0-9]+)?)', price_cell)
     if model_id is None or price is None:
-        raise RuntimeError(f'Unexpected Perplexity price row: {model_cell} | {price_cell}')
+        raise UnreadableRowError(f'Unexpected Perplexity price row: {model_cell} | {price_cell}')
     return ModelInfo(
         id=model_id.group(1),
         match=ClauseEquals(equals=model_id.group(1)),

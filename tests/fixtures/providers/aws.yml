@@ -1,0 +1,2294 @@
+# yaml-language-server: $schema=.schema.json
+name: AWS Bedrock
+id: aws
+pricing_urls:
+  - https://aws.amazon.com/bedrock/pricing/
+api_pattern: 'https://bedrock-runtime\.[a-z0-9-]+\.amazonaws\.com(/|$)'
+provider_match:
+  or:
+    - contains: bedrock
+    - contains: amazon
+extractors:
+  - root: usage
+    mappings:
+      - path: inputTokens
+        dest: input_tokens
+      - path: cacheReadInputTokens
+        dest: input_tokens
+        required: false
+      - path: cacheWriteInputTokens
+        dest: input_tokens
+        required: false
+      - path: cacheReadInputTokens
+        dest: cache_read_tokens
+        required: false
+      - path: cacheWriteInputTokens
+        dest: cache_write_tokens
+        required: false
+      # Converse splits cache writes by TTL; the two TTLs are billed at different rates.
+      - path:
+          - cacheDetails
+          - type: array-match
+            field: ttl
+            match:
+              equals: 5m
+          - inputTokens
+        dest: cache_write_5m_tokens
+        required: false
+      - path:
+          - cacheDetails
+          - type: array-match
+            field: ttl
+            match:
+              equals: 1h
+          - inputTokens
+        dest: cache_write_1h_tokens
+        required: false
+      - path: outputTokens
+        dest: output_tokens
+  - api_flavor: anthropic
+    root: usage
+    mappings:
+      - path: input_tokens
+        dest: input_tokens
+        # when Anthropic quotes prices for input tokens, they included all input tokens
+      - path: cache_creation_input_tokens
+        dest: input_tokens
+        required: false
+      - path: cache_read_input_tokens
+        dest: input_tokens
+        required: false
+      - path: cache_creation_input_tokens
+        dest: cache_write_tokens
+        required: false
+      - path: [cache_creation, ephemeral_5m_input_tokens]
+        dest: cache_write_5m_tokens
+        required: false
+      - path: [cache_creation, ephemeral_1h_input_tokens]
+        dest: cache_write_1h_tokens
+        required: false
+      - path: cache_read_input_tokens
+        dest: cache_read_tokens
+        required: false
+      - path: output_tokens
+        dest: output_tokens
+models:
+  - id: amazon.nova-2-sonic-v1:0
+    name: Nova 2 Sonic
+    prices_checked: 2026-10-19
+    match:
+      contains: amazon.nova-2-sonic
+    context_window: 1000000
+    prices:
+      input_mtok: 0.33
+      output_mtok: 2.75
+      input_audio_mtok: 3.0
+      output_audio_mtok: 12.0
+
+  - id: amazon.nova-lite-v1:0
+    name: Nova Lite
+    description: >-
+      Amazon Nova Lite 1.0 is a very low-cost multimodal model from Amazon that focused on fast processing of image, video,
+      and text inputs to generate text output. Amazon Nova Lite can handle real-time
+      customer interactions, document analysis, and visual question-answering tasks with high accuracy.
+    match:
+      contains: amazon.nova-lite
+    context_window: 300000
+    prices:
+      input_mtok: 0.06
+      cache_read_mtok: 0.015
+      output_mtok: 0.24
+    prices_checked: 2026-10-19
+
+  - id: amazon.nova-micro-v1:0
+    name: Nova Micro
+    description: >-
+      Amazon Nova Micro 1.0 is a text-only model that delivers the lowest latency responses in the Amazon Nova family of models
+      at a very low cost. With a context length of 128K tokens and optimized for
+      speed and cost, Amazon Nova Micro excels at tasks such as text summarization, translation, content classification, interactive
+      chat, and brainstorming. It has  simple mathematical reasoning and coding
+      abilities.
+    match:
+      contains: amazon.nova-micro
+    context_window: 128000
+    prices:
+      input_mtok: 0.035
+      cache_read_mtok: 0.00875
+      output_mtok: 0.14
+    prices_checked: 2026-10-19
+
+  - id: amazon.nova-premier-v1:0
+    name: Nova Premier
+    match:
+      contains: amazon.nova-premier
+    context_window: 1000000
+    prices:
+      input_mtok: 2.5
+      cache_read_mtok: 0.625
+      output_mtok: 12.5
+    prices_checked: 2026-10-19
+
+  - id: amazon.nova-pro-v1:0
+    name: Nova Pro
+    description: >-
+      Amazon Nova Pro 1.0 is a capable multimodal model from Amazon focused on providing a combination of accuracy, speed,
+      and cost for a wide range of tasks. As of December 2024, it achieves state-of-the-art
+      performance on key benchmarks including visual question answering (TextVQA) and video understanding (VATEX).
+    match:
+      contains: amazon.nova-pro
+    context_window: 300000
+    prices:
+      input_mtok: 0.8
+      cache_read_mtok: 0.2
+      output_mtok: 3.2
+    prices_checked: 2026-10-19
+
+  - id: amazon.nova-sonic-v1:0
+    name: Nova Sonic
+    match:
+      contains: amazon.nova-sonic
+    prices:
+      input_mtok: 0.06
+      output_mtok: 0.24
+      input_audio_mtok: 3.4
+      output_audio_mtok: 13.6
+    prices_checked: 2026-10-19
+
+  - id: amazon.titan-embed-text-v1
+    name: Titan Embeddings G1 - Text
+    match:
+      or:
+        - ends_with: amazon.titan-embed-text
+        - contains: amazon.titan-embed-text-v1
+    context_window: 8192
+    prices:
+      input_mtok: 0.1
+    prices_checked: 2026-10-19
+
+  - id: amazon.titan-embed-text-v2:0
+    name: Titan Text Embeddings V2
+    prices_checked: 2026-10-19
+    price_comments: >-
+      On-demand input token price from the AWS price list API, AmazonBedrock (us-east-1),
+      usage type TitanEmbeddingV2-Text-input-tokens: $0.00002 per 1K tokens.
+      Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-amazon-titan-text-embeddings-v2.html
+    match:
+      contains: amazon.titan-embed-text-v2
+    context_window: 8192
+    prices:
+      input_mtok: 0.02
+
+  - id: amazon.titan-text-express-v1
+    name: Titan Text G1 - Express
+    match:
+      contains: titan-text-express
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.6
+    prices_checked: 2026-10-19
+
+  - id: amazon.titan-text-lite-v1
+    name: Titan Text G1 - Lite
+    match:
+      contains: titan-text-lite
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.2
+    prices_checked: 2026-10-19
+
+  - id: deepseek.r1-v1:0
+    name: DeepSeek-R1
+    match:
+      contains: deepseek.r1
+    context_window: 128000
+    prices:
+      input_mtok: 1.35
+      output_mtok: 5.4
+    prices_checked: 2026-10-19
+
+  - id: global.amazon.nova-2-lite-v1:0
+    name: Nova 2 Lite
+    prices_checked: 2026-10-19
+    match:
+      contains: global.amazon.nova-2-lite
+    context_window: 1000000
+    prices:
+      input_mtok: 0.3
+      cache_read_mtok: 0.075
+      output_mtok: 2.5
+
+  - id: global.anthropic.claude-fable-5-1-v1:0
+    canonical_model: anthropic/claude-fable-5-1
+    prices_checked: 2026-10-19
+    price_comments: >-
+      Global endpoint (no premium). Cache hits are 0.025x base input (not the usual 0.1x),
+      unique to Fable 5.1 and Mythos 5.1.
+      Ref: https://platform.claude.com/docs/en/about-claude/pricing#model-pricing
+      Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
+    match:
+      or:
+        - ends_with: global.anthropic.claude-fable-5-1
+        - contains: global.anthropic.claude-fable-5-1-v1
+    prices:
+      input_mtok: 10
+      cache_write_mtok: 12.5
+      cache_write_1h_mtok: 20
+      cache_read_mtok: 0.25
+      output_mtok: 50
+
+  - id: global.anthropic.claude-fable-5-2
+    canonical_model: anthropic/claude-fable-5-2
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Global endpoint (no premium). Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1.
+      Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Fable 5.2 (Amazon Bedrock Edition)"
+      (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)
+      Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock
+    match:
+      or:
+        - ends_with: global.anthropic.claude-fable-5-2
+        - contains: global.anthropic.claude-fable-5-2-v1
+    prices:
+      input_mtok: 8
+      cache_write_mtok: 10
+      cache_write_1h_mtok: 16
+      cache_read_mtok: 0.20
+      output_mtok: 40
+
+  - id: global.anthropic.claude-fable-5-v1:0
+    canonical_model: anthropic/claude-fable-5
+    prices_checked: 2026-10-19
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
+    match:
+      or:
+        - ends_with: global.anthropic.claude-fable-5
+        - contains: global.anthropic.claude-fable-5-v1
+    prices:
+      input_mtok: 10
+      cache_write_mtok: 12.5
+      cache_write_1h_mtok: 20
+      cache_read_mtok: 1.0
+      output_mtok: 50
+
+  - id: global.anthropic.claude-haiku-4-5-20251001-v1:0
+    canonical_model: anthropic/claude-haiku-4-5
+    prices_checked: 2026-10-19
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
+    match:
+      contains: global.anthropic.claude-haiku-4-5-20251001
+    prices:
+      input_mtok: 1
+      cache_write_mtok: 1.25
+      cache_write_1h_mtok: 2
+      cache_read_mtok: 0.1
+      output_mtok: 5
+
+  - id: global.anthropic.claude-haiku-5-5
+    canonical_model: anthropic/claude-haiku-5-5
+    prices_checked: 2026-10-19
+    match:
+      or:
+        - ends_with: global.anthropic.claude-haiku-5-5
+        - contains: global.anthropic.claude-haiku-5-5-v1
+    price_comments: >-
+      Global endpoint (no premium). Prompts over 100,000 tokens bill every token at the long-context rate.
+      Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Haiku 5.5 (Amazon Bedrock Edition)"
+      (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)
+      Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview
+    prices:
+      input_mtok:
+        base: 0.1
+        tiers:
+          - start: 100000
+            price: 0.5
+      cache_write_mtok:
+        base: 0.125
+        tiers:
+          - start: 100000
+            price: 0.625
+      cache_write_1h_mtok:
+        base: 0.2
+        tiers:
+          - start: 100000
+            price: 1
+      cache_read_mtok:
+        base: 0.01
+        tiers:
+          - start: 100000
+            price: 0.05
+      output_mtok:
+        base: 0.5
+        tiers:
+          - start: 100000
+            price: 2.5
+
+  - id: global.anthropic.claude-mythos-5-2
+    canonical_model: anthropic/claude-mythos-5-2
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Global endpoint (no premium). Same pricing as Claude Fable 5.2, with limited availability.
+      Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1.
+      Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Mythos 5.2 (Amazon Bedrock Edition)"
+      (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)
+      Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock
+    match:
+      or:
+        - ends_with: global.anthropic.claude-mythos-5-2
+        - contains: global.anthropic.claude-mythos-5-2-v1
+    prices:
+      input_mtok: 8
+      cache_write_mtok: 10
+      cache_write_1h_mtok: 16
+      cache_read_mtok: 0.20
+      output_mtok: 40
+
+  - id: global.anthropic.claude-opus-4-5-v1:0
+    canonical_model: anthropic/claude-opus-4-5
+    prices_checked: 2026-10-19
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
+    match:
+      contains: global.anthropic.claude-opus-4-5
+    prices:
+      input_mtok: 5
+      cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
+      cache_read_mtok: 0.50
+      output_mtok: 25
+
+  - id: global.anthropic.claude-opus-4-6-v1:0
+    canonical_model: anthropic/claude-opus-4-6
+    prices_checked: 2026-10-19
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
+    match:
+      contains: global.anthropic.claude-opus-4-6
+    prices:
+      input_mtok: 5
+      cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
+      cache_read_mtok: 0.50
+      output_mtok: 25
+
+  - id: global.anthropic.claude-opus-4-7-v1:0
+    canonical_model: anthropic/claude-opus-4-7
+    prices_checked: 2026-10-19
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
+    match:
+      contains: global.anthropic.claude-opus-4-7
+    prices:
+      input_mtok: 5
+      cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
+      cache_read_mtok: 0.50
+      output_mtok: 25
+
+  - id: global.anthropic.claude-opus-4-8-v1:0
+    canonical_model: anthropic/claude-opus-4-8
+    prices_checked: 2026-10-19
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
+    match:
+      contains: global.anthropic.claude-opus-4-8
+    prices:
+      input_mtok: 5
+      cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
+      cache_read_mtok: 0.50
+      output_mtok: 25
+
+  - id: global.anthropic.claude-opus-5
+    canonical_model: anthropic/claude-opus-5
+    prices_checked: 2026-10-19
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
+    match:
+      or:
+        - ends_with: global.anthropic.claude-opus-5
+        - contains: global.anthropic.claude-opus-5-v1
+    prices:
+      input_mtok: 5
+      cache_write_mtok: 6.25
+      cache_write_1h_mtok: 10
+      cache_read_mtok: 0.50
+      output_mtok: 25
+
+  - id: global.anthropic.claude-opus-5-5
+    canonical_model: anthropic/claude-opus-5-5
+    prices_checked: 2026-10-19
+    price_comments: >-
+      Global endpoint (no premium). Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5.
+      Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Opus 5.5 (Amazon Bedrock Edition)"
+      (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)
+      Model ID ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock
+    match:
+      or:
+        - ends_with: global.anthropic.claude-opus-5-5
+        - contains: global.anthropic.claude-opus-5-5-v1
+    prices:
+      input_mtok: 4
+      cache_write_mtok: 5
+      cache_write_1h_mtok: 8
+      cache_read_mtok: 0.20
+      output_mtok: 20
+
+  - id: global.anthropic.claude-sonnet-4-20250514-v1:0
+    canonical_model: anthropic/claude-sonnet-4-0
+    match:
+      contains: global.anthropic.claude-sonnet-4-20250514
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+    prices_checked: 2026-10-19
+
+  - id: global.anthropic.claude-sonnet-4-5-20250929-v1:0
+    canonical_model: anthropic/claude-sonnet-4-5
+    prices_checked: 2026-10-19
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
+    match:
+      contains: global.anthropic.claude-sonnet-4-5-20250929
+    # Bedrock documents 200K for this exact model: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-sonnet-4-5.html
+    context_window: 200000
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_write_1h_mtok: 6
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: global.anthropic.claude-sonnet-4-6-v1:0
+    canonical_model: anthropic/claude-sonnet-4-6
+    prices_checked: 2026-10-19
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
+    match:
+      contains: global.anthropic.claude-sonnet-4-6
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_write_1h_mtok: 6
+      cache_read_mtok: 0.30
+      output_mtok: 15
+
+  - id: global.anthropic.claude-sonnet-5-5
+    canonical_model: anthropic/claude-sonnet-5-5
+    prices_checked: 2026-10-19
+    match:
+      or:
+        - ends_with: global.anthropic.claude-sonnet-5-5
+        - contains: global.anthropic.claude-sonnet-5-5-v1
+    price_comments: >-
+      Global endpoint (no premium), flat across the full 1M context window.
+      Cache hits are 0.05x base input (not the usual 0.1x), as on Opus 5.5.
+      Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Sonnet 5.5 (Amazon Bedrock Edition)"
+      (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)
+      Model ID ref: https://platform.claude.com/docs/en/about-claude/models/overview
+    prices:
+      input_mtok: 2
+      cache_write_mtok: 2.5
+      cache_write_1h_mtok: 4
+      cache_read_mtok: 0.1
+      output_mtok: 10
+
+  - id: global.anthropic.claude-sonnet-5-v1:0
+    canonical_model: anthropic/claude-sonnet-5
+    prices_checked: 2026-10-19
+    match:
+      or:
+        - ends_with: global.anthropic.claude-sonnet-5
+        - contains: global.anthropic.claude-sonnet-5-v1
+    price_comments: >-
+      Flat pricing across the full 1M context window (no tiered pricing). The $2/$10 per MTok
+      launch rates are now permanent, with no 2026-09-01 increase.
+      Refs: https://aws.amazon.com/bedrock/pricing/,
+      https://platform.claude.com/docs/en/about-claude/pricing
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
+    prices:
+      input_mtok: 2
+      cache_write_mtok: 2.5
+      cache_write_1h_mtok: 4
+      cache_read_mtok: 0.2
+      output_mtok: 10
+
+  - id: global.moonshotai.kimi-k3
+    name: Kimi K3 (global)
+    match:
+      or:
+        - equals: global.moonshotai.kimi-k3
+        - ends_with: /global.moonshotai.kimi-k3
+    context_window: 1000000
+    prices_checked: 2026-11-07
+    price_comments: >-
+      Launched on Bedrock 2026-09-18. Global cross-Region inference, 10% below the US and India Geo profiles. Cache
+      writes use the 30-minute TTL. Matched as the exact ID or the end of an inference profile ARN, so that it doesn't
+      also match Kimi K3.1. Refs:
+      https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-moonshot-ai-kimi-k3.html,
+      https://aws.amazon.com/bedrock/pricing/, AWS price list API (AmazonBedrock offer, us-east-1)
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+
+  - id: global.moonshotai.kimi-k3.1
+    name: Kimi K3.1 Pro Highspeed (global)
+    match:
+      contains: global.moonshotai.kimi-k3.1
+    context_window: 1000000
+    prices_checked: 2026-11-07
+    price_comments: >-
+      Launched on Bedrock 2026-11-04 as Kimi K3.1 Pro - Highspeed, under the model ID `moonshotai.kimi-k3.1`. Global
+      cross-Region inference, 10% below the US and India Geo profiles. Cache writes use the 30-minute TTL. Not yet in
+      the AWS price list API. Refs:
+      https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-moonshot-ai-kimi-k3-1-highspeed.html,
+      https://aws.amazon.com/bedrock/pricing/
+    prices:
+      input_mtok: 4
+      cache_write_mtok: 5
+      cache_read_mtok: 0.2
+      output_mtok: 20
+
+  - id: global.openai.gpt-5.6-luna
+    name: GPT-5.6 Luna (global)
+    match:
+      contains: global.openai.gpt-5.6-luna
+    context_window: 1000000
+    prices_checked: 2026-09-29
+    price_comments: >-
+      Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price.
+      Cross-Region inference for the GPT-5.6 models launched on 2026-08-17. Cache writes (30m TTL) are billed at
+      1.25x the input rate. Above 272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000
+      because the pricing engines select a tier when the token count is greater than start. The 80% Luna price cut
+      of 2026-07-30 predates global availability, so there is no earlier global rate to record. Refs:
+      https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-luna.html,
+      https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/,
+      https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/
+    prices:
+      input_mtok:
+        base: 0.2
+        tiers:
+          - start: 272000
+            price: 0.4
+      cache_write_mtok:
+        base: 0.25
+        tiers:
+          - start: 272000
+            price: 0.5
+      cache_read_mtok:
+        base: 0.02
+        tiers:
+          - start: 272000
+            price: 0.04
+      output_mtok:
+        base: 1.2
+        tiers:
+          - start: 272000
+            price: 1.8
+
+  - id: global.openai.gpt-5.6-sol
+    name: GPT-5.6 Sol (global)
+    match:
+      contains: global.openai.gpt-5.6-sol
+    context_window: 1000000
+    prices_checked: 2026-09-29
+    price_comments: >-
+      Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price.
+      Cross-Region inference launched 2026-08-17. Cache writes (30m TTL) are billed at 1.25x the input rate. Above
+      272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines
+      select a tier when the token count is greater than start. AWS cut Sol input prices by 20% and output prices by
+      33.3% on 2026-08-21, quoting the global rates ($4 input, $20 output); the unconstrained entry keeps the four
+      days of rates between global availability and the cut. Refs:
+      https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-sol.html,
+      https://aws.amazon.com/about-aws/whats-new/2026/08/bedrock-openai-gpt-56-sol-reduced-pricing/,
+      https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/,
+      https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/
+    prices:
+      - prices:
+          input_mtok:
+            base: 5
+            tiers:
+              - start: 272000
+                price: 10
+          cache_write_mtok:
+            base: 6.25
+            tiers:
+              - start: 272000
+                price: 12.5
+          cache_read_mtok:
+            base: 0.5
+            tiers:
+              - start: 272000
+                price: 1
+          output_mtok:
+            base: 30
+            tiers:
+              - start: 272000
+                price: 45
+      - constraint:
+          # https://aws.amazon.com/about-aws/whats-new/2026/08/bedrock-openai-gpt-56-sol-reduced-pricing/
+          start_date: 2026-08-21
+        prices:
+          input_mtok:
+            base: 4
+            tiers:
+              - start: 272000
+                price: 8
+          cache_write_mtok:
+            base: 5
+            tiers:
+              - start: 272000
+                price: 10
+          cache_read_mtok:
+            base: 0.4
+            tiers:
+              - start: 272000
+                price: 0.8
+          output_mtok:
+            base: 20
+            tiers:
+              - start: 272000
+                price: 30
+
+  - id: global.openai.gpt-5.6-terra
+    name: GPT-5.6 Terra (global)
+    match:
+      contains: global.openai.gpt-5.6-terra
+    context_window: 1000000
+    prices_checked: 2026-09-29
+    price_comments: >-
+      Global cross-Region inference, priced 10% below in-Region and Geo, and identical to OpenAI's own list price.
+      Cross-Region inference for the GPT-5.6 models launched on 2026-08-17. Cache writes (30m TTL) are billed at
+      1.25x the input rate. Above 272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000
+      because the pricing engines select a tier when the token count is greater than start. The 20% Terra price cut
+      of 2026-07-30 predates global availability, so there is no earlier global rate to record. Refs:
+      https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-terra.html,
+      https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-bedrock-cross-region-openai-v2/,
+      https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 272000
+            price: 4
+      cache_write_mtok:
+        base: 2.5
+        tiers:
+          - start: 272000
+            price: 5
+      cache_read_mtok:
+        base: 0.2
+        tiers:
+          - start: 272000
+            price: 0.4
+      output_mtok:
+        base: 12
+        tiers:
+          - start: 272000
+            price: 18
+
+  - id: global.openai.gpt-6-astra
+    name: GPT-6 Astra (global)
+    match:
+      contains: global.openai.gpt-6-astra
+    context_window: 1050000
+    prices_checked: 2026-10-19
+    price_comments: >-
+      Global cross-Region inference at OpenAI's own list price; In-Region and Geo add 10% on top of it.
+      Launched on Bedrock 2026-09-08. Cache writes (30m TTL) are billed at 1.25x the input rate. Above
+      272K input tokens, input and cache are 2x and output 1.5x; AWS bills 272K or fewer at the short-context
+      rate, so tier starts are 272000.
+      Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html
+    prices:
+      input_mtok:
+        base: 10
+        tiers:
+          - start: 272000
+            price: 20
+      cache_write_mtok:
+        base: 12.5
+        tiers:
+          - start: 272000
+            price: 25
+      cache_read_mtok:
+        base: 1
+        tiers:
+          - start: 272000
+            price: 2
+      output_mtok:
+        base: 50
+        tiers:
+          - start: 272000
+            price: 75
+
+  - id: global.openai.gpt-6-luna
+    name: GPT-6 Luna (global)
+    match:
+      contains: global.openai.gpt-6-luna
+    context_window: 1000000
+    prices_checked: 2026-09-23
+    price_comments: >-
+      Launched on Bedrock 2026-09-22. AWS had not yet published a model card or rate table for Luna, so these
+      rates follow the rule every Bedrock OpenAI model card states: Global CRIS is OpenAI's list price, and
+      In-Region/Geo add 10%. GPT-6 Astra's card confirms the rule for the GPT-6 family. Cache writes (30m TTL)
+      are 1.25x input. Above 272K input tokens, input and cache are 2x and output 1.5x (tier start 272000).
+      Refs: https://aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-sol-luna-on-amazon-bedrock/,
+      https://developers.openai.com/api/docs/models/gpt-6-luna
+    prices:
+      input_mtok:
+        base: 0.1
+        tiers:
+          - start: 272000
+            price: 0.2
+      cache_write_mtok:
+        base: 0.125
+        tiers:
+          - start: 272000
+            price: 0.25
+      cache_read_mtok:
+        base: 0.01
+        tiers:
+          - start: 272000
+            price: 0.02
+      output_mtok:
+        base: 0.5
+        tiers:
+          - start: 272000
+            price: 0.75
+
+  - id: global.openai.gpt-6-sol
+    name: GPT-6 Sol (global)
+    match:
+      contains: global.openai.gpt-6-sol
+    context_window: 1000000
+    prices_checked: 2026-09-23
+    price_comments: >-
+      Launched on Bedrock 2026-09-22. AWS had not yet published a model card or rate table for Sol, so these
+      rates follow the rule every Bedrock OpenAI model card states: Global CRIS is OpenAI's list price, and
+      In-Region/Geo add 10%. GPT-6 Astra's card confirms the rule for the GPT-6 family. Cache writes (30m TTL)
+      are 1.25x input. Above 272K input tokens, input and cache are 2x and output 1.5x (tier start 272000).
+      Refs: https://aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-sol-luna-on-amazon-bedrock/,
+      https://developers.openai.com/api/docs/models/gpt-6-sol
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 272000
+            price: 4
+      cache_write_mtok:
+        base: 2.5
+        tiers:
+          - start: 272000
+            price: 5
+      cache_read_mtok:
+        base: 0.2
+        tiers:
+          - start: 272000
+            price: 0.4
+      output_mtok:
+        base: 10
+        tiers:
+          - start: 272000
+            price: 15
+
+  - id: global.openai.gpt-6.1-sol
+    name: GPT-6.1 Sol (global)
+    match:
+      contains: global.openai.gpt-6.1-sol
+    context_window: 1000000
+    prices_checked: 2026-10-03
+    price_comments: >-
+      Launched on Bedrock 2026-09-29. Global cross-Region inference, identical to OpenAI's own list price and 10%
+      below In-Region and Geo. Cache reads are 5% of input and cache writes 1.25x. AWS bills the whole request at
+      long-context rates above 272K input tokens: input and cache are 2x and output 1.5x. Tier starts use 272000
+      because the pricing engines select a tier when the token count is greater than start. Refs:
+      https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-1-sol.html,
+      https://developers.openai.com/api/docs/models/gpt-6.1-sol
+    prices:
+      input_mtok:
+        base: 2
+        tiers:
+          - start: 272000
+            price: 4
+      cache_write_mtok:
+        base: 2.5
+        tiers:
+          - start: 272000
+            price: 5
+      cache_read_mtok:
+        base: 0.1
+        tiers:
+          - start: 272000
+            price: 0.2
+      output_mtok:
+        base: 10
+        tiers:
+          - start: 272000
+            price: 15
+
+  - id: global.openai.gpt-6.1-terra
+    name: GPT-6.1 Terra (global)
+    match:
+      contains: global.openai.gpt-6.1-terra
+    context_window: 1050000
+    prices_checked: 2026-11-07
+    price_comments: >-
+      Launched on Bedrock 2026-10-26. Global cross-Region inference, identical to OpenAI's own list price and 10%
+      below In-Region and Geo. Cache reads are 5% of input and cache writes 1.25x. AWS bills the whole request at
+      long-context rates above 272K input tokens: input and cache are 2x and output 1.5x. Tier starts use 272000
+      because the pricing engines select a tier when the token count is greater than start. Refs:
+      https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-1-terra.html,
+      https://developers.openai.com/api/docs/models/gpt-6.1-terra
+    prices:
+      input_mtok:
+        base: 1
+        tiers:
+          - start: 272000
+            price: 2
+      cache_write_mtok:
+        base: 1.25
+        tiers:
+          - start: 272000
+            price: 2.5
+      cache_read_mtok:
+        base: 0.05
+        tiers:
+          - start: 272000
+            price: 0.1
+      output_mtok:
+        base: 5
+        tiers:
+          - start: 272000
+            price: 7.5
+
+  - id: global.zai.glm-5.3
+    name: GLM 5.3 (global)
+    match:
+      or:
+        - equals: global.zai.glm-5.3
+        - ends_with: /global.zai.glm-5.3
+    context_window: 1000000
+    prices_checked: 2026-11-07
+    price_comments: >-
+      Launched on Bedrock 2026-10-05. Global cross-Region inference, 10% below the US Geo profile. Cache writes use
+      the 30-minute TTL. Matched as the exact ID or the end of an inference profile ARN. Refs:
+      https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-zai-glm-5-3.html,
+      https://aws.amazon.com/bedrock/pricing/
+    prices:
+      input_mtok: 1.68
+      cache_write_mtok: 2.1
+      cache_read_mtok: 0.312
+      output_mtok: 5.28
+
+  - id: google.gemma-3-12b-it
+    name: Gemma 3 12B IT
+    prices_checked: 2026-10-19
+    match:
+      contains: google.gemma-3-12b-it
+    context_window: 128000
+    prices:
+      input_mtok: 0.09
+      output_mtok: 0.29
+
+  - id: google.gemma-3-27b-it
+    name: Gemma 3 27B IT
+    prices_checked: 2026-10-19
+    match:
+      contains: google.gemma-3-27b-it
+    context_window: 128000
+    prices:
+      input_mtok: 0.23
+      output_mtok: 0.38
+
+  - id: google.gemma-3-4b-it
+    name: Gemma 3 4B IT
+    prices_checked: 2026-10-19
+    match:
+      contains: google.gemma-3-4b-it
+    context_window: 128000
+    prices:
+      input_mtok: 0.04
+      output_mtok: 0.08
+
+  - id: meta.llama3-1-70b-instruct-v1:0
+    name: Llama 3.1 70B Instruct
+    match:
+      contains: meta.llama3-1-70b-instruct
+    context_window: 128000
+    prices:
+      input_mtok: 0.72
+      output_mtok: 0.72
+    prices_checked: 2026-10-19
+
+  - id: meta.llama3-1-8b-instruct-v1:0
+    name: Llama 3.1 8B Instruct
+    match:
+      contains: meta.llama3-1-8b-instruct
+    context_window: 128000
+    prices:
+      input_mtok: 0.22
+      output_mtok: 0.22
+    prices_checked: 2026-10-19
+
+  - id: meta.llama3-2-11b-instruct-v1:0
+    name: Llama 3.2 11B Instruct
+    match:
+      contains: meta.llama3-2-11b-instruct
+    context_window: 128000
+    prices:
+      input_mtok: 0.16
+      output_mtok: 0.16
+    prices_checked: 2026-10-19
+
+  - id: meta.llama3-2-1b-instruct-v1:0
+    name: Llama 3.2 1B Instruct
+    match:
+      contains: meta.llama3-2-1b-instruct
+    context_window: 128000
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.1
+    prices_checked: 2026-10-19
+
+  - id: meta.llama3-2-3b-instruct-v1:0
+    name: Llama 3.2 3B Instruct
+    match:
+      contains: meta.llama3-2-3b-instruct
+    context_window: 128000
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.15
+    prices_checked: 2026-10-19
+
+  - id: meta.llama3-2-90b-instruct-v1:0
+    name: Llama 3.2 90B Instruct
+    match:
+      contains: meta.llama3-2-90b-instruct
+    context_window: 128000
+    prices:
+      input_mtok: 0.72
+      output_mtok: 0.72
+    prices_checked: 2026-10-19
+
+  - id: meta.llama3-3-70b-instruct-v1:0
+    name: Llama 3.3 70B Instruct
+    match:
+      contains: meta.llama3-3-70b-instruct
+    context_window: 128000
+    prices:
+      input_mtok: 0.72
+      output_mtok: 0.72
+    prices_checked: 2026-10-19
+
+  - id: meta.llama3-70b-instruct-v1:0
+    name: Llama 3 70B Instruct
+    match:
+      contains: meta.llama3-70b-instruct
+    context_window: 8192
+    prices:
+      input_mtok: 2.65
+      output_mtok: 3.5
+    prices_checked: 2026-10-19
+
+  - id: meta.llama3-8b-instruct-v1:0
+    name: Llama 3 8B Instruct
+    match:
+      contains: meta.llama3-8b-instruct
+    context_window: 8192
+    prices:
+      input_mtok: 0.3
+      output_mtok: 0.6
+    prices_checked: 2026-10-19
+
+  - id: meta.llama4-maverick-17b-instruct-v1:0
+    name: Llama 4 Maverick 17B Instruct
+    match:
+      contains: meta.llama4-maverick-17b-instruct
+    context_window: 1000000
+    prices:
+      input_mtok: 0.24
+      output_mtok: 0.97
+    prices_checked: 2026-10-19
+
+  - id: meta.llama4-scout-17b-instruct-v1:0
+    name: Llama 4 Scout 17B Instruct
+    match:
+      contains: meta.llama4-scout-17b-instruct
+    context_window: 10000000
+    prices:
+      input_mtok: 0.17
+      output_mtok: 0.66
+    prices_checked: 2026-10-19
+
+  - id: mistral.devstral-2-123b
+    name: Devstral 2 123B
+    prices_checked: 2026-10-19
+    match:
+      contains: mistral.devstral-2-123b
+    context_window: 256000
+    prices:
+      input_mtok: 0.4
+      output_mtok: 2
+
+  - id: mistral.magistral-small-2509
+    name: Magistral Small 2509
+    prices_checked: 2026-10-19
+    match:
+      contains: mistral.magistral-small-2509
+    context_window: 128000
+    prices:
+      input_mtok: 0.5
+      output_mtok: 1.5
+
+  - id: mistral.ministral-3-14b-instruct
+    name: Ministral 14B 3.0
+    prices_checked: 2026-10-19
+    match:
+      contains: mistral.ministral-3-14b-instruct
+    context_window: 128000
+    prices:
+      input_mtok: 0.2
+      output_mtok: 0.2
+
+  - id: mistral.ministral-3-3b-instruct
+    name: Ministral 3B 3.0
+    prices_checked: 2026-10-19
+    match:
+      contains: mistral.ministral-3-3b-instruct
+    context_window: 128000
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.1
+
+  - id: mistral.ministral-3-8b-instruct
+    name: Ministral 8B 3.0
+    prices_checked: 2026-10-19
+    match:
+      contains: mistral.ministral-3-8b-instruct
+    context_window: 128000
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.15
+
+  - id: mistral.mistral-7b-instruct-v0:2
+    name: Mistral 7B Instruct
+    match:
+      contains: mistral.mistral-7b-instruct-v0
+    context_window: 32000
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.2
+    prices_checked: 2026-10-19
+
+  - id: mistral.mistral-large-2402-v1:0
+    name: Mistral Large (24.02)
+    match:
+      contains: mistral.mistral-large-2402
+    context_window: 32000
+    prices:
+      input_mtok: 4
+      output_mtok: 12
+    prices_checked: 2026-10-19
+
+  - id: mistral.mistral-large-3-675b-instruct
+    name: Mistral Large 3
+    prices_checked: 2026-10-19
+    match:
+      contains: mistral.mistral-large-3-675b-instruct
+    context_window: 256000
+    prices:
+      input_mtok: 0.5
+      output_mtok: 1.5
+
+  - id: mistral.mistral-small-2402-v1:0
+    name: Mistral Small (24.02)
+    match:
+      contains: mistral.mistral-small-2402
+    context_window: 32000
+    prices:
+      input_mtok: 1
+      output_mtok: 3
+    prices_checked: 2026-10-19
+
+  - id: mistral.mixtral-8x7b-instruct-v0:1
+    name: Mixtral 8x7B Instruct
+    match:
+      contains: mistral.mixtral-8x7b-instruct-v0
+    context_window: 32000
+    prices:
+      input_mtok: 0.45
+      output_mtok: 0.7
+    prices_checked: 2026-10-19
+
+  - id: mistral.pixtral-large-2502-v1:0
+    name: Pixtral Large (25.02)
+    match:
+      contains: mistral.pixtral-large-2502
+    context_window: 128000
+    prices:
+      input_mtok: 2
+      output_mtok: 6
+    prices_checked: 2026-10-19
+
+  - id: mistral.voxtral-mini-3b-2507
+    name: Voxtral Mini 3B 2507
+    prices_checked: 2026-10-19
+    match:
+      contains: mistral.voxtral-mini-3b-2507
+    context_window: 32000
+    prices:
+      input_mtok: 0.04
+      output_mtok: 0.04
+
+  - id: mistral.voxtral-small-24b-2507
+    name: Voxtral Small 24B 2507
+    prices_checked: 2026-10-19
+    match:
+      contains: mistral.voxtral-small-24b-2507
+    context_window: 32000
+    prices:
+      input_mtok: 0.1
+      output_mtok: 0.3
+
+  - id: nvidia.nemotron-nano-3-30b:0
+    name: Nemotron 3 Nano 30B
+    prices_checked: 2026-10-19
+    match:
+      contains: nvidia.nemotron-nano-3-30b
+    context_window: 256000
+    prices:
+      input_mtok: 0.06
+      output_mtok: 0.24
+
+  - id: nvidia.nemotron-nano-9b-v2:0
+    name: Nemotron 2 Nano 9B
+    prices_checked: 2026-10-19
+    match:
+      contains: nvidia.nemotron-nano-9b-v2
+    context_window: 128000
+    prices:
+      input_mtok: 0.06
+      output_mtok: 0.23
+
+  - id: nvidia.nemotron-super-3-120b:0
+    name: Nemotron 3 Super 120B
+    prices_checked: 2026-10-19
+    match:
+      contains: nvidia.nemotron-super-3-120b
+    context_window: 256000
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.65
+
+  - id: openai.gpt-5.4
+    name: GPT-5.4
+    match:
+      equals: openai.gpt-5.4
+    prices_checked: 2026-06-30
+    # No context_window: AWS's model card states 272K with max output 'N/A', and 272K equals the
+    # GPT-5 family's input-only cap — whether it is the total window is unclear, so no value is recorded
+    prices:
+      input_mtok: 2.75
+      cache_read_mtok: 0.275
+      output_mtok: 16.5
+
+  - id: openai.gpt-5.5
+    name: GPT-5.5
+    match:
+      equals: openai.gpt-5.5
+    prices_checked: 2026-06-30
+    # No context_window: AWS's model card states 272K with max output 'N/A', and 272K equals the
+    # GPT-5 family's input-only cap — whether it is the total window is unclear, so no value is recorded
+    prices:
+      input_mtok: 5.5
+      cache_read_mtok: 0.55
+      output_mtok: 33
+
+  - id: openai.gpt-oss-120b-1:0
+    name: gpt-oss-120b
+    match:
+      contains: openai.gpt-oss-120b-1
+    context_window: 128000
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.6
+    prices_checked: 2026-10-19
+
+  - id: openai.gpt-oss-20b-1:0
+    name: gpt-oss-20b
+    match:
+      contains: openai.gpt-oss-20b-1
+    context_window: 128000
+    prices:
+      input_mtok: 0.07
+      output_mtok: 0.3
+    prices_checked: 2026-10-19
+
+  - id: qwen.qwen3-32b-v1:0
+    name: Qwen3 32B (dense)
+    match:
+      contains: qwen.qwen3-32b
+    context_window: 32000
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.6
+    prices_checked: 2026-10-19
+
+  - id: qwen.qwen3-coder-30b-a3b-v1:0
+    name: Qwen3-Coder-30B-A3B-Instruct
+    match:
+      contains: qwen.qwen3-coder-30b-a3b
+    context_window: 256000
+    prices:
+      input_mtok: 0.15
+      output_mtok: 0.6
+    prices_checked: 2026-10-19
+
+  - id: qwen.qwen3-coder-480b-a35b-v1:0
+    name: Qwen3-Coder-480B-A35B-Instruct
+    match:
+      contains: qwen.qwen3-coder-480b-a35b
+    context_window: 128000
+    prices:
+      input_mtok: 0.45
+      output_mtok: 1.8
+    prices_checked: 2026-10-19
+
+  - id: qwen.qwen3-vl-235b-a22b-v1:0
+    name: Qwen3-VL-235B-A22B-Instruct
+    match:
+      contains: qwen.qwen3-vl-235b-a22b
+    context_window: 256000
+    prices:
+      input_mtok: 0.53
+      output_mtok: 2.66
+    prices_checked: 2026-10-19
+
+  - id: regional.amazon.nova-2-lite-v1:0
+    name: Nova 2 Lite
+    prices_checked: 2026-10-19
+    description: >-
+      Amazon Nova 2 Lite is an advanced multimodal reasoning model that intelligently balances performance and efficiency
+      by dynamically adjusting reasoning depth based on task complexity. With flexible controls for developers to adjust
+      the reasoning process, Nova 2 Lite delivers superior results for agentic workflows across software development,
+      consumer experiences and enterprise application.
+    match:
+      or:
+        - contains: us.amazon.nova-2-lite
+        - contains: eu.amazon.nova-2-lite
+        - contains: jp.amazon.nova-2-lite
+    context_window: 1000000
+    prices:
+      input_mtok: 0.33
+      cache_read_mtok: 0.0825
+      output_mtok: 2.75
+
+  - id: regional.anthropic.claude-3-5-haiku-20241022-v1:0
+    canonical_model: anthropic/claude-3-5-haiku-latest
+    match:
+      contains: claude-3-5-haiku-20241022
+    prices:
+      input_mtok: 0.8
+      cache_write_mtok: 1
+      cache_read_mtok: 0.08
+      output_mtok: 4
+    prices_checked: 2026-10-19
+
+  - id: regional.anthropic.claude-3-5-sonnet-20240620-v1:0
+    canonical_model: anthropic/claude-3-5-sonnet
+    match:
+      contains: claude-3-5-sonnet-20240620
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+    prices_checked: 2026-10-19
+
+  - id: regional.anthropic.claude-3-5-sonnet-20241022-v2:0
+    canonical_model: anthropic/claude-3-5-sonnet
+    match:
+      contains: claude-3-5-sonnet-20241022
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+    prices_checked: 2026-10-19
+
+  - id: regional.anthropic.claude-3-7-sonnet-20250219-v1:0
+    canonical_model: anthropic/claude-3-7-sonnet-latest
+    match:
+      contains: claude-3-7-sonnet-20250219
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+    prices_checked: 2026-10-19
+
+  - id: regional.anthropic.claude-3-haiku-20240307-v1:0
+    canonical_model: anthropic/claude-3-haiku
+    match:
+      contains: claude-3-haiku-20240307
+    prices:
+      input_mtok: 0.25
+      output_mtok: 1.25
+    prices_checked: 2026-10-19
+
+  - id: regional.anthropic.claude-3-opus-20240229-v1:0
+    canonical_model: anthropic/claude-3-opus-latest
+    match:
+      contains: claude-3-opus-20240229
+    prices:
+      input_mtok: 15
+      output_mtok: 75
+    prices_checked: 2026-10-19
+
+  - id: regional.anthropic.claude-3-sonnet-20240229-v1:0
+    canonical_model: anthropic/claude-3-sonnet
+    match:
+      contains: claude-3-sonnet-20240229
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+    prices_checked: 2026-10-19
+
+  - id: regional.anthropic.claude-fable-5-1-v1:0
+    canonical_model: anthropic/claude-fable-5-1
+    prices_checked: 2026-10-19
+    price_comments: >-
+      Regional endpoint: 10% premium over the global endpoint. Fable 5.1 regional is
+      currently the us. inference profile only; the AWS price list has no EU, AU or JP regional rate.
+      Cache hits are 0.025x base input (not the usual 0.1x), unique to Fable 5.1 and Mythos 5.1.
+      Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
+    match:
+      or:
+        - equals: anthropic.claude-fable-5-1
+        - equals: claude-fable-5-1
+        - starts_with: anthropic.claude-fable-5-1-v1
+        - starts_with: claude-fable-5-1-v1
+        - equals: us.anthropic.claude-fable-5-1
+        - contains: us.anthropic.claude-fable-5-1-v1
+    prices:
+      input_mtok: 11
+      cache_write_mtok: 13.75
+      cache_write_1h_mtok: 22
+      cache_read_mtok: 0.275
+      output_mtok: 55
+
+  - id: regional.anthropic.claude-fable-5-2
+    canonical_model: anthropic/claude-fable-5-2
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Regional endpoints and US/EU inference profiles carry a 10% premium over the global endpoint. The AWS
+      price list has regional rates in US, Canada and EU regions only, none in AU or JP.
+      Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1.
+      Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Fable 5.2 (Amazon Bedrock Edition)"
+      (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)
+    match:
+      or:
+        - equals: anthropic.claude-fable-5-2
+        - equals: claude-fable-5-2
+        - starts_with: anthropic.claude-fable-5-2-v1
+        - starts_with: claude-fable-5-2-v1
+        - equals: us.anthropic.claude-fable-5-2
+        - equals: eu.anthropic.claude-fable-5-2
+        - contains: us.anthropic.claude-fable-5-2-v1
+        - contains: eu.anthropic.claude-fable-5-2-v1
+    prices:
+      input_mtok: 8.8
+      cache_write_mtok: 11
+      cache_write_1h_mtok: 17.6
+      cache_read_mtok: 0.22
+      output_mtok: 44
+
+  - id: regional.anthropic.claude-fable-5-v1:0
+    canonical_model: anthropic/claude-fable-5
+    prices_checked: 2026-10-19
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
+      The price list carries regional Fable 5 rates for US, EU and AU regions, but none for JP.
+    match:
+      or:
+        - equals: anthropic.claude-fable-5
+        - equals: claude-fable-5
+        - starts_with: anthropic.claude-fable-5-v1
+        - starts_with: claude-fable-5-v1
+        - equals: us.anthropic.claude-fable-5
+        - equals: au.anthropic.claude-fable-5
+        - equals: eu.anthropic.claude-fable-5
+        - contains: us.anthropic.claude-fable-5-v1
+        - contains: au.anthropic.claude-fable-5-v1
+        - contains: eu.anthropic.claude-fable-5-v1
+        - contains: jp.anthropic.claude-fable-5-v1
+    prices:
+      input_mtok: 11
+      cache_write_mtok: 13.75
+      cache_write_1h_mtok: 22
+      cache_read_mtok: 1.1
+      output_mtok: 55
+
+  - id: regional.anthropic.claude-haiku-4-5-20251001-v1:0
+    canonical_model: anthropic/claude-haiku-4-5
+    prices_checked: 2026-10-19
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
+    match:
+      or:
+        - starts_with: anthropic.claude-haiku-4-5-20251001
+        - starts_with: claude-haiku-4-5-20251001
+        - contains: us.anthropic.claude-haiku-4-5-20251001
+        - contains: au.anthropic.claude-haiku-4-5-20251001
+        - contains: apac.anthropic.claude-haiku-4-5-20251001
+        - contains: eu.anthropic.claude-haiku-4-5-20251001
+        - contains: us-gov.anthropic.claude-haiku-4-5-20251001
+        - contains: jp.anthropic.claude-haiku-4-5-20251001
+        - contains: in.anthropic.claude-haiku-4-5-20251001
+    prices:
+      input_mtok: 1.1
+      cache_write_mtok: 1.375
+      cache_write_1h_mtok: 2.2
+      cache_read_mtok: 0.11
+      output_mtok: 5.5
+
+  - id: regional.anthropic.claude-haiku-5-5
+    canonical_model: anthropic/claude-haiku-5-5
+    prices_checked: 2026-10-19
+    match:
+      or:
+        - equals: anthropic.claude-haiku-5-5
+        - equals: claude-haiku-5-5
+        - starts_with: anthropic.claude-haiku-5-5-v1
+        - starts_with: claude-haiku-5-5-v1
+        - equals: us.anthropic.claude-haiku-5-5
+        - equals: au.anthropic.claude-haiku-5-5
+        - equals: apac.anthropic.claude-haiku-5-5
+        - equals: eu.anthropic.claude-haiku-5-5
+        - equals: us-gov.anthropic.claude-haiku-5-5
+        - equals: jp.anthropic.claude-haiku-5-5
+        - equals: ca.anthropic.claude-haiku-5-5
+        - contains: us.anthropic.claude-haiku-5-5-v1
+        - contains: au.anthropic.claude-haiku-5-5-v1
+        - contains: apac.anthropic.claude-haiku-5-5-v1
+        - contains: eu.anthropic.claude-haiku-5-5-v1
+        - contains: us-gov.anthropic.claude-haiku-5-5-v1
+        - contains: jp.anthropic.claude-haiku-5-5-v1
+        - contains: ca.anthropic.claude-haiku-5-5-v1
+    price_comments: >-
+      Regional endpoints and inference profiles carry a 10% premium over the global endpoint.
+      Prompts over 100,000 tokens bill every token at the long-context rate.
+      Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Haiku 5.5 (Amazon Bedrock Edition)"
+      (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)
+    prices:
+      input_mtok:
+        base: 0.11
+        tiers:
+          - start: 100000
+            price: 0.55
+      cache_write_mtok:
+        base: 0.1375
+        tiers:
+          - start: 100000
+            price: 0.6875
+      cache_write_1h_mtok:
+        base: 0.22
+        tiers:
+          - start: 100000
+            price: 1.1
+      cache_read_mtok:
+        base: 0.011
+        tiers:
+          - start: 100000
+            price: 0.055
+      output_mtok:
+        base: 0.55
+        tiers:
+          - start: 100000
+            price: 2.75
+
+  - id: regional.anthropic.claude-mythos-5-2
+    canonical_model: anthropic/claude-mythos-5-2
+    prices_checked: 2026-11-09
+    price_comments: >-
+      Regional endpoints and US/EU inference profiles carry a 10% premium over the global endpoint. The AWS
+      price list has regional rates in US, Canada and EU regions only, none in AU or JP.
+      Same pricing as Claude Fable 5.2, with limited availability.
+      Cache hits are 0.025x base input (not the usual 0.1x), as on Fable 5.1.
+      Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Mythos 5.2 (Amazon Bedrock Edition)"
+      (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)
+    match:
+      or:
+        - equals: anthropic.claude-mythos-5-2
+        - equals: claude-mythos-5-2
+        - starts_with: anthropic.claude-mythos-5-2-v1
+        - starts_with: claude-mythos-5-2-v1
+        - equals: us.anthropic.claude-mythos-5-2
+        - equals: eu.anthropic.claude-mythos-5-2
+        - contains: us.anthropic.claude-mythos-5-2-v1
+        - contains: eu.anthropic.claude-mythos-5-2-v1
+    prices:
+      input_mtok: 8.8
+      cache_write_mtok: 11
+      cache_write_1h_mtok: 17.6
+      cache_read_mtok: 0.22
+      output_mtok: 44
+
+  - id: regional.anthropic.claude-opus-4-1-20250805-v1:0
+    canonical_model: anthropic/claude-opus-4-1
+    match:
+      or:
+        - starts_with: anthropic.claude-opus-4-1-20250805
+        - starts_with: claude-opus-4-1-20250805
+        - contains: us.anthropic.claude-opus-4-1-20250805
+        - contains: au.anthropic.claude-opus-4-1-20250805
+        - contains: apac.anthropic.claude-opus-4-1-20250805
+        - contains: eu.anthropic.claude-opus-4-1-20250805
+        - contains: us-gov.anthropic.claude-opus-4-1-20250805
+        - contains: jp.anthropic.claude-opus-4-1-20250805
+    prices:
+      input_mtok: 15
+      cache_write_mtok: 18.75
+      cache_read_mtok: 1.5
+      output_mtok: 75
+    prices_checked: 2026-10-19
+
+  - id: regional.anthropic.claude-opus-4-20250514-v1:0
+    canonical_model: anthropic/claude-opus-4-0
+    match:
+      or:
+        - starts_with: anthropic.claude-opus-4-20250514
+        - starts_with: claude-opus-4-20250514
+        - contains: us.anthropic.claude-opus-4-20250514
+        - contains: au.anthropic.claude-opus-4-20250514
+        - contains: apac.anthropic.claude-opus-4-20250514
+        - contains: eu.anthropic.claude-opus-4-20250514
+        - contains: us-gov.anthropic.claude-opus-4-20250514
+        - contains: jp.anthropic.claude-opus-4-20250514
+    prices:
+      input_mtok: 15
+      cache_write_mtok: 18.75
+      cache_read_mtok: 1.5
+      output_mtok: 75
+    prices_checked: 2026-10-19
+
+  - id: regional.anthropic.claude-opus-4-5-v1:0
+    canonical_model: anthropic/claude-opus-4-5
+    prices_checked: 2026-10-19
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
+    match:
+      or:
+        - starts_with: anthropic.claude-opus-4-5
+        - starts_with: claude-opus-4-5
+        - contains: us.anthropic.claude-opus-4-5
+        - contains: au.anthropic.claude-opus-4-5
+        - contains: apac.anthropic.claude-opus-4-5
+        - contains: eu.anthropic.claude-opus-4-5
+        - contains: us-gov.anthropic.claude-opus-4-5
+        - contains: jp.anthropic.claude-opus-4-5
+    prices:
+      input_mtok: 5.5
+      cache_write_mtok: 6.875
+      cache_write_1h_mtok: 11
+      cache_read_mtok: 0.55
+      output_mtok: 27.5
+
+  - id: regional.anthropic.claude-opus-4-6-v1:0
+    canonical_model: anthropic/claude-opus-4-6
+    prices_checked: 2026-10-19
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
+    match:
+      or:
+        - starts_with: anthropic.claude-opus-4-6
+        - starts_with: claude-opus-4-6
+        - contains: us.anthropic.claude-opus-4-6
+        - contains: au.anthropic.claude-opus-4-6
+        - contains: apac.anthropic.claude-opus-4-6
+        - contains: eu.anthropic.claude-opus-4-6
+        - contains: us-gov.anthropic.claude-opus-4-6
+        - contains: jp.anthropic.claude-opus-4-6
+    prices:
+      input_mtok: 5.5
+      cache_write_mtok: 6.875
+      cache_write_1h_mtok: 11
+      cache_read_mtok: 0.55
+      output_mtok: 27.5
+
+  - id: regional.anthropic.claude-opus-4-7-v1:0
+    canonical_model: anthropic/claude-opus-4-7
+    prices_checked: 2026-10-19
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
+    match:
+      or:
+        - starts_with: anthropic.claude-opus-4-7
+        - starts_with: claude-opus-4-7
+        - contains: us.anthropic.claude-opus-4-7
+        - contains: au.anthropic.claude-opus-4-7
+        - contains: apac.anthropic.claude-opus-4-7
+        - contains: eu.anthropic.claude-opus-4-7
+        - contains: us-gov.anthropic.claude-opus-4-7
+        - contains: jp.anthropic.claude-opus-4-7
+    prices:
+      input_mtok: 5.5
+      cache_write_mtok: 6.875
+      cache_write_1h_mtok: 11
+      cache_read_mtok: 0.55
+      output_mtok: 27.5
+
+  - id: regional.anthropic.claude-opus-4-8-v1:0
+    canonical_model: anthropic/claude-opus-4-8
+    prices_checked: 2026-10-19
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
+    match:
+      or:
+        - starts_with: anthropic.claude-opus-4-8
+        - starts_with: claude-opus-4-8
+        - contains: us.anthropic.claude-opus-4-8
+        - contains: au.anthropic.claude-opus-4-8
+        - contains: eu.anthropic.claude-opus-4-8
+        - contains: jp.anthropic.claude-opus-4-8
+    prices:
+      input_mtok: 5.5
+      cache_write_mtok: 6.875
+      cache_write_1h_mtok: 11
+      cache_read_mtok: 0.55
+      output_mtok: 27.5
+
+  - id: regional.anthropic.claude-opus-5
+    canonical_model: anthropic/claude-opus-5
+    prices_checked: 2026-10-19
+    price_comments: >-
+      Regional endpoints and US/EU/JP/AU/IN inference profiles carry a 10% premium over the global endpoint.
+      Ref: https://platform.claude.com/docs/en/build-with-claude/claude-in-amazon-bedrock#regions
+      IN rates from the AWS price list API, AmazonBedrockFoundationModels (ap-south-1, ap-south-2).
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
+    match:
+      or:
+        - equals: anthropic.claude-opus-5
+        - equals: claude-opus-5
+        - starts_with: anthropic.claude-opus-5-v1
+        - starts_with: claude-opus-5-v1
+        - equals: us.anthropic.claude-opus-5
+        - equals: au.anthropic.claude-opus-5
+        - equals: eu.anthropic.claude-opus-5
+        - equals: jp.anthropic.claude-opus-5
+        - equals: in.anthropic.claude-opus-5
+        - contains: us.anthropic.claude-opus-5-v1
+        - contains: au.anthropic.claude-opus-5-v1
+        - contains: eu.anthropic.claude-opus-5-v1
+        - contains: jp.anthropic.claude-opus-5-v1
+        - contains: in.anthropic.claude-opus-5-v1
+    prices:
+      input_mtok: 5.5
+      cache_write_mtok: 6.875
+      cache_write_1h_mtok: 11
+      cache_read_mtok: 0.55
+      output_mtok: 27.5
+
+  - id: regional.anthropic.claude-opus-5-5
+    canonical_model: anthropic/claude-opus-5-5
+    prices_checked: 2026-10-19
+    price_comments: >-
+      Regional endpoints and US/EU/JP/AU inference profiles carry a 10% premium over the global endpoint.
+      Cache hits are 0.05x base input (not the usual 0.1x), as on Sonnet 5.5.
+      Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Opus 5.5 (Amazon Bedrock Edition)"
+      (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)
+    match:
+      or:
+        - equals: anthropic.claude-opus-5-5
+        - equals: claude-opus-5-5
+        - starts_with: anthropic.claude-opus-5-5-v1
+        - starts_with: claude-opus-5-5-v1
+        - equals: us.anthropic.claude-opus-5-5
+        - equals: au.anthropic.claude-opus-5-5
+        - equals: eu.anthropic.claude-opus-5-5
+        - equals: jp.anthropic.claude-opus-5-5
+        - contains: us.anthropic.claude-opus-5-5-v1
+        - contains: au.anthropic.claude-opus-5-5-v1
+        - contains: eu.anthropic.claude-opus-5-5-v1
+        - contains: jp.anthropic.claude-opus-5-5-v1
+    prices:
+      input_mtok: 4.4
+      cache_write_mtok: 5.5
+      cache_write_1h_mtok: 8.8
+      cache_read_mtok: 0.22
+      output_mtok: 22
+
+  - id: regional.anthropic.claude-sonnet-4-20250514-v1:0
+    canonical_model: anthropic/claude-sonnet-4-0
+    match:
+      or:
+        - starts_with: anthropic.claude-sonnet-4-20250514
+        - starts_with: claude-sonnet-4-20250514
+        - contains: us.anthropic.claude-sonnet-4-20250514
+        - contains: au.anthropic.claude-sonnet-4-20250514
+        - contains: apac.anthropic.claude-sonnet-4-20250514
+        - contains: eu.anthropic.claude-sonnet-4-20250514
+        - contains: us-gov.anthropic.claude-sonnet-4-20250514
+        - contains: jp.anthropic.claude-sonnet-4-20250514
+    prices:
+      input_mtok: 3
+      cache_write_mtok: 3.75
+      cache_read_mtok: 0.3
+      output_mtok: 15
+    prices_checked: 2026-10-19
+
+  - id: regional.anthropic.claude-sonnet-4-5-20250929-v1:0
+    canonical_model: anthropic/claude-sonnet-4-5
+    prices_checked: 2026-10-19
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
+    match:
+      or:
+        - starts_with: anthropic.claude-sonnet-4-5-20250929
+        - starts_with: claude-sonnet-4-5-20250929
+        - contains: us.anthropic.claude-sonnet-4-5-20250929
+        - contains: au.anthropic.claude-sonnet-4-5-20250929
+        - contains: apac.anthropic.claude-sonnet-4-5-20250929
+        - contains: eu.anthropic.claude-sonnet-4-5-20250929
+        - contains: us-gov.anthropic.claude-sonnet-4-5-20250929
+        - contains: jp.anthropic.claude-sonnet-4-5-20250929
+    # Bedrock documents 200K for this exact model: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-anthropic-claude-sonnet-4-5.html
+    context_window: 200000
+    prices:
+      input_mtok: 3.3
+      cache_write_mtok: 4.125
+      cache_write_1h_mtok: 6.6
+      cache_read_mtok: 0.33
+      output_mtok: 16.5
+
+  - id: regional.anthropic.claude-sonnet-4-6-v1:0
+    canonical_model: anthropic/claude-sonnet-4-6
+    prices_checked: 2026-10-19
+    price_comments: >-
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
+    match:
+      or:
+        - starts_with: anthropic.claude-sonnet-4-6
+        - starts_with: claude-sonnet-4-6
+        - contains: us.anthropic.claude-sonnet-4-6
+        - contains: au.anthropic.claude-sonnet-4-6
+        - contains: apac.anthropic.claude-sonnet-4-6
+        - contains: eu.anthropic.claude-sonnet-4-6
+        - contains: us-gov.anthropic.claude-sonnet-4-6
+        - contains: jp.anthropic.claude-sonnet-4-6
+    prices:
+      input_mtok: 3.3
+      cache_write_mtok: 4.125
+      cache_write_1h_mtok: 6.6
+      cache_read_mtok: 0.33
+      output_mtok: 16.5
+
+  - id: regional.anthropic.claude-sonnet-5-5
+    canonical_model: anthropic/claude-sonnet-5-5
+    prices_checked: 2026-10-19
+    match:
+      or:
+        - equals: anthropic.claude-sonnet-5-5
+        - equals: claude-sonnet-5-5
+        - starts_with: anthropic.claude-sonnet-5-5-v1
+        - starts_with: claude-sonnet-5-5-v1
+        - equals: us.anthropic.claude-sonnet-5-5
+        - equals: au.anthropic.claude-sonnet-5-5
+        - equals: apac.anthropic.claude-sonnet-5-5
+        - equals: eu.anthropic.claude-sonnet-5-5
+        - equals: us-gov.anthropic.claude-sonnet-5-5
+        - equals: jp.anthropic.claude-sonnet-5-5
+        - equals: ca.anthropic.claude-sonnet-5-5
+        - contains: us.anthropic.claude-sonnet-5-5-v1
+        - contains: au.anthropic.claude-sonnet-5-5-v1
+        - contains: apac.anthropic.claude-sonnet-5-5-v1
+        - contains: eu.anthropic.claude-sonnet-5-5-v1
+        - contains: us-gov.anthropic.claude-sonnet-5-5-v1
+        - contains: jp.anthropic.claude-sonnet-5-5-v1
+        - contains: ca.anthropic.claude-sonnet-5-5-v1
+    price_comments: >-
+      Regional endpoints and inference profiles carry a 10% premium over the global endpoint.
+      Cache hits are 0.05x base input (not the usual 0.1x), as on Opus 5.5.
+      Ref: AWS price list API, AmazonBedrockFoundationModels "Claude Sonnet 5.5 (Amazon Bedrock Edition)"
+      (https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonBedrockFoundationModels/current/us-east-1/index.json)
+    prices:
+      input_mtok: 2.2
+      cache_write_mtok: 2.75
+      cache_write_1h_mtok: 4.4
+      cache_read_mtok: 0.11
+      output_mtok: 11
+
+  - id: regional.anthropic.claude-sonnet-5-v1:0
+    canonical_model: anthropic/claude-sonnet-5
+    prices_checked: 2026-10-19
+    match:
+      or:
+        - equals: anthropic.claude-sonnet-5
+        - equals: claude-sonnet-5
+        - starts_with: anthropic.claude-sonnet-5-v1
+        - starts_with: claude-sonnet-5-v1
+        - equals: us.anthropic.claude-sonnet-5
+        - equals: au.anthropic.claude-sonnet-5
+        - equals: apac.anthropic.claude-sonnet-5
+        - equals: eu.anthropic.claude-sonnet-5
+        - equals: us-gov.anthropic.claude-sonnet-5
+        - equals: jp.anthropic.claude-sonnet-5
+        - equals: in.anthropic.claude-sonnet-5
+        - contains: us.anthropic.claude-sonnet-5-v1
+        - contains: au.anthropic.claude-sonnet-5-v1
+        - contains: apac.anthropic.claude-sonnet-5-v1
+        - contains: eu.anthropic.claude-sonnet-5-v1
+        - contains: us-gov.anthropic.claude-sonnet-5-v1
+        - contains: jp.anthropic.claude-sonnet-5-v1
+        - contains: in.anthropic.claude-sonnet-5-v1
+    price_comments: >-
+      Regional/cross-region endpoints carry a 10% premium over global. The launch rates are now
+      permanent, with no 2026-09-01 increase.
+      Refs: https://aws.amazon.com/bedrock/pricing/,
+      https://platform.claude.com/docs/en/about-claude/pricing
+      One-hour cache write price from the AWS price list API, AmazonBedrockFoundationModels (us-east-1).
+    prices:
+      input_mtok: 2.2
+      cache_write_mtok: 2.75
+      cache_write_1h_mtok: 4.4
+      cache_read_mtok: 0.22
+      output_mtok: 11
+
+  - id: regional.moonshotai.kimi-k3
+    name: Kimi K3 (regional)
+    match:
+      or:
+        - equals: us.moonshotai.kimi-k3
+        - equals: in.moonshotai.kimi-k3
+        - ends_with: /us.moonshotai.kimi-k3
+        - ends_with: /in.moonshotai.kimi-k3
+        - equals: moonshotai.kimi-k3
+    context_window: 1000000
+    prices_checked: 2026-11-07
+    price_comments: >-
+      US Geo (`us.`) and India Geo (`in.`) cross-Region inference, 10% above global. Kimi K3 has no In-Region
+      inference, but the AWS price list API bills this rate under the model's own ID (`moonshotai.kimi-k3-mantle-*`
+      usage types), so the bare `moonshotai.kimi-k3` is matched too. Matched as the exact ID or the end of an inference
+      profile ARN, so that it doesn't also match Kimi K3.1. Cache writes use the 30-minute TTL.
+      Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-moonshot-ai-kimi-k3.html
+    prices:
+      input_mtok: 3.3
+      cache_write_mtok: 4.125
+      cache_read_mtok: 0.33
+      output_mtok: 16.5
+
+  - id: regional.moonshotai.kimi-k3.1
+    name: Kimi K3.1 Pro Highspeed (regional)
+    match:
+      or:
+        - contains: us.moonshotai.kimi-k3.1
+        - contains: in.moonshotai.kimi-k3.1
+    context_window: 1000000
+    prices_checked: 2026-11-07
+    price_comments: >-
+      US Geo (`us.`) and India Geo (`in.`) cross-Region inference, 10% above global. Kimi K3.1 is available through
+      cross-Region inference only, so `moonshotai.kimi-k3.1` itself is not matched. Cache writes use the 30-minute TTL.
+      Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-moonshot-ai-kimi-k3-1-highspeed.html
+    prices:
+      input_mtok: 4.4
+      cache_write_mtok: 5.5
+      cache_read_mtok: 0.22
+      output_mtok: 22
+
+  - id: regional.openai.gpt-5.6-luna
+    name: GPT-5.6 Luna (regional)
+    match:
+      or:
+        - starts_with: openai.gpt-5.6-luna
+        - starts_with: gpt-5.6-luna
+        - contains: us.openai.gpt-5.6-luna
+        - contains: in.openai.gpt-5.6-luna
+    context_window: 1000000
+    prices_checked: 2026-09-29
+    price_comments: >-
+      In-Region and Geo (`us.`/`in.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input;
+      above 272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing
+      engines select a tier when the token count is greater than start. AWS cut Luna prices by 80% on 2026-07-30;
+      the unconstrained entry preserves the launch (2026-07-13) rates. The long-context tier arrived with the 1M
+      context window on 2026-08-03, so the launch entry stays flat. Refs:
+      https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-luna.html,
+      https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/,
+      https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/
+    prices:
+      - prices:
+          input_mtok: 1.1
+          cache_write_mtok: 1.375
+          cache_read_mtok: 0.11
+          output_mtok: 6.6
+      - constraint:
+          # https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/
+          start_date: 2026-07-30
+        prices:
+          input_mtok:
+            base: 0.22
+            tiers:
+              - start: 272000
+                price: 0.44
+          cache_write_mtok:
+            base: 0.275
+            tiers:
+              - start: 272000
+                price: 0.55
+          cache_read_mtok:
+            base: 0.022
+            tiers:
+              - start: 272000
+                price: 0.044
+          output_mtok:
+            base: 1.32
+            tiers:
+              - start: 272000
+                price: 1.98
+
+  - id: regional.openai.gpt-5.6-sol
+    name: GPT-5.6 Sol (regional)
+    match:
+      or:
+        - starts_with: openai.gpt-5.6-sol
+        - starts_with: gpt-5.6-sol
+        - contains: us.openai.gpt-5.6-sol
+    context_window: 1000000
+    prices_checked: 2026-09-29
+    price_comments: >-
+      In-Region and Geo (`us.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input; above
+      272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing engines
+      select a tier when the token count is greater than start. Sol input prices fell 20% and output prices 33.3% on
+      2026-08-21; the announcement quotes the global rates, and the in-Region and Geo rates moved with them. Refs:
+      https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-sol.html,
+      https://aws.amazon.com/about-aws/whats-new/2026/08/bedrock-openai-gpt-56-sol-reduced-pricing/,
+      https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/
+    prices:
+      - prices:
+          input_mtok:
+            base: 5.5
+            tiers:
+              - start: 272000
+                price: 11
+          cache_write_mtok:
+            base: 6.875
+            tiers:
+              - start: 272000
+                price: 13.75
+          cache_read_mtok:
+            base: 0.55
+            tiers:
+              - start: 272000
+                price: 1.1
+          output_mtok:
+            base: 33
+            tiers:
+              - start: 272000
+                price: 49.5
+      - constraint:
+          # https://aws.amazon.com/about-aws/whats-new/2026/08/bedrock-openai-gpt-56-sol-reduced-pricing/
+          start_date: 2026-08-21
+        prices:
+          input_mtok:
+            base: 4.4
+            tiers:
+              - start: 272000
+                price: 8.8
+          cache_write_mtok:
+            base: 5.5
+            tiers:
+              - start: 272000
+                price: 11
+          cache_read_mtok:
+            base: 0.44
+            tiers:
+              - start: 272000
+                price: 0.88
+          output_mtok:
+            base: 22
+            tiers:
+              - start: 272000
+                price: 33
+
+  - id: regional.openai.gpt-5.6-terra
+    name: GPT-5.6 Terra (regional)
+    match:
+      or:
+        - starts_with: openai.gpt-5.6-terra
+        - starts_with: gpt-5.6-terra
+        - contains: us.openai.gpt-5.6-terra
+        - contains: in.openai.gpt-5.6-terra
+    context_window: 1000000
+    prices_checked: 2026-09-29
+    price_comments: >-
+      In-Region and Geo (`us.`/`in.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input;
+      above 272K input tokens, input and cache are 2x and output 1.5x. Tier starts use 272000 because the pricing
+      engines select a tier when the token count is greater than start. AWS cut Terra prices by 20% on 2026-07-30;
+      the unconstrained entry preserves the launch (2026-07-13) rates. The long-context tier arrived with the 1M
+      context window on 2026-08-03, so the launch entry stays flat. Refs:
+      https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-56-terra.html,
+      https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/,
+      https://aws.amazon.com/about-aws/whats-new/2026/08/gpt-sol-terra-luna-long-context-bedrock/
+    prices:
+      - prices:
+          input_mtok: 2.75
+          cache_write_mtok: 3.4375
+          cache_read_mtok: 0.275
+          output_mtok: 16.5
+      - constraint:
+          # https://aws.amazon.com/about-aws/whats-new/2026/07/openai-gpt-terra-luna-pricing-bedrock/
+          start_date: 2026-07-30
+        prices:
+          input_mtok:
+            base: 2.2
+            tiers:
+              - start: 272000
+                price: 4.4
+          cache_write_mtok:
+            base: 2.75
+            tiers:
+              - start: 272000
+                price: 5.5
+          cache_read_mtok:
+            base: 0.22
+            tiers:
+              - start: 272000
+                price: 0.44
+          output_mtok:
+            base: 13.2
+            tiers:
+              - start: 272000
+                price: 19.8
+
+  - id: regional.openai.gpt-6-astra
+    name: GPT-6 Astra (regional)
+    match:
+      or:
+        - starts_with: openai.gpt-6-astra
+        - starts_with: gpt-6-astra
+        - contains: us.openai.gpt-6-astra
+    context_window: 1050000
+    prices_checked: 2026-10-19
+    price_comments: >-
+      In-Region and Geo (`us.`) inference, 10% above global. Cache writes (30m TTL) are billed at 1.25x input.
+      Above 272K input tokens, input and cache are 2x and output 1.5x; AWS bills 272K or fewer at the
+      short-context rate, so tier starts are 272000.
+      Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-astra.html
+    prices:
+      input_mtok:
+        base: 11
+        tiers:
+          - start: 272000
+            price: 22
+      cache_write_mtok:
+        base: 13.75
+        tiers:
+          - start: 272000
+            price: 27.5
+      cache_read_mtok:
+        base: 1.1
+        tiers:
+          - start: 272000
+            price: 2.2
+      output_mtok:
+        base: 55
+        tiers:
+          - start: 272000
+            price: 82.5
+
+  - id: regional.openai.gpt-6-luna
+    name: GPT-6 Luna (regional)
+    match:
+      or:
+        - starts_with: openai.gpt-6-luna
+        - starts_with: gpt-6-luna
+        - contains: us.openai.gpt-6-luna
+        - contains: in.openai.gpt-6-luna
+    context_window: 1000000
+    prices_checked: 2026-09-23
+    price_comments: >-
+      In-Region and Geo (`us.`/`in.`) inference, 10% above global. AWS had not yet published a model card or
+      rate table for Luna; see the global entry for how these rates were derived.
+      Ref: https://aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-sol-luna-on-amazon-bedrock/
+    prices:
+      input_mtok:
+        base: 0.11
+        tiers:
+          - start: 272000
+            price: 0.22
+      cache_write_mtok:
+        base: 0.1375
+        tiers:
+          - start: 272000
+            price: 0.275
+      cache_read_mtok:
+        base: 0.011
+        tiers:
+          - start: 272000
+            price: 0.022
+      output_mtok:
+        base: 0.55
+        tiers:
+          - start: 272000
+            price: 0.825
+
+  - id: regional.openai.gpt-6-sol
+    name: GPT-6 Sol (regional)
+    match:
+      or:
+        - starts_with: openai.gpt-6-sol
+        - starts_with: gpt-6-sol
+        - contains: us.openai.gpt-6-sol
+        - contains: in.openai.gpt-6-sol
+    context_window: 1000000
+    prices_checked: 2026-09-23
+    price_comments: >-
+      In-Region and Geo (`us.`/`in.`) inference, 10% above global. AWS had not yet published a model card or
+      rate table for Sol; see the global entry for how these rates were derived.
+      Ref: https://aws.amazon.com/about-aws/whats-new/2026/09/openai-gpt-6-sol-luna-on-amazon-bedrock/
+    prices:
+      input_mtok:
+        base: 2.2
+        tiers:
+          - start: 272000
+            price: 4.4
+      cache_write_mtok:
+        base: 2.75
+        tiers:
+          - start: 272000
+            price: 5.5
+      cache_read_mtok:
+        base: 0.22
+        tiers:
+          - start: 272000
+            price: 0.44
+      output_mtok:
+        base: 11
+        tiers:
+          - start: 272000
+            price: 16.5
+
+  - id: regional.openai.gpt-6.1-sol
+    name: GPT-6.1 Sol (regional)
+    match:
+      or:
+        - starts_with: openai.gpt-6.1-sol
+        - starts_with: gpt-6.1-sol
+        - contains: us.openai.gpt-6.1-sol
+    context_window: 1000000
+    prices_checked: 2026-10-03
+    price_comments: >-
+      In-Region (`bedrock-mantle` in us-east-1) and US Geo (`us.`) inference, 10% above global. AWS offers no
+      `in.` profile for 6.1 Sol. See the global entry for tiering and cache notes.
+      Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-1-sol.html
+    prices:
+      input_mtok:
+        base: 2.2
+        tiers:
+          - start: 272000
+            price: 4.4
+      cache_write_mtok:
+        base: 2.75
+        tiers:
+          - start: 272000
+            price: 5.5
+      cache_read_mtok:
+        base: 0.11
+        tiers:
+          - start: 272000
+            price: 0.22
+      output_mtok:
+        base: 11
+        tiers:
+          - start: 272000
+            price: 16.5
+
+  - id: regional.openai.gpt-6.1-terra
+    name: GPT-6.1 Terra (regional)
+    match:
+      or:
+        - starts_with: openai.gpt-6.1-terra
+        - starts_with: gpt-6.1-terra
+        - contains: us.openai.gpt-6.1-terra
+    context_window: 1050000
+    prices_checked: 2026-11-07
+    price_comments: >-
+      In-Region (`bedrock-mantle` in us-east-1) and US Geo (`us.`) inference, 10% above global. AWS offers no
+      `in.` profile for 6.1 Terra. See the global entry for tiering and cache notes.
+      Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-openai-gpt-6-1-terra.html
+    prices:
+      input_mtok:
+        base: 1.1
+        tiers:
+          - start: 272000
+            price: 2.2
+      cache_write_mtok:
+        base: 1.375
+        tiers:
+          - start: 272000
+            price: 2.75
+      cache_read_mtok:
+        base: 0.055
+        tiers:
+          - start: 272000
+            price: 0.11
+      output_mtok:
+        base: 5.5
+        tiers:
+          - start: 272000
+            price: 8.25
+
+  - id: regional.zai.glm-5.3
+    name: GLM 5.3 (regional)
+    match:
+      or:
+        - equals: us.zai.glm-5.3
+        - ends_with: /us.zai.glm-5.3
+    context_window: 1000000
+    prices_checked: 2026-11-07
+    price_comments: >-
+      US Geo (`us.`) cross-Region inference, 10% above global. GLM 5.3 is available through cross-Region inference
+      only and AWS offers no other Geo profile, so neither `zai.glm-5.3` nor an `in.`, `eu.` or `apac.` ID is matched.
+      Cache writes use the 30-minute TTL. Matched as the exact ID or the end of an inference profile ARN.
+      Ref: https://docs.aws.amazon.com/bedrock/latest/userguide/model-card-zai-glm-5-3.html
+    prices:
+      input_mtok: 1.848
+      cache_write_mtok: 2.31
+      cache_read_mtok: 0.3432
+      output_mtok: 5.808
+
+  - id: writer.palmyra-x4-v1:0
+    name: Palmyra X4
+    prices_checked: 2026-10-19
+    match:
+      contains: writer.palmyra-x4
+    context_window: 128000
+    price_comments: >-
+      Bedrock serves Palmyra X4 through cross-region inference profiles, so the model reference
+      arrives prefixed, e.g. 'us.writer.palmyra-x4-v1:0'. Pricing is flat across regions.
+      Ref: https://aws.amazon.com/bedrock/pricing/
+    prices:
+      input_mtok: 2.5
+      output_mtok: 10
+
+  - id: writer.palmyra-x5-v1:0
+    name: Palmyra X5
+    prices_checked: 2026-10-19
+    match:
+      contains: writer.palmyra-x5
+    context_window: 128000
+    price_comments: >-
+      Bedrock serves Palmyra X5 through cross-region inference profiles, so the model reference
+      arrives prefixed, e.g. 'us.writer.palmyra-x5-v1:0'. Pricing is flat across regions.
+      Ref: https://aws.amazon.com/bedrock/pricing/
+    prices:
+      input_mtok: 0.6
+      output_mtok: 6
