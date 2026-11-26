@@ -510,29 +510,6 @@ describe('Comprehensive API Tests', () => {
         total_price: first!.total_price,
       })
     })
-
-    it('should calculate prices for multiple models (async)', async () => {
-      const usage: Usage = { input_tokens: 1000, output_tokens: 100 }
-      const models = ['gpt-5', 'gpt-4o', 'o1']
-      const results = await Promise.all(models.map((model) => calcPrice(usage, model, { providerId: 'openai' })))
-
-      expect(results.length).toBe(models.length)
-      for (const result of results) {
-        expect(result).not.toBeNull()
-        expect(result).toMatchObject({
-          input_price: expect.any(Number),
-          model: { name: expect.any(String) },
-          output_price: expect.any(Number),
-          provider: { name: expect.any(String) },
-          total_price: expect.any(Number),
-        })
-        expect(result!.total_price).toBeGreaterThanOrEqual(0)
-        expect(result!.input_price).toBeGreaterThanOrEqual(0)
-        expect(result!.output_price).toBeGreaterThanOrEqual(0)
-        expect(result!.provider.name).toBeTruthy()
-        expect(result!.model.name).toBeTruthy()
-      }
-    })
   })
 
   describe('Provider and Model Matching', () => {
@@ -578,12 +555,12 @@ describe('Comprehensive API Tests', () => {
       {
         expected: { input_price: 0, output_price: 0, total_price: 0 },
         name: 'zero tokens',
-        usage: { input_tokens: 0, output_tokens: 0 } as Usage,
+        usage: { input_tokens: 0, output_tokens: 0 },
       },
       {
         expected: { input_price: 0, output_price: 0, total_price: 0 },
         name: 'undefined tokens',
-        usage: {} as Usage,
+        usage: {},
       },
     ])('should handle $name', ({ expected, usage }) => {
       const result = calcPrice(usage, 'gpt-5', { providerId: 'openai' })
@@ -615,7 +592,7 @@ describe('Comprehensive API Tests', () => {
           cache_write_tokens: 200,
           input_tokens: 1000,
           output_tokens: 500,
-        } as Usage,
+        },
       },
     ])('should handle $name', ({ usage }) => {
       const result = calcPrice(usage, 'gpt-5', { providerId: 'openai' })

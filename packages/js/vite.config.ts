@@ -34,8 +34,8 @@ export default defineConfig({
         // correct extension supplied in the package.json exports field.
         copyFileSync('dist/index.d.ts', 'dist/index.d.cts')
       },
+      bundleTypes: true,
       compilerOptions: { skipLibCheck: true },
-      rollupTypes: true,
       staticImport: true,
     }),
   ],

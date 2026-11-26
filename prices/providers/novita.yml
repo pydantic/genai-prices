@@ -595,7 +595,7 @@ models:
     prices:
       input_mtok: 0.57
       output_mtok: 2.3
-    prices_checked: 2026-11-24
+    prices_checked: 2026-11-26
 
   - id: moonshotai/kimi-k2-thinking
     name: Kimi K2 Thinking

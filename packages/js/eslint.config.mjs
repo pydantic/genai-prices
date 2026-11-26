@@ -3,11 +3,12 @@ import eslintConfigPrettier from 'eslint-config-prettier/flat'
 import perfectionist from 'eslint-plugin-perfectionist'
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import turboPlugin from 'eslint-plugin-turbo'
+import { defineConfig } from 'eslint/config'
 import globals from 'globals'
 import neostandard from 'neostandard'
 import tseslint from 'typescript-eslint'
 
-export default tseslint.config(
+export default defineConfig(
   pluginJs.configs.recommended,
   tseslint.configs.strictTypeChecked,
   tseslint.configs.stylisticTypeChecked,
@@ -28,6 +29,14 @@ export default tseslint.config(
     rules: {
       'perfectionist/sort-modules': 'off',
       'turbo/no-undeclared-env-vars': 'off',
+    },
+  },
+  {
+    // Tests pass tiered prices as plain objects, the shape callers and the JSON data use.
+    // The engine validates them and rebuilds them as TieredPrices instances.
+    files: ['src/__tests__/calcPrice.test.ts', 'src/__tests__/tieredPricing.test.ts'],
+    rules: {
+      '@typescript-eslint/no-unsafe-class-instance-assignment': 'off',
     },
   },
   { ignores: ['coverage', 'dist', 'src/data.ts'] },
