@@ -89,6 +89,10 @@ def test_trustedrouter_parses_token_non_token_aliases_and_filters_hidden_and_unp
             {'id': 'hidden/synth', 'pricing': {'prompt': '0.000001'}, 'trustedrouter': {'synthetic_monitor': True}},
             {'id': 'trustedrouter/synth', 'pricing': {'prompt': '-1', 'completion': '-1'}},
             {'id': 'trustedrouter/free', 'pricing': {'prompt': '0', 'completion': '0'}},
+            {
+                'id': 'parasail/liberty-2.0',
+                'pricing': {'prompt': '0.000002', 'completion': '0.000019', 'minimum': '0.001'},
+            },
             {'id': 'image/only', 'pricing': {'prompt': '0', 'completion': '0', 'image': '0.03'}},
             {'id': 'missing/pricing', 'pricing': None},
         ]
@@ -214,7 +218,13 @@ def test_trustedrouter_parses_prompt_length_tiers_and_handles_constant_and_negat
 @pytest.mark.parametrize(
     ('bad_row', 'error'),
     [
+        (None, 'Unexpected TrustedRouter model entry'),
+        ('not-a-dict', 'Unexpected TrustedRouter model entry'),
         ({'id': '', 'pricing': {'prompt': '0.000001'}}, 'Missing TrustedRouter model id'),
+        (
+            {'id': 'v/bad-meta', 'trustedrouter': 'bad', 'pricing': {'prompt': '0.000001'}},
+            'Unexpected TrustedRouter metadata for v/bad-meta',
+        ),
         ({'id': 'v/bool', 'pricing': {'prompt': True}}, 'Non-numeric prompt price for v/bool'),
         ({'id': 'v/str', 'pricing': {'prompt': 'varies'}}, 'Non-numeric prompt price for v/str'),
         ({'id': 'v/nan', 'pricing': {'prompt': 'NaN'}}, 'Non-finite prompt price for v/nan'),
@@ -270,7 +280,7 @@ def test_trustedrouter_parses_prompt_length_tiers_and_handles_constant_and_negat
     ],
 )
 def test_trustedrouter_skips_unreadable_rows_and_reads_the_others(
-    bad_row: dict[str, Any], error: str, capsys: pytest.CaptureFixture[str]
+    bad_row: Any, error: str, capsys: pytest.CaptureFixture[str]
 ) -> None:
     models = source_trustedrouter.parse_models([bad_row, SAMPLE_MODEL])
 
@@ -332,4 +342,4 @@ def test_trustedrouter_main_fetches_recorded_models(
 
     source_trustedrouter.main(provider_path)
 
-    assert capsys.readouterr().out == 'TrustedRouter prices updated: 0 added, 548 updated\n'
+    assert capsys.readouterr().out == 'TrustedRouter prices updated: 0 added, 547 updated\n'

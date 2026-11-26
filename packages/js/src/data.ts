@@ -54416,7 +54416,7 @@ export const data: Provider[] = [
     pricing_urls: ['https://trustedrouter.com/models', 'https://api.trustedrouter.com/v1/models'],
     api_pattern: 'https://(?:api\\.trustedrouter\\.com|api-europe-west4\\.quillrouter\\.com)(?:/|$)',
     price_comments:
-      'OpenAI-compatible multi-model inference gateway routing through hardware-attested Confidential Space enclaves (US: `https://api.trustedrouter.com/v1`, EU: `https://api-europe-west4.quillrouter.com/v1`). Prices are imported from the public catalog at https://api.trustedrouter.com/v1/models, including prompt/completion/cache token rates, prompt-length tiers (`tiers[].max_prompt_tokens`), character-priced TTS (`input_mchars`), audio-minute transcription (`audio_hours` / `input_audio_hours`), per-request models (`requests_kcount`), and `trustedrouter/*` routing presets (recorded at their published starting rates where `prompt_max`/`completion_max` report candidate upper bounds). Hidden/internal routes, dynamic sentinel `-1` routes, zero-priced/free routes, per-image models, and per-second video models are excluded because the current v2 unit registry has no per-image or per-video-second billing units.',
+      'OpenAI-compatible inference gateway routing through hardware-attested Confidential Space enclaves (US: `https://api.trustedrouter.com/v1`, EU: `https://api-europe-west4.quillrouter.com/v1`). Prices are imported from https://api.trustedrouter.com/v1/models, covering token rates, prompt-length tiers, character-priced TTS (`input_mchars`), audio-minute transcription (`audio_hours` / `input_audio_hours`), per-request models (`requests_kcount`), and `trustedrouter/*` presets (at their published starting rates). Hidden/internal routes, dynamic `-1` routes, zero-priced/free routes, per-request minimum-charge floors (`pricing.minimum`), per-image models, and per-second video models are excluded.',
     model_match: {
       starts_with: 'trustedrouter/',
     },
@@ -58885,18 +58885,6 @@ export const data: Provider[] = [
           input_mtok: 0.36925,
           cache_read_mtok: 0.0844,
           output_mtok: 2.90125,
-        },
-      },
-      {
-        id: 'parasail/liberty-2.0',
-        name: 'Parasail Liberty 2.0',
-        match: {
-          equals: 'parasail/liberty-2.0',
-        },
-        context_window: 262144,
-        prices: {
-          input_mtok: 2,
-          output_mtok: 19,
         },
       },
       {

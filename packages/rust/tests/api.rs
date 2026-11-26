@@ -389,6 +389,7 @@ fn trustedrouter_provider_selection_and_tiered_pricing() {
     let preset_usage = usage([(UsageKey::INPUT_TOKENS, 1_000_000.0), (UsageKey::OUTPUT_TOKENS, 1_000_000.0)]);
     for request in [
         PriceRequest::new("trustedrouter/fast", &preset_usage).with_provider_id("trustedrouter").with_timestamp(ts),
+        PriceRequest::new("trustedrouter/fast", &preset_usage).with_provider_id("trusted-router").with_timestamp(ts),
         PriceRequest::new("trustedrouter/fast", &preset_usage)
             .with_provider_api_url("https://api.trustedrouter.com/v1/chat/completions")
             .with_timestamp(ts),

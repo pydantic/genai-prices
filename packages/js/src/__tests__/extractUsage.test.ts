@@ -1366,15 +1366,17 @@ describe('extractUsage', () => {
         expectedUsage: {
           cache_read_tokens: 200,
           cache_write_tokens: 50,
+          input_audio_tokens: 30,
           input_tokens: 1_000,
+          output_audio_tokens: 15,
           output_reasoning_tokens: 25,
           output_tokens: 100,
         },
         usage: {
           completion_tokens: 100,
-          completion_tokens_details: { reasoning_tokens: 25 },
+          completion_tokens_details: { audio_tokens: 15, reasoning_tokens: 25 },
           prompt_tokens: 1_000,
-          prompt_tokens_details: { cache_write_tokens: 50, cached_tokens: 200 },
+          prompt_tokens_details: { audio_tokens: 30, cache_write_tokens: 50, cached_tokens: 200 },
         },
       },
       {

@@ -28,27 +28,38 @@ SCALAR_PRICE_KEYS = (
     'input_character',
     'input_audio_minute',
     'request',
+    'minimum',
 )
 
 
-def parse_models(models: list[dict[str, Any]]) -> list[ModelInfo]:
+def parse_models(models: list[Any]) -> list[ModelInfo]:
     """Parse public priced models from TrustedRouter's `/v1/models` payload."""
-    all_ids = {raw_id.lower() for model in models if isinstance(raw_id := model.get('id'), str) and raw_id}
+    all_ids = {
+        raw_id.lower()
+        for model in models
+        if isinstance(model, dict) and isinstance(raw_id := cast(dict[str, Any], model).get('id'), str) and raw_id
+    }
     claimed_aliases: set[str] = set()
     model_infos: list[ModelInfo] = []
 
     for model in models:
         with skipping_unreadable_row('TrustedRouter') as row:
-            model_id = model.get('id')
+            if not isinstance(model, dict):
+                raise UnreadableRowError(f'Unexpected TrustedRouter model entry: {model!r}')
+            entry = cast(dict[str, Any], model)
+            model_id = entry.get('id')
             if not isinstance(model_id, str) or not model_id.strip():
-                raise UnreadableRowError(f'Missing TrustedRouter model id: {model!r}')
+                raise UnreadableRowError(f'Missing TrustedRouter model id: {entry!r}')
             row.model_ids.add(model_id)
 
-            metadata: dict[str, Any] = model.get('trustedrouter') or {}
+            raw_metadata = entry.get('trustedrouter')
+            if raw_metadata is not None and not isinstance(raw_metadata, dict):
+                raise UnreadableRowError(f'Unexpected TrustedRouter metadata for {model_id}: {raw_metadata!r}')
+            metadata: dict[str, Any] = cast(dict[str, Any], raw_metadata) if raw_metadata is not None else {}
             if any(metadata.get(flag) for flag in HIDDEN_METADATA_FLAGS):
                 continue
 
-            pricing = model.get('pricing')
+            pricing = entry.get('pricing')
             if not isinstance(pricing, dict):
                 continue
 
@@ -59,9 +70,9 @@ def parse_models(models: list[dict[str, Any]]) -> list[ModelInfo]:
             model_infos.append(
                 ModelInfo(
                     id=model_id,
-                    name=_model_name(model.get('name')),
+                    name=_model_name(entry.get('name')),
                     match=_model_match(model_id, metadata.get('aliases'), all_ids, claimed_aliases),
-                    context_window=_context_window(model.get('context_length')),
+                    context_window=_context_window(entry.get('context_length')),
                     prices=prices,
                     prices_checked=date.today(),
                 )
@@ -77,7 +88,7 @@ def main(provider_path: Path | None = None) -> None:
     data: Any = cast(dict[str, Any], payload).get('data') if isinstance(payload, dict) else None
     if not isinstance(data, list):
         raise RuntimeError('TrustedRouter /v1/models response did not contain a data list')
-    models = parse_models(cast(list[dict[str, Any]], data))
+    models = parse_models(cast(list[Any], data))
     provider_yaml = ProviderYaml(provider_path or package_dir / 'providers/trustedrouter.yml')
     added, updated = provider_yaml.upsert_models(models, source='TrustedRouter', min_count=MIN_MODEL_COUNT)
     print(f'TrustedRouter prices updated: {added} added, {updated} updated')
@@ -91,6 +102,9 @@ def get_trustedrouter_prices() -> None:  # pragma: no cover - thin CLI alias for
 def _model_price(model_id: str, pricing: dict[str, Any]) -> ModelPrice | None:
     parsed = {key: _parse_decimal(pricing.get(key), field=key, model_id=model_id) for key in SCALAR_PRICE_KEYS}
     if any(value is not None and value < 0 for value in parsed.values()):
+        return None
+    if (minimum := parsed['minimum']) is not None and minimum > 0:
+        # Per-request minimum-charge floors cannot be expressed in the v2 price schema.
         return None
 
     fields: dict[str, Decimal | TieredPrices] = {

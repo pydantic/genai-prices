@@ -1419,12 +1419,14 @@ func TestTrustedRouterProviderSelectionPricingAndExtraction(t *testing.T) {
 	}{
 		{
 			"chat",
-			`{"model":"anthropic/claude-haiku-5.5","usage":{"prompt_tokens":1000,"prompt_tokens_details":{"cached_tokens":200,"cache_write_tokens":50},"completion_tokens":100,"completion_tokens_details":{"reasoning_tokens":25}}}`,
+			`{"model":"anthropic/claude-haiku-5.5","usage":{"prompt_tokens":1000,"prompt_tokens_details":{"cached_tokens":200,"cache_write_tokens":50,"audio_tokens":30},"completion_tokens":100,"completion_tokens_details":{"reasoning_tokens":25,"audio_tokens":15}}}`,
 			genai_prices.Usage{
 				genai_prices.UsageInputTokens:           1_000,
 				genai_prices.UsageCacheReadTokens:       200,
 				genai_prices.UsageCacheWriteTokens:      50,
+				genai_prices.UsageInputAudioTokens:      30,
 				genai_prices.UsageOutputTokens:          100,
+				genai_prices.UsageOutputAudioTokens:     15,
 				genai_prices.UsageOutputReasoningTokens: 25,
 			},
 		},
