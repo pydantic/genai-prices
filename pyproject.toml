@@ -33,7 +33,7 @@ dev = [
 ]
 
 [tool.uv]
-exclude-newer = "1 week"
+exclude-newer = "3 hours"
 exclude-newer-package = { cassetter = false }
 required-version = ">=0.12.1"
 
