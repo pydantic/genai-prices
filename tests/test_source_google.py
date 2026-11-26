@@ -94,6 +94,18 @@ PRICING_MARKDOWN = '\n'.join(
             '| Image input price | Free | $0.45 ($0.00012 per image) |\n'
             '| Audio input price | Free | $6.50 ($0.00016 per second) |',
         ),
+        section(
+            'Genie',
+            '[`genie-x`](https://x)',
+            '| Input price | Not available | $1.50 (text / reference image) |\n'
+            '| Output price | Not available | $9.00 (text) $17.50 (video, audio included){% sup %}*{% /sup %} |',
+        ),
+        section(
+            'Decision',
+            '[`gemini-decision-x`](https://x)',
+            '| Input price (text, image, video, audio, PDF) | Free of charge | $0.10 |\n'
+            '| Output price | Not applicable (0 output tokens) | Not applicable (0 output tokens) |',
+        ),
         ARGON,
         section(
             'Old image',
@@ -160,6 +172,8 @@ def test_google_parses_standard_rates_by_modality_and_prompt_size(capsys: pytest
         'gemini-embedding-x': price(
             input_mtok=Decimal('0.2'), input_image_mtok=Decimal('0.45'), input_audio_mtok=Decimal('6.5')
         ),
+        'genie-x': price(input_mtok=Decimal('1.5'), output_mtok=Decimal('9'), output_video_mtok=Decimal('17.5')),
+        'gemini-decision-x': price(input_mtok=Decimal('0.1')),
     }
     assert {model.prices_checked for model in models} == {TODAY}
     assert capsys.readouterr().out == (
