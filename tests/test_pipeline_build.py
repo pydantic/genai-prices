@@ -383,7 +383,7 @@ prices:
     assert 'pub(crate) const UNIT_COUNT: usize = 5;' in rust_units
     assert 'price_key: "input_5m_mtok", per: 1000000.0' in rust_units
     assert (rust_dir / 'data' / 'prices.json').read_text() == (go_dir / 'internal' / 'data' / 'prices.json').read_text()
-    assert [call[0] for call in calls] == ['uv', 'uv', 'uv', 'uv', 'gofmt', 'npx']
+    assert [call[0] for call in calls] == ['uv', 'uv', 'uv', 'uv', 'gofmt', 'node']
 
 
 def test_package_data_rejects_a_non_array_payload(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
