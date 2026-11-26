@@ -13,7 +13,7 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.05
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: baichuan/baichuan-m2-32b
     name: Baichuan M2 32B
@@ -61,7 +61,7 @@ models:
     prices:
       input_mtok: 0.03
       output_mtok: 0.03
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: deepseek/deepseek-r1
     name: DeepSeek R1
@@ -233,7 +233,7 @@ models:
     prices:
       input_mtok: 0.119
       output_mtok: 0.2
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: google/gemma-4-26b-a4b-it
     name: Gemma 4 26B A4B
@@ -243,7 +243,7 @@ models:
     prices:
       input_mtok: 0.13
       output_mtok: 0.4
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: google/gemma-4-31b-it
     name: Gemma 4 31B
@@ -253,7 +253,7 @@ models:
     prices:
       input_mtok: 0.14
       output_mtok: 0.4
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: gryphe/mythomax-l2-13b
     name: MythoMax L2 13B
@@ -366,7 +366,7 @@ models:
         prices:
           input_mtok: 0.02
           output_mtok: 0.05
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: meta-llama/llama-3.1-8b-instruct-bf16
     match:
@@ -414,7 +414,7 @@ models:
         prices:
           input_mtok: 0.135
           output_mtok: 0.4
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: meta-llama/llama-4-maverick-17b-128e-instruct-fp8
     name: Llama 4 Maverick Instruct
@@ -702,7 +702,7 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.2
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: openai/gpt-oss-120b
     name: OpenAI GPT OSS 120B
@@ -712,7 +712,7 @@ models:
     prices:
       input_mtok: 0.05
       output_mtok: 0.25
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: openchat/openchat-7b
     match:
@@ -780,7 +780,7 @@ models:
     prices:
       input_mtok: 0.25
       output_mtok: 0.97
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: qwen/qwen3-vl-30b-a3b-instruct
     name: Qwen3 VL 30B A3B Instruct
