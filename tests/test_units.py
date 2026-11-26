@@ -905,8 +905,15 @@ def test_package_ts_data_accepts_separated_inputs_without_units_yml(
     }
     assert prettier_calls == [
         (
-            ['npx', '--', 'prettier', '--write', 'src/data.ts', 'src/dataUnits.ts'],
-            str(tmp_path / 'packages' / 'js'),
+            [
+                'node',
+                'scripts/require_node_modules.cjs',
+                'node_modules/.bin/prettier',
+                '--write',
+                'packages/js/src/data.ts',
+                'packages/js/src/dataUnits.ts',
+            ],
+            str(tmp_path),
         )
     ]
 

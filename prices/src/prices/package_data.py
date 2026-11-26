@@ -241,16 +241,17 @@ export const unitData: RawUnitsDict = {json.dumps(runtime_units, indent=2, ensur
     data_units_ts = js_package_dir / 'src' / 'dataUnits.ts'
     data_units_ts.write_text(units_ts_content)
 
+    # The guard fails unless node_modules matches package-lock.json, so prettier never comes from the registry.
     subprocess.run(
         [
-            'npx',
-            '--',
-            'prettier',
+            'node',
+            'scripts/require_node_modules.cjs',
+            'node_modules/.bin/prettier',
             '--write',
-            'src/data.ts',
-            'src/dataUnits.ts',
+            str(data_ts.relative_to(root_dir)),
+            str(data_units_ts.relative_to(root_dir)),
         ],
-        cwd=str(js_package_dir),
+        cwd=str(root_dir),
         check=True,
         stdout=subprocess.PIPE,
     )

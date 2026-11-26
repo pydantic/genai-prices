@@ -6717,7 +6717,7 @@ providers: list[Provider] = [
             'https://ai.google.dev/gemini-api/docs/pricing',
             'https://cloud.google.com/vertex-ai/generative-ai/pricing',
         ],
-        model_match=ClauseContains(contains='gemini'),
+        model_match=ClauseOr(or_=[ClauseContains(contains='gemini'), ClauseStartsWith(starts_with='genie-')]),
         provider_match=ClauseOr(
             or_=[
                 ClauseContains(contains='google'),
@@ -8005,6 +8005,30 @@ providers: list[Provider] = [
                 ],
             ),
             ModelInfo(
+                id='gemini-3.5-live-translate-preview',
+                match=ClauseEquals(equals='gemini-3.5-live-translate-preview'),
+                name='Gemini 3.5 Live Translate Preview',
+                description="Google's low-latency, real-time speech-to-speech translation model for more than 70 languages.",
+                price_comments='See https://aistudio.google.com/docs/pricing. Input and output are audio, at 25 tokens per second. Google also quotes per-minute prices, which have no unit here; the per-token prices are shown.',
+                prices=ModelPrice(input_mtok=Decimal('3.5'), output_mtok=Decimal('21')),
+            ),
+            ModelInfo(
+                id='gemini-3.5-transcribe',
+                match=ClauseEquals(equals='gemini-3.5-transcribe'),
+                name='Gemini 3.5 Transcribe',
+                description="Google's speech-to-text model with automatic language detection, speaker diarization, word-level timestamps and custom vocabulary biasing.",
+                price_comments='See https://aistudio.google.com/docs/pricing. Input is audio and output is text, including thinking tokens. Google also quotes per-minute prices, which have no unit here; the per-token prices are shown.',
+                prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('12')),
+            ),
+            ModelInfo(
+                id='gemini-3.5-transcribe-live',
+                match=ClauseEquals(equals='gemini-3.5-transcribe-live'),
+                name='Gemini 3.5 Transcribe Live',
+                description="Google's low-latency, real-time speech-to-text model for bidirectional streaming audio transcription over WebSockets.",
+                price_comments='See https://aistudio.google.com/docs/pricing. Input is audio and output is text, including thinking tokens. Google also quotes per-minute prices, which have no unit here; the per-token prices are shown.',
+                prices=ModelPrice(input_mtok=Decimal('3.5'), output_mtok=Decimal('21')),
+            ),
+            ModelInfo(
                 id='gemini-3.6-flash',
                 match=ClauseStartsWith(starts_with='gemini-3.6-flash'),
                 name='Gemini 3.6 Flash',
@@ -8596,6 +8620,14 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='gemini-omni-1.2-flash',
+                match=ClauseEquals(equals='gemini-omni-1.2-flash'),
+                name='Gemini Omni 1.2 Flash',
+                description="Google's video generation and editing model, generating and editing up to 15 seconds of video with native audio.",
+                price_comments='See https://aistudio.google.com/docs/pricing. Input is $1.50 / 1M tokens across text, image and video; output is $9 / 1M tokens for text and $12 / 1M tokens for video, at 5,792 tokens per second of 720p video.',
+                prices=ModelPrice(input_mtok=Decimal('1.5'), output_mtok=Decimal('9'), output_video_mtok=Decimal('12')),
+            ),
+            ModelInfo(
                 id='gemini-omni-flash-preview',
                 match=ClauseStartsWith(starts_with='gemini-omni-flash-preview'),
                 name='Gemini Omni Flash Preview',
@@ -8721,6 +8753,16 @@ providers: list[Provider] = [
                 context_window=262144,
                 price_comments='Free of charge on the Gemini API with no paid tier, see https://ai.google.dev/gemini-api/docs/pricing. Not offered as Model-as-a-Service on Vertex AI (only Gemma 4 26B is); there it is self-deployed from Model Garden and billed as endpoint compute, so no per-token price applies. The previous rates were imported from OpenRouter, not Google.',
                 prices=ModelPrice(),
+            ),
+            ModelInfo(
+                id='genie-4',
+                match=ClauseEquals(equals='genie-4'),
+                name='Genie 4',
+                description="Google's real-time interactive world generation model, streaming steerable 24 fps video with synchronized stereo audio on the Interactions API.",
+                price_comments='See https://aistudio.google.com/docs/pricing. Input is $1.50 / 1M tokens for text and reference images; output is $9 / 1M tokens for text and $17.50 / 1M tokens for video, at 240 tokens per frame, with the audio included in the video rate. The free tier, Batch, Flex and Priority are not offered.',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.5'), output_mtok=Decimal('9'), output_video_mtok=Decimal('17.5')
+                ),
             ),
         ],
     ),
