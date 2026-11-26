@@ -50,7 +50,7 @@ This is the GenAI Prices project - a database and tools for calculating LLM infe
 ### Setup
 
 ```bash
-make install      # Install dependencies and pre-commit hooks
+make install      # Install the Python and JS dependencies and the pre-commit hooks
 make sync         # Update local packages and uv.lock
 ```
 

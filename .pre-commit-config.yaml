@@ -50,12 +50,12 @@ repos:
         pass_filenames: false
       - id: prettier
         name: prettier
-        entry: npx
-        args: [--, prettier, --write, --ignore-unknown]
+        entry: node scripts/require_node_modules.cjs node_modules/.bin/prettier
+        args: [--write, --ignore-unknown]
         language: system
       - id: lint-fix
         name: lint fix
-        entry: npm
+        entry: node scripts/require_node_modules.cjs npm
         args: [run, lint-fix]
         files: "packages/js/"
         types_or: [ts, javascript]
@@ -77,7 +77,7 @@ repos:
         pass_filenames: false
       - id: build
         name: build prices
-        entry: make
+        entry: node scripts/require_node_modules.cjs make
         args: [build]
         files: "prices/"
         language: system
@@ -107,7 +107,7 @@ repos:
         pass_filenames: false
       - id: typecheck-ts
         name: typecheck typescript
-        entry: npm
+        entry: node scripts/require_node_modules.cjs npm
         args: [run, typecheck]
         language: system
         types: [ts]
