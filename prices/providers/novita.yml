@@ -1106,7 +1106,7 @@ models:
     prices:
       input_mtok: 0.035
       output_mtok: 0.138
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: zai-org/glm-4.5-air
     name: GLM 4.5 Air
@@ -1128,7 +1128,7 @@ models:
       input_mtok: 0.6
       cache_read_mtok: 0.11
       output_mtok: 1.8
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: zai-org/glm-4.6
     name: GLM 4.6
@@ -1150,7 +1150,7 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.055
       output_mtok: 0.9
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: zai-org/glm-4.7
     name: GLM 4.7
@@ -1174,7 +1174,7 @@ models:
       input_mtok: 0.07
       cache_read_mtok: 0.01
       output_mtok: 0.4
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: zai-org/glm-5
     name: GLM 5
