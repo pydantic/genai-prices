@@ -94,6 +94,7 @@ safe-outputs:
       - prices/providers/perplexity.yml
       - prices/providers/quicksilverpro.yml
       - prices/providers/together.yml
+      - prices/providers/trustedrouter.yml
       - prices/providers/typesafe.yml
       - prices/providers/voyageai.yml
       - prices/providers/x_ai.yml

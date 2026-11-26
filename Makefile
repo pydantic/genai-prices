@@ -195,8 +195,12 @@ modal-get: ## get modal shared endpoint prices
 openrouter-provider-get: ## get openrouter provider prices
 	uv run -m prices get_openrouter_provider_prices
 
+.PHONY: trustedrouter-get
+trustedrouter-get: ## get trustedrouter provider prices
+	uv run -m prices get_trustedrouter_prices
+
 .PHONY: get-all-prices
-get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get avian-get azure-get baseten-get cerebras-get cloudflare-get cursor-get doubleword-get elevenlabs-get github-copilot-get meta-get minimax-get moonshotai-get novita-get openai-decisions-get ovhcloud-get quicksilverpro-get typesafe-get voyageai-get zai-get groq-get perplexity-get together-get xai-get openrouter-provider-get google-get anthropic-get databricks-get fireworks-get modal-get aws-get openai-get mistral-get ## get all prices
+get-all-prices: helicone-get openrouter-get litellm-get simonw-prices-get huggingface-get arcee-get avian-get azure-get baseten-get cerebras-get cloudflare-get cursor-get doubleword-get elevenlabs-get github-copilot-get meta-get minimax-get moonshotai-get novita-get openai-decisions-get ovhcloud-get quicksilverpro-get trustedrouter-get typesafe-get voyageai-get zai-get groq-get perplexity-get together-get xai-get openrouter-provider-get google-get anthropic-get databricks-get fireworks-get modal-get aws-get openai-get mistral-get ## get all prices
 
 .PHONE: update-price-discrepancies
 update-price-discrepancies: ## update price discrepancies

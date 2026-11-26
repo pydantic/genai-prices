@@ -382,3 +382,49 @@ fn error_messages_name_the_failure() {
     assert_eq!(error.kind(), ErrorKind::ModelNotFound);
     assert_eq!(error.to_string(), r#"model not found: unable to find model with model_ref="missing" in openai"#);
 }
+
+#[test]
+fn trustedrouter_provider_selection_and_tiered_pricing() {
+    let ts = date(2026, 11, 26);
+    let preset_usage = usage([(UsageKey::INPUT_TOKENS, 1_000_000.0), (UsageKey::OUTPUT_TOKENS, 1_000_000.0)]);
+    for request in [
+        PriceRequest::new("trustedrouter/fast", &preset_usage).with_provider_id("trustedrouter").with_timestamp(ts),
+        PriceRequest::new("trustedrouter/fast", &preset_usage)
+            .with_provider_api_url("https://api.trustedrouter.com/v1/chat/completions")
+            .with_timestamp(ts),
+        PriceRequest::new("trustedrouter/fast", &preset_usage)
+            .with_provider_api_url("https://api-europe-west4.quillrouter.com/v1/chat/completions")
+            .with_timestamp(ts),
+        PriceRequest::new("trustedrouter/fast", &preset_usage).with_timestamp(ts),
+    ] {
+        let calculation = genai_prices::calculate(&request).unwrap();
+        assert_eq!(
+            (calculation.provider_id.as_str(), calculation.model_id.as_str()),
+            ("trustedrouter", "trustedrouter/fast")
+        );
+        assert_close(calculation.total_price, 1.1605, 1e-9);
+    }
+
+    for (tokens, want) in [(100_000.0, 0.013_926), (100_001.0, 0.069_630_527_5)] {
+        let tiered_usage = usage([
+            (UsageKey::INPUT_TOKENS, tokens),
+            (UsageKey::CACHE_READ_TOKENS, 20_000.0),
+            (UsageKey::OUTPUT_TOKENS, 10_000.0),
+        ]);
+        let calculation = genai_prices::calculate(
+            &PriceRequest::new("anthropic/claude-haiku-5.5", &tiered_usage)
+                .with_provider_id("trustedrouter")
+                .with_timestamp(ts),
+        )
+        .unwrap();
+        assert_close(calculation.total_price, want, 1e-12);
+    }
+
+    let one = usage([(UsageKey::INPUT_TOKENS, 1.0)]);
+    for url in
+        ["https://api.trustedrouter.com.evil.example/v1", "https://api-europe-west4.quillrouter.com.evil.example/v1"]
+    {
+        let request = PriceRequest::new("trustedrouter/fast", &one).with_provider_api_url(url);
+        assert_eq!(error_kind(&genai_prices::calculate(&request)), Some(ErrorKind::ProviderNotFound), "{url}");
+    }
+}

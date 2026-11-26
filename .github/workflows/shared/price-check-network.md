@@ -7,6 +7,7 @@ network:
     - api-docs.deepseek.com
     - api.arcee.ai
     - api.cerebras.ai
+    - api.trustedrouter.com
     - avian.io
     - aws.amazon.com
     - azure.microsoft.com
@@ -51,6 +52,7 @@ network:
     - platform.openai.com
     - quicksilverpro.io
     - router.huggingface.co
+    - trustedrouter.com
     - www.anthropic.com
     - www.baseten.co
     - www.cerebras.ai

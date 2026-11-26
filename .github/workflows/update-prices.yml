@@ -37,7 +37,7 @@ jobs:
       fail-fast: false
       matrix:
         importer: >-
-          ${{ fromJSON((github.event.schedule == '47 6 * * 1' || inputs.weekly) && '["huggingface", "openrouter-provider"]' || '[
+          ${{ fromJSON((github.event.schedule == '47 6 * * 1' || inputs.weekly) && '["huggingface", "openrouter-provider", "trustedrouter"]' || '[
             "anthropic", "arcee", "avian", "azure", "aws", "baseten", "cerebras", "cloudflare", "cursor",
             "databricks", "doubleword", "elevenlabs", "fireworks", "github-copilot", "google", "groq", "meta", "minimax",
             "mistral", "modal", "moonshotai", "novita", "openai", "openai-decisions", "ovhcloud",

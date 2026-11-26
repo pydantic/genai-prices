@@ -3578,3 +3578,109 @@ def test_decision_model_input_only_prices(
 def test_typesafe_served_id_match_is_exact(provider_id: str, model_ref: str) -> None:
     with pytest.raises(LookupError, match='Unable to find model'):
         calc_price(Usage(input_tokens=285), model_ref=model_ref, provider_id=provider_id)
+
+
+TRUSTEDROUTER_TIMESTAMP = datetime(2026, 11, 26, tzinfo=UTC)
+
+
+@pytest.mark.parametrize(
+    ('input_tokens', 'expected_total_price'),
+    [
+        (100_000, Decimal('0.013926')),
+        (100_001, Decimal('0.0696305275')),
+    ],
+)
+def test_trustedrouter_tiered_long_context_prices(input_tokens: int, expected_total_price: Decimal) -> None:
+    price = calc_price(
+        Usage(input_tokens=input_tokens, cache_read_tokens=20_000, output_tokens=10_000),
+        model_ref='anthropic/claude-haiku-5.5',
+        provider_id='trustedrouter',
+        genai_request_timestamp=TRUSTEDROUTER_TIMESTAMP,
+    )
+
+    assert price.provider.id == 'trustedrouter'
+    assert price.model.id == 'anthropic/claude-haiku-5.5'
+    assert price.total_price == expected_total_price
+
+
+@pytest.mark.parametrize(
+    'provider_api_url',
+    [
+        'https://api.trustedrouter.com',
+        'https://api.trustedrouter.com/v1/chat/completions',
+        'https://api-europe-west4.quillrouter.com/v1/chat/completions',
+    ],
+)
+def test_trustedrouter_selected_by_api_url(provider_api_url: str) -> None:
+    price = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref='trustedrouter/fast',
+        provider_api_url=provider_api_url,
+        genai_request_timestamp=TRUSTEDROUTER_TIMESTAMP,
+    )
+
+    assert price.provider.id == 'trustedrouter'
+    assert price.model.id == 'trustedrouter/fast'
+    assert price.total_price == Decimal('1.1605')
+
+
+def test_trustedrouter_namespace_aliases_and_non_token_units() -> None:
+    by_namespace = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref='trustedrouter/auto-routing',
+        genai_request_timestamp=TRUSTEDROUTER_TIMESTAMP,
+    )
+    assert by_namespace.provider.id == 'trustedrouter'
+    assert by_namespace.model.id == 'trustedrouter/auto'
+    assert by_namespace.total_price == Decimal('0.100225')
+
+    by_alias = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref='minimax/minimax-m3-1-flash',
+        provider_id='trusted-router',
+        genai_request_timestamp=TRUSTEDROUTER_TIMESTAMP,
+    )
+    assert by_alias.provider.id == 'trustedrouter'
+    assert by_alias.model.id == 'minimax/minimax-m3.1-flash'
+    assert by_alias.total_price == Decimal('0.79125')
+
+    tts = calc_price(
+        Usage(input_characters=10_000),
+        model_ref='elevenlabs/eleven-v3',
+        provider_id='trustedrouter',
+        genai_request_timestamp=TRUSTEDROUTER_TIMESTAMP,
+    )
+    assert tts.total_price == Decimal('0.844')
+
+    whisper = calc_price(
+        Usage(audio_seconds=60),
+        model_ref='openai/whisper-1',
+        provider_id='trustedrouter',
+        genai_request_timestamp=TRUSTEDROUTER_TIMESTAMP,
+    )
+    assert whisper.total_price == Decimal('0.00633')
+
+    fetch = calc_price(
+        Usage(),
+        model_ref='deepseek/fetch',
+        provider_id='trustedrouter',
+        genai_request_timestamp=TRUSTEDROUTER_TIMESTAMP,
+    )
+    assert fetch.total_price == Decimal('0.000792')
+
+
+@pytest.mark.parametrize(
+    'provider_api_url',
+    [
+        'https://api.trustedrouter.com.evil.example/v1',
+        'https://api-europe-west4.quillrouter.com.evil.example/v1',
+    ],
+)
+def test_trustedrouter_api_url_requires_real_host(provider_api_url: str) -> None:
+    with pytest.raises(LookupError, match='Unable to find provider'):
+        calc_price(Usage(input_tokens=1), 'trustedrouter/fast', provider_api_url=provider_api_url)
+
+
+def test_trustedrouter_does_not_price_unknown_models_in_its_namespace() -> None:
+    with pytest.raises(LookupError, match='Unable to find model'):
+        calc_price(Usage(input_tokens=1), 'trustedrouter/unknown-model', provider_id='trustedrouter')

@@ -1348,3 +1348,113 @@ func TestElevenLabsRealtimeProviderSelectionAndPricing(t *testing.T) {
 		}
 	}
 }
+
+func TestTrustedRouterProviderSelectionPricingAndExtraction(t *testing.T) {
+	timestamp := time.Date(2026, 11, 26, 0, 0, 0, 0, time.UTC)
+	presetUsage := genai_prices.Usage{
+		genai_prices.UsageInputTokens:  1_000_000,
+		genai_prices.UsageOutputTokens: 1_000_000,
+	}
+	for _, selection := range []genai_prices.PriceRequest{
+		{ProviderID: "trustedrouter"},
+		{ProviderID: "trusted-router"},
+		{ProviderAPIURL: "https://api.trustedrouter.com"},
+		{ProviderAPIURL: "https://api.trustedrouter.com/v1/chat/completions"},
+		{ProviderAPIURL: "https://api-europe-west4.quillrouter.com/v1/chat/completions"},
+		{},
+	} {
+		selection.Model = "trustedrouter/fast"
+		selection.Usage = presetUsage
+		selection.Timestamp = timestamp
+		calculation, err := genai_prices.Calculate(selection)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if calculation.ProviderID != "trustedrouter" || math.Abs(calculation.TotalPrice-1.1605) > 1e-9 {
+			t.Fatalf("%#v resolved to %q at %g, want trustedrouter at 1.1605", selection, calculation.ProviderID, calculation.TotalPrice)
+		}
+	}
+
+	for _, test := range []struct {
+		inputTokens float64
+		want        float64
+	}{
+		{inputTokens: 100_000, want: 0.013926},
+		{inputTokens: 100_001, want: 0.0696305275},
+	} {
+		calculation, err := genai_prices.Calculate(genai_prices.PriceRequest{
+			Usage: genai_prices.Usage{
+				genai_prices.UsageInputTokens:     test.inputTokens,
+				genai_prices.UsageCacheReadTokens: 20_000,
+				genai_prices.UsageOutputTokens:    10_000,
+			},
+			Model:      "anthropic/claude-haiku-5.5",
+			ProviderID: "trustedrouter",
+			Timestamp:  timestamp,
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if math.Abs(calculation.TotalPrice-test.want) > 1e-12 {
+			t.Fatalf("%g input tokens: got %g, want %g", test.inputTokens, calculation.TotalPrice, test.want)
+		}
+	}
+
+	for _, request := range []genai_prices.PriceRequest{
+		{Model: "trustedrouter/fast", ProviderAPIURL: "https://api.trustedrouter.com.evil.example/v1"},
+		{Model: "trustedrouter/fast", ProviderAPIURL: "https://api-europe-west4.quillrouter.com.evil.example/v1"},
+		{Model: "trustedrouter/unknown", ProviderID: "trustedrouter"},
+	} {
+		request.Usage = genai_prices.Usage{genai_prices.UsageInputTokens: 1}
+		request.Timestamp = timestamp
+		if calculation, err := genai_prices.Calculate(request); err == nil {
+			t.Fatalf("%#v unexpectedly priced as %#v", request, calculation)
+		}
+	}
+
+	for _, fixture := range []struct {
+		apiFlavor string
+		body      string
+		want      genai_prices.Usage
+	}{
+		{
+			"chat",
+			`{"model":"anthropic/claude-haiku-5.5","usage":{"prompt_tokens":1000,"prompt_tokens_details":{"cached_tokens":200,"cache_write_tokens":50},"completion_tokens":100,"completion_tokens_details":{"reasoning_tokens":25}}}`,
+			genai_prices.Usage{
+				genai_prices.UsageInputTokens:           1_000,
+				genai_prices.UsageCacheReadTokens:       200,
+				genai_prices.UsageCacheWriteTokens:      50,
+				genai_prices.UsageOutputTokens:          100,
+				genai_prices.UsageOutputReasoningTokens: 25,
+			},
+		},
+		{
+			"responses",
+			`{"model":"anthropic/claude-haiku-5.5","usage":{"input_tokens":1000,"input_tokens_details":{"cached_tokens":200,"cache_write_tokens":50},"output_tokens":100,"output_tokens_details":{"reasoning_tokens":25}}}`,
+			genai_prices.Usage{
+				genai_prices.UsageInputTokens:           1_000,
+				genai_prices.UsageCacheReadTokens:       200,
+				genai_prices.UsageCacheWriteTokens:      50,
+				genai_prices.UsageOutputTokens:          100,
+				genai_prices.UsageOutputReasoningTokens: 25,
+			},
+		},
+		{
+			"embeddings",
+			`{"model":"anthropic/claude-haiku-5.5","usage":{"prompt_tokens":1000,"total_tokens":1000}}`,
+			genai_prices.Usage{genai_prices.UsageInputTokens: 1_000},
+		},
+	} {
+		extracted, err := genai_prices.ExtractUsage(genai_prices.ExtractRequest{
+			ResponseJSON: []byte(fixture.body),
+			ProviderID:   "trustedrouter",
+			APIFlavor:    fixture.apiFlavor,
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if extracted.Model != "anthropic/claude-haiku-5.5" || !maps.Equal(extracted.Usage, fixture.want) {
+			t.Errorf("%s extracted %#v, want %#v", fixture.apiFlavor, extracted, fixture.want)
+		}
+	}
+}

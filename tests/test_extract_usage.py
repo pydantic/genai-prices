@@ -2131,3 +2131,57 @@ def test_cloudflare_clairic_native_decision_response() -> None:
     assert result.model is not None and result.model.id == '@cf/cloudflare/clairic'
     assert result.usage == Usage(input_tokens=655, output_tokens=0)
     assert result.calc_price().total_price == Decimal('0.0000655')
+
+
+@pytest.mark.parametrize(
+    ('api_flavor', 'usage_payload', 'expected_usage'),
+    [
+        (
+            'chat',
+            {
+                'prompt_tokens': 1_000,
+                'prompt_tokens_details': {'cached_tokens': 200, 'cache_write_tokens': 50},
+                'completion_tokens': 100,
+                'completion_tokens_details': {'reasoning_tokens': 25},
+            },
+            Usage(
+                input_tokens=1_000,
+                cache_read_tokens=200,
+                cache_write_tokens=50,
+                output_tokens=100,
+                output_reasoning_tokens=25,
+            ),
+        ),
+        (
+            'responses',
+            {
+                'input_tokens': 1_000,
+                'input_tokens_details': {'cached_tokens': 200, 'cache_write_tokens': 50},
+                'output_tokens': 100,
+                'output_tokens_details': {'reasoning_tokens': 25},
+            },
+            Usage(
+                input_tokens=1_000,
+                cache_read_tokens=200,
+                cache_write_tokens=50,
+                output_tokens=100,
+                output_reasoning_tokens=25,
+            ),
+        ),
+        (
+            'embeddings',
+            {'prompt_tokens': 1_000, 'total_tokens': 1_000},
+            Usage(input_tokens=1_000),
+        ),
+    ],
+)
+def test_trustedrouter_usage_extractors(
+    api_flavor: str, usage_payload: dict[str, object], expected_usage: Usage
+) -> None:
+    response: dict[str, object] = {'model': 'anthropic/claude-haiku-5.5', 'usage': usage_payload}
+
+    extracted = extract_usage(response, provider_id='trustedrouter', api_flavor=api_flavor)
+
+    assert extracted.model is not None
+    assert extracted.model.id == 'anthropic/claude-haiku-5.5'
+    assert extracted.usage == expected_usage
