@@ -371,3 +371,74 @@ test('a repair request keeps the attempt count of an in-flight repair', async ()
   assert.equal(readState(comments).requestId, '123-861-1')
   assert.equal(calls.filter(([kind]) => kind === 'dispatch').length, 1)
 })
+
+// The pulls API reports the replaced head for the first `staleReads` reads, then `current`.
+async function recordAfterPush({ staleReads = 0, published = 'f'.repeat(40), current = published }) {
+  const { options, github, calls, comments, pr } = fixture()
+  await watchOne({ ...options, assess: () => ({ state: 'repair', reason: 'finding', findings: [] }) })
+  let reads = 0
+  github.rest.pulls.get = async () => ({
+    data: { ...pr, head: { ...pr.head, sha: reads++ < staleReads ? head : current } },
+  })
+  const expected = {
+    prNumber: 861,
+    headSha: head,
+    requestId: '123-861-1',
+    findings: [{ id: 'thread:one', kind: 'thread', threadId: 'one', commentId: 7 }],
+  }
+  const report = {
+    ...expected,
+    assessments: [
+      {
+        id: 'thread:one',
+        action: 'fixed',
+        verdict: 'net-positive → do',
+        evidence: 'The repair dates the new rate and the price tests cover it.',
+      },
+    ],
+  }
+  const delays = []
+  const result = recordResult({
+    github,
+    context: { repo },
+    core,
+    expected,
+    report,
+    publishedHead: published,
+    sleep: async (ms) => delays.push(ms),
+  })
+  return { result, delays, calls, comments }
+}
+
+test('recording a repair waits for the pulls API to report the pushed head', async () => {
+  const { result, delays, calls, comments } = await recordAfterPush({ staleReads: 2 })
+  await result
+  assert.deepEqual(delays, [1000, 2000])
+  assert.equal(calls.find(([kind]) => kind === 'reaction')[1].content, '+1')
+  assert.match(calls.find(([kind]) => kind === 'reply')[1].body, /result at f{40}/)
+  assert.equal(calls.find(([kind]) => kind === 'resolve')[1].id, 'one')
+  assert.equal(readState(comments).status, 'assessed')
+})
+
+test('recording a repair fails when the pushed head never appears', async () => {
+  const { result, delays, calls } = await recordAfterPush({ staleReads: Infinity })
+  await assert.rejects(result, /identity or head changed/)
+  assert.deepEqual(delays, [1000, 2000, 4000, 8000])
+  assert.equal(
+    calls.some(([kind]) => ['reaction', 'reply', 'resolve'].includes(kind)),
+    false,
+  )
+})
+
+test('recording a repair fails at once when another push replaced the head', async () => {
+  const { result, delays } = await recordAfterPush({ current: 'c'.repeat(40) })
+  await assert.rejects(result, /identity or head changed/)
+  assert.deepEqual(delays, [])
+})
+
+test('recording a repair that changed no code does not wait', async () => {
+  const { result, delays, comments } = await recordAfterPush({ published: head })
+  await result
+  assert.deepEqual(delays, [])
+  assert.equal(readState(comments).status, 'assessed')
+})
