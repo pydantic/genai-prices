@@ -14,15 +14,22 @@ PRICING_URL = 'https://docs.fireworks.ai/serverless/pricing.md'
 MIN_MODEL_COUNT = 8
 TABLE_HEADER = '| Model | Standard | Priority |'
 MODEL_CELL = re.compile(
-    r'\[(?P<name>[^]]+?)(?P<mode> Fast| Ultra-fast \(Preview\)| Flex)?(?P<us> \(US\))?]'
+    r'\[(?P<name>[^]]+?)(?P<mode> Fast| Ultra-fast(?: \(Preview\))?| Flex| Spot)?(?P<us> \(US\))?]'
     r'\(https://app\.fireworks\.ai/models/fireworks/(?P<slug>[\w.-]+)\)'
 )
-MODE_SUFFIXES = {None: '', ' Fast': '-fast', ' Ultra-fast (Preview)': '-ultrafast', ' Flex': '-flex'}
+MODE_SUFFIXES = {
+    None: '',
+    ' Fast': '-fast',
+    ' Ultra-fast': '-ultrafast',
+    ' Ultra-fast (Preview)': '-ultrafast',
+    ' Flex': '-flex',
+    ' Spot': '-spot',
+}
 STANDARD_CELL = re.compile(r'\\\$(\d+(?:\.\d+)?) / \\\$(\d+(?:\.\d+)?) / \\\$(\d+(?:\.\d+)?)')
 
 
 def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
-    """Parse the Standard serverless rates; Fast, Ultra-fast and US-only rows are separate router models."""
+    """Parse the Standard serverless rates; Fast, Ultra-fast, Flex, Spot and US-only rows are separate models."""
     lines = markdown.splitlines()
     if TABLE_HEADER not in lines:
         raise RuntimeError('Fireworks pricing page has no text and vision models table')
@@ -38,9 +45,10 @@ def parse_pricing_markdown(markdown: str) -> list[ModelInfo]:
                 raise UnreadableRowError(f'Unexpected Fireworks pricing row: {line}')
             suffix = MODE_SUFFIXES[model['mode']] + ('-us' if model['us'] else '')
             # https://docs.fireworks.ai/serverless/serverless-modes and /serverless/us-only-serverless
-            # name these routers.
+            # name these routers, except Spot, whose ID is a model.
             slug = model['slug'].removesuffix('-us') if model['us'] else model['slug']
-            api_id = f'accounts/fireworks/{"routers" if suffix else "models"}/{slug}{suffix}'
+            namespace = 'routers' if suffix and model['mode'] != ' Spot' else 'models'
+            api_id = f'accounts/fireworks/{namespace}/{slug}{suffix}'
             row.model_ids.add(api_id)
             rates = STANDARD_CELL.fullmatch(cells[1]) if len(cells) == 3 else None
             if rates is None:

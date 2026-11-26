@@ -44,13 +44,13 @@ The following providers are currently supported:
 - [Cloudflare Workers AI](prices/providers/cloudflare.yml) - 56 models
 - [Cohere](prices/providers/cohere.yml) - 9 models
 - [Cursor](prices/providers/cursor.yml) - 8 models
-- [Databricks](prices/providers/databricks.yml) - 20 models
+- [Databricks](prices/providers/databricks.yml) - 23 models
 - [Deepseek](prices/providers/deepseek.yml) - 8 models
 - [Doubleword](prices/providers/doubleword.yml) - 29 models
 - [ElevenLabs](prices/providers/elevenlabs.yml) - 2 models
-- [Fireworks](prices/providers/fireworks.yml) - 57 models
+- [Fireworks](prices/providers/fireworks.yml) - 58 models
 - [GitHub Copilot](prices/providers/github_copilot.yml) - 51 models
-- [Google](prices/providers/google.yml) - 73 models
+- [Google](prices/providers/google.yml) - 78 models
 - [Groq](prices/providers/groq.yml) - 37 models
 - [HuggingFace (cerebras)](prices/providers/huggingface_cerebras.yml) - 3 models
 - [HuggingFace (fireworks-ai)](prices/providers/huggingface_fireworks-ai.yml) - 6 models

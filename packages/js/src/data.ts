@@ -8163,6 +8163,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'databricks-deepseek-v4-1-flash-1017',
+        match: {
+          equals: 'databricks-deepseek-v4-1-flash-1017',
+        },
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.007,
+          output_mtok: 1.2,
+        },
+      },
+      {
         id: 'databricks-deepseek-v4-flash-0731',
         name: 'DeepSeek V4 Flash (0731)',
         match: {
@@ -8410,6 +8421,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'databricks-kimi-k3-1-pro',
+        match: {
+          equals: 'databricks-kimi-k3-1-pro',
+        },
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
+      },
+      {
         id: 'databricks-llama-4-maverick',
         name: 'Llama 4 Maverick',
         match: {
@@ -8466,6 +8488,15 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.5,
           output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'databricks-openjev-qwen35-4b',
+        match: {
+          equals: 'databricks-openjev-qwen35-4b',
+        },
+        prices: {
+          input_mtok: 0.042,
         },
       },
       {
@@ -9758,6 +9789,18 @@ export const data: Provider[] = [
         name: 'GLM 5.3 Flex',
         match: {
           equals: 'accounts/fireworks/routers/glm-5p3-flex',
+        },
+        prices: {
+          input_mtok: 0.7,
+          cache_read_mtok: 0.13,
+          output_mtok: 2.2,
+        },
+      },
+      {
+        id: 'glm-5p3-spot',
+        name: 'GLM 5.3 Spot',
+        match: {
+          equals: 'accounts/fireworks/models/glm-5p3-spot',
         },
         prices: {
           input_mtok: 0.7,
@@ -11660,7 +11703,14 @@ export const data: Provider[] = [
     pricing_urls: ['https://ai.google.dev/gemini-api/docs/pricing', 'https://cloud.google.com/vertex-ai/generative-ai/pricing'],
     api_pattern: 'https://(.*\\.)?googleapis\\.com',
     model_match: {
-      contains: 'gemini',
+      or: [
+        {
+          contains: 'gemini',
+        },
+        {
+          starts_with: 'genie-',
+        },
+      ],
     },
     provider_match: {
       or: [
@@ -13795,6 +13845,50 @@ export const data: Provider[] = [
         ],
       },
       {
+        id: 'gemini-3.5-live-translate-preview',
+        name: 'Gemini 3.5 Live Translate Preview',
+        description: "Google's low-latency, real-time speech-to-speech translation model for more than 70 languages.",
+        match: {
+          equals: 'gemini-3.5-live-translate-preview',
+        },
+        price_comments:
+          'See https://aistudio.google.com/docs/pricing. Input and output are audio, at 25 tokens per second. Google also quotes per-minute prices, which have no unit here; the per-token prices are shown.',
+        prices: {
+          input_mtok: 3.5,
+          output_mtok: 21,
+        },
+      },
+      {
+        id: 'gemini-3.5-transcribe',
+        name: 'Gemini 3.5 Transcribe',
+        description:
+          "Google's speech-to-text model with automatic language detection, speaker diarization, word-level timestamps and custom vocabulary biasing.",
+        match: {
+          equals: 'gemini-3.5-transcribe',
+        },
+        price_comments:
+          'See https://aistudio.google.com/docs/pricing. Input is audio and output is text, including thinking tokens. Google also quotes per-minute prices, which have no unit here; the per-token prices are shown.',
+        prices: {
+          input_mtok: 2,
+          output_mtok: 12,
+        },
+      },
+      {
+        id: 'gemini-3.5-transcribe-live',
+        name: 'Gemini 3.5 Transcribe Live',
+        description:
+          "Google's low-latency, real-time speech-to-text model for bidirectional streaming audio transcription over WebSockets.",
+        match: {
+          equals: 'gemini-3.5-transcribe-live',
+        },
+        price_comments:
+          'See https://aistudio.google.com/docs/pricing. Input is audio and output is text, including thinking tokens. Google also quotes per-minute prices, which have no unit here; the per-token prices are shown.',
+        prices: {
+          input_mtok: 3.5,
+          output_mtok: 21,
+        },
+      },
+      {
         id: 'gemini-3.6-flash',
         name: 'Gemini 3.6 Flash',
         description:
@@ -14818,6 +14912,21 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'gemini-omni-1.2-flash',
+        name: 'Gemini Omni 1.2 Flash',
+        description: "Google's video generation and editing model, generating and editing up to 15 seconds of video with native audio.",
+        match: {
+          equals: 'gemini-omni-1.2-flash',
+        },
+        price_comments:
+          'See https://aistudio.google.com/docs/pricing. Input is $1.50 / 1M tokens across text, image and video; output is $9 / 1M tokens for text and $12 / 1M tokens for video, at 5,792 tokens per second of 720p video.',
+        prices: {
+          input_mtok: 1.5,
+          output_mtok: 9,
+          output_video_mtok: 12,
+        },
+      },
+      {
         id: 'gemini-omni-flash-preview',
         name: 'Gemini Omni Flash Preview',
         description: "Google's video generation and editing model with multimodal input.",
@@ -15034,6 +15143,22 @@ export const data: Provider[] = [
         price_comments:
           'Free of charge on the Gemini API with no paid tier, see https://ai.google.dev/gemini-api/docs/pricing. Not offered as Model-as-a-Service on Vertex AI (only Gemma 4 26B is); there it is self-deployed from Model Garden and billed as endpoint compute, so no per-token price applies. The previous rates were imported from OpenRouter, not Google.',
         prices: {},
+      },
+      {
+        id: 'genie-4',
+        name: 'Genie 4',
+        description:
+          "Google's real-time interactive world generation model, streaming steerable 24 fps video with synchronized stereo audio on the Interactions API.",
+        match: {
+          equals: 'genie-4',
+        },
+        price_comments:
+          'See https://aistudio.google.com/docs/pricing. Input is $1.50 / 1M tokens for text and reference images; output is $9 / 1M tokens for text and $17.50 / 1M tokens for video, at 240 tokens per frame, with the audio included in the video rate. The free tier, Batch, Flex and Priority are not offered.',
+        prices: {
+          input_mtok: 1.5,
+          output_mtok: 9,
+          output_video_mtok: 17.5,
+        },
       },
     ],
   },
@@ -24879,26 +25004,11 @@ export const data: Provider[] = [
           equals: 'qwen/qwen3.7-max',
         },
         context_window: 1000000,
-        prices: [
-          {
-            prices: {
-              input_mtok: 1.25,
-              cache_read_mtok: 0.25,
-              output_mtok: 3.75,
-            },
-          },
-          {
-            constraint: {
-              start_date: '2026-11-26',
-              type: 'start_date',
-            },
-            prices: {
-              input_mtok: 1.65,
-              cache_read_mtok: 0.33,
-              output_mtok: 4.951,
-            },
-          },
-        ],
+        prices: {
+          input_mtok: 1.25,
+          cache_read_mtok: 0.25,
+          output_mtok: 3.75,
+        },
       },
       {
         id: 'qwen/qwen3.8-2.4t-a95b',

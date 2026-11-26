@@ -118,7 +118,7 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.006
       output_mtok: 1.2
-    prices_checked: 2026-11-25
+    prices_checked: 2026-11-26
 
   - id: deepseek-v4p1-flash-1017-flex
     name: DeepSeek V4.1 Flash 1017 Flex
@@ -145,7 +145,7 @@ models:
           input_mtok: 1.2
           cache_read_mtok: 0.024
           output_mtok: 4.8
-    prices_checked: 2026-11-25
+    prices_checked: 2026-11-26
 
   - id: deepseek-v4p1-flash-1017-us
     name: DeepSeek V4.1 Flash 1017 US
@@ -259,7 +259,7 @@ models:
       input_mtok: 1.4
       cache_read_mtok: 0.26
       output_mtok: 4.4
-    prices_checked: 2026-11-09
+    prices_checked: 2026-11-26
 
   - id: glm-5p3-fast
     name: GLM 5.3 Fast
@@ -305,6 +305,16 @@ models:
     name: GLM 5.3 Flex
     match:
       equals: accounts/fireworks/routers/glm-5p3-flex
+    prices:
+      input_mtok: 0.7
+      cache_read_mtok: 0.13
+      output_mtok: 2.2
+    prices_checked: 2026-11-26
+
+  - id: glm-5p3-spot
+    name: GLM 5.3 Spot
+    match:
+      equals: accounts/fireworks/models/glm-5p3-spot
     prices:
       input_mtok: 0.7
       cache_read_mtok: 0.13

@@ -84,7 +84,7 @@ models:
       input_mtok: 0.7
       cache_read_mtok: 0.35
       output_mtok: 2.5
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: deepseek/deepseek-r1-0528-qwen3-8b
     name: DeepSeek R1 Distill Qwen3 8B 0528
@@ -595,7 +595,7 @@ models:
     prices:
       input_mtok: 0.57
       output_mtok: 2.3
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: moonshotai/kimi-k2-thinking
     name: Kimi K2 Thinking
@@ -606,7 +606,7 @@ models:
       input_mtok: 0.6
       cache_read_mtok: 0.15
       output_mtok: 2.5
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: moonshotai/kimi-k2.5
     name: Kimi K2.5
@@ -639,7 +639,7 @@ models:
       input_mtok: 0.95
       cache_read_mtok: 0.19
       output_mtok: 4
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: moonshotai/kimi-k3
     name: Kimi K3
@@ -829,7 +829,7 @@ models:
     prices:
       input_mtok: 0.4
       output_mtok: 3.2
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: qwen/qwen3.5-27b
     name: Qwen3.5 27B
@@ -849,7 +849,7 @@ models:
     prices:
       input_mtok: 0.25
       output_mtok: 2
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: qwen/qwen3.5-397b-a17b
     name: Qwen3.5 397B A17B
@@ -859,7 +859,7 @@ models:
     prices:
       input_mtok: 0.6
       output_mtok: 3.6
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: qwen/qwen3.6-27b
     name: Qwen3.6 27B
@@ -869,7 +869,7 @@ models:
     prices:
       input_mtok: 0.6
       output_mtok: 3.6
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: qwen/qwen3.6-35b-a3b
     name: Qwen3.6 35B A3B
@@ -879,7 +879,7 @@ models:
     prices:
       input_mtok: 0.248
       output_mtok: 1.485
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: qwen/qwen3.7-max
     name: Qwen3.7 Max
@@ -887,17 +887,10 @@ models:
       equals: qwen/qwen3.7-max
     context_window: 1000000
     prices:
-      - prices:
-          input_mtok: 1.25
-          cache_read_mtok: 0.25
-          output_mtok: 3.75
-      - constraint:
-          start_date: 2026-11-26
-        prices:
-          input_mtok: 1.65
-          cache_read_mtok: 0.33
-          output_mtok: 4.951
-    prices_checked: 2026-11-26
+      input_mtok: 1.25
+      cache_read_mtok: 0.25
+      output_mtok: 3.75
+    prices_checked: 2026-11-24
 
   - id: qwen/qwen3.8-2.4t-a95b
     name: Qwen3.8 2.4T A95B
@@ -1059,7 +1052,7 @@ models:
       input_mtok: 0.834
       cache_read_mtok: 0.042
       output_mtok: 2.501
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: xiaomimimo/mimo-v2.5
     name: Xiaomi MiMo V2.5
