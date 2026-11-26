@@ -135,7 +135,7 @@ models:
     prices:
       input_mtok: 0.7
       output_mtok: 2.5
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: deepseek/deepseek-v4-flash-0731
     name: DeepSeek V4 Flash 0731
