@@ -94,7 +94,7 @@ models:
     prices:
       input_mtok: 0.06
       output_mtok: 0.09
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-24
 
   - id: deepseek/deepseek-r1-distill-llama-70b
     match:
@@ -762,8 +762,14 @@ models:
       equals: qwen/qwen-mt-plus
     context_window: 16384
     prices:
-      input_mtok: 0.25
-      output_mtok: 0.75
+      - prices:
+          input_mtok: 0.25
+          output_mtok: 0.75
+      - constraint:
+          start_date: 2026-11-26
+        prices:
+          input_mtok: 0.259
+          output_mtok: 0.775
     prices_checked: 2026-11-26
 
   - id: qwen/qwen3-omni-30b-a3b-thinking

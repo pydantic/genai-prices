@@ -14352,7 +14352,15 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='qwen/qwen-mt-plus'),
                 name='Qwen MT Plus',
                 context_window=16384,
-                prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('0.75')),
+                prices=[
+                    ConditionalPrice(
+                        constraint=None, prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('0.75'))
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 26)),
+                        prices=ModelPrice(input_mtok=Decimal('0.259'), output_mtok=Decimal('0.775')),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='qwen/qwen3-omni-30b-a3b-thinking',

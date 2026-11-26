@@ -24708,10 +24708,24 @@ export const data: Provider[] = [
           equals: 'qwen/qwen-mt-plus',
         },
         context_window: 16384,
-        prices: {
-          input_mtok: 0.25,
-          output_mtok: 0.75,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.25,
+              output_mtok: 0.75,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-26',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.259,
+              output_mtok: 0.775,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3-omni-30b-a3b-thinking',
