@@ -40,6 +40,9 @@
     "prettier": "^3.6.2"
   },
   "overrides": {
-    "tinypool": "^2.1.2"
+    "tinypool": "^2.1.2",
+    "@microsoft/api-extractor": {
+      "minimatch": "^11.0.1"
+    }
   }
 }

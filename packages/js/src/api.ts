@@ -2,7 +2,6 @@ import type {
   ConditionalPrice,
   PriceCalculationResult,
   PriceOptions,
-  PriceVariant,
   Provider,
   ProviderDataPayload,
   ProviderFindOptions,
@@ -84,7 +83,7 @@ function normalizeProvider(provider: Provider): Provider {
         return {
           ...normalizeConditionalPrice({ ...variant, constraint: variant.constraint ?? undefined }, provider.id, model.id),
           when: variant.when,
-        } as PriceVariant
+        }
       }),
       prices: Array.isArray(model.prices)
         ? model.prices.map((price) => normalizeConditionalPrice(price, provider.id, model.id))
@@ -222,7 +221,7 @@ export function calcPrice(usage: Usage, modelId: string, options?: PriceOptions)
   let providerId = options?.providerId
 
   // Handle litellm provider_id by extracting actual provider from model name prefix
-  if (providerId && providerId.toLowerCase() === 'litellm' && lowerModelId.includes('/')) {
+  if (providerId?.toLowerCase() === 'litellm' && lowerModelId.includes('/')) {
     const slashIndex = lowerModelId.indexOf('/')
     const actualProviderId = lowerModelId.slice(0, slashIndex)
     const actualModelId = lowerModelId.slice(slashIndex + 1)
