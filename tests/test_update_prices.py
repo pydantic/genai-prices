@@ -576,6 +576,93 @@ def test_crashed_thread_fails_waiters_and_next_start_relaunches(monkeypatch: pyt
     replacement.stop()
 
 
+def test_failed_replacement_launch_preserves_existing_waiter_outcome(monkeypatch: pytest.MonkeyPatch) -> None:
+    class CrashingUpdatePrices(UpdatePrices):
+        def fetch(self) -> data_snapshot.DataSnapshot | None:
+            raise KeyboardInterrupt
+
+    def fail_thread_start(_thread: threading.Thread) -> None:
+        raise RuntimeError('cannot start a new thread')
+
+    crashed = CrashingUpdatePrices()
+    replacement = NullUpdatePrices()
+    crashed.start()
+    try:
+        with pytest.raises(RuntimeError, match='terminated unexpectedly') as original_error:
+            crashed.wait(timeout=5)
+
+        with monkeypatch.context() as context:
+            context.setattr(threading.Thread, 'start', fail_thread_start)
+            with pytest.raises(RuntimeError, match='cannot start a new thread'):
+                replacement.start()
+
+        with pytest.raises(RuntimeError, match='terminated unexpectedly') as instance_error:
+            crashed.wait(timeout=0)
+        with pytest.raises(RuntimeError, match='terminated unexpectedly') as global_error:
+            wait_prices_updated_sync(timeout=0)
+        assert instance_error.value is original_error.value
+        assert global_error.value is original_error.value
+        assert replacement.wait(timeout=0) is False
+
+        replacement.start(wait=True)
+        assert crashed.wait(timeout=0) is True
+        assert wait_prices_updated_sync(timeout=0) is True
+    finally:
+        crashed.stop()
+        replacement.stop()
+
+
+@pytest.mark.parametrize('existing_owner', [False, True])
+def test_interrupted_outcome_reset_rolls_back_acquisition(
+    monkeypatch: pytest.MonkeyPatch, existing_owner: bool
+) -> None:
+    monkeypatch.setattr(update_prices_module, '_shared_updater', update_prices_module._SharedUpdater())
+
+    class CrashingUpdatePrices(UpdatePrices):
+        def fetch(self) -> data_snapshot.DataSnapshot | None:
+            raise KeyboardInterrupt
+
+    previous = CrashingUpdatePrices()
+    replacement = NullUpdatePrices()
+    if existing_owner:
+        previous.start()
+        with pytest.raises(RuntimeError, match='terminated unexpectedly'):
+            previous.wait(timeout=5)
+
+    def interrupt_reset() -> None:
+        raise KeyboardInterrupt
+
+    launched: list[threading.Thread] = []
+    original_start = threading.Thread.start
+
+    def record_start(thread: threading.Thread) -> None:
+        launched.append(thread)
+        original_start(thread)
+
+    try:
+        with monkeypatch.context() as context:
+            context.setattr(threading.Thread, 'start', record_start)
+            context.setattr(update_prices_module._shared_updater.ready, 'clear', interrupt_reset)
+            with pytest.raises(KeyboardInterrupt):
+                replacement.start()
+        (launched_thread,) = launched
+        launched_thread.join(timeout=5)
+        assert not launched_thread.is_alive()
+        assert replacement.wait(timeout=0) is False
+        if existing_owner:
+            with pytest.raises(RuntimeError, match='terminated unexpectedly'):
+                previous.wait(timeout=0)
+        else:
+            assert wait_prices_updated_sync(timeout=0) is False
+        replacement.start(wait=True)
+        replacement.stop()
+        previous.stop()
+        assert wait_prices_updated_sync(timeout=0) is False
+    finally:
+        replacement.stop()
+        previous.stop()
+
+
 def test_interrupted_thread_start_leaves_no_running_worker(monkeypatch: pytest.MonkeyPatch):
     original_start = threading.Thread.start
     launched: list[threading.Thread] = []
