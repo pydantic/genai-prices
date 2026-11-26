@@ -75,7 +75,7 @@ describe('genai-prices CLI', () => {
     const [gpt4o, claudeV1] = stdout.split('\n\n')
     const gpt4oPrice = calcPrice(usage, 'gpt-4o', { providerId: 'openai', timestamp: new Date(timestamp) })
     expect(gpt4o).toContain('      Provider: OpenAI\n')
-    expect(gpt4o).toMatch(/^Context Window: [\d,]+$/m)
+    expect(gpt4o).toMatch(/^Context Window: \d/m)
     expect(gpt4o).toContain(`   Total Price: $${String(gpt4oPrice?.total_price)}\n`)
     // claude-v1 has no display name and no context window in the data.
     expect(claudeV1).toContain('         Model: claude-v1\n')

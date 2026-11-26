@@ -34,7 +34,7 @@ export default defineConfig(
   {
     // Tests pass tiered prices as plain objects, the shape callers and the JSON data use.
     // The engine validates them and rebuilds them as TieredPrices instances.
-    files: ['src/__tests__/**'],
+    files: ['src/__tests__/calcPrice.test.ts', 'src/__tests__/tieredPricing.test.ts'],
     rules: {
       '@typescript-eslint/no-unsafe-class-instance-assignment': 'off',
     },
