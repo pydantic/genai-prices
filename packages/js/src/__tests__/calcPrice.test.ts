@@ -258,7 +258,7 @@ describe('Core Price Calculation Function', () => {
   it('warns and ignores unsupported usage and price keys', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
 
-    expect(calcPrice({ future_tokens: 500, input_tokens: 1_000 }, { future_mtok: 10, input_mtok: 1 } as ModelPrice)).toEqual({
+    expect(calcPrice({ future_tokens: 500, input_tokens: 1_000 }, { future_mtok: 10, input_mtok: 1 })).toEqual({
       input_price: 0.001,
       output_price: 0,
       total_price: 0.001,
@@ -692,33 +692,33 @@ describe('Core Price Calculation Function', () => {
     it.each([
       {
         expected: { input_price: 0, output_price: 0, total_price: 0 },
-        modelPrice: {} as ModelPrice,
+        modelPrice: {},
         name: 'absent prices',
-        usage: { input_tokens: 1000, output_tokens: 500 } as Usage,
+        usage: { input_tokens: 1000, output_tokens: 500 },
       },
       {
         expected: { input_price: 0, output_price: 0, total_price: 0 },
-        modelPrice: { input_mtok: 1.0, output_mtok: 2.0 } as ModelPrice,
+        modelPrice: { input_mtok: 1.0, output_mtok: 2.0 },
         name: 'zero tokens',
-        usage: { input_tokens: 0, output_tokens: 0 } as Usage,
+        usage: { input_tokens: 0, output_tokens: 0 },
       },
       {
         expected: { input_price: 0, output_price: 0, total_price: 0 },
-        modelPrice: { input_mtok: 1.0, output_mtok: 2.0 } as ModelPrice,
+        modelPrice: { input_mtok: 1.0, output_mtok: 2.0 },
         name: 'undefined tokens',
-        usage: {} as Usage,
+        usage: {},
       },
       {
         expected: { input_price: 0, output_price: 0, total_price: 0 },
-        modelPrice: {} as ModelPrice,
+        modelPrice: {},
         name: 'absent prices',
-        usage: { input_tokens: 1000, output_tokens: 500 } as Usage,
+        usage: { input_tokens: 1000, output_tokens: 500 },
       },
       {
         expected: { input_price: 0.001, output_price: 0, total_price: 0.001 },
-        modelPrice: { input_mtok: 1.0, output_mtok: 2.0 } as ModelPrice,
+        modelPrice: { input_mtok: 1.0, output_mtok: 2.0 },
         name: 'mixed zero and defined tokens',
-        usage: { input_tokens: 1000, output_tokens: 0 } as Usage,
+        usage: { input_tokens: 1000, output_tokens: 0 },
       },
     ])('should handle $name', ({ expected, modelPrice, usage }) => {
       const result = calcPrice(usage, modelPrice)
