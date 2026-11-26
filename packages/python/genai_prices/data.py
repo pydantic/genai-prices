@@ -8591,17 +8591,23 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gemini-robotics-er-2-preview',
                 match=ClauseEquals(equals='gemini-robotics-er-2-preview'),
-                price_comments='Rates from https://ai.google.dev/gemini-api/docs/pricing (Gemini Robotics ER 2): input $1 / 1M tokens and output $5 / 1M tokens through 2026-12-31, rising to $2 and $10 from 2027-01-01. Cache reads are implicit only at $0.10 / 1M tokens through 2026-12-31 and $0.20 from 2027-01-01; the engines do not represent the cache storage fee.',
+                price_comments='Rates from https://ai.google.dev/gemini-api/docs/pricing (Gemini Robotics ER 2): input $1 / 1M tokens and output $5 / 1M tokens through 2026-12-31, rising to $2 and $10 from 2027-01-01. Cache reads are implicit only at $0.10 / 1M tokens through 2026-12-31 and $0.20 from 2027-01-01; the engines do not represent the cache storage fee. Grounding with Google Search is $14 per 1,000 search requests at both rate levels; the page lists it undated, at the rate shared by all Gemini 3 and newer models, so it is not a rate change. First recorded here on 2026-11-25.',
                 prices=[
                     ConditionalPrice(
                         prices=ModelPrice(
-                            input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.1'), output_mtok=Decimal('5')
+                            input_mtok=Decimal('1'),
+                            cache_read_mtok=Decimal('0.1'),
+                            output_mtok=Decimal('5'),
+                            web_searches_kcount=Decimal('14'),
                         )
                     ),
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2027, 1, 1)),
                         prices=ModelPrice(
-                            input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('10')
+                            input_mtok=Decimal('2'),
+                            cache_read_mtok=Decimal('0.2'),
+                            output_mtok=Decimal('10'),
+                            web_searches_kcount=Decimal('14'),
                         ),
                     ),
                 ],
@@ -8609,14 +8615,18 @@ providers: list[Provider] = [
             ModelInfo(
                 id='gemini-robotics-er-2-streaming-preview',
                 match=ClauseEquals(equals='gemini-robotics-er-2-streaming-preview'),
-                price_comments='Rates from https://ai.google.dev/gemini-api/docs/pricing (Gemini Robotics ER 2 Streaming): input $1 / 1M tokens and output $5 / 1M tokens through 2026-12-31, rising to $2 and $10 from 2027-01-01. No context-caching section is published for the streaming endpoint.',
+                price_comments='Rates from https://ai.google.dev/gemini-api/docs/pricing (Gemini Robotics ER 2 Streaming): input $1 / 1M tokens and output $5 / 1M tokens through 2026-12-31, rising to $2 and $10 from 2027-01-01. No context-caching section is published for the streaming endpoint. Grounding with Google Search is $14 per 1,000 search requests at both rate levels; the page lists it undated, at the rate shared by all Gemini 3 and newer models, so it is not a rate change. First recorded here on 2026-11-25.',
                 prices=[
                     ConditionalPrice(
-                        constraint=None, prices=ModelPrice(input_mtok=Decimal('1'), output_mtok=Decimal('5'))
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1'), output_mtok=Decimal('5'), web_searches_kcount=Decimal('14')
+                        )
                     ),
                     ConditionalPrice(
                         constraint=StartDateConstraint(start_date=datetime.date(2027, 1, 1)),
-                        prices=ModelPrice(input_mtok=Decimal('2'), output_mtok=Decimal('10')),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('2'), output_mtok=Decimal('10'), web_searches_kcount=Decimal('14')
+                        ),
                     ),
                 ],
             ),
