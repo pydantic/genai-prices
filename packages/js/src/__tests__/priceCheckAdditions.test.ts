@@ -81,3 +81,14 @@ it.each([
   const usage = { input_tokens: 200_000, output_tokens: 1_000_000 }
   expect(calcPrice(usage, model, { providerId: 'x-ai', timestamp: new Date(`${day}T00:00:00Z`) })?.total_price).toBeCloseTo(total, 12)
 })
+
+it.each([
+  ['gemini-2.5-pro', '2026-11-30', 17.5],
+  ['gemini-2.5-pro', '2026-12-01', 4.5],
+  ['gemini-2.5-pro', '2027-01-01', 9],
+  ['gemini-2.5-flash', '2026-11-30', 2.8],
+  ['gemini-2.5-flash', '2026-12-01', 2.8],
+])('prices %s on %s across the Gemini API December rerouting', (model, day, total) => {
+  const usage = { input_tokens: 1_000_000, output_tokens: 1_000_000 }
+  expect(calcPrice(usage, model, { providerId: 'google', timestamp: new Date(`${day}T00:00:00Z`) })?.total_price).toBeCloseTo(total, 12)
+})

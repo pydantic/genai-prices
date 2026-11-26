@@ -7485,15 +7485,30 @@ providers: list[Provider] = [
                 name='Gemini 2.5 Flash',
                 description='Gemini 2.5 Flash is Google\'s state-of-the-art workhorse model, specifically designed for advanced reasoning, coding, mathematics, and scientific tasks. It includes built-in "thinking" capabilities, enabling it to provide responses with greater accuracy and nuanced context handling.',
                 context_window=1048576,
-                price_comments='Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output; context caching stays at the standard rate.',
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.3'),
-                    cache_read_mtok=Decimal('0.03'),
-                    output_mtok=Decimal('2.5'),
-                    input_audio_mtok=Decimal('1'),
-                    cache_audio_read_mtok=Decimal('0.1'),
-                    web_searches_kcount=Decimal('35'),
-                ),
+                price_comments="Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output; context caching stays at the standard rate. From 2026-12-01 the Gemini API routes gemini-2.5-flash requests to Gemini 3.5 Flash-Lite and bills them at that model's rates: text input, cache-read and output are unchanged, audio input drops from $1.00 to $0.30 and audio cache-read from $0.10 to $0.03 per Mtok. Google does not document batch handling after the rerouting, so batch variants keep the pre-rerouting rates. Vertex AI pricing is separate and unaffected by this rerouting.",
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.3'),
+                            cache_read_mtok=Decimal('0.03'),
+                            output_mtok=Decimal('2.5'),
+                            input_audio_mtok=Decimal('1'),
+                            cache_audio_read_mtok=Decimal('0.1'),
+                            web_searches_kcount=Decimal('35'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 12, 1)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.3'),
+                            cache_read_mtok=Decimal('0.03'),
+                            output_mtok=Decimal('2.5'),
+                            input_audio_mtok=Decimal('0.3'),
+                            cache_audio_read_mtok=Decimal('0.03'),
+                            web_searches_kcount=Decimal('35'),
+                        ),
+                    ),
+                ],
                 price_variants=[
                     PriceVariant(
                         when={'processing': 'batch'},
@@ -7613,15 +7628,41 @@ providers: list[Provider] = [
                 ),
                 name='Gemini 2.5 Pro',
                 description='Gemini 2.5 Pro is Google\'s state-of-the-art AI model designed for advanced reasoning, coding, mathematics, and scientific tasks. It employs "thinking" capabilities, enabling it to reason through responses with enhanced accuracy and nuanced context handling. Gemini 2.5 Pro achieves top-tier performance on multiple benchmarks, including first-place positioning on the LMArena leaderboard, reflecting superior human-preference alignment and complex problem-solving abilities.',
-                price_comments='See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output in both prompt-size tiers; context caching stays at the standard rate.',
-                prices=ModelPrice(
-                    input_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=200000, price=Decimal('2.5'))]),
-                    cache_read_mtok=TieredPrices(
-                        base=Decimal('0.125'), tiers=[Tier(start=200000, price=Decimal('0.25'))]
+                price_comments="See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro. Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves input and output in both prompt-size tiers; context caching stays at the standard rate. From 2026-12-01 the Gemini API routes gemini-2.5-pro requests to Gemini 3.8 Flash and bills them at that model's rates (the over-200K-prompt tier no longer applies; grounding keeps the recorded 2.x rate pending documentation). Google does not document batch handling after the rerouting, so batch variants keep the pre-rerouting rates. Vertex AI pricing is separate and unaffected by this Gemini API rerouting.",
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=TieredPrices(
+                                base=Decimal('1.25'), tiers=[Tier(start=200000, price=Decimal('2.5'))]
+                            ),
+                            cache_read_mtok=TieredPrices(
+                                base=Decimal('0.125'), tiers=[Tier(start=200000, price=Decimal('0.25'))]
+                            ),
+                            output_mtok=TieredPrices(
+                                base=Decimal('10'), tiers=[Tier(start=200000, price=Decimal('15'))]
+                            ),
+                            web_searches_kcount=Decimal('35'),
+                        )
                     ),
-                    output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=200000, price=Decimal('15'))]),
-                    web_searches_kcount=Decimal('35'),
-                ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 12, 1)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.75'),
+                            cache_read_mtok=Decimal('0.075'),
+                            output_mtok=Decimal('3.75'),
+                            web_searches_kcount=Decimal('35'),
+                        ),
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2027, 1, 1)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.5'),
+                            cache_read_mtok=Decimal('0.15'),
+                            output_mtok=Decimal('7.5'),
+                            web_searches_kcount=Decimal('35'),
+                        ),
+                    ),
+                ],
                 price_variants=[
                     PriceVariant(
                         when={'processing': 'batch'},

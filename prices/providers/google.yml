@@ -921,17 +921,30 @@ models:
         - equals: gemini-2.5-flash-latest
         - equals: gemini-2.5-flash-preview-09-2025
     context_window: 1048576
-    prices_checked: 2026-11-03
+    prices_checked: 2026-11-26
     price_comments: >-
       Batch rates verified on 2026-10-14 at https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history
       before then is not modelled. Batch halves input and output; context caching stays at the standard rate.
+      From 2026-12-01 the Gemini API routes gemini-2.5-flash requests to Gemini 3.5 Flash-Lite and bills them at that
+      model's rates: text input, cache-read and output are unchanged, audio input drops from $1.00 to $0.30 and audio
+      cache-read from $0.10 to $0.03 per Mtok. Google does not document batch handling after the rerouting, so batch
+      variants keep the pre-rerouting rates. Vertex AI pricing is separate and unaffected by this rerouting.
     prices:
-      input_mtok: 0.3
-      input_audio_mtok: 1
-      cache_read_mtok: 0.03
-      cache_audio_read_mtok: 0.1
-      output_mtok: 2.5
-      web_searches_kcount: 35 # per grounded prompt, not per query
+      - prices:
+          input_mtok: 0.3
+          input_audio_mtok: 1
+          cache_read_mtok: 0.03
+          cache_audio_read_mtok: 0.1
+          output_mtok: 2.5
+          web_searches_kcount: 35 # per grounded prompt, not per query
+      - constraint: { start_date: 2026-12-01 }
+        prices:
+          input_mtok: 0.3
+          input_audio_mtok: 0.3
+          cache_read_mtok: 0.03
+          cache_audio_read_mtok: 0.03
+          output_mtok: 2.5
+          web_searches_kcount: 35
     price_variants:
       - when: { processing: batch }
         constraint: { start_date: 2026-10-14 }
@@ -1067,24 +1080,41 @@ models:
       See https://ai.google.dev/gemini-api/docs/pricing#gemini-2.5-pro. Batch rates verified on 2026-10-14 at
       https://ai.google.dev/gemini-api/docs/pricing (Batch tab); batch history before then is not modelled. Batch halves
       input and output in both prompt-size tiers; context caching stays at the standard rate.
-    prices_checked: 2026-11-03
+      From 2026-12-01 the Gemini API routes gemini-2.5-pro requests to Gemini 3.8 Flash and bills them at that model's
+      rates (the over-200K-prompt tier no longer applies; grounding keeps the recorded 2.x rate pending documentation).
+      Google does not document batch handling after the rerouting, so batch variants keep the pre-rerouting rates.
+      Vertex AI pricing is separate and unaffected by this Gemini API rerouting.
+    prices_checked: 2026-11-26
     prices:
-      input_mtok:
-        base: 1.25
-        tiers:
-          - start: 200000
-            price: 2.5
-      cache_read_mtok:
-        base: 0.125
-        tiers:
-          - start: 200000
-            price: 0.25
-      output_mtok:
-        base: 10
-        tiers:
-          - start: 200000
-            price: 15
-      web_searches_kcount: 35 # per grounded prompt, not per query
+      - prices:
+          input_mtok:
+            base: 1.25
+            tiers:
+              - start: 200000
+                price: 2.5
+          cache_read_mtok:
+            base: 0.125
+            tiers:
+              - start: 200000
+                price: 0.25
+          output_mtok:
+            base: 10
+            tiers:
+              - start: 200000
+                price: 15
+          web_searches_kcount: 35 # per grounded prompt, not per query
+      - constraint: { start_date: 2026-12-01 }
+        prices:
+          input_mtok: 0.75
+          cache_read_mtok: 0.075
+          output_mtok: 3.75
+          web_searches_kcount: 35
+      - constraint: { start_date: 2027-01-01 }
+        prices:
+          input_mtok: 1.5
+          cache_read_mtok: 0.15
+          output_mtok: 7.5
+          web_searches_kcount: 35
     price_variants:
       - when: { processing: batch }
         constraint: { start_date: 2026-10-14 }
