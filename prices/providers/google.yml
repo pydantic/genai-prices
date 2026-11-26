@@ -11,7 +11,9 @@ pricing_urls:
   # https://ai.google.dev/gemini-api/docs/google-search#pricing
 api_pattern: 'https://(.*\.)?googleapis\.com'
 model_match:
-  contains: gemini
+  or:
+    - contains: gemini
+    - starts_with: genie-
 provider_match:
   or:
     - contains: google

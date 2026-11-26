@@ -6717,7 +6717,7 @@ providers: list[Provider] = [
             'https://ai.google.dev/gemini-api/docs/pricing',
             'https://cloud.google.com/vertex-ai/generative-ai/pricing',
         ],
-        model_match=ClauseContains(contains='gemini'),
+        model_match=ClauseOr(or_=[ClauseContains(contains='gemini'), ClauseStartsWith(starts_with='genie-')]),
         provider_match=ClauseOr(
             or_=[
                 ClauseContains(contains='google'),
