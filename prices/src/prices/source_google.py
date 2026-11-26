@@ -30,6 +30,8 @@ NOISE = [
     re.compile(r' ?\(\$[\d.]+ per \w+\)'),
     re.compile(r' ?\$[\d.]+ / 1,000,000 tokens per hour \(storage price\)(?: (?:through|starting) \w+ \d+, \d{4}\.)?'),
     re.compile(r' ?Implicit caching only \(explicit caching is not supported\)\.'),
+    # Genie 4 bills its audio inside the video rate: "$17.50 (video, audio included)".
+    re.compile(r', audio included(?=\))'),
 ]
 ROWS = {
     'Input price': 'input',
@@ -153,7 +155,8 @@ def _prices(cells: dict[str, str], today: date) -> ModelPrice:
                 keys['web_searches_kcount'] = Decimal(search[1])
             continue
         row = next((row for prefix, row in ROWS.items() if label.startswith(prefix)), None)
-        if row is None or cell.strip() in ('Not available', ''):
+        # Gemini Decision 1 lists its output price as "Not applicable (0 output tokens)".
+        if row is None or cell.strip() in ('Not available', '') or cell.startswith('Not applicable'):
             continue
         for key, rate in _cell_rates(row, cell, today).items():
             if key in keys:
