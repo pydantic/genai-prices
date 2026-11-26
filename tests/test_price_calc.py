@@ -3578,3 +3578,97 @@ def test_decision_model_input_only_prices(
 def test_typesafe_served_id_match_is_exact(provider_id: str, model_ref: str) -> None:
     with pytest.raises(LookupError, match='Unable to find model'):
         calc_price(Usage(input_tokens=285), model_ref=model_ref, provider_id=provider_id)
+
+
+@pytest.mark.parametrize(
+    'request_timestamp,expected_prices,expected_total',
+    [
+        (
+            datetime(2026, 11, 30, tzinfo=UTC),
+            ModelPrice(
+                input_mtok=TieredPrices(base=Decimal('1.25'), tiers=[Tier(start=200_000, price=Decimal('2.5'))]),
+                cache_read_mtok=TieredPrices(base=Decimal('0.125'), tiers=[Tier(start=200_000, price=Decimal('0.25'))]),
+                output_mtok=TieredPrices(base=Decimal('10'), tiers=[Tier(start=200_000, price=Decimal('15'))]),
+                web_searches_kcount=Decimal('35'),
+            ),
+            Decimal('17.50'),
+        ),
+        (
+            datetime(2026, 12, 1, tzinfo=UTC),
+            ModelPrice(
+                input_mtok=Decimal('0.75'),
+                cache_read_mtok=Decimal('0.075'),
+                output_mtok=Decimal('3.75'),
+                web_searches_kcount=Decimal('35'),
+            ),
+            Decimal('4.50'),
+        ),
+        (
+            datetime(2027, 1, 1, tzinfo=UTC),
+            ModelPrice(
+                input_mtok=Decimal('1.5'),
+                cache_read_mtok=Decimal('0.15'),
+                output_mtok=Decimal('7.5'),
+                web_searches_kcount=Decimal('35'),
+            ),
+            Decimal('9.00'),
+        ),
+    ],
+)
+def test_gemini_2_5_pro_rebilling_dated_entries(
+    request_timestamp: datetime, expected_prices: ModelPrice, expected_total: Decimal
+) -> None:
+    """Gemini 2.5 Pro rebills at Gemini 3.8 Flash rates from 2026-12-01 and those rise on 2027-01-01."""
+    price = calc_price(
+        Usage(input_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref='gemini-2.5-pro',
+        provider_id='google',
+        genai_request_timestamp=request_timestamp,
+    )
+
+    assert price.model_price == expected_prices
+    assert price.total_price == expected_total
+
+
+@pytest.mark.parametrize(
+    'request_timestamp,expected_prices,expected_total',
+    [
+        (
+            datetime(2026, 11, 30, tzinfo=UTC),
+            ModelPrice(
+                input_mtok=Decimal('0.3'),
+                input_audio_mtok=Decimal('1'),
+                cache_read_mtok=Decimal('0.03'),
+                cache_audio_read_mtok=Decimal('0.1'),
+                output_mtok=Decimal('2.5'),
+                web_searches_kcount=Decimal('35'),
+            ),
+            Decimal('3.80'),
+        ),
+        (
+            datetime(2026, 12, 1, tzinfo=UTC),
+            ModelPrice(
+                input_mtok=Decimal('0.3'),
+                input_audio_mtok=Decimal('0.3'),
+                cache_read_mtok=Decimal('0.03'),
+                cache_audio_read_mtok=Decimal('0.03'),
+                output_mtok=Decimal('2.5'),
+                web_searches_kcount=Decimal('35'),
+            ),
+            Decimal('3.10'),
+        ),
+    ],
+)
+def test_gemini_2_5_flash_audio_rates_drop_on_2026_12_01(
+    request_timestamp: datetime, expected_prices: ModelPrice, expected_total: Decimal
+) -> None:
+    """Gemini 2.5 Flash rebills at Gemini 3.5 Flash-Lite rates from 2026-12-01: audio in 1->0.3, audio cache 0.1->0.03."""
+    price = calc_price(
+        Usage(input_tokens=2_000_000, input_audio_tokens=1_000_000, output_tokens=1_000_000),
+        model_ref='gemini-2.5-flash',
+        provider_id='google',
+        genai_request_timestamp=request_timestamp,
+    )
+
+    assert price.model_price == expected_prices
+    assert price.total_price == expected_total
