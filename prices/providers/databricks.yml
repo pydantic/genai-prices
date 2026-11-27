@@ -90,7 +90,7 @@ models:
         - equals: databricks-bge-large-en
         - equals: system.ai.bge-large-en
     context_window: 512
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-27
     price_comments: 1.429 DBU per 1M input tokens.
     prices:
       input_mtok: 0.10
@@ -115,7 +115,7 @@ models:
       input_mtok: 0.3
       cache_read_mtok: 0.007
       output_mtok: 1.2
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-27
 
   - id: databricks-deepseek-v4-flash-0731
     name: DeepSeek V4 Flash (0731)
@@ -136,7 +136,7 @@ models:
       or:
         - equals: databricks-deepseek-v4-pro-0813
         - equals: system.ai.deepseek-v4-pro-0813
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-27
     price_comments: 18.857 input, 56.571 output and 1.886 cache-read DBU per 1M tokens. Retires on 2026-10-30.
     deprecated: true
     prices:
@@ -151,7 +151,7 @@ models:
         - equals: databricks-gemma-3-12b
         - equals: system.ai.gemma-3-12b
     context_window: 128000
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-27
     price_comments: 2.143 input and 7.143 output DBU per 1M tokens.
     prices:
       input_mtok: 0.15
@@ -164,7 +164,7 @@ models:
         - equals: databricks-glm-5-2
         - equals: system.ai.glm-5-2
     context_window: 1000000
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-27
     price_comments: 20 input, 62.857 output and 3.714 cache-read DBU per 1M tokens.
     prices:
       input_mtok: 1.40
@@ -178,7 +178,7 @@ models:
         - equals: databricks-glm-5-3
         - equals: system.ai.glm-5-3
     context_window: 1048576
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-27
     price_comments: 20 input, 62.857 output and 3.714 cache-read DBU per 1M tokens.
     prices:
       input_mtok: 1.40
@@ -192,7 +192,7 @@ models:
         - equals: databricks-glm-5-3-flash
         - equals: system.ai.glm-5-3-flash
     context_window: 1048576
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-27
     price_comments: 2.143 input, 7.143 output and 0.429 cache-read DBU per 1M tokens.
     prices:
       input_mtok: 0.15
@@ -206,7 +206,7 @@ models:
         - equals: databricks-gpt-oss-120b
         - equals: system.ai.gpt-oss-120b
     context_window: 128000
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-27
     price_comments: 2.143 input and 8.571 output DBU per 1M tokens.
     prices:
       input_mtok: 0.15
@@ -219,7 +219,7 @@ models:
         - equals: databricks-gpt-oss-20b
         - equals: system.ai.gpt-oss-20b
     context_window: 128000
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-27
     price_comments: 1 input and 4.286 output DBU per 1M tokens.
     prices:
       input_mtok: 0.07
@@ -232,7 +232,7 @@ models:
         - equals: databricks-gte-large-en
         - equals: system.ai.gte-large-en
     context_window: 8192
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-27
     price_comments: 1.857 DBU per 1M input tokens.
     prices:
       input_mtok: 0.13
@@ -244,7 +244,7 @@ models:
         - equals: databricks-inkling
         - equals: system.ai.inkling
     context_window: 1000000
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-27
     price_comments: 14.286 input, 57.857 output and 2.429 cache-read DBU per 1M tokens. Retires on 2026-10-30.
     deprecated: true
     prices:
@@ -260,7 +260,7 @@ models:
       or:
         - equals: databricks-kimi-k2-7-code
         - equals: system.ai.kimi-k2-7-code
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-27
     price_comments: 13.571 input, 57.143 output and 2.714 cache-read DBU per 1M tokens. Retires on 2026-10-30.
     deprecated: true
     prices:
@@ -275,7 +275,7 @@ models:
         - equals: databricks-kimi-k3
         - equals: system.ai.kimi-k3
     context_window: 1000000
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-27
     price_comments: 42.857 input, 214.286 output and 4.286 cache-read DBU per 1M tokens.
     prices:
       input_mtok: 3.00
@@ -289,7 +289,7 @@ models:
       input_mtok: 2
       cache_read_mtok: 0.2
       output_mtok: 10
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-27
 
   - id: databricks-llama-4-maverick
     name: Llama 4 Maverick
@@ -297,7 +297,7 @@ models:
       or:
         - equals: databricks-llama-4-maverick
         - equals: system.ai.llama-4-maverick
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-27
     price_comments: 7.143 input and 21.429 output DBU per 1M tokens.
     prices:
       input_mtok: 0.50
@@ -310,7 +310,7 @@ models:
         - equals: databricks-meta-llama-3-1-8b-instruct
         - equals: system.ai.meta-llama-3-1-8b-instruct
     context_window: 128000
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-27
     price_comments: 2.143 input and 6.429 output DBU per 1M tokens.
     prices:
       input_mtok: 0.15
@@ -323,7 +323,7 @@ models:
         - equals: databricks-meta-llama-3-3-70b-instruct
         - equals: system.ai.meta-llama-3-3-70b-instruct
     context_window: 128000
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-27
     price_comments: 7.143 input and 21.429 output DBU per 1M tokens.
     prices:
       input_mtok: 0.50
@@ -334,7 +334,7 @@ models:
       equals: databricks-openjev-qwen35-4b
     prices:
       input_mtok: 0.042
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-27
 
   - id: databricks-qwen3-embedding-0-6b
     name: Qwen3 Embedding 0.6B
@@ -342,7 +342,7 @@ models:
       or:
         - equals: databricks-qwen3-embedding-0-6b
         - equals: system.ai.qwen3-embedding-0-6b
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-27
     price_comments: 0.286 DBU per 1M input tokens.
     prices:
       input_mtok: 0.02
@@ -353,7 +353,7 @@ models:
       or:
         - equals: databricks-qwen3-next-80b-a3b-instruct
         - equals: system.ai.qwen3-next-80b-a3b-instruct
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-27
     price_comments: 2.143 input and 17.143 output DBU per 1M tokens.
     prices:
       input_mtok: 0.15
@@ -366,7 +366,7 @@ models:
         - equals: databricks-qwen35-122b-a10b
         - equals: system.ai.qwen35-122b-a10b
     context_window: 256000
-    prices_checked: 2026-11-26
+    prices_checked: 2026-11-27
     price_comments: 3.143 input and 31.429 output DBU per 1M tokens.
     prices:
       input_mtok: 0.22
