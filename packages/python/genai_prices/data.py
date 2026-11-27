@@ -13439,15 +13439,32 @@ providers: list[Provider] = [
                             input_audio_hours=Decimal('0.24'),
                         ),
                     ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 27)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.1'),
+                            cache_read_mtok=Decimal('0.01'),
+                            output_mtok=Decimal('0.3'),
+                            audio_hours=Decimal('0.24'),
+                            input_audio_hours=Decimal('0.24'),
+                        ),
+                    ),
                 ],
                 price_variants=[
+                    PriceVariant(
+                        when={'processing': 'batch'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.05'), cache_read_mtok=Decimal('0.005'), output_mtok=Decimal('0.15')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 27)),
+                    ),
                     PriceVariant(
                         when={'processing': 'batch'},
                         prices=ModelPrice(
                             input_mtok=Decimal('0.05'), cache_read_mtok=Decimal('0.005'), output_mtok=Decimal('0.2')
                         ),
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
-                    )
+                    ),
                 ],
             ),
             ModelInfo(

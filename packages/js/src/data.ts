@@ -23220,8 +23220,35 @@ export const data: Provider[] = [
               input_audio_hours: 0.24,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-11-27',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.1,
+              cache_read_mtok: 0.01,
+              output_mtok: 0.3,
+              audio_hours: 0.24,
+              input_audio_hours: 0.24,
+            },
+          },
         ],
         price_variants: [
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: 0.05,
+              cache_read_mtok: 0.005,
+              output_mtok: 0.15,
+            },
+            constraint: {
+              start_date: '2026-11-27',
+              type: 'start_date',
+            },
+          },
           {
             when: {
               processing: 'batch',
