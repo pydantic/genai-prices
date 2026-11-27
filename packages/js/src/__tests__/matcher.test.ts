@@ -908,3 +908,51 @@ describe('ElevenLabs Realtime', () => {
     expect(calcPrice({ input_tokens: 1 }, 'eleven_multilingual_v2', { providerId: 'elevenlabs', timestamp })).toBeNull()
   })
 })
+
+describe('TrustedRouter', () => {
+  const timestamp = new Date('2026-11-26T00:00:00Z')
+
+  it.each([
+    { providerId: 'trustedrouter' },
+    { providerId: 'trusted-router' },
+    { providerApiUrl: 'https://api.trustedrouter.com' },
+    { providerApiUrl: 'https://api.trustedrouter.com/v1/chat/completions' },
+    { providerApiUrl: 'https://api-europe-west4.quillrouter.com/v1/chat/completions' },
+    {},
+  ])('selects TrustedRouter and prices presets with %o', (options) => {
+    const result = calcPrice({ input_tokens: 1_000_000, output_tokens: 1_000_000 }, 'trustedrouter/fast', {
+      ...options,
+      timestamp,
+    })
+
+    expect(result?.provider.id).toBe('trustedrouter')
+    expect(result?.model.id).toBe('trustedrouter/fast')
+    expect(result?.total_price).toBeCloseTo(1.1605, 10)
+  })
+
+  it.each([
+    [100_000, 0.013926],
+    [100_001, 0.0696305275],
+  ])('prices tiered long-context model at %i input tokens', (inputTokens, expectedTotal) => {
+    const result = calcPrice(
+      { cache_read_tokens: 20_000, input_tokens: inputTokens, output_tokens: 10_000 },
+      'anthropic/claude-haiku-5.5',
+      { providerId: 'trustedrouter', timestamp }
+    )
+
+    expect(result?.provider.id).toBe('trustedrouter')
+    expect(result?.total_price).toBeCloseTo(expectedTotal, 10)
+  })
+
+  it.each(['https://api.trustedrouter.com.evil.example/v1', 'https://api-europe-west4.quillrouter.com.evil.example/v1'])(
+    'rejects the spoofed API URL %s',
+    (providerApiUrl) => {
+      expect(calcPrice({ input_tokens: 1 }, 'trustedrouter/fast', { providerApiUrl, timestamp })).toBeNull()
+    }
+  )
+
+  it('does not claim third-party namespaces without provider selection', () => {
+    expect(matchProvider(actualProviders, { modelId: 'anthropic/claude-haiku-5.5' })?.id).not.toBe('trustedrouter')
+    expect(calcPrice({ input_tokens: 1 }, 'trustedrouter/unknown', { providerId: 'trustedrouter', timestamp })).toBeNull()
+  })
+})

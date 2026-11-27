@@ -39,6 +39,7 @@ from .source_perplexity import get_perplexity_prices
 from .source_quicksilverpro import get_quicksilverpro_prices
 from .source_simonw_prices import get_simonw_prices
 from .source_together import get_together_prices
+from .source_trustedrouter import get_trustedrouter_prices
 from .source_typesafe import get_typesafe_prices
 from .source_voyageai import get_voyageai_prices
 from .source_xai import get_xai_prices
@@ -84,6 +85,7 @@ def main():
         get_quicksilverpro_prices,
         get_simonw_prices,
         get_together_prices,
+        get_trustedrouter_prices,
         get_typesafe_prices,
         get_voyageai_prices,
         get_xai_prices,

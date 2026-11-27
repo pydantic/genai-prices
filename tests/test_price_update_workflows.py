@@ -985,7 +985,7 @@ def test_aggregators_update_weekly_on_their_own_proposal() -> None:
         r"'(\[[^']*\])'", workflow['jobs']['import']['strategy']['matrix']['importer']
     )
     weekly_importers, hourly_importers = json.loads(weekly_list), json.loads(hourly_list)
-    assert weekly_importers == ['huggingface', 'openrouter-provider']
+    assert weekly_importers == ['huggingface', 'openrouter-provider', 'trustedrouter']
     assert not set(weekly_importers) & set(hourly_importers)
     makefile = (WORKFLOWS.parents[1] / 'Makefile').read_text()
     assert all(f'\n{importer}-get:' in makefile for importer in weekly_importers + hourly_importers)

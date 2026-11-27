@@ -1356,4 +1356,54 @@ describe('extractUsage', () => {
       expect(usage).toEqual({ cache_read_tokens: 11207, cache_write_tokens: 0, input_tokens: 11216, output_tokens: 5 })
     })
   })
+
+  describe('TrustedRouter provider', () => {
+    const trustedRouterProvider: Provider = data.find((provider) => provider.id === 'trustedrouter')!
+
+    it.each([
+      {
+        apiFlavor: 'chat',
+        expectedUsage: {
+          cache_read_tokens: 200,
+          cache_write_tokens: 50,
+          input_audio_tokens: 30,
+          input_tokens: 1_000,
+          output_audio_tokens: 15,
+          output_reasoning_tokens: 25,
+          output_tokens: 100,
+        },
+        usage: {
+          completion_tokens: 100,
+          completion_tokens_details: { audio_tokens: 15, reasoning_tokens: 25 },
+          prompt_tokens: 1_000,
+          prompt_tokens_details: { audio_tokens: 30, cache_write_tokens: 50, cached_tokens: 200 },
+        },
+      },
+      {
+        apiFlavor: 'responses',
+        expectedUsage: {
+          cache_read_tokens: 200,
+          cache_write_tokens: 50,
+          input_tokens: 1_000,
+          output_reasoning_tokens: 25,
+          output_tokens: 100,
+        },
+        usage: {
+          input_tokens: 1_000,
+          input_tokens_details: { cache_write_tokens: 50, cached_tokens: 200 },
+          output_tokens: 100,
+          output_tokens_details: { reasoning_tokens: 25 },
+        },
+      },
+      {
+        apiFlavor: 'embeddings',
+        expectedUsage: { input_tokens: 1_000 },
+        usage: { prompt_tokens: 1_000, total_tokens: 1_000 },
+      },
+    ])('extracts TrustedRouter $apiFlavor usage', ({ apiFlavor, expectedUsage, usage }) => {
+      const extracted = extractUsage(trustedRouterProvider, { model: 'anthropic/claude-haiku-5.5', usage }, apiFlavor)
+
+      expect(extracted).toEqual({ model: 'anthropic/claude-haiku-5.5', usage: expectedUsage })
+    })
+  })
 })

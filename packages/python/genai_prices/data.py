@@ -30703,6 +30703,4956 @@ providers: list[Provider] = [
         ],
     ),
     Provider(
+        id='trustedrouter',
+        name='TrustedRouter',
+        api_pattern='https://(?:api\\.trustedrouter\\.com|api-europe-west4\\.quillrouter\\.com)(?:/|$)',
+        pricing_urls=['https://trustedrouter.com/models', 'https://api.trustedrouter.com/v1/models'],
+        price_comments='OpenAI-compatible inference gateway routing through hardware-attested Confidential Space enclaves (US: `https://api.trustedrouter.com/v1`, EU: `https://api-europe-west4.quillrouter.com/v1`). Prices are imported from https://api.trustedrouter.com/v1/models, covering token rates, prompt-length tiers, character-priced TTS (`input_mchars`), audio-minute transcription (`audio_hours` / `input_audio_hours`), per-request models (`requests_kcount`), and `trustedrouter/*` presets (at their published starting rates). Hidden/internal routes, dynamic `-1` routes, zero-priced/free routes, per-request minimum-charge floors (`pricing.minimum`), per-image models, and per-second video models are excluded.',
+        model_match=ClauseStartsWith(starts_with='trustedrouter/'),
+        provider_match=ClauseOr(
+            or_=[ClauseContains(contains='trustedrouter'), ClauseContains(contains='trusted-router')]
+        ),
+        extractors=[
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['prompt_tokens_details', 'audio_tokens'], dest='input_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'audio_tokens'], dest='output_audio_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['completion_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(path='completion_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='chat',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[
+                    UsageExtractorMapping(path='input_tokens', dest='input_tokens', required=True),
+                    UsageExtractorMapping(
+                        path=['input_tokens_details', 'cached_tokens'], dest='cache_read_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['input_tokens_details', 'cache_write_tokens'], dest='cache_write_tokens', required=False
+                    ),
+                    UsageExtractorMapping(
+                        path=['output_tokens_details', 'reasoning_tokens'],
+                        dest='output_reasoning_tokens',
+                        required=False,
+                    ),
+                    UsageExtractorMapping(path='output_tokens', dest='output_tokens', required=True),
+                ],
+                api_flavor='responses',
+                model_path='model',
+            ),
+            UsageExtractor(
+                root='usage',
+                mappings=[UsageExtractorMapping(path='prompt_tokens', dest='input_tokens', required=True)],
+                api_flavor='embeddings',
+                model_path='model',
+            ),
+        ],
+        models=[
+            ModelInfo(
+                id='NousResearch/Hermes-4-405B',
+                match=ClauseEquals(equals='NousResearch/Hermes-4-405B'),
+                name='Hermes 4 405B',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('1.055'), output_mtok=Decimal('3.165')),
+            ),
+            ModelInfo(
+                id='Sao10K/L3-8B-Stheno-v3.2',
+                match=ClauseEquals(equals='Sao10K/L3-8B-Stheno-v3.2'),
+                name='Llama 3 8B Stheno V3.2',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.05275'), output_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='abliterate/abliterate-0.3-balanced',
+                match=ClauseEquals(equals='abliterate/abliterate-0.3-balanced'),
+                name='abliterate-0.3-balanced',
+                prices=ModelPrice(input_mtok=Decimal('0.9495'), output_mtok=Decimal('2.11')),
+            ),
+            ModelInfo(
+                id='abliterate/abliterate-0.3-clever',
+                match=ClauseEquals(equals='abliterate/abliterate-0.3-clever'),
+                name='abliterate-0.3-clever',
+                prices=ModelPrice(input_mtok=Decimal('2.6375'), output_mtok=Decimal('5.275')),
+            ),
+            ModelInfo(
+                id='abliterate/abliterate-0.3-fast',
+                match=ClauseEquals(equals='abliterate/abliterate-0.3-fast'),
+                name='abliterate-0.3-fast',
+                prices=ModelPrice(input_mtok=Decimal('0.5275'), output_mtok=Decimal('1.055')),
+            ),
+            ModelInfo(
+                id='abliteration/abliterated-model',
+                match=ClauseEquals(equals='abliteration/abliterated-model'),
+                name='Abliterated Model',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.055'), cache_read_mtok=Decimal('0.1055'), output_mtok=Decimal('3.165')
+                ),
+            ),
+            ModelInfo(
+                id='abliteration/abliterated-model-large',
+                match=ClauseEquals(equals='abliteration/abliterated-model-large'),
+                name='Abliterated Large',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('3.165'), cache_read_mtok=Decimal('0.3165'), output_mtok=Decimal('5.275')
+                ),
+            ),
+            ModelInfo(
+                id='abliteration/abliterated-model-large-flash',
+                match=ClauseEquals(equals='abliteration/abliterated-model-large-flash'),
+                name='Abliterated Large Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.055'), cache_read_mtok=Decimal('0.1055'), output_mtok=Decimal('2.11')
+                ),
+            ),
+            ModelInfo(
+                id='abliteration/abliterated-model-large-v2',
+                match=ClauseEquals(equals='abliteration/abliterated-model-large-v2'),
+                name='Abliterated Large v2',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('3.165'), cache_read_mtok=Decimal('0.3165'), output_mtok=Decimal('5.275')
+                ),
+            ),
+            ModelInfo(
+                id='aion-labs/aion-2.0',
+                match=ClauseEquals(equals='aion-labs/aion-2.0'),
+                name='Aion 2.0',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.844'), cache_read_mtok=Decimal('0.211'), output_mtok=Decimal('1.688')
+                ),
+            ),
+            ModelInfo(
+                id='aion-labs/aion-3.0',
+                match=ClauseEquals(equals='aion-labs/aion-3.0'),
+                name='Aion 3.0',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('3.165'), cache_read_mtok=Decimal('0.79125'), output_mtok=Decimal('6.33')
+                ),
+            ),
+            ModelInfo(
+                id='aion-labs/aion-3.0-mini',
+                match=ClauseEquals(equals='aion-labs/aion-3.0-mini'),
+                name='Aion 3.0 Mini',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.7385'), cache_read_mtok=Decimal('0.1899'), output_mtok=Decimal('1.477')
+                ),
+            ),
+            ModelInfo(
+                id='aion-labs/aion-3.5',
+                match=ClauseEquals(equals='aion-labs/aion-3.5'),
+                name='Aion 3.5',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('3.165'), cache_read_mtok=Decimal('0.79125'), output_mtok=Decimal('6.33')
+                ),
+            ),
+            ModelInfo(
+                id='aion-labs/aion-3.5-mini',
+                match=ClauseEquals(equals='aion-labs/aion-3.5-mini'),
+                name='Aion 3.5 Mini',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.7385'), cache_read_mtok=Decimal('0.1899'), output_mtok=Decimal('1.477')
+                ),
+            ),
+            ModelInfo(
+                id='aion-labs/aion-rp-llama-3.1-8b',
+                match=ClauseEquals(equals='aion-labs/aion-rp-llama-3.1-8b'),
+                name='Aion-RP 1.0 (8B)',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.844'), output_mtok=Decimal('1.688')),
+            ),
+            ModelInfo(
+                id='aisingapore/gemma-sea-lion-v4-27b-it',
+                match=ClauseEquals(equals='aisingapore/gemma-sea-lion-v4-27b-it'),
+                name='@cf/aisingapore/gemma-sea-lion-v4-27b-it',
+                context_window=128000,
+                prices=ModelPrice(input_mtok=Decimal('0.370305'), output_mtok=Decimal('0.585525')),
+            ),
+            ModelInfo(
+                id='anthropic/claude-fable-5',
+                match=ClauseEquals(equals='anthropic/claude-fable-5'),
+                name='Claude Fable 5',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('10.55'), cache_read_mtok=Decimal('1.055'), output_mtok=Decimal('52.75')
+                ),
+            ),
+            ModelInfo(
+                id='anthropic/claude-fable-5.1',
+                match=ClauseEquals(equals='anthropic/claude-fable-5.1'),
+                name='Claude Fable 5.1',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('10.55'), cache_read_mtok=Decimal('0.26375'), output_mtok=Decimal('52.75')
+                ),
+            ),
+            ModelInfo(
+                id='anthropic/claude-fable-5.2',
+                match=ClauseEquals(equals='anthropic/claude-fable-5.2'),
+                name='Claude Fable 5.2',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('8.44'), cache_read_mtok=Decimal('0.211'), output_mtok=Decimal('42.2')
+                ),
+            ),
+            ModelInfo(
+                id='anthropic/claude-haiku-4.5',
+                match=ClauseEquals(equals='anthropic/claude-haiku-4.5'),
+                name='Claude Haiku 4.5',
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.055'), cache_read_mtok=Decimal('0.1055'), output_mtok=Decimal('5.275')
+                ),
+            ),
+            ModelInfo(
+                id='anthropic/claude-haiku-5.5',
+                match=ClauseEquals(equals='anthropic/claude-haiku-5.5'),
+                name='Claude Haiku 5.5',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(
+                        base=Decimal('0.1055'), tiers=[Tier(start=100000, price=Decimal('0.5275'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.01055'), tiers=[Tier(start=100000, price=Decimal('0.05275'))]
+                    ),
+                    output_mtok=TieredPrices(
+                        base=Decimal('0.5275'), tiers=[Tier(start=100000, price=Decimal('2.6375'))]
+                    ),
+                ),
+            ),
+            ModelInfo(
+                id='anthropic/claude-opus-4.5',
+                match=ClauseEquals(equals='anthropic/claude-opus-4.5'),
+                name='Claude Opus 4.5',
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('5.275'), cache_read_mtok=Decimal('0.5275'), output_mtok=Decimal('26.375')
+                ),
+            ),
+            ModelInfo(
+                id='anthropic/claude-opus-4.6',
+                match=ClauseEquals(equals='anthropic/claude-opus-4.6'),
+                name='Claude Opus 4.6',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('5.275'), cache_read_mtok=Decimal('0.5275'), output_mtok=Decimal('26.375')
+                ),
+            ),
+            ModelInfo(
+                id='anthropic/claude-opus-4.7',
+                match=ClauseEquals(equals='anthropic/claude-opus-4.7'),
+                name='Claude Opus 4.7',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('5.275'), cache_read_mtok=Decimal('0.5275'), output_mtok=Decimal('26.375')
+                ),
+            ),
+            ModelInfo(
+                id='anthropic/claude-opus-4.8',
+                match=ClauseEquals(equals='anthropic/claude-opus-4.8'),
+                name='Claude Opus 4.8',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('5.275'), cache_read_mtok=Decimal('0.5275'), output_mtok=Decimal('26.375')
+                ),
+            ),
+            ModelInfo(
+                id='anthropic/claude-opus-5',
+                match=ClauseEquals(equals='anthropic/claude-opus-5'),
+                name='Claude Opus 5',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('5.275'), cache_read_mtok=Decimal('0.5275'), output_mtok=Decimal('26.375')
+                ),
+            ),
+            ModelInfo(
+                id='anthropic/claude-opus-5.5',
+                match=ClauseEquals(equals='anthropic/claude-opus-5.5'),
+                name='Claude Opus 5.5',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('4.22'), cache_read_mtok=Decimal('0.211'), output_mtok=Decimal('21.1')
+                ),
+            ),
+            ModelInfo(
+                id='anthropic/claude-sonnet-4.5',
+                match=ClauseEquals(equals='anthropic/claude-sonnet-4.5'),
+                name='Claude Sonnet 4.5',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('3.165'), cache_read_mtok=Decimal('0.3165'), output_mtok=Decimal('15.825')
+                ),
+            ),
+            ModelInfo(
+                id='anthropic/claude-sonnet-4.6',
+                match=ClauseEquals(equals='anthropic/claude-sonnet-4.6'),
+                name='Claude Sonnet 4.6',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('3.165'), cache_read_mtok=Decimal('0.3165'), output_mtok=Decimal('15.825')
+                ),
+            ),
+            ModelInfo(
+                id='anthropic/claude-sonnet-5',
+                match=ClauseEquals(equals='anthropic/claude-sonnet-5'),
+                name='Claude Sonnet 5',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.11'), cache_read_mtok=Decimal('0.211'), output_mtok=Decimal('10.55')
+                ),
+            ),
+            ModelInfo(
+                id='anthropic/claude-sonnet-5.5',
+                match=ClauseEquals(equals='anthropic/claude-sonnet-5.5'),
+                name='Claude Sonnet 5.5',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.11'), cache_read_mtok=Decimal('0.1055'), output_mtok=Decimal('10.55')
+                ),
+            ),
+            ModelInfo(
+                id='bsc-lt/alia-40b-instruct-2601',
+                match=ClauseEquals(equals='bsc-lt/alia-40b-instruct-2601'),
+                name='40b',
+                context_window=65536,
+                prices=ModelPrice(input_mtok=Decimal('0.3165'), output_mtok=Decimal('0.633')),
+            ),
+            ModelInfo(
+                id='bytedance-seed/seed-oss-36b-instruct',
+                match=ClauseEquals(equals='bytedance-seed/seed-oss-36b-instruct'),
+                name='ByteDance-Seed/Seed-OSS-36B-Instruct',
+                prices=ModelPrice(input_mtok=Decimal('0.22155'), output_mtok=Decimal('0.60135')),
+            ),
+            ModelInfo(
+                id='bytedance/dola-seed-2-1-turbo-260628',
+                match=ClauseEquals(equals='bytedance/dola-seed-2-1-turbo-260628'),
+                name='dola-seed-2-1-turbo',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.5275'), cache_read_mtok=Decimal('0.1055'), output_mtok=Decimal('2.6375')
+                ),
+            ),
+            ModelInfo(
+                id='bytedance/seed-2-0-code-preview-260328',
+                match=ClauseEquals(equals='bytedance/seed-2-0-code-preview-260328'),
+                name='seed-2-0-code',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.5275'), tiers=[Tier(start=128000, price=Decimal('1.055'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.1055'), tiers=[Tier(start=128000, price=Decimal('0.211'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('3.165'), tiers=[Tier(start=128000, price=Decimal('6.33'))]),
+                ),
+            ),
+            ModelInfo(
+                id='bytedance/seed-2-0-lite-260428',
+                match=ClauseEquals(equals='bytedance/seed-2-0-lite-260428'),
+                name='seed-2-0-lite',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(
+                        base=Decimal('0.26375'), tiers=[Tier(start=128000, price=Decimal('0.5275'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.05275'), tiers=[Tier(start=128000, price=Decimal('0.1055'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('2.11'), tiers=[Tier(start=128000, price=Decimal('4.22'))]),
+                ),
+            ),
+            ModelInfo(
+                id='bytedance/seed-2-0-mini-260428',
+                match=ClauseEquals(equals='bytedance/seed-2-0-mini-260428'),
+                name='seed-2-0-mini',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.1055'), tiers=[Tier(start=128000, price=Decimal('0.211'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.0211'), tiers=[Tier(start=128000, price=Decimal('0.0422'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('0.422'), tiers=[Tier(start=128000, price=Decimal('0.844'))]),
+                ),
+            ),
+            ModelInfo(
+                id='bytedance/seed-2-0-pro-260328',
+                match=ClauseEquals(equals='bytedance/seed-2-0-pro-260328'),
+                name='seed-2-0-pro',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.5275'), tiers=[Tier(start=128000, price=Decimal('1.055'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.1055'), tiers=[Tier(start=128000, price=Decimal('0.211'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('3.165'), tiers=[Tier(start=128000, price=Decimal('6.33'))]),
+                ),
+            ),
+            ModelInfo(
+                id='bytedance/seedance-2.0',
+                match=ClauseEquals(equals='bytedance/seedance-2.0'),
+                name='ByteDance Seedance 2.0',
+                context_window=10000,
+                prices=ModelPrice(output_mtok=Decimal('7.385')),
+            ),
+            ModelInfo(
+                id='bytedance/seedance-2.0-fast',
+                match=ClauseEquals(equals='bytedance/seedance-2.0-fast'),
+                name='ByteDance Seedance 2.0 Fast',
+                context_window=10000,
+                prices=ModelPrice(output_mtok=Decimal('5.908')),
+            ),
+            ModelInfo(
+                id='bytedance/seedance-2.5',
+                match=ClauseEquals(equals='bytedance/seedance-2.5'),
+                name='ByteDance Seedance 2.5',
+                context_window=15000,
+                prices=ModelPrice(output_mtok=Decimal('11.2885')),
+            ),
+            ModelInfo(
+                id='bytedance/ui-tars-1.5-7b',
+                match=ClauseEquals(equals='bytedance/ui-tars-1.5-7b'),
+                name='UI-TARS 7B',
+                context_window=128000,
+                prices=ModelPrice(input_mtok=Decimal('0.1055'), output_mtok=Decimal('0.211')),
+            ),
+            ModelInfo(
+                id='cerebras/gpt-oss-120b',
+                match=ClauseEquals(equals='cerebras/gpt-oss-120b'),
+                name='OpenAI GPT OSS',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.36925'), output_mtok=Decimal('0.79125')),
+            ),
+            ModelInfo(
+                id='cloudflare/clef-flash',
+                match=ClauseEquals(equals='cloudflare/clef-flash'),
+                name='Cloudflare Clef-Flash',
+                context_window=65536,
+                prices=ModelPrice(input_mtok=Decimal('0.17368')),
+            ),
+            ModelInfo(
+                id='cohere/command-a',
+                match=ClauseEquals(equals='cohere/command-a'),
+                name='cohere-command-a',
+                prices=ModelPrice(input_mtok=Decimal('2.6375'), output_mtok=Decimal('10.55')),
+            ),
+            ModelInfo(
+                id='cohere/embed-english-v3.0',
+                match=ClauseEquals(equals='cohere/embed-english-v3.0'),
+                name='Cohere Embed English v3.0',
+                context_window=512,
+                prices=ModelPrice(input_mtok=Decimal('0.1055')),
+            ),
+            ModelInfo(
+                id='cohere/embed-multilingual-v3.0',
+                match=ClauseEquals(equals='cohere/embed-multilingual-v3.0'),
+                name='Cohere Embed Multilingual v3.0',
+                context_window=512,
+                prices=ModelPrice(input_mtok=Decimal('0.1055')),
+            ),
+            ModelInfo(
+                id='cohere/embed-v4.0',
+                match=ClauseEquals(equals='cohere/embed-v4.0'),
+                name='Cohere Embed v4.0',
+                context_window=128000,
+                prices=ModelPrice(input_mtok=Decimal('0.1266')),
+            ),
+            ModelInfo(
+                id='coralbricks/deepseek-v4.1-flash',
+                match=ClauseEquals(equals='coralbricks/deepseek-v4.1-flash'),
+                name='deepseek-v4.1-flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.20045'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.633')
+                ),
+            ),
+            ModelInfo(
+                id='coralbricks/deepseek-v4.1-flash-value',
+                match=ClauseEquals(equals='coralbricks/deepseek-v4.1-flash-value'),
+                name='deepseek-v4.1-flash-value',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.01'), output_mtok=Decimal('0.60135')),
+            ),
+            ModelInfo(
+                id='dealignai/deepseek-v4.1-flash-1017-uncensored',
+                match=ClauseEquals(equals='dealignai/deepseek-v4.1-flash-1017-uncensored'),
+                name='DeepSeek V4.1 Flash Uncensored',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.68575'), cache_read_mtok=Decimal('0.13715'), output_mtok=Decimal('1.52975')
+                ),
+            ),
+            ModelInfo(
+                id='decision-models/baseten-elephant-9b-latest',
+                match=ClauseEquals(equals='decision-models/baseten-elephant-9b-latest'),
+                name='elephant-1',
+                context_window=16384,
+                prices=ModelPrice(input_mtok=Decimal('0.036925')),
+            ),
+            ModelInfo(
+                id='decision-models/baseten-mammoth-27b-latest',
+                match=ClauseEquals(equals='decision-models/baseten-mammoth-27b-latest'),
+                name='mammoth-1',
+                context_window=16384,
+                prices=ModelPrice(input_mtok=Decimal('0.1055')),
+            ),
+            ModelInfo(
+                id='decisionmodelsio-eu/s1-fast',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='decisionmodelsio-eu/s1-fast'),
+                        ClauseEquals(equals='system1models-eu/s1-fast'),
+                    ]
+                ),
+                name='Decision Models s1-fast (EU)',
+                context_window=16192,
+                prices=ModelPrice(input_mtok=Decimal('0.022155')),
+            ),
+            ModelInfo(
+                id='decisionmodelsio-eu/s1-fast-2',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='decisionmodelsio-eu/s1-fast-2'),
+                        ClauseEquals(equals='system1models-eu/s1-fast-2'),
+                    ]
+                ),
+                name='Decision Models s1-fast-2 (EU)',
+                context_window=16192,
+                prices=ModelPrice(input_mtok=Decimal('0.022155')),
+            ),
+            ModelInfo(
+                id='decisionmodelsio-eu/s1-pro',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='decisionmodelsio-eu/s1-pro'),
+                        ClauseEquals(equals='system1models-eu/s1-pro'),
+                    ]
+                ),
+                name='Decision Models s1-pro (EU)',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.08862')),
+            ),
+            ModelInfo(
+                id='decisionmodelsio-eu/s1-pro-2',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='decisionmodelsio-eu/s1-pro-2'),
+                        ClauseEquals(equals='system1models-eu/s1-pro-2'),
+                    ]
+                ),
+                name='Decision Models s1-pro-2 (EU)',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.08862')),
+            ),
+            ModelInfo(
+                id='decisionmodelsio-eu/s1-pro-3',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='decisionmodelsio-eu/s1-pro-3'),
+                        ClauseEquals(equals='system1models-eu/s1-pro-3'),
+                    ]
+                ),
+                name='Decision Models s1-pro-3 (EU)',
+                context_window=16384,
+                prices=ModelPrice(input_mtok=Decimal('0.08862')),
+            ),
+            ModelInfo(
+                id='decisionmodelsio-eu/s1-pro-5',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='decisionmodelsio-eu/s1-pro-5'),
+                        ClauseEquals(equals='system1models-eu/s1-pro-5'),
+                    ]
+                ),
+                name='Decision Models s1-pro-5 (EU)',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.08862')),
+            ),
+            ModelInfo(
+                id='decisionmodelsio/s1-fast',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='decisionmodelsio/s1-fast'), ClauseEquals(equals='system1models/s1-fast')]
+                ),
+                name='Decision Models s1-fast (GLOBAL)',
+                context_window=16192,
+                prices=ModelPrice(input_mtok=Decimal('0.020045')),
+            ),
+            ModelInfo(
+                id='decisionmodelsio/s1-fast-2',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='decisionmodelsio/s1-fast-2'),
+                        ClauseEquals(equals='system1models/s1-fast-2'),
+                    ]
+                ),
+                name='Decision Models s1-fast-2 (GLOBAL)',
+                context_window=16192,
+                prices=ModelPrice(input_mtok=Decimal('0.020045')),
+            ),
+            ModelInfo(
+                id='decisionmodelsio/s1-pro',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='decisionmodelsio/s1-pro'), ClauseEquals(equals='system1models/s1-pro')]
+                ),
+                name='Decision Models s1-pro (GLOBAL)',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.0844')),
+            ),
+            ModelInfo(
+                id='decisionmodelsio/s1-pro-2',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='decisionmodelsio/s1-pro-2'),
+                        ClauseEquals(equals='system1models/s1-pro-2'),
+                    ]
+                ),
+                name='Decision Models s1-pro-2 (GLOBAL)',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.0844')),
+            ),
+            ModelInfo(
+                id='decisionmodelsio/s1-pro-3',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='decisionmodelsio/s1-pro-3'),
+                        ClauseEquals(equals='system1models/s1-pro-3'),
+                    ]
+                ),
+                name='Decision Models s1-pro-3 (GLOBAL)',
+                context_window=16384,
+                prices=ModelPrice(input_mtok=Decimal('0.0844')),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-flash',
+                match=ClauseEquals(equals='deepseek/deepseek-flash'),
+                name='DeepSeek V4.1 Flash (rolling)',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15825'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.633')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-ocr-2',
+                match=ClauseEquals(equals='deepseek/deepseek-ocr-2'),
+                name='DeepSeek OCR 2',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.03165'), output_mtok=Decimal('0.03165')),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-r1',
+                match=ClauseEquals(equals='deepseek/deepseek-r1'),
+                name='deepseek-ai/DeepSeek-R1',
+                prices=ModelPrice(input_mtok=Decimal('0.5275'), output_mtok=Decimal('2.2999')),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-r1-0528',
+                match=ClauseEquals(equals='deepseek/deepseek-r1-0528'),
+                name='R1 0528',
+                context_window=128000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.5275'), cache_read_mtok=Decimal('0.36925'), output_mtok=Decimal('2.26825')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v3',
+                match=ClauseEquals(equals='deepseek/deepseek-v3'),
+                name='deepseek-ai/DeepSeek-V3',
+                context_window=163840,
+                prices=ModelPrice(input_mtok=Decimal('0.26375'), output_mtok=Decimal('0.93895')),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v3-0324',
+                match=ClauseEquals(equals='deepseek/deepseek-v3-0324'),
+                name='DeepSeek V3 0324',
+                context_window=128000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.30595'), cache_read_mtok=Decimal('0.11605'), output_mtok=Decimal('1.2027')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v3.1',
+                match=ClauseEquals(equals='deepseek/deepseek-v3.1'),
+                name='deepseek-ai/DeepSeek-V3.1',
+                context_window=163840,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.26375'), cache_read_mtok=Decimal('0.13715'), output_mtok=Decimal('1.00225')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v3.1-terminus',
+                match=ClauseEquals(equals='deepseek/deepseek-v3.1-terminus'),
+                name='DeepSeek V3.1 Terminus',
+                context_window=163840,
+                prices=ModelPrice(input_mtok=Decimal('0.28485'), output_mtok=Decimal('1.055')),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v3.2',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='deepseek/deepseek-v3.2'),
+                        ClauseEquals(equals='deepseek/deepseek-v3.2-exp'),
+                    ]
+                ),
+                name='DeepSeek V3.2',
+                context_window=163840,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.2743'), cache_read_mtok=Decimal('0.13715'), output_mtok=Decimal('0.4009')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4-1-flash',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='deepseek/deepseek-v4-1-flash'),
+                        ClauseEquals(equals='deepseek/deepseek-v4-1-flash-1017'),
+                    ]
+                ),
+                name='DeepSeek V4.1 Flash',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3165'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('1.266')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4-1-flash-1017-ultrafast',
+                match=ClauseEquals(equals='deepseek/deepseek-v4-1-flash-1017-ultrafast'),
+                name='DeepSeek V4.1 Flash 1017 Ultrafast',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.5825'), cache_read_mtok=Decimal('0.03165'), output_mtok=Decimal('6.33')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4-1-flash-1017-uncensored',
+                match=ClauseEquals(equals='deepseek/deepseek-v4-1-flash-1017-uncensored'),
+                name='DeepSeek V4.1 Flash 1017 Uncensored',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.34815'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('1.3926')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4-1-flash-uncensored',
+                match=ClauseEquals(equals='deepseek/deepseek-v4-1-flash-uncensored'),
+                name='DeepSeek V4.1 Flash Uncensored',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.34815'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('1.3926')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4-flash',
+                match=ClauseEquals(equals='deepseek/deepseek-v4-flash'),
+                name='DeepSeek V4 Flash 0423',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.09495'), cache_read_mtok=Decimal('0.01899'), output_mtok=Decimal('0.1899')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4-flash-0423',
+                match=ClauseEquals(equals='deepseek/deepseek-v4-flash-0423'),
+                name='DeepSeek-V4-Flash-0423',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1477'), cache_read_mtok=Decimal('0.02954'), output_mtok=Decimal('0.2954')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4-flash-0731',
+                match=ClauseEquals(equals='deepseek/deepseek-v4-flash-0731'),
+                name='DeepSeek V4 Flash 0731',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.0422'), output_mtok=Decimal('0.09495')),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4-flash-0731-fast',
+                match=ClauseEquals(equals='deepseek/deepseek-v4-flash-0731-fast'),
+                name='DeepSeek V4 Flash 0731 Fast',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.13715'), cache_read_mtok=Decimal('0.02954'), output_mtok=Decimal('0.24265')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4-flash-0731-p',
+                match=ClauseEquals(equals='deepseek/deepseek-v4-flash-0731-p'),
+                name='deepseek/deepseek-v4-flash-0731-p',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.4642'), cache_read_mtok=Decimal('0.015614'), output_mtok=Decimal('1.3926')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4-flash-vision-exp',
+                match=ClauseEquals(equals='deepseek/deepseek-v4-flash-vision-exp'),
+                name='DeepSeek V4 Flash Vision Exp',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.4642'), cache_read_mtok=Decimal('0.01477'), output_mtok=Decimal('1.3926')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4-pro',
+                match=ClauseEquals(equals='deepseek/deepseek-v4-pro'),
+                name='DeepSeek V4 Pro 0423',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15825'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.633')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4-pro-0423',
+                match=ClauseEquals(equals='deepseek/deepseek-v4-pro-0423'),
+                name='DeepSeek V4 Pro 0423',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.3715'), cache_read_mtok=Decimal('0.1055'), output_mtok=Decimal('2.743')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4-pro-0813',
+                match=ClauseEquals(equals='deepseek/deepseek-v4-pro-0813'),
+                name='DeepSeek V4 Pro 0813',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.3926'), cache_read_mtok=Decimal('0.13926'), output_mtok=Decimal('4.1778')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4-pro-0813-p',
+                match=ClauseEquals(equals='deepseek/deepseek-v4-pro-0813-p'),
+                name='deepseek/deepseek-v4-pro-0813-p',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.3926'), cache_read_mtok=Decimal('0.04642'), output_mtok=Decimal('4.1778')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4.1-flash',
+                match=ClauseEquals(equals='deepseek/deepseek-v4.1-flash'),
+                name='DeepSeek V4.1 Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.01055'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.1266')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4.1-flash-1017',
+                match=ClauseEquals(equals='deepseek/deepseek-v4.1-flash-1017'),
+                name='DeepSeek V4.1 Flash 1017',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.03165'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.1266')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4.1-flash-1017-fast',
+                match=ClauseEquals(equals='deepseek/deepseek-v4.1-flash-1017-fast'),
+                name='DeepSeek V4.1 Flash 1017 fast',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.633'), output_mtok=Decimal('2.532')),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4.1-flash-dst',
+                match=ClauseEquals(equals='deepseek/deepseek-v4.1-flash-dst'),
+                name='DeepSeek V4.1 Flash DST',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3165'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('1.266')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4.1-flash-fast',
+                match=ClauseEquals(equals='deepseek/deepseek-v4.1-flash-fast'),
+                name='DeepSeek V4.1 Flash Fast',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.633'), cache_read_mtok=Decimal('0.01477'), output_mtok=Decimal('2.532')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4.1-flash-p',
+                match=ClauseEquals(equals='deepseek/deepseek-v4.1-flash-p'),
+                name='DeepSeek V4.1 Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3165'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('1.266')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/deepseek-v4p1-flash',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='deepseek/deepseek-v4p1-flash'),
+                        ClauseEquals(equals='deepseek/deepseek-v4p1-flash-1017'),
+                    ]
+                ),
+                name='Deepseek V4P1 Flash on Fireworks',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3165'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('1.266')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek/fetch',
+                match=ClauseEquals(equals='deepseek/fetch'),
+                name='DeepSeek Fetch',
+                prices=ModelPrice(requests_kcount=Decimal('0.792')),
+            ),
+            ModelInfo(
+                id='elevenlabs/eleven-flash-v2.5',
+                match=ClauseEquals(equals='elevenlabs/eleven-flash-v2.5'),
+                name='Eleven Flash V2.5',
+                prices=ModelPrice(input_mchars=Decimal('42.2')),
+            ),
+            ModelInfo(
+                id='elevenlabs/eleven-multilingual-v2',
+                match=ClauseEquals(equals='elevenlabs/eleven-multilingual-v2'),
+                name='Eleven Multilingual V2',
+                prices=ModelPrice(input_mchars=Decimal('84.4')),
+            ),
+            ModelInfo(
+                id='elevenlabs/eleven-turbo-v2.5',
+                match=ClauseEquals(equals='elevenlabs/eleven-turbo-v2.5'),
+                name='Eleven Turbo V2.5',
+                prices=ModelPrice(input_mchars=Decimal('42.2')),
+            ),
+            ModelInfo(
+                id='elevenlabs/eleven-v3',
+                match=ClauseEquals(equals='elevenlabs/eleven-v3'),
+                name='Eleven V3',
+                prices=ModelPrice(input_mchars=Decimal('84.4')),
+            ),
+            ModelInfo(
+                id='fortanix/glm-5.3-flash',
+                match=ClauseEquals(equals='fortanix/glm-5.3-flash'),
+                name='GLM 5.3 Flash (Fortanix)',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.01'), output_mtok=Decimal('0.01')),
+            ),
+            ModelInfo(
+                id='gmicloud/ripple-65b-preview',
+                match=ClauseEquals(equals='gmicloud/ripple-65b-preview'),
+                name='ricursiveAI/Ripple-65B-Preview',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.211'), cache_read_mtok=Decimal('0.05275'), output_mtok=Decimal('0.633')
+                ),
+            ),
+            ModelInfo(
+                id='google/gemini-2.5-flash',
+                match=ClauseEquals(equals='google/gemini-2.5-flash'),
+                name='Gemini 2.5 Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3165'), cache_read_mtok=Decimal('0.03165'), output_mtok=Decimal('2.6375')
+                ),
+            ),
+            ModelInfo(
+                id='google/gemini-2.5-flash-lite',
+                match=ClauseEquals(equals='google/gemini-2.5-flash-lite'),
+                name='Gemini 2.5 Flash Lite',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1055'), cache_read_mtok=Decimal('0.01055'), output_mtok=Decimal('0.422')
+                ),
+            ),
+            ModelInfo(
+                id='google/gemini-2.5-pro',
+                match=ClauseEquals(equals='google/gemini-2.5-pro'),
+                name='Gemini 2.5 Pro',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(
+                        base=Decimal('1.31875'), tiers=[Tier(start=200000, price=Decimal('2.6375'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.131875'), tiers=[Tier(start=200000, price=Decimal('0.26375'))]
+                    ),
+                    output_mtok=TieredPrices(
+                        base=Decimal('10.55'), tiers=[Tier(start=200000, price=Decimal('15.825'))]
+                    ),
+                ),
+            ),
+            ModelInfo(
+                id='google/gemini-3-flash-preview',
+                match=ClauseEquals(equals='google/gemini-3-flash-preview'),
+                name='Gemini 3 Flash Preview',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.5275'), cache_read_mtok=Decimal('0.05275'), output_mtok=Decimal('3.165')
+                ),
+            ),
+            ModelInfo(
+                id='google/gemini-3.1-flash-image',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='google/gemini-3.1-flash-image'),
+                        ClauseEquals(equals='google/gemini-3.1-flash-image-preview'),
+                    ]
+                ),
+                name='Nano Banana 2',
+                context_window=65536,
+                prices=ModelPrice(input_mtok=Decimal('0.5275'), output_mtok=Decimal('63.3')),
+            ),
+            ModelInfo(
+                id='google/gemini-3.1-flash-lite',
+                match=ClauseEquals(equals='google/gemini-3.1-flash-lite'),
+                name='Gemini 3.1 Flash Lite',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.26375'), cache_read_mtok=Decimal('0.026375'), output_mtok=Decimal('1.5825')
+                ),
+            ),
+            ModelInfo(
+                id='google/gemini-3.1-pro-preview',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='google/gemini-3.1-pro-preview'),
+                        ClauseEquals(equals='google/gemini-3.1-pro-preview-customtools'),
+                    ]
+                ),
+                name='Gemini 3.1 Pro Preview',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2.11'), tiers=[Tier(start=200000, price=Decimal('4.22'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.211'), tiers=[Tier(start=200000, price=Decimal('0.422'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('12.66'), tiers=[Tier(start=200000, price=Decimal('18.99'))]),
+                ),
+            ),
+            ModelInfo(
+                id='google/gemini-3.5-flash',
+                match=ClauseEquals(equals='google/gemini-3.5-flash'),
+                name='Gemini 3.5 Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.5825'), cache_read_mtok=Decimal('0.15825'), output_mtok=Decimal('9.495')
+                ),
+            ),
+            ModelInfo(
+                id='google/gemini-3.5-flash-lite',
+                match=ClauseEquals(equals='google/gemini-3.5-flash-lite'),
+                name='Gemini 3.5 Flash Lite',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3165'), cache_read_mtok=Decimal('0.03165'), output_mtok=Decimal('2.6375')
+                ),
+            ),
+            ModelInfo(
+                id='google/gemini-3.6-flash',
+                match=ClauseEquals(equals='google/gemini-3.6-flash'),
+                name='Gemini 3.6 Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.79125'), cache_read_mtok=Decimal('0.079125'), output_mtok=Decimal('3.95625')
+                ),
+            ),
+            ModelInfo(
+                id='google/gemini-3.7-flash',
+                match=ClauseEquals(equals='google/gemini-3.7-flash'),
+                name='Gemini 3.7 Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.79125'), cache_read_mtok=Decimal('0.079125'), output_mtok=Decimal('3.95625')
+                ),
+            ),
+            ModelInfo(
+                id='google/gemini-3.8-flash',
+                match=ClauseEquals(equals='google/gemini-3.8-flash'),
+                name='Gemini 3.8 Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.79125'), cache_read_mtok=Decimal('0.079125'), output_mtok=Decimal('3.95625')
+                ),
+            ),
+            ModelInfo(
+                id='google/gemini-3.8-flash-lite-tts',
+                match=ClauseEquals(equals='google/gemini-3.8-flash-lite-tts'),
+                name='Gemini 3.8 Flash Lite TTS',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.5275'), output_mtok=Decimal('6.33')),
+            ),
+            ModelInfo(
+                id='google/gemini-3.8-flash-tts',
+                match=ClauseEquals(equals='google/gemini-3.8-flash-tts'),
+                name='Gemini 3.8 Flash TTS',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.5275'), output_mtok=Decimal('9.495')),
+            ),
+            ModelInfo(
+                id='google/gemini-4-argon',
+                match=ClauseEquals(equals='google/gemini-4-argon'),
+                name='Gemini 4 Argon',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.11'), cache_read_mtok=Decimal('0.1055'), output_mtok=Decimal('10.55')
+                ),
+            ),
+            ModelInfo(
+                id='google/gemini-4-carbon',
+                match=ClauseEquals(equals='google/gemini-4-carbon'),
+                name='Gemini 4 Carbon',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.11'), cache_read_mtok=Decimal('0.1055'), output_mtok=Decimal('10.55')
+                ),
+            ),
+            ModelInfo(
+                id='google/gemini-4-hydrogen',
+                match=ClauseEquals(equals='google/gemini-4-hydrogen'),
+                name='Gemini 4 Hydrogen',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.5825'), cache_read_mtok=Decimal('0.079125'), output_mtok=Decimal('7.9125')
+                ),
+            ),
+            ModelInfo(
+                id='google/gemini-4-neon',
+                match=ClauseEquals(equals='google/gemini-4-neon'),
+                name='Gemini 4 Neon',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('3.165'), cache_read_mtok=Decimal('0.15825'), output_mtok=Decimal('15.825')
+                ),
+            ),
+            ModelInfo(
+                id='google/gemini-embedding-001',
+                match=ClauseEquals(equals='google/gemini-embedding-001'),
+                name='Gemini Embedding 001',
+                context_window=2048,
+                prices=ModelPrice(input_mtok=Decimal('0.15825')),
+            ),
+            ModelInfo(
+                id='google/gemini-flash-latest',
+                match=ClauseEquals(equals='google/gemini-flash-latest'),
+                name='Gemini Flash Latest',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.5275'), cache_read_mtok=Decimal('0.05275'), output_mtok=Decimal('3.165')
+                ),
+            ),
+            ModelInfo(
+                id='google/gemini-pro-latest',
+                match=ClauseEquals(equals='google/gemini-pro-latest'),
+                name='Gemini Pro Latest',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2.11'), tiers=[Tier(start=200000, price=Decimal('4.22'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.211'), tiers=[Tier(start=200000, price=Decimal('0.422'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('12.66'), tiers=[Tier(start=200000, price=Decimal('18.99'))]),
+                ),
+            ),
+            ModelInfo(
+                id='google/gemini-robotics-er-2-preview',
+                match=ClauseEquals(equals='google/gemini-robotics-er-2-preview'),
+                name='Gemini Robotics-ER 2 Preview',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.055'), cache_read_mtok=Decimal('0.1055'), output_mtok=Decimal('5.275')
+                ),
+            ),
+            ModelInfo(
+                id='google/gemma-2-2b-it',
+                match=ClauseEquals(equals='google/gemma-2-2b-it'),
+                name='gemma 2 2b it',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.0211'), output_mtok=Decimal('0.0633')),
+            ),
+            ModelInfo(
+                id='google/gemma-3-12b-it',
+                match=ClauseEquals(equals='google/gemma-3-12b-it'),
+                name='Gemma 3 12B',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.05275'), output_mtok=Decimal('0.15825')),
+            ),
+            ModelInfo(
+                id='google/gemma-3-27b-it',
+                match=ClauseEquals(equals='google/gemma-3-27b-it'),
+                name='Gemma 3 27B',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.0844'), output_mtok=Decimal('0.1688')),
+            ),
+            ModelInfo(
+                id='google/gemma-3-4b-it',
+                match=ClauseEquals(equals='google/gemma-3-4b-it'),
+                name='Gemma 3 4B',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.0422'), output_mtok=Decimal('0.0844')),
+            ),
+            ModelInfo(
+                id='google/gemma-4-26b-a4b-it',
+                match=ClauseEquals(equals='google/gemma-4-26b-a4b-it'),
+                name='Gemma 4 26B A4B',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.068575'), cache_read_mtok=Decimal('0.0211'), output_mtok=Decimal('0.3165')
+                ),
+            ),
+            ModelInfo(
+                id='google/gemma-4-31b-it',
+                match=ClauseEquals(equals='google/gemma-4-31b-it'),
+                name='Gemma 4 31B',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.1055'), output_mtok=Decimal('0.3587')),
+            ),
+            ModelInfo(
+                id='google/gemma-4-31b-it-nvfp4',
+                match=ClauseEquals(equals='google/gemma-4-31b-it-nvfp4'),
+                name='nvidia/Gemma-4-31B-IT-NVFP4',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1477'), cache_read_mtok=Decimal('0.07385'), output_mtok=Decimal('0.422')
+                ),
+            ),
+            ModelInfo(
+                id='google/gemma-4-31b-it-turbo',
+                match=ClauseEquals(equals='google/gemma-4-31b-it-turbo'),
+                name='google/gemma-4-31B-it-turbo',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.09495'), cache_read_mtok=Decimal('0.05275'), output_mtok=Decimal('0.3587')
+                ),
+            ),
+            ModelInfo(
+                id='google/gemma-4-31b-it-ultra',
+                match=ClauseEquals(equals='google/gemma-4-31b-it-ultra'),
+                name='google/gemma-4-31B-it-Ultra',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.28485'), output_mtok=Decimal('0.8018')),
+            ),
+            ModelInfo(
+                id='google/gemma-4-31b-turbo',
+                match=ClauseEquals(equals='google/gemma-4-31b-turbo'),
+                name='google/gemma-4-31B-turbo',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1266'), cache_read_mtok=Decimal('0.01266'), output_mtok=Decimal('0.39035')
+                ),
+            ),
+            ModelInfo(
+                id='google/gemma-4-uncensored',
+                match=ClauseEquals(equals='google/gemma-4-uncensored'),
+                name='Gemma 4 Uncensored',
+                context_window=256000,
+                prices=ModelPrice(input_mtok=Decimal('0.171438'), output_mtok=Decimal('0.5275')),
+            ),
+            ModelInfo(
+                id='gryphe/mythomax-l2-13b',
+                match=ClauseEquals(equals='gryphe/mythomax-l2-13b'),
+                name='MythoMax 13B',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.505388'), output_mtok=Decimal('0.842312')),
+            ),
+            ModelInfo(
+                id='ibm-granite/granite-4.1-8b',
+                match=ClauseEquals(equals='ibm-granite/granite-4.1-8b'),
+                name='granite-4.1-8b',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.05275'), output_mtok=Decimal('0.1055')),
+            ),
+            ModelInfo(
+                id='ibm-granite/granite-4.2-8b',
+                match=ClauseEquals(equals='ibm-granite/granite-4.2-8b'),
+                name='Granite 4.2 8B',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.0633'), cache_read_mtok=Decimal('0.015825'), output_mtok=Decimal('0.15825')
+                ),
+            ),
+            ModelInfo(
+                id='inception/mercury-3',
+                match=ClauseEquals(equals='inception/mercury-3'),
+                name='Mercury 3',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1055'), cache_read_mtok=Decimal('0.01055'), output_mtok=Decimal('0.36925')
+                ),
+            ),
+            ModelInfo(
+                id='inclusionai/ling-3.0-flash',
+                match=ClauseEquals(equals='inclusionai/ling-3.0-flash'),
+                name='Ling 3.0 Flash',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.0633'), cache_read_mtok=Decimal('0.01266'), output_mtok=Decimal('0.1899')
+                ),
+            ),
+            ModelInfo(
+                id='inclusionai/ling-3.0-flash-vl',
+                match=ClauseEquals(equals='inclusionai/ling-3.0-flash-vl'),
+                name='Ling 3.0 Flash VL',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.0633'), cache_read_mtok=Decimal('0.01266'), output_mtok=Decimal('0.1899')
+                ),
+            ),
+            ModelInfo(
+                id='inclusionai/ling-flash-2.0',
+                match=ClauseEquals(equals='inclusionai/ling-flash-2.0'),
+                name='inclusionAI/Ling-flash-2.0',
+                prices=ModelPrice(input_mtok=Decimal('0.1477'), output_mtok=Decimal('0.60135')),
+            ),
+            ModelInfo(
+                id='inclusionai/lingsante-3.1-air-vl',
+                match=ClauseEquals(equals='inclusionai/lingsante-3.1-air-vl'),
+                name='LingSante 3.1 Air VL',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.0633'), cache_read_mtok=Decimal('0.01266'), output_mtok=Decimal('0.1899')
+                ),
+            ),
+            ModelInfo(
+                id='intel/qwen3-coder-480b-a35b-instruct-int4-mixed-ar',
+                match=ClauseEquals(equals='intel/qwen3-coder-480b-a35b-instruct-int4-mixed-ar'),
+                name='Qwen3 Coder 480B A35B Instruct INT4 Mixed AR',
+                context_window=106000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.342875'), cache_read_mtok=Decimal('0.171438'), output_mtok=Decimal('1.31875')
+                ),
+            ),
+            ModelInfo(
+                id='intfloat/multilingual-e5-large-instruct',
+                match=ClauseEquals(equals='intfloat/multilingual-e5-large-instruct'),
+                name='Multilingual E5 Large Instruct',
+                context_window=512,
+                prices=ModelPrice(input_mtok=Decimal('0.0211')),
+            ),
+            ModelInfo(
+                id='jina-ai/jina-clip-v1',
+                match=ClauseEquals(equals='jina-ai/jina-clip-v1'),
+                name='Jina Clip v1',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='jina-ai/jina-clip-v2',
+                match=ClauseEquals(equals='jina-ai/jina-clip-v2'),
+                name='Jina Clip v2',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='jina-ai/jina-code-embeddings-0.5b',
+                match=ClauseEquals(equals='jina-ai/jina-code-embeddings-0.5b'),
+                name='Jina Code Embeddings 0.5b',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='jina-ai/jina-code-embeddings-1.5b',
+                match=ClauseEquals(equals='jina-ai/jina-code-embeddings-1.5b'),
+                name='Jina Code Embeddings 1.5b',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='jina-ai/jina-colbert-v2',
+                match=ClauseEquals(equals='jina-ai/jina-colbert-v2'),
+                name='Jina Colbert v2',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='jina-ai/jina-embedding-b-en-v1',
+                match=ClauseEquals(equals='jina-ai/jina-embedding-b-en-v1'),
+                name='Jina Embedding B EN v1',
+                context_window=512,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='jina-ai/jina-embeddings-v2-base-code',
+                match=ClauseEquals(equals='jina-ai/jina-embeddings-v2-base-code'),
+                name='Jina Embeddings v2 Base Code',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='jina-ai/jina-embeddings-v2-base-de',
+                match=ClauseEquals(equals='jina-ai/jina-embeddings-v2-base-de'),
+                name='Jina Embeddings v2 Base DE',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='jina-ai/jina-embeddings-v2-base-en',
+                match=ClauseEquals(equals='jina-ai/jina-embeddings-v2-base-en'),
+                name='Jina Embeddings v2 Base EN',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='jina-ai/jina-embeddings-v2-base-es',
+                match=ClauseEquals(equals='jina-ai/jina-embeddings-v2-base-es'),
+                name='Jina Embeddings v2 Base ES',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='jina-ai/jina-embeddings-v2-base-zh',
+                match=ClauseEquals(equals='jina-ai/jina-embeddings-v2-base-zh'),
+                name='Jina Embeddings v2 Base ZH',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='jina-ai/jina-embeddings-v3',
+                match=ClauseEquals(equals='jina-ai/jina-embeddings-v3'),
+                name='Jina Embeddings v3',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='jina-ai/jina-embeddings-v4',
+                match=ClauseEquals(equals='jina-ai/jina-embeddings-v4'),
+                name='Jina Embeddings v4',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='jina-ai/jina-embeddings-v5-omni-nano',
+                match=ClauseEquals(equals='jina-ai/jina-embeddings-v5-omni-nano'),
+                name='Jina Embeddings v5 Omni Nano',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.0211')),
+            ),
+            ModelInfo(
+                id='jina-ai/jina-embeddings-v5-omni-small',
+                match=ClauseEquals(equals='jina-ai/jina-embeddings-v5-omni-small'),
+                name='Jina Embeddings v5 Omni Small',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='jina-ai/jina-embeddings-v5-text-nano',
+                match=ClauseEquals(equals='jina-ai/jina-embeddings-v5-text-nano'),
+                name='Jina Embeddings v5 Text Nano',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.0211')),
+            ),
+            ModelInfo(
+                id='jina-ai/jina-embeddings-v5-text-small',
+                match=ClauseEquals(equals='jina-ai/jina-embeddings-v5-text-small'),
+                name='Jina Embeddings v5 Text Small',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='kwaipilot/kat-coder-air-v2.5',
+                match=ClauseEquals(equals='kwaipilot/kat-coder-air-v2.5'),
+                name='KAT Coder Air V2.5',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15825'), cache_read_mtok=Decimal('0.03165'), output_mtok=Decimal('0.633')
+                ),
+            ),
+            ModelInfo(
+                id='meituan-longcat/longcat-2.0',
+                match=ClauseEquals(equals='meituan-longcat/longcat-2.0'),
+                name='meituan-longcat/LongCat-2.0',
+                context_window=1048756,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.79125'), cache_read_mtok=Decimal('0.015825'), output_mtok=Decimal('3.11225')
+                ),
+            ),
+            ModelInfo(
+                id='meta-llama/Meta-Llama-3.1-8B-Instruct',
+                match=ClauseEquals(equals='meta-llama/Meta-Llama-3.1-8B-Instruct'),
+                name='Meta Llama 3.1 8B Instruct',
+                context_window=128000,
+                prices=ModelPrice(input_mtok=Decimal('0.0211'), output_mtok=Decimal('0.0633')),
+            ),
+            ModelInfo(
+                id='meta-llama/llama-3.1-8b-instruct',
+                match=ClauseEquals(equals='meta-llama/llama-3.1-8b-instruct'),
+                name='Llama 3.1 8B Instruct',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.0211'), output_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='meta-llama/llama-3.2-11b-vision-instruct',
+                match=ClauseEquals(equals='meta-llama/llama-3.2-11b-vision-instruct'),
+                name='@cf/meta/llama-3.2-11b-vision-instruct',
+                context_window=128000,
+                prices=ModelPrice(input_mtok=Decimal('0.051168'), output_mtok=Decimal('0.71318')),
+            ),
+            ModelInfo(
+                id='meta-llama/llama-3.2-3b',
+                match=ClauseEquals(equals='meta-llama/llama-3.2-3b'),
+                name='Llama 3.2 3B',
+                context_window=128000,
+                prices=ModelPrice(input_mtok=Decimal('0.15825'), output_mtok=Decimal('0.633')),
+            ),
+            ModelInfo(
+                id='meta-llama/llama-3.3-70b',
+                match=ClauseEquals(equals='meta-llama/llama-3.3-70b'),
+                name='Llama 3.3 70B',
+                context_window=128000,
+                prices=ModelPrice(input_mtok=Decimal('0.7385'), output_mtok=Decimal('2.954')),
+            ),
+            ModelInfo(
+                id='meta-llama/llama-3.3-70b-instruct',
+                match=ClauseEquals(equals='meta-llama/llama-3.3-70b-instruct'),
+                name='Llama 3.3 70B Instruct',
+                context_window=128000,
+                prices=ModelPrice(input_mtok=Decimal('0.142425'), output_mtok=Decimal('0.422')),
+            ),
+            ModelInfo(
+                id='meta-llama/llama-3.3-70b-instruct-fp8-fast',
+                match=ClauseEquals(equals='meta-llama/llama-3.3-70b-instruct-fp8-fast'),
+                name='@cf/meta/llama-3.3-70b-instruct-fp8-fast',
+                context_window=24000,
+                prices=ModelPrice(input_mtok=Decimal('0.309115'), output_mtok=Decimal('2.376915')),
+            ),
+            ModelInfo(
+                id='meta-llama/llama-3.3-70b-instruct-turbo',
+                match=ClauseEquals(equals='meta-llama/llama-3.3-70b-instruct-turbo'),
+                name='meta-llama/Llama-3.3-70B-Instruct-Turbo',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.1055'), output_mtok=Decimal('0.3376')),
+            ),
+            ModelInfo(
+                id='meta-llama/llama-4-maverick',
+                match=ClauseEquals(equals='meta-llama/llama-4-maverick'),
+                name='Llama 4 Maverick',
+                context_window=524288,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.36925'), cache_read_mtok=Decimal('0.17935'), output_mtok=Decimal('1.055')
+                ),
+            ),
+            ModelInfo(
+                id='meta-llama/llama-4-maverick-17b-128e-instruct-fp8',
+                match=ClauseEquals(equals='meta-llama/llama-4-maverick-17b-128e-instruct-fp8'),
+                name='Llama 4 Maverick 17B 128E Instruct FP8',
+                context_window=430000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.36925'), cache_read_mtok=Decimal('0.184625'), output_mtok=Decimal('1.134125')
+                ),
+            ),
+            ModelInfo(
+                id='meta-llama/llama-4-scout-17b-16e-instruct',
+                match=ClauseEquals(equals='meta-llama/llama-4-scout-17b-16e-instruct'),
+                name='meta-llama/Llama-4-Scout-17B-16E-Instruct',
+                context_window=327680,
+                prices=ModelPrice(input_mtok=Decimal('0.1055'), output_mtok=Decimal('0.3165')),
+            ),
+            ModelInfo(
+                id='meta-llama/llama-guard-4-12b',
+                match=ClauseEquals(equals='meta-llama/llama-guard-4-12b'),
+                name='Llama Guard 4 12B',
+                context_window=163840,
+                prices=ModelPrice(input_mtok=Decimal('0.1899'), output_mtok=Decimal('0.1899')),
+            ),
+            ModelInfo(
+                id='meta-llama/meta-llama-3.1-8b-instruct-turbo',
+                match=ClauseEquals(equals='meta-llama/meta-llama-3.1-8b-instruct-turbo'),
+                name='meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.0211'), output_mtok=Decimal('0.0422')),
+            ),
+            ModelInfo(
+                id='meta-models/muse-glimmer-30b',
+                match=ClauseEquals(equals='meta-models/muse-glimmer-30b'),
+                name='meta-models/Muse-Glimmer-30B',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3165'), cache_read_mtok=Decimal('0.0422'), output_mtok=Decimal('1.266')
+                ),
+            ),
+            ModelInfo(
+                id='meta-models/muse-spark-open',
+                match=ClauseEquals(equals='meta-models/muse-spark-open'),
+                name='Muse Spark Open',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('1.31875'), output_mtok=Decimal('4.48375')),
+            ),
+            ModelInfo(
+                id='meta/muse-spark-1.1',
+                match=ClauseEquals(equals='meta/muse-spark-1.1'),
+                name='Muse Spark 1.1',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.31875'), cache_read_mtok=Decimal('0.15825'), output_mtok=Decimal('4.48375')
+                ),
+            ),
+            ModelInfo(
+                id='meta/muse-spark-1.2',
+                match=ClauseEquals(equals='meta/muse-spark-1.2'),
+                name='Muse Spark 1.2',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.31875'), cache_read_mtok=Decimal('0.15825'), output_mtok=Decimal('4.48375')
+                ),
+            ),
+            ModelInfo(
+                id='meta/muse-spark-1.3',
+                match=ClauseEquals(equals='meta/muse-spark-1.3'),
+                name='Muse Spark 1.3',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.31875'), cache_read_mtok=Decimal('0.15825'), output_mtok=Decimal('4.48375')
+                ),
+            ),
+            ModelInfo(
+                id='microsoft/mai-voice-2.1',
+                match=ClauseEquals(equals='microsoft/mai-voice-2.1'),
+                name='MAI-Voice-2.1',
+                prices=ModelPrice(input_mchars=Decimal('23.21')),
+            ),
+            ModelInfo(
+                id='microsoft/mai-voice-2.1-flash',
+                match=ClauseEquals(equals='microsoft/mai-voice-2.1-flash'),
+                name='MAI-Voice-2.1-Flash',
+                prices=ModelPrice(input_mchars=Decimal('15.825')),
+            ),
+            ModelInfo(
+                id='microsoft/microsoft-decision-1',
+                match=ClauseEquals(equals='microsoft/microsoft-decision-1'),
+                name='Microsoft Decision-1',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.04431')),
+            ),
+            ModelInfo(
+                id='microsoft/phi-4',
+                match=ClauseEquals(equals='microsoft/phi-4'),
+                name='Phi 4',
+                context_window=16384,
+                prices=ModelPrice(input_mtok=Decimal('0.07385'), output_mtok=Decimal('0.1477')),
+            ),
+            ModelInfo(
+                id='mindai/macaron-v1-tall',
+                match=ClauseEquals(equals='mindai/macaron-v1-tall'),
+                name='Macaron V1 Tall',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.261113'), cache_read_mtok=Decimal('0.04642'), output_mtok=Decimal('1.50865')
+                ),
+            ),
+            ModelInfo(
+                id='mindai/macaron-v1-venti',
+                match=ClauseEquals(equals='mindai/macaron-v1-venti'),
+                name='Macaron V1 Venti',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.870375'), cache_read_mtok=Decimal('0.174075'), output_mtok=Decimal('2.611125')
+                ),
+            ),
+            ModelInfo(
+                id='minimax/minimax-m2',
+                match=ClauseEquals(equals='minimax/minimax-m2'),
+                name='minimax-m2',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('0.292763'), output_mtok=Decimal('1.17105')),
+            ),
+            ModelInfo(
+                id='minimax/minimax-m2.1',
+                match=ClauseEquals(equals='minimax/minimax-m2.1'),
+                name='minimax-m2.1',
+                context_window=196000,
+                prices=ModelPrice(input_mtok=Decimal('0.3165'), output_mtok=Decimal('1.266')),
+            ),
+            ModelInfo(
+                id='minimax/minimax-m2.5',
+                match=ClauseEquals(equals='minimax/minimax-m2.5'),
+                name='MiniMaxAI/MiniMax-M2.5',
+                context_window=196608,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.302785'), cache_read_mtok=Decimal('0.151393'), output_mtok=Decimal('1.18793')
+                ),
+            ),
+            ModelInfo(
+                id='minimax/minimax-m2.7',
+                match=ClauseEquals(equals='minimax/minimax-m2.7'),
+                name='MiniMax M2.7',
+                context_window=204800,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3165'), cache_read_mtok=Decimal('0.0633'), output_mtok=Decimal('1.266')
+                ),
+            ),
+            ModelInfo(
+                id='minimax/minimax-m25',
+                match=ClauseEquals(equals='minimax/minimax-m25'),
+                name='MiniMax M2.5',
+                context_window=198000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.28485'), cache_read_mtok=Decimal('0.03165'), output_mtok=Decimal('1.00225')
+                ),
+            ),
+            ModelInfo(
+                id='minimax/minimax-m27',
+                match=ClauseEquals(equals='minimax/minimax-m27'),
+                name='MiniMax M2.7',
+                context_window=198000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.395625'), cache_read_mtok=Decimal('0.072532'), output_mtok=Decimal('1.5825')
+                ),
+            ),
+            ModelInfo(
+                id='minimax/minimax-m3',
+                match=ClauseEquals(equals='minimax/minimax-m3'),
+                name='MiniMax M3',
+                context_window=524288,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.24265'), cache_read_mtok=Decimal('0.05275'), output_mtok=Decimal('1.0128')
+                ),
+            ),
+            ModelInfo(
+                id='minimax/minimax-m3-preview',
+                match=ClauseEquals(equals='minimax/minimax-m3-preview'),
+                name='MiniMax M3 Preview',
+                context_window=524288,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3165'), cache_read_mtok=Decimal('0.0633'), output_mtok=Decimal('1.266')
+                ),
+            ),
+            ModelInfo(
+                id='minimax/minimax-m3.1-flash',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='minimax/minimax-m3.1-flash'),
+                        ClauseEquals(equals='minimax/minimax-m3-1-flash'),
+                    ]
+                ),
+                name='MiniMax M3.1 Flash',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.15825'), output_mtok=Decimal('0.633')),
+            ),
+            ModelInfo(
+                id='minimaxai/minimax-m1-80k',
+                match=ClauseEquals(equals='minimaxai/minimax-m1-80k'),
+                name='MiniMax M1',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('0.58025'), output_mtok=Decimal('2.321')),
+            ),
+            ModelInfo(
+                id='mistralai/codestral-2508',
+                match=ClauseEquals(equals='mistralai/codestral-2508'),
+                name='Codestral 2508',
+                context_window=256000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3165'), cache_read_mtok=Decimal('0.03165'), output_mtok=Decimal('0.9495')
+                ),
+            ),
+            ModelInfo(
+                id='mistralai/devstral-2-123b',
+                match=ClauseEquals(equals='mistralai/devstral-2-123b'),
+                name='devstral-2-123b',
+                context_window=4096,
+                prices=ModelPrice(input_mtok=Decimal('0.422'), output_mtok=Decimal('2.11')),
+            ),
+            ModelInfo(
+                id='mistralai/magistral-small-2509',
+                match=ClauseEquals(equals='mistralai/magistral-small-2509'),
+                name='magistral-small-2509',
+                context_window=4096,
+                prices=ModelPrice(input_mtok=Decimal('0.5275'), output_mtok=Decimal('1.5825')),
+            ),
+            ModelInfo(
+                id='mistralai/ministral-14b-2512',
+                match=ClauseEquals(equals='mistralai/ministral-14b-2512'),
+                name='Ministral 3 14B 2512',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.211'), cache_read_mtok=Decimal('0.0211'), output_mtok=Decimal('0.211')
+                ),
+            ),
+            ModelInfo(
+                id='mistralai/ministral-3-14b-instruct',
+                match=ClauseEquals(equals='mistralai/ministral-3-14b-instruct'),
+                name='Ministral 3 14B Instruct',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.211'), cache_read_mtok=Decimal('0.0422'), output_mtok=Decimal('0.211')
+                ),
+            ),
+            ModelInfo(
+                id='mistralai/ministral-3-3b-instruct',
+                match=ClauseEquals(equals='mistralai/ministral-3-3b-instruct'),
+                name='ministral-3-3b-instruct',
+                context_window=4096,
+                prices=ModelPrice(input_mtok=Decimal('0.1055'), output_mtok=Decimal('0.1055')),
+            ),
+            ModelInfo(
+                id='mistralai/ministral-3-8b-instruct',
+                match=ClauseEquals(equals='mistralai/ministral-3-8b-instruct'),
+                name='ministral-3-8b-instruct',
+                context_window=4096,
+                prices=ModelPrice(input_mtok=Decimal('0.15825'), output_mtok=Decimal('0.15825')),
+            ),
+            ModelInfo(
+                id='mistralai/ministral-3b-2512',
+                match=ClauseEquals(equals='mistralai/ministral-3b-2512'),
+                name='Ministral 3 3B 2512',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1055'), cache_read_mtok=Decimal('0.01055'), output_mtok=Decimal('0.1055')
+                ),
+            ),
+            ModelInfo(
+                id='mistralai/ministral-8b-2512',
+                match=ClauseEquals(equals='mistralai/ministral-8b-2512'),
+                name='Ministral 3 8B 2512',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15825'), cache_read_mtok=Decimal('0.015825'), output_mtok=Decimal('0.15825')
+                ),
+            ),
+            ModelInfo(
+                id='mistralai/mistral-large-2512',
+                match=ClauseEquals(equals='mistralai/mistral-large-2512'),
+                name='Mistral Large 3 2512',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.5275'), output_mtok=Decimal('1.5825')),
+            ),
+            ModelInfo(
+                id='mistralai/mistral-large-3-675b-instruct-2512-nvfp4',
+                match=ClauseEquals(equals='mistralai/mistral-large-3-675b-instruct-2512-nvfp4'),
+                name='Mistral-Large-3-675B-Instruct-2512-NVFP4',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('1.055'), output_mtok=Decimal('2.6375')),
+            ),
+            ModelInfo(
+                id='mistralai/mistral-large-4',
+                match=ClauseEquals(equals='mistralai/mistral-large-4'),
+                name='Mistral Large 4',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.7385'), cache_read_mtok=Decimal('0.07385'), output_mtok=Decimal('2.2155')
+                ),
+            ),
+            ModelInfo(
+                id='mistralai/mistral-medium-3.5-128b',
+                match=ClauseEquals(equals='mistralai/mistral-medium-3.5-128b'),
+                name='mistral-medium-3.5-128b',
+                prices=ModelPrice(input_mtok=Decimal('1.823634'), output_mtok=Decimal('9.118168')),
+            ),
+            ModelInfo(
+                id='mistralai/mistral-nemo-instruct-2407',
+                match=ClauseEquals(equals='mistralai/mistral-nemo-instruct-2407'),
+                name='mistralai/Mistral-Nemo-Instruct-2407',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.030595'), output_mtok=Decimal('0.03165')),
+            ),
+            ModelInfo(
+                id='mistralai/mistral-small-24b-instruct-2501',
+                match=ClauseEquals(equals='mistralai/mistral-small-24b-instruct-2501'),
+                name='Mistral Small 3',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.05275'), output_mtok=Decimal('0.0844')),
+            ),
+            ModelInfo(
+                id='mistralai/mistral-small-2603',
+                match=ClauseEquals(equals='mistralai/mistral-small-2603'),
+                name='Mistral Small 4',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15825'), cache_read_mtok=Decimal('0.015825'), output_mtok=Decimal('0.633')
+                ),
+            ),
+            ModelInfo(
+                id='mistralai/mistral-small-3.1-24b-instruct',
+                match=ClauseEquals(equals='mistralai/mistral-small-3.1-24b-instruct'),
+                name='@cf/mistralai/mistral-small-3.1-24b-instruct',
+                context_window=128000,
+                prices=ModelPrice(input_mtok=Decimal('0.370305'), output_mtok=Decimal('0.585525')),
+            ),
+            ModelInfo(
+                id='mistralai/mistral-small-3.2-24b-instruct-2506',
+                match=ClauseEquals(equals='mistralai/mistral-small-3.2-24b-instruct-2506'),
+                name='mistralai/Mistral-Small-3.2-24B-Instruct-2506',
+                context_window=128000,
+                prices=ModelPrice(input_mtok=Decimal('0.079125'), output_mtok=Decimal('0.211')),
+            ),
+            ModelInfo(
+                id='mistralai/voxtral-4b-tts-2603',
+                match=ClauseEquals(equals='mistralai/voxtral-4b-tts-2603'),
+                name='Voxtral 4B TTS',
+                prices=ModelPrice(requests_kcount=Decimal('2.11')),
+            ),
+            ModelInfo(
+                id='mistralai/voxtral-mini-2602',
+                match=ClauseEquals(equals='mistralai/voxtral-mini-2602'),
+                name='Voxtral Mini Transcribe 2',
+                prices=ModelPrice(audio_hours=Decimal('0.1899'), input_audio_hours=Decimal('0.1899')),
+            ),
+            ModelInfo(
+                id='mistralai/voxtral-mini-3b-2507',
+                match=ClauseEquals(equals='mistralai/voxtral-mini-3b-2507'),
+                name='Voxtral Mini 3B',
+                prices=ModelPrice(audio_hours=Decimal('0.29184'), input_audio_hours=Decimal('0.29184')),
+            ),
+            ModelInfo(
+                id='mistralai/voxtral-mini-tts-2603',
+                match=ClauseEquals(equals='mistralai/voxtral-mini-tts-2603'),
+                name='Voxtral Mini TTS',
+                prices=ModelPrice(input_mchars=Decimal('16.88')),
+            ),
+            ModelInfo(
+                id='mistralai/voxtral-small-24b',
+                match=ClauseEquals(equals='mistralai/voxtral-small-24b'),
+                name='Voxtral Small 24B',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.211'), output_mtok=Decimal('0.633')),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k2-0905',
+                match=ClauseEquals(equals='moonshotai/kimi-k2-0905'),
+                name='Kimi K2 Instruct 0905',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.633'), output_mtok=Decimal('2.6375')),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k2-6',
+                match=ClauseEquals(equals='moonshotai/kimi-k2-6'),
+                name='Kimi K2.6',
+                context_window=256000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.79125'), cache_read_mtok=Decimal('0.1688'), output_mtok=Decimal('3.6925')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k2-7-code',
+                match=ClauseEquals(equals='moonshotai/kimi-k2-7-code'),
+                name='Kimi K2.7 Code',
+                context_window=256000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.79125'), cache_read_mtok=Decimal('0.1688'), output_mtok=Decimal('3.6925')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k2-instruct',
+                match=ClauseEquals(equals='moonshotai/kimi-k2-instruct'),
+                name='Kimi K2 Instruct',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.60135'), output_mtok=Decimal('2.4265')),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k2-instruct-0905',
+                match=ClauseEquals(equals='moonshotai/kimi-k2-instruct-0905'),
+                name='Kimi K2 Instruct 0905',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.60135'), cache_read_mtok=Decimal('0.300675'), output_mtok=Decimal('2.4265')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k2-thinking',
+                match=ClauseEquals(equals='moonshotai/kimi-k2-thinking'),
+                name='Kimi K2 Thinking',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.633'), cache_read_mtok=Decimal('0.15825'), output_mtok=Decimal('1.266')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k2.5',
+                match=ClauseEquals(equals='moonshotai/kimi-k2.5'),
+                name='Kimi K2.5',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.51695'), cache_read_mtok=Decimal('0.211'), output_mtok=Decimal('2.6375')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k2.6',
+                match=ClauseEquals(equals='moonshotai/kimi-k2.6'),
+                name='Kimi K2.6',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.41145'), cache_read_mtok=Decimal('0.041145'), output_mtok=Decimal('1.899')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k2.7-code',
+                match=ClauseEquals(equals='moonshotai/kimi-k2.7-code'),
+                name='Kimi K2.7 Code',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.633'), cache_read_mtok=Decimal('0.1266'), output_mtok=Decimal('3.165')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k2.7-code-highspeed',
+                match=ClauseEquals(equals='moonshotai/kimi-k2.7-code-highspeed'),
+                name='K2.7-Code-Highspeed',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.0045'), cache_read_mtok=Decimal('0.4009'), output_mtok=Decimal('8.44')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k2.8-preview',
+                match=ClauseEquals(equals='moonshotai/kimi-k2.8-preview'),
+                name='Kimi K2.8 Preview',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.055'), cache_read_mtok=Decimal('0.26375'), output_mtok=Decimal('4.22')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k3',
+                match=ClauseEquals(equals='moonshotai/kimi-k3'),
+                name='Kimi K3',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3798'), cache_read_mtok=Decimal('0.1688'), output_mtok=Decimal('10.0225')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k3-1-pro',
+                match=ClauseEquals(equals='moonshotai/kimi-k3-1-pro'),
+                name='Kimi K3.1 Pro',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.11'), cache_read_mtok=Decimal('0.211'), output_mtok=Decimal('10.55')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k3-1-pro-highspeed',
+                match=ClauseEquals(equals='moonshotai/kimi-k3-1-pro-highspeed'),
+                name='Kimi K3.1 Pro Highspeed',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('5.275'), cache_read_mtok=Decimal('0.395625'), output_mtok=Decimal('26.375')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k3-fast',
+                match=ClauseEquals(equals='moonshotai/kimi-k3-fast'),
+                name='Kimi K3 Fast on Fireworks',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('4.7475'), cache_read_mtok=Decimal('0.47475'), output_mtok=Decimal('23.7375')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k3-fast-api',
+                match=ClauseEquals(equals='moonshotai/kimi-k3-fast-api'),
+                name='Kimi K3 Fast',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('4.7475'), cache_read_mtok=Decimal('0.47475'), output_mtok=Decimal('23.7375')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k3-p',
+                match=ClauseEquals(equals='moonshotai/kimi-k3-p'),
+                name='Kimi K3',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('3.165'), cache_read_mtok=Decimal('0.3165'), output_mtok=Decimal('15.825')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k3.1-pro',
+                match=ClauseEquals(equals='moonshotai/kimi-k3.1-pro'),
+                name='Kimi K3.1 Pro',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.477'), cache_read_mtok=Decimal('0.1477'), output_mtok=Decimal('7.385')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k3.1-pro-highspeed',
+                match=ClauseEquals(equals='moonshotai/kimi-k3.1-pro-highspeed'),
+                name='Kimi K3.1 Pro Highspeed',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('4.22'), cache_read_mtok=Decimal('0.211'), output_mtok=Decimal('21.1')
+                ),
+            ),
+            ModelInfo(
+                id='moonshotai/kimi-k3.1-pro-us',
+                match=ClauseEquals(equals='moonshotai/kimi-k3.1-pro-us'),
+                name='Kimi-K3.1-Pro (US)',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.11'), cache_read_mtok=Decimal('0.211'), output_mtok=Decimal('10.55')
+                ),
+            ),
+            ModelInfo(
+                id='morph/morph-v3-fast',
+                match=ClauseEquals(equals='morph/morph-v3-fast'),
+                name='morph-v3-fast',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.844'), output_mtok=Decimal('1.266')),
+            ),
+            ModelInfo(
+                id='morph/morph-v3-large',
+                match=ClauseEquals(equals='morph/morph-v3-large'),
+                name='morph-v3-large',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.9495'), output_mtok=Decimal('2.0045')),
+            ),
+            ModelInfo(
+                id='neurometric/conversation-summary',
+                match=ClauseEquals(equals='neurometric/conversation-summary'),
+                name='Conversation Summary',
+                context_window=49152,
+                prices=ModelPrice(input_mtok=Decimal('0.01055'), output_mtok=Decimal('0.1055')),
+            ),
+            ModelInfo(
+                id='neurometric/document-structured-extraction',
+                match=ClauseEquals(equals='neurometric/document-structured-extraction'),
+                name='Document Structured Extraction',
+                context_window=49152,
+                prices=ModelPrice(input_mtok=Decimal('0.01055'), output_mtok=Decimal('0.1055')),
+            ),
+            ModelInfo(
+                id='neurometric/grounded-document-qa',
+                match=ClauseEquals(equals='neurometric/grounded-document-qa'),
+                name='Grounded Document QA',
+                context_window=49152,
+                prices=ModelPrice(input_mtok=Decimal('0.01055'), output_mtok=Decimal('0.1055')),
+            ),
+            ModelInfo(
+                id='nomic-ai/nomic-embed-text',
+                match=ClauseEquals(equals='nomic-ai/nomic-embed-text'),
+                name='Nomic Embed Text',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.01688')),
+            ),
+            ModelInfo(
+                id='nvidia/nemotron-3-nano-30b-a3b',
+                match=ClauseEquals(equals='nvidia/nemotron-3-nano-30b-a3b'),
+                name='Nemotron 3 Nano 30B A3B',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.05275'), output_mtok=Decimal('0.211')),
+            ),
+            ModelInfo(
+                id='nvidia/nemotron-3-nano-omni-30b-a3b-reasoning',
+                match=ClauseEquals(equals='nvidia/nemotron-3-nano-omni-30b-a3b-reasoning'),
+                name='nvidia/nemotron-3-nano-omni-30b-a3b-reasoning',
+                prices=ModelPrice(input_mtok=Decimal('2.11'), output_mtok=Decimal('10.55')),
+            ),
+            ModelInfo(
+                id='nvidia/nemotron-3-super-120b-a12b',
+                match=ClauseEquals(equals='nvidia/nemotron-3-super-120b-a12b'),
+                name='Nemotron 3 Super',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.079125'), output_mtok=Decimal('0.422')),
+            ),
+            ModelInfo(
+                id='nvidia/nemotron-3-ultra-550b-a55b',
+                match=ClauseEquals(equals='nvidia/nemotron-3-ultra-550b-a55b'),
+                name='Nemotron 3 Ultra',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.5275'), cache_read_mtok=Decimal('0.1055'), output_mtok=Decimal('2.26825')
+                ),
+            ),
+            ModelInfo(
+                id='nvidia/nemotron-3.5-bolt-e4b',
+                match=ClauseEquals(equals='nvidia/nemotron-3.5-bolt-e4b'),
+                name='nvidia/nemotron-3.5-bolt-e4b',
+                prices=ModelPrice(input_mtok=Decimal('2.11'), output_mtok=Decimal('10.55')),
+            ),
+            ModelInfo(
+                id='nvidia/nemotron-3.5-lightning',
+                match=ClauseEquals(equals='nvidia/nemotron-3.5-lightning'),
+                name='Nemotron 3.5 Lightning',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.05275'), cache_read_mtok=Decimal('0.01055'), output_mtok=Decimal('0.1688')
+                ),
+            ),
+            ModelInfo(
+                id='nvidia/nemotron-3.5-lightning-30b-a3b',
+                match=ClauseEquals(equals='nvidia/nemotron-3.5-lightning-30b-a3b'),
+                name='nvidia/Nemotron-3.5-Lightning-30B-A3B',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.05275'), cache_read_mtok=Decimal('0.03165'), output_mtok=Decimal('0.211')
+                ),
+            ),
+            ModelInfo(
+                id='nvidia/nemotron-3.5-super-vl',
+                match=ClauseEquals(equals='nvidia/nemotron-3.5-super-vl'),
+                name='Nemotron 3.5 Super VL',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1055'), cache_read_mtok=Decimal('0.0844'), output_mtok=Decimal('0.422')
+                ),
+            ),
+            ModelInfo(
+                id='nvidia/nemotron-3.5-super-vl-120b-a12b',
+                match=ClauseEquals(equals='nvidia/nemotron-3.5-super-vl-120b-a12b'),
+                name='Nemotron 3.5 Super VL',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15825'), cache_read_mtok=Decimal('0.0211'), output_mtok=Decimal('0.49585')
+                ),
+            ),
+            ModelInfo(
+                id='nvidia/nemotron-3_5-lightning',
+                match=ClauseEquals(equals='nvidia/nemotron-3_5-lightning'),
+                name='Nemotron-3.5-Lightning',
+                context_window=8000,
+                prices=ModelPrice(input_mtok=Decimal('0.0633'), output_mtok=Decimal('0.2532')),
+            ),
+            ModelInfo(
+                id='nvidia/nemotron-content-safety-3.5',
+                match=ClauseEquals(equals='nvidia/nemotron-content-safety-3.5'),
+                name='nvidia/Nemotron-Content-Safety-3.5',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.211'), output_mtok=Decimal('0.211')),
+            ),
+            ModelInfo(
+                id='nvidia/nemotron-nano-12b-v2',
+                match=ClauseEquals(equals='nvidia/nemotron-nano-12b-v2'),
+                name='nemotron-nano-12b-v2',
+                context_window=4096,
+                prices=ModelPrice(input_mtok=Decimal('0.211'), output_mtok=Decimal('0.633')),
+            ),
+            ModelInfo(
+                id='nvidia/nemotron-nano-9b-v2',
+                match=ClauseEquals(equals='nvidia/nemotron-nano-9b-v2'),
+                name='nemotron-nano-9b-v2',
+                context_window=4096,
+                prices=ModelPrice(input_mtok=Decimal('0.0633'), output_mtok=Decimal('0.24265')),
+            ),
+            ModelInfo(
+                id='openai/chat-latest',
+                match=ClauseEquals(equals='openai/chat-latest'),
+                name='chat-latest',
+                prices=ModelPrice(
+                    input_mtok=Decimal('5.275'), cache_read_mtok=Decimal('0.5275'), output_mtok=Decimal('31.65')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-4.1',
+                match=ClauseEquals(equals='openai/gpt-4.1'),
+                name='GPT-4.1',
+                context_window=1047576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.11'), cache_read_mtok=Decimal('0.5275'), output_mtok=Decimal('8.44')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-4.1-mini',
+                match=ClauseEquals(equals='openai/gpt-4.1-mini'),
+                name='GPT-4.1 Mini',
+                context_window=1047576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.422'), cache_read_mtok=Decimal('0.1055'), output_mtok=Decimal('1.688')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-4o',
+                match=ClauseEquals(equals='openai/gpt-4o'),
+                name='GPT-4o',
+                context_window=128000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.6375'), cache_read_mtok=Decimal('1.31875'), output_mtok=Decimal('10.55')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-4o-mini',
+                match=ClauseEquals(equals='openai/gpt-4o-mini'),
+                name='GPT-4o-mini',
+                context_window=128000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15825'), cache_read_mtok=Decimal('0.079125'), output_mtok=Decimal('0.633')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5',
+                match=ClauseEquals(equals='openai/gpt-5'),
+                name='GPT-5',
+                context_window=400000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.31875'), cache_read_mtok=Decimal('0.131875'), output_mtok=Decimal('10.55')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5-mini',
+                match=ClauseEquals(equals='openai/gpt-5-mini'),
+                name='GPT-5 Mini',
+                context_window=400000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.26375'), cache_read_mtok=Decimal('0.026375'), output_mtok=Decimal('2.11')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5-nano',
+                match=ClauseEquals(equals='openai/gpt-5-nano'),
+                name='GPT-5 Nano',
+                context_window=400000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.05275'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.422')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5-pro',
+                match=ClauseEquals(equals='openai/gpt-5-pro'),
+                name='GPT-5 Pro',
+                context_window=400000,
+                prices=ModelPrice(input_mtok=Decimal('15.825'), output_mtok=Decimal('126.6')),
+            ),
+            ModelInfo(
+                id='openai/gpt-5-search-api',
+                match=ClauseEquals(equals='openai/gpt-5-search-api'),
+                name='gpt-5-search-api',
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.31875'), cache_read_mtok=Decimal('0.131875'), output_mtok=Decimal('10.55')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.1',
+                match=ClauseEquals(equals='openai/gpt-5.1'),
+                name='GPT-5.1',
+                context_window=400000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.31875'), cache_read_mtok=Decimal('0.131875'), output_mtok=Decimal('10.55')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.2',
+                match=ClauseEquals(equals='openai/gpt-5.2'),
+                name='GPT-5.2',
+                context_window=400000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.84625'), cache_read_mtok=Decimal('0.184625'), output_mtok=Decimal('14.77')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.2-pro',
+                match=ClauseEquals(equals='openai/gpt-5.2-pro'),
+                name='GPT-5.2 Pro',
+                context_window=400000,
+                prices=ModelPrice(input_mtok=Decimal('22.155'), output_mtok=Decimal('177.24')),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.3-codex',
+                match=ClauseEquals(equals='openai/gpt-5.3-codex'),
+                name='GPT-5.3-Codex',
+                context_window=400000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.84625'), cache_read_mtok=Decimal('0.184625'), output_mtok=Decimal('14.77')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.4',
+                match=ClauseEquals(equals='openai/gpt-5.4'),
+                name='GPT-5.4',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2.6375'), tiers=[Tier(start=272000, price=Decimal('5.275'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.26375'), tiers=[Tier(start=272000, price=Decimal('0.5275'))]
+                    ),
+                    output_mtok=TieredPrices(
+                        base=Decimal('15.825'), tiers=[Tier(start=272000, price=Decimal('23.7375'))]
+                    ),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.4-mini',
+                match=ClauseEquals(equals='openai/gpt-5.4-mini'),
+                name='GPT-5.4 Mini',
+                context_window=400000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.79125'), cache_read_mtok=Decimal('0.079125'), output_mtok=Decimal('4.7475')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.4-nano',
+                match=ClauseEquals(equals='openai/gpt-5.4-nano'),
+                name='GPT-5.4 Nano',
+                context_window=400000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.211'), cache_read_mtok=Decimal('0.0211'), output_mtok=Decimal('1.31875')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.4-pro',
+                match=ClauseEquals(equals='openai/gpt-5.4-pro'),
+                name='GPT-5.4 Pro',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('31.65'), tiers=[Tier(start=272000, price=Decimal('63.3'))]),
+                    output_mtok=TieredPrices(
+                        base=Decimal('189.9'), tiers=[Tier(start=272000, price=Decimal('284.85'))]
+                    ),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.5',
+                match=ClauseEquals(equals='openai/gpt-5.5'),
+                name='GPT-5.5',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('5.275'), tiers=[Tier(start=272000, price=Decimal('10.55'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.5275'), tiers=[Tier(start=272000, price=Decimal('1.055'))]
+                    ),
+                    output_mtok=TieredPrices(
+                        base=Decimal('31.65'), tiers=[Tier(start=272000, price=Decimal('47.475'))]
+                    ),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.5-pro',
+                match=ClauseEquals(equals='openai/gpt-5.5-pro'),
+                name='GPT-5.5 Pro',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('31.65'), tiers=[Tier(start=272000, price=Decimal('63.3'))]),
+                    output_mtok=TieredPrices(
+                        base=Decimal('189.9'), tiers=[Tier(start=272000, price=Decimal('284.85'))]
+                    ),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.6-luna',
+                match=ClauseEquals(equals='openai/gpt-5.6-luna'),
+                name='GPT-5.6 Luna',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.211'), tiers=[Tier(start=272000, price=Decimal('0.422'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.0211'), tiers=[Tier(start=272000, price=Decimal('0.0422'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('1.266'), tiers=[Tier(start=272000, price=Decimal('1.899'))]),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.6-sol',
+                match=ClauseEquals(equals='openai/gpt-5.6-sol'),
+                name='GPT-5.6 Sol',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('4.22'), tiers=[Tier(start=272000, price=Decimal('8.44'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.422'), tiers=[Tier(start=272000, price=Decimal('0.844'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('21.1'), tiers=[Tier(start=272000, price=Decimal('31.65'))]),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-5.6-terra',
+                match=ClauseEquals(equals='openai/gpt-5.6-terra'),
+                name='GPT-5.6 Terra',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2.11'), tiers=[Tier(start=272000, price=Decimal('4.22'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.211'), tiers=[Tier(start=272000, price=Decimal('0.422'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('12.66'), tiers=[Tier(start=272000, price=Decimal('18.99'))]),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-6-astra',
+                match=ClauseEquals(equals='openai/gpt-6-astra'),
+                name='GPT-6 Astra',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('10.55'), tiers=[Tier(start=272000, price=Decimal('21.1'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('1.055'), tiers=[Tier(start=272000, price=Decimal('2.11'))]
+                    ),
+                    output_mtok=TieredPrices(
+                        base=Decimal('52.75'), tiers=[Tier(start=272000, price=Decimal('79.125'))]
+                    ),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-6-luna',
+                match=ClauseEquals(equals='openai/gpt-6-luna'),
+                name='GPT-6 Luna',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.1055'), tiers=[Tier(start=272000, price=Decimal('0.211'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.01055'), tiers=[Tier(start=272000, price=Decimal('0.0211'))]
+                    ),
+                    output_mtok=TieredPrices(
+                        base=Decimal('0.5275'), tiers=[Tier(start=272000, price=Decimal('0.79125'))]
+                    ),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-6-sol',
+                match=ClauseEquals(equals='openai/gpt-6-sol'),
+                name='GPT-6 Sol',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2.11'), tiers=[Tier(start=272000, price=Decimal('4.22'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.211'), tiers=[Tier(start=272000, price=Decimal('0.422'))]
+                    ),
+                    output_mtok=TieredPrices(
+                        base=Decimal('10.55'), tiers=[Tier(start=272000, price=Decimal('15.825'))]
+                    ),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-6.1-sol',
+                match=ClauseEquals(equals='openai/gpt-6.1-sol'),
+                name='GPT-6.1 Sol',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2.11'), tiers=[Tier(start=272000, price=Decimal('4.22'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.1055'), tiers=[Tier(start=272000, price=Decimal('0.211'))]
+                    ),
+                    output_mtok=TieredPrices(
+                        base=Decimal('10.55'), tiers=[Tier(start=272000, price=Decimal('15.825'))]
+                    ),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-6.1-terra',
+                match=ClauseEquals(equals='openai/gpt-6.1-terra'),
+                name='GPT-6.1 Terra',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('1.055'), tiers=[Tier(start=272000, price=Decimal('2.11'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.05275'), tiers=[Tier(start=272000, price=Decimal('0.1055'))]
+                    ),
+                    output_mtok=TieredPrices(
+                        base=Decimal('5.275'), tiers=[Tier(start=272000, price=Decimal('7.9125'))]
+                    ),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-6.2-astra',
+                match=ClauseEquals(equals='openai/gpt-6.2-astra'),
+                name='GPT-6.2 Astra',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('8.44'), tiers=[Tier(start=272000, price=Decimal('16.88'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.422'), tiers=[Tier(start=272000, price=Decimal('0.844'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('42.2'), tiers=[Tier(start=272000, price=Decimal('63.3'))]),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-6.2-sol',
+                match=ClauseEquals(equals='openai/gpt-6.2-sol'),
+                name='GPT-6.2 Sol',
+                context_window=1050000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2.11'), tiers=[Tier(start=272000, price=Decimal('4.22'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.1055'), tiers=[Tier(start=272000, price=Decimal('0.211'))]
+                    ),
+                    output_mtok=TieredPrices(
+                        base=Decimal('10.55'), tiers=[Tier(start=272000, price=Decimal('15.825'))]
+                    ),
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-image-2.5-flare',
+                match=ClauseEquals(equals='openai/gpt-image-2.5-flare'),
+                name='GPT Image 2.5 Flare',
+                prices=ModelPrice(
+                    input_mtok=Decimal('5.275'), cache_read_mtok=Decimal('1.31875'), output_mtok=Decimal('31.65')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-image-2.5-sunburst',
+                match=ClauseEquals(equals='openai/gpt-image-2.5-sunburst'),
+                name='GPT Image 2.5 Sunburst',
+                prices=ModelPrice(
+                    input_mtok=Decimal('5.275'), cache_read_mtok=Decimal('1.31875'), output_mtok=Decimal('31.65')
+                ),
+            ),
+            ModelInfo(
+                id='openai/gpt-oss-120b',
+                match=ClauseEquals(equals='openai/gpt-oss-120b'),
+                name='gpt-oss-120b',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.03165'), output_mtok=Decimal('0.17935')),
+            ),
+            ModelInfo(
+                id='openai/gpt-oss-120b-ultra',
+                match=ClauseEquals(equals='openai/gpt-oss-120b-ultra'),
+                name='openai/gpt-oss-120b-Ultra',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.211'), output_mtok=Decimal('1.00225')),
+            ),
+            ModelInfo(
+                id='openai/gpt-oss-20b',
+                match=ClauseEquals(equals='openai/gpt-oss-20b'),
+                name='gpt-oss-20b',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.01'), output_mtok=Decimal('0.047475')),
+            ),
+            ModelInfo(
+                id='openai/gpt-oss-safeguard-120b',
+                match=ClauseEquals(equals='openai/gpt-oss-safeguard-120b'),
+                name='GPT-OSS Safeguard 120B',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.15825'), output_mtok=Decimal('0.633')),
+            ),
+            ModelInfo(
+                id='openai/gpt-oss-safeguard-20b',
+                match=ClauseEquals(equals='openai/gpt-oss-safeguard-20b'),
+                name='gpt-oss-safeguard-20b',
+                context_window=128000,
+                prices=ModelPrice(input_mtok=Decimal('0.07385'), output_mtok=Decimal('0.211')),
+            ),
+            ModelInfo(
+                id='openai/o3',
+                match=ClauseEquals(equals='openai/o3'),
+                name='o3',
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.11'), cache_read_mtok=Decimal('0.5275'), output_mtok=Decimal('8.44')
+                ),
+            ),
+            ModelInfo(
+                id='openai/o3-pro',
+                match=ClauseEquals(equals='openai/o3-pro'),
+                name='o3 Pro',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('21.1'), output_mtok=Decimal('84.4')),
+            ),
+            ModelInfo(
+                id='openai/text-embedding-3-large',
+                match=ClauseEquals(equals='openai/text-embedding-3-large'),
+                name='OpenAI Text Embedding 3 Large',
+                context_window=8191,
+                prices=ModelPrice(input_mtok=Decimal('0.13715')),
+            ),
+            ModelInfo(
+                id='openai/text-embedding-3-small',
+                match=ClauseEquals(equals='openai/text-embedding-3-small'),
+                name='OpenAI Text Embedding 3 Small',
+                context_window=8191,
+                prices=ModelPrice(input_mtok=Decimal('0.0211')),
+            ),
+            ModelInfo(
+                id='openai/text-embedding-ada-002',
+                match=ClauseEquals(equals='openai/text-embedding-ada-002'),
+                name='OpenAI Text Embedding Ada 002',
+                context_window=8191,
+                prices=ModelPrice(input_mtok=Decimal('0.1055')),
+            ),
+            ModelInfo(
+                id='openai/whisper-1',
+                match=ClauseEquals(equals='openai/whisper-1'),
+                name='OpenAI Whisper',
+                prices=ModelPrice(audio_hours=Decimal('0.3798'), input_audio_hours=Decimal('0.3798')),
+            ),
+            ModelInfo(
+                id='openai/whisper-large-v3',
+                match=ClauseEquals(equals='openai/whisper-large-v3'),
+                name='Whisper Large V3',
+                prices=ModelPrice(audio_hours=Decimal('1.02132'), input_audio_hours=Decimal('1.02132')),
+            ),
+            ModelInfo(
+                id='openai/whisper-large-v3-turbo',
+                match=ClauseEquals(equals='openai/whisper-large-v3-turbo'),
+                name='Whisper Large V3 Turbo',
+                prices=ModelPrice(requests_kcount=Decimal('10.55')),
+            ),
+            ModelInfo(
+                id='orcarouter/qwen-3.8-27b-uncensored',
+                match=ClauseEquals(equals='orcarouter/qwen-3.8-27b-uncensored'),
+                name='qwen-3.8-27b-uncensored',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.36925'), cache_read_mtok=Decimal('0.0844'), output_mtok=Decimal('2.90125')
+                ),
+            ),
+            ModelInfo(
+                id='poolside/laguna-s-2.1',
+                match=ClauseEquals(equals='poolside/laguna-s-2.1'),
+                name='Laguna-S-2.1',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1055'), cache_read_mtok=Decimal('0.0211'), output_mtok=Decimal('0.211')
+                ),
+            ),
+            ModelInfo(
+                id='poolside/laguna-xs-2.1',
+                match=ClauseEquals(equals='poolside/laguna-xs-2.1'),
+                name='poolside/laguna-xs-2.1',
+                prices=ModelPrice(input_mtok=Decimal('2.11'), output_mtok=Decimal('10.55')),
+            ),
+            ModelInfo(
+                id='prism-ml/ternary-bonsai-27b',
+                match=ClauseEquals(equals='prism-ml/ternary-bonsai-27b'),
+                name='Ternary Bonsai 27B',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.01'), output_mtok=Decimal('0.01')),
+            ),
+            ModelInfo(
+                id='qwen/qwen-3-6-plus',
+                match=ClauseEquals(equals='qwen/qwen-3-6-plus'),
+                name='Qwen 3.6 Plus Uncensored',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.659375'), cache_read_mtok=Decimal('0.065938'), output_mtok=Decimal('3.95625')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen-3-7-max',
+                match=ClauseEquals(equals='qwen/qwen-3-7-max'),
+                name='Qwen 3.7 Max',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.8485'), cache_read_mtok=Decimal('0.28485'), output_mtok=Decimal('8.49275')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen-3-7-plus',
+                match=ClauseEquals(equals='qwen/qwen-3-7-plus'),
+                name='Qwen 3.7 Plus',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.5275'), cache_read_mtok=Decimal('0.05275'), output_mtok=Decimal('2.11')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen-3-8-2-4t-a95b',
+                match=ClauseEquals(equals='qwen/qwen-3-8-2-4t-a95b'),
+                name='Qwen 3.8 2.4T',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.11'), cache_read_mtok=Decimal('0.26375'), output_mtok=Decimal('6.33')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen-3-8-flash',
+                match=ClauseEquals(equals='qwen/qwen-3-8-flash'),
+                name='Qwen 3.8 Flash',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1477'), cache_read_mtok=Decimal('0.01477'), output_mtok=Decimal('0.51695')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen-3-8-max',
+                match=ClauseEquals(equals='qwen/qwen-3-8-max'),
+                name='Qwen 3.8 Max',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.6375'), cache_read_mtok=Decimal('0.329688'), output_mtok=Decimal('7.9125')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen-4-max',
+                match=ClauseEquals(equals='qwen/qwen-4-max'),
+                name='Qwen 4 Max',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.978125'), cache_read_mtok=Decimal('0.098907'), output_mtok=Decimal('5.934375')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen-agentworld-35b-a3b',
+                match=ClauseEquals(equals='qwen/qwen-agentworld-35b-a3b'),
+                name='Qwen/Qwen-AgentWorld-35B-A3B',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.422'), output_mtok=Decimal('4.22')),
+            ),
+            ModelInfo(
+                id='qwen/qwen-flash',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='qwen/qwen-flash'), ClauseEquals(equals='qwen/qwen-flash-2025-07-28')]
+                ),
+                name='Qwen Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(
+                        base=Decimal('0.05275'), tiers=[Tier(start=256000, price=Decimal('0.26375'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.01'), tiers=[Tier(start=256000, price=Decimal('0.026375'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('0.422'), tiers=[Tier(start=256000, price=Decimal('2.11'))]),
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen-mt-flash',
+                match=ClauseEquals(equals='qwen/qwen-mt-flash'),
+                name='Qwen MT Flash',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.05275'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.422')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen-mt-lite',
+                match=ClauseEquals(equals='qwen/qwen-mt-lite'),
+                name='Qwen MT Lite',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.05275'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.422')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen-mt-plus',
+                match=ClauseEquals(equals='qwen/qwen-mt-plus'),
+                name='Qwen MT Plus',
+                context_window=16384,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.05275'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.422')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen-plus',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='qwen/qwen-plus'), ClauseEquals(equals='qwen/qwen-plus-2025-12-01')]
+                ),
+                name='Qwen Plus',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.422'), tiers=[Tier(start=256000, price=Decimal('1.266'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.0422'), tiers=[Tier(start=256000, price=Decimal('0.1266'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('4.22'), tiers=[Tier(start=256000, price=Decimal('12.66'))]),
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen-plus-character',
+                match=ClauseEquals(equals='qwen/qwen-plus-character'),
+                name='Qwen Plus Character',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.422'), cache_read_mtok=Decimal('0.0422'), output_mtok=Decimal('4.22')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen-vl-ocr',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='qwen/qwen-vl-ocr'), ClauseEquals(equals='qwen/qwen-vl-ocr-2025-11-20')]
+                ),
+                name='Qwen VL OCR',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.07385'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.1688')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen2.5-72b-instruct',
+                match=ClauseEquals(equals='qwen/qwen2.5-72b-instruct'),
+                name='Qwen/Qwen2.5-72B-Instruct',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.3798'), output_mtok=Decimal('0.422')),
+            ),
+            ModelInfo(
+                id='qwen/qwen2.5-7b-instruct',
+                match=ClauseEquals(equals='qwen/qwen2.5-7b-instruct'),
+                name='Qwen/Qwen2.5-7B-Instruct',
+                prices=ModelPrice(input_mtok=Decimal('0.05275'), output_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='qwen/qwen2.5-coder-32b-instruct',
+                match=ClauseEquals(equals='qwen/qwen2.5-coder-32b-instruct'),
+                name='@cf/qwen/qwen2.5-coder-32b-instruct',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.6963'), output_mtok=Decimal('1.055')),
+            ),
+            ModelInfo(
+                id='qwen/qwen2.5-vl-72b-instruct',
+                match=ClauseEquals(equals='qwen/qwen2.5-vl-72b-instruct'),
+                name='Qwen2.5 VL 72B Instruct',
+                context_window=128000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.844'), cache_read_mtok=Decimal('0.422'), output_mtok=Decimal('1.055')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-14b',
+                match=ClauseEquals(equals='qwen/qwen3-14b'),
+                name='Qwen3 14B',
+                context_window=40960,
+                prices=ModelPrice(input_mtok=Decimal('0.07385'), output_mtok=Decimal('0.2321')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-235b-a22b-instruct-2507',
+                match=ClauseEquals(equals='qwen/qwen3-235b-a22b-instruct-2507'),
+                name='Qwen/Qwen3-235B-A22B-Instruct-2507',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.09495'), output_mtok=Decimal('0.58025')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-235b-a22b-instruct-2507-fp8',
+                match=ClauseEquals(equals='qwen/qwen3-235b-a22b-instruct-2507-fp8'),
+                name='Qwen/Qwen3-235B-A22B-Instruct-2507-FP8',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.36925'), cache_read_mtok=Decimal('0.07385'), output_mtok=Decimal('1.477')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-235b-a22b-thinking-2507',
+                match=ClauseEquals(equals='qwen/qwen3-235b-a22b-thinking-2507'),
+                name='Qwen3 235B A22B Thinking 2507',
+                context_window=128000,
+                prices=ModelPrice(input_mtok=Decimal('0.47475'), output_mtok=Decimal('3.6925')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-30b-a3b',
+                match=ClauseEquals(equals='qwen/qwen3-30b-a3b'),
+                name='Qwen3 30B A3B',
+                context_window=40960,
+                prices=ModelPrice(input_mtok=Decimal('0.1266'), output_mtok=Decimal('0.5275')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-30b-a3b-instruct-2507',
+                match=ClauseEquals(equals='qwen/qwen3-30b-a3b-instruct-2507'),
+                name='Qwen3 30B A3B Instruct 2507',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.09495'), output_mtok=Decimal('0.3165')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-32b',
+                match=ClauseEquals(equals='qwen/qwen3-32b'),
+                name='Qwen3 32B',
+                context_window=40960,
+                prices=ModelPrice(input_mtok=Decimal('0.1477'), output_mtok=Decimal('0.60135')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-4b-instruct-2507',
+                match=ClauseEquals(equals='qwen/qwen3-4b-instruct-2507'),
+                name='Qwen/Qwen3-4B-Instruct-2507',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.422'), output_mtok=Decimal('0.844')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-4b-thinking-2507',
+                match=ClauseEquals(equals='qwen/qwen3-4b-thinking-2507'),
+                name='Qwen/Qwen3-4B-Thinking-2507',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.422'), output_mtok=Decimal('0.844')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-5-35b-a3b',
+                match=ClauseEquals(equals='qwen/qwen3-5-35b-a3b'),
+                name='Qwen 3.5 35B A3B',
+                context_window=256000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15825'), cache_read_mtok=Decimal('0.05275'), output_mtok=Decimal('1.055')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-6-35b-a3b',
+                match=ClauseEquals(equals='qwen/qwen3-6-35b-a3b'),
+                name='Qwen 3.6 35B A3B',
+                context_window=256000,
+                prices=ModelPrice(input_mtok=Decimal('0.1055'), output_mtok=Decimal('1.055')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-8b',
+                match=ClauseEquals(equals='qwen/qwen3-8b'),
+                name='Qwen/Qwen3-8B',
+                context_window=41000,
+                prices=ModelPrice(input_mtok=Decimal('0.0633'), output_mtok=Decimal('0.0633')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-coder-30b-a3b-instruct',
+                match=ClauseEquals(equals='qwen/qwen3-coder-30b-a3b-instruct'),
+                name='Qwen3 Coder 30B A3B Instruct',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.07385'), output_mtok=Decimal('0.2954')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-coder-480b-a35b-instruct',
+                match=ClauseEquals(equals='qwen/qwen3-coder-480b-a35b-instruct'),
+                name='qwen3-coder-480b-a35b-instruct',
+                context_window=256000,
+                prices=ModelPrice(input_mtok=Decimal('0.4009'), output_mtok=Decimal('1.63525')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-coder-480b-a35b-instruct-turbo',
+                match=ClauseEquals(equals='qwen/qwen3-coder-480b-a35b-instruct-turbo'),
+                name='Qwen/Qwen3-Coder-480B-A35B-Instruct-Turbo',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3165'), cache_read_mtok=Decimal('0.1055'), output_mtok=Decimal('1.055')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-coder-flash',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='qwen/qwen3-coder-flash'),
+                        ClauseEquals(equals='qwen/qwen3-coder-flash-2025-07-28'),
+                    ]
+                ),
+                name='Qwen3 Coder Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(
+                        base=Decimal('0.3165'),
+                        tiers=[
+                            Tier(start=32000, price=Decimal('0.5275')),
+                            Tier(start=128000, price=Decimal('0.844')),
+                            Tier(start=256000, price=Decimal('1.688')),
+                        ],
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.03165'),
+                        tiers=[
+                            Tier(start=32000, price=Decimal('0.05275')),
+                            Tier(start=128000, price=Decimal('0.0844')),
+                            Tier(start=256000, price=Decimal('0.1688')),
+                        ],
+                    ),
+                    output_mtok=TieredPrices(
+                        base=Decimal('1.5825'),
+                        tiers=[
+                            Tier(start=32000, price=Decimal('2.6375')),
+                            Tier(start=128000, price=Decimal('4.22')),
+                            Tier(start=256000, price=Decimal('10.128')),
+                        ],
+                    ),
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-coder-next',
+                match=ClauseEquals(equals='qwen/qwen3-coder-next'),
+                name='Qwen3 Coder Next',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1266'), cache_read_mtok=Decimal('0.07385'), output_mtok=Decimal('0.844')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-embedding-4b',
+                match=ClauseEquals(equals='qwen/qwen3-embedding-4b'),
+                name='Qwen3-Embedding 4B',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.158049')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-embedding-8b',
+                match=ClauseEquals(equals='qwen/qwen3-embedding-8b'),
+                name='Qwen3 Embedding 8B',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.01055')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-next-80b',
+                match=ClauseEquals(equals='qwen/qwen3-next-80b'),
+                name='Qwen 3 Next 80b',
+                context_window=256000,
+                prices=ModelPrice(input_mtok=Decimal('0.36925'), output_mtok=Decimal('2.0045')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-next-80b-a3b-instruct',
+                match=ClauseEquals(equals='qwen/qwen3-next-80b-a3b-instruct'),
+                name='Qwen3 Next 80B A3B Instruct',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.09495'), output_mtok=Decimal('1.1605')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-omni-30b-a3b-thinking',
+                match=ClauseEquals(equals='qwen/qwen3-omni-30b-a3b-thinking'),
+                name='Qwen3 Omni 30B A3B Thinking',
+                context_window=65536,
+                prices=ModelPrice(input_mtok=Decimal('0.26375'), output_mtok=Decimal('1.02335')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-tts',
+                match=ClauseEquals(equals='qwen/qwen3-tts'),
+                name='Qwen3 TTS',
+                prices=ModelPrice(requests_kcount=Decimal('10.55')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-vl-235b-a22b',
+                match=ClauseEquals(equals='qwen/qwen3-vl-235b-a22b'),
+                name='Qwen3 VL 235B',
+                context_window=128000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.22155'), cache_read_mtok=Decimal('0.1055'), output_mtok=Decimal('2.0045')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-vl-235b-a22b-instruct',
+                match=ClauseEquals(equals='qwen/qwen3-vl-235b-a22b-instruct'),
+                name='Qwen3 VL 235B A22B Instruct',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.211'), cache_read_mtok=Decimal('0.11605'), output_mtok=Decimal('0.9284')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-vl-2b-instruct',
+                match=ClauseEquals(equals='qwen/qwen3-vl-2b-instruct'),
+                name='Qwen/Qwen3-VL-2B-Instruct',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.3376'), output_mtok=Decimal('1.688')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-vl-30b-a3b-instruct',
+                match=ClauseEquals(equals='qwen/qwen3-vl-30b-a3b-instruct'),
+                name='Qwen3 VL 30B A3B Instruct',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.15825'), output_mtok=Decimal('0.5275')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-vl-30b-a3b-thinking',
+                match=ClauseEquals(equals='qwen/qwen3-vl-30b-a3b-thinking'),
+                name='Qwen/Qwen3-VL-30B-A3B-Thinking',
+                prices=ModelPrice(input_mtok=Decimal('0.30595'), output_mtok=Decimal('1.055')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-vl-32b-instruct',
+                match=ClauseEquals(equals='qwen/qwen3-vl-32b-instruct'),
+                name='Qwen/Qwen3-VL-32B-Instruct',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.10972'), output_mtok=Decimal('0.43888')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-vl-32b-thinking',
+                match=ClauseEquals(equals='qwen/qwen3-vl-32b-thinking'),
+                name='Qwen/Qwen3-VL-32B-Thinking',
+                prices=ModelPrice(input_mtok=Decimal('0.211'), output_mtok=Decimal('1.5825')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-vl-4b-instruct',
+                match=ClauseEquals(equals='qwen/qwen3-vl-4b-instruct'),
+                name='Qwen/Qwen3-VL-4B-Instruct',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.422'), output_mtok=Decimal('0.844')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-vl-8b-instruct',
+                match=ClauseEquals(equals='qwen/qwen3-vl-8b-instruct'),
+                name='Qwen3 VL 8B Instruct',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.1899'), output_mtok=Decimal('0.7174')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3-vl-plus',
+                match=ClauseEquals(equals='qwen/qwen3-vl-plus'),
+                name='Qwen3 VL Plus',
+                context_window=262000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(
+                        base=Decimal('0.211'),
+                        tiers=[Tier(start=32000, price=Decimal('0.3165')), Tier(start=128000, price=Decimal('0.633'))],
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.0211'),
+                        tiers=[
+                            Tier(start=32000, price=Decimal('0.03165')),
+                            Tier(start=128000, price=Decimal('0.0633')),
+                        ],
+                    ),
+                    output_mtok=TieredPrices(
+                        base=Decimal('1.688'),
+                        tiers=[Tier(start=32000, price=Decimal('2.532')), Tier(start=128000, price=Decimal('5.064'))],
+                    ),
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.5-122b-a10b',
+                match=ClauseEquals(equals='qwen/qwen3.5-122b-a10b'),
+                name='Qwen3.5-122B-A10B',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.2321'), output_mtok=Decimal('2.1944')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.5-27b',
+                match=ClauseEquals(equals='qwen/qwen3.5-27b'),
+                name='Qwen3.5-27B',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.26375'), output_mtok=Decimal('2.11')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.5-2b',
+                match=ClauseEquals(equals='qwen/qwen3.5-2b'),
+                name='Qwen/Qwen3.5-2B',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.0844'), output_mtok=Decimal('0.422')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.5-35b-a3b',
+                match=ClauseEquals(equals='qwen/qwen3.5-35b-a3b'),
+                name='Qwen3.5-35B-A3B',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1477'), cache_read_mtok=Decimal('0.05275'), output_mtok=Decimal('1.055')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.5-397b-a17b',
+                match=ClauseEquals(equals='qwen/qwen3.5-397b-a17b'),
+                name='Qwen3.5 397B A17B',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.47475'), cache_read_mtok=Decimal('0.2321'), output_mtok=Decimal('3.165')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.5-4b',
+                match=ClauseEquals(equals='qwen/qwen3.5-4b'),
+                name='Qwen/Qwen3.5-4B',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.1055'), output_mtok=Decimal('0.211')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.5-9b',
+                match=ClauseEquals(equals='qwen/qwen3.5-9b'),
+                name='Qwen3.5-9B',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.0422'), cache_read_mtok=Decimal('0.0211'), output_mtok=Decimal('0.068575')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.5-flash',
+                match=ClauseEquals(equals='qwen/qwen3.5-flash'),
+                name='Qwen3.5 Flash',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('0.1055'), output_mtok=Decimal('0.422')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.5-flash-2026-02-23',
+                match=ClauseEquals(equals='qwen/qwen3.5-flash-2026-02-23'),
+                name='Qwen3.5 Flash 2026 02 23',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1055'), cache_read_mtok=Decimal('0.01055'), output_mtok=Decimal('0.422')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.5-plus',
+                match=ClauseEquals(equals='qwen/qwen3.5-plus'),
+                name='Qwen3.5 Plus',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.422'), tiers=[Tier(start=262144, price=Decimal('0.5275'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.0422'), tiers=[Tier(start=262144, price=Decimal('0.05275'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('2.532'), tiers=[Tier(start=262144, price=Decimal('3.165'))]),
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.5-plus-2026-02-15',
+                match=ClauseEquals(equals='qwen/qwen3.5-plus-2026-02-15'),
+                name='Qwen3.5 Plus 2026 02 15',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.422'), tiers=[Tier(start=256000, price=Decimal('0.5275'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.0422'), tiers=[Tier(start=256000, price=Decimal('0.05275'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('2.532'), tiers=[Tier(start=256000, price=Decimal('3.165'))]),
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.6-27b',
+                match=ClauseEquals(equals='qwen/qwen3.6-27b'),
+                name='Qwen3.6 27B',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15825'), cache_read_mtok=Decimal('0.079125'), output_mtok=Decimal('1.42425')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.6-35b-a3b',
+                match=ClauseEquals(equals='qwen/qwen3.6-35b-a3b'),
+                name='Qwen3.6 35B A3B',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.0422'), cache_read_mtok=Decimal('0.0211'), output_mtok=Decimal('0.3165')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.6-flash',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='qwen/qwen3.6-flash'),
+                        ClauseEquals(equals='qwen/qwen3.6-flash-2026-04-16'),
+                    ]
+                ),
+                name='Qwen3.6 Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(
+                        base=Decimal('0.26375'), tiers=[Tier(start=256000, price=Decimal('1.055'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.026375'), tiers=[Tier(start=256000, price=Decimal('0.1055'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('1.5825'), tiers=[Tier(start=256000, price=Decimal('4.22'))]),
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.6-plus',
+                match=ClauseEquals(equals='qwen/qwen3.6-plus'),
+                name='Qwen3.6 Plus',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(
+                        base=Decimal('0.342875'), tiers=[Tier(start=256000, price=Decimal('1.3715'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.034288'), tiers=[Tier(start=256000, price=Decimal('0.13715'))]
+                    ),
+                    output_mtok=TieredPrices(
+                        base=Decimal('2.05725'), tiers=[Tier(start=256000, price=Decimal('4.1145'))]
+                    ),
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.6-plus-2026-04-02',
+                match=ClauseEquals(equals='qwen/qwen3.6-plus-2026-04-02'),
+                name='Qwen3.6 Plus 2026-04-02',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.5275'), tiers=[Tier(start=256000, price=Decimal('2.11'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.05275'), tiers=[Tier(start=256000, price=Decimal('0.211'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('3.165'), tiers=[Tier(start=256000, price=Decimal('6.33'))]),
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.7-flash',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='qwen/qwen3.7-flash'),
+                        ClauseEquals(equals='qwen/qwen3.7-flash-2026-07-15'),
+                    ]
+                ),
+                name='Qwen3.7 Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(
+                        base=Decimal('0.03165'),
+                        tiers=[Tier(start=32000, price=Decimal('0.1055')), Tier(start=256000, price=Decimal('0.211'))],
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.01'),
+                        tiers=[Tier(start=32000, price=Decimal('0.0211')), Tier(start=256000, price=Decimal('0.0422'))],
+                    ),
+                    output_mtok=TieredPrices(
+                        base=Decimal('0.13715'),
+                        tiers=[Tier(start=32000, price=Decimal('0.422')), Tier(start=256000, price=Decimal('0.844'))],
+                    ),
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.7-max',
+                match=ClauseEquals(equals='qwen/qwen3.7-max'),
+                name='Qwen3.7 Max',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.74075'), cache_read_mtok=Decimal('0.34815'), output_mtok=Decimal('5.223305')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.7-max-2026-05-20',
+                match=ClauseEquals(equals='qwen/qwen3.7-max-2026-05-20'),
+                name='Qwen3.7 Max 2026 05 20',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.6375'), cache_read_mtok=Decimal('0.26375'), output_mtok=Decimal('7.9125')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.7-max-2026-06-08',
+                match=ClauseEquals(equals='qwen/qwen3.7-max-2026-06-08'),
+                name='Qwen3.7 Max 2026 06 08',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.6375'), cache_read_mtok=Decimal('0.26375'), output_mtok=Decimal('7.9125')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.7-plus',
+                match=ClauseEquals(equals='qwen/qwen3.7-plus'),
+                name='Qwen3.7 Plus',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.422'), tiers=[Tier(start=262144, price=Decimal('1.266'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.0844'), tiers=[Tier(start=262144, price=Decimal('0.2532'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('1.688'), tiers=[Tier(start=262144, price=Decimal('5.064'))]),
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.7-plus-2026-05-26',
+                match=ClauseEquals(equals='qwen/qwen3.7-plus-2026-05-26'),
+                name='Qwen3.7 Plus 2026 05 26',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('0.422'), tiers=[Tier(start=256000, price=Decimal('1.266'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.0422'), tiers=[Tier(start=256000, price=Decimal('0.1266'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('1.688'), tiers=[Tier(start=256000, price=Decimal('5.064'))]),
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.8-2.4t-a95b',
+                match=ClauseEquals(equals='qwen/qwen3.8-2.4t-a95b'),
+                name='Qwen3.8 2.4T A95B',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('1.055'), output_mtok=Decimal('4.22')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.8-27b',
+                match=ClauseEquals(equals='qwen/qwen3.8-27b'),
+                name='Qwen3.8 27B',
+                context_window=65536,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.041145'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.3376')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.8-flash',
+                match=ClauseEquals(equals='qwen/qwen3.8-flash'),
+                name='Qwen3.8 Flash',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.119215'), cache_read_mtok=Decimal('0.014876'), output_mtok=Decimal('0.40301')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.8-flash-next',
+                match=ClauseEquals(equals='qwen/qwen3.8-flash-next'),
+                name='Qwen/Qwen3.8-Flash-Next',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.15825'), output_mtok=Decimal('0.5275')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.8-flash-next-fp8',
+                match=ClauseEquals(equals='qwen/qwen3.8-flash-next-fp8'),
+                name='Qwen3.8-Flash-Next-FP8',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.15825'), output_mtok=Decimal('0.49585')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.8-max',
+                match=ClauseEquals(equals='qwen/qwen3.8-max'),
+                name='Qwen3.8 Max',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.477'), cache_read_mtok=Decimal('0.184625'), output_mtok=Decimal('4.431')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3.8-max-0902',
+                match=ClauseEquals(equals='qwen/qwen3.8-max-0902'),
+                name='Qwen3.8 Max 0902',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.74075'), cache_read_mtok=Decimal('0.21733'), output_mtok=Decimal('5.223305')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/qwen3guard-gen-0.6b',
+                match=ClauseEquals(equals='qwen/qwen3guard-gen-0.6b'),
+                name='Qwen/Qwen3Guard-Gen-0.6B',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.0422'), output_mtok=Decimal('0.0844')),
+            ),
+            ModelInfo(
+                id='qwen/qwen3guard-gen-8b',
+                match=ClauseEquals(equals='qwen/qwen3guard-gen-8b'),
+                name='Qwen/Qwen3Guard-Gen-8B',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.49374'), output_mtok=Decimal('1.9201')),
+            ),
+            ModelInfo(
+                id='qwen/qwen4-max',
+                match=ClauseEquals(equals='qwen/qwen4-max'),
+                name='Qwen4 Max',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.490715'), cache_read_mtok=Decimal('0.074905'), output_mtok=Decimal('4.4732')
+                ),
+            ),
+            ModelInfo(
+                id='qwen/webworld-8b',
+                match=ClauseEquals(equals='qwen/webworld-8b'),
+                name='Qwen/WebWorld-8B',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.49374'), output_mtok=Decimal('1.9201')),
+            ),
+            ModelInfo(
+                id='radixark/daisyrose-27b',
+                match=ClauseEquals(equals='radixark/daisyrose-27b'),
+                name='DaisyRose 27B',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.211'), cache_read_mtok=Decimal('0.05275'), output_mtok=Decimal('2.6375')
+                ),
+            ),
+            ModelInfo(
+                id='reflection/beam',
+                match=ClauseEquals(equals='reflection/beam'),
+                name='Reflection Beam 1.0',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.26375'), output_mtok=Decimal('1.055')),
+            ),
+            ModelInfo(
+                id='reflection/beam-1.0',
+                match=ClauseEquals(equals='reflection/beam-1.0'),
+                name='Beam',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.422'), cache_read_mtok=Decimal('0.0422'), output_mtok=Decimal('1.266')
+                ),
+            ),
+            ModelInfo(
+                id='reflection/beam-1.0-501b-a23b',
+                match=ClauseEquals(equals='reflection/beam-1.0-501b-a23b'),
+                name='Beam 1.0 501B A23B',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3165'), cache_read_mtok=Decimal('0.0422'), output_mtok=Decimal('1.055')
+                ),
+            ),
+            ModelInfo(
+                id='reka/reka-edge-2603',
+                match=ClauseEquals(equals='reka/reka-edge-2603'),
+                name='Reka Edge 2603',
+                context_window=16384,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1055'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.1055')
+                ),
+            ),
+            ModelInfo(
+                id='sakana-ai/fugu-ultra-v1.1',
+                match=ClauseEquals(equals='sakana-ai/fugu-ultra-v1.1'),
+                name='fugu-ultra-v1.1',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('30')),
+            ),
+            ModelInfo(
+                id='sao10k/l3-8b-lunaris-v1-turbo',
+                match=ClauseEquals(equals='sao10k/l3-8b-lunaris-v1-turbo'),
+                name='Sao10K/L3-8B-Lunaris-v1-Turbo',
+                context_window=8192,
+                prices=ModelPrice(input_mtok=Decimal('0.0422'), output_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='sao10k/l3.1-70b-euryale-v2.2',
+                match=ClauseEquals(equals='sao10k/l3.1-70b-euryale-v2.2'),
+                name='Sao10K/L3.1-70B-Euryale-v2.2',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.89675'), output_mtok=Decimal('0.89675')),
+            ),
+            ModelInfo(
+                id='scaledown/classify',
+                match=ClauseEquals(equals='scaledown/classify'),
+                name='ScaleDown Classify',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='scaledown/compress',
+                match=ClauseEquals(equals='scaledown/compress'),
+                name='ScaleDown Compress',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='scaledown/extract',
+                match=ClauseEquals(equals='scaledown/extract'),
+                name='ScaleDown Extract',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='scaledown/summarize',
+                match=ClauseEquals(equals='scaledown/summarize'),
+                name='ScaleDown Summarize',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='stepfun-ai/step-3.5-flash',
+                match=ClauseEquals(equals='stepfun-ai/step-3.5-flash'),
+                name='stepfun-ai/Step-3.5-Flash',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.1055'), output_mtok=Decimal('0.3165')),
+            ),
+            ModelInfo(
+                id='stepfun-ai/step-3.7-flash',
+                match=ClauseEquals(equals='stepfun-ai/step-3.7-flash'),
+                name='Step-3.7-Flash',
+                context_window=256000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.211'), cache_read_mtok=Decimal('0.0422'), output_mtok=Decimal('1.21325')
+                ),
+            ),
+            ModelInfo(
+                id='stepfun-ai/step-5-preview',
+                match=ClauseEquals(equals='stepfun-ai/step-5-preview'),
+                name='Step-5-Preview',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.055'), cache_read_mtok=Decimal('0.1055'), output_mtok=Decimal('2.8485')
+                ),
+            ),
+            ModelInfo(
+                id='stepfun/step-3.5-flash',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='stepfun/step-3.5-flash'),
+                        ClauseEquals(equals='stepfun/step-3.5-flash-2603'),
+                    ]
+                ),
+                name='Step 3.5 Flash',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1055'), cache_read_mtok=Decimal('0.0211'), output_mtok=Decimal('0.3165')
+                ),
+            ),
+            ModelInfo(
+                id='stepfun/step-3.7-flash',
+                match=ClauseEquals(equals='stepfun/step-3.7-flash'),
+                name='Step 3.7 Flash',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.211'), cache_read_mtok=Decimal('0.0422'), output_mtok=Decimal('1.21325')
+                ),
+            ),
+            ModelInfo(
+                id='stepfun/step-5-preview',
+                match=ClauseEquals(equals='stepfun/step-5-preview'),
+                name='Step 5 Preview',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.055'), cache_read_mtok=Decimal('0.1055'), output_mtok=Decimal('2.8485')
+                ),
+            ),
+            ModelInfo(
+                id='swiss-ai/apertus-70b-instruct',
+                match=ClauseEquals(equals='swiss-ai/apertus-70b-instruct'),
+                name='apertus-70b',
+                context_window=30000,
+                prices=ModelPrice(input_mtok=Decimal('1.157863'), output_mtok=Decimal('3.936733')),
+            ),
+            ModelInfo(
+                id='tencent/hunyuan-a13b-instruct',
+                match=ClauseEquals(equals='tencent/hunyuan-a13b-instruct'),
+                name='tencent/Hunyuan-A13B-Instruct',
+                prices=ModelPrice(input_mtok=Decimal('0.1477'), output_mtok=Decimal('0.60135')),
+            ),
+            ModelInfo(
+                id='tencent/hy3',
+                match=ClauseEquals(equals='tencent/hy3'),
+                name='Hy3',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.13926'), cache_read_mtok=Decimal('0.034815'), output_mtok=Decimal('0.55704')
+                ),
+            ),
+            ModelInfo(
+                id='tencent/hy3-preview',
+                match=ClauseEquals(equals='tencent/hy3-preview'),
+                name='tencent/hy3-preview',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(
+                        base=Decimal('0.1899'),
+                        tiers=[Tier(start=16383, price=Decimal('0.2532')), Tier(start=32767, price=Decimal('0.3165'))],
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.0633'),
+                        tiers=[Tier(start=16383, price=Decimal('0.09495')), Tier(start=32767, price=Decimal('0.1266'))],
+                    ),
+                    output_mtok=TieredPrices(
+                        base=Decimal('0.633'),
+                        tiers=[Tier(start=16383, price=Decimal('1.0128')), Tier(start=32767, price=Decimal('1.266'))],
+                    ),
+                ),
+            ),
+            ModelInfo(
+                id='tencent/hy4',
+                match=ClauseEquals(equals='tencent/hy4'),
+                name='Hy4',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.439935'), cache_read_mtok=Decimal('0.022155'), output_mtok=Decimal('1.319278')
+                ),
+            ),
+            ModelInfo(
+                id='tencent/hy4-flash',
+                match=ClauseEquals(equals='tencent/hy4-flash'),
+                name='Hy4 flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.036925'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.148228')
+                ),
+            ),
+            ModelInfo(
+                id='tencent/hy4-preview',
+                match=ClauseEquals(equals='tencent/hy4-preview'),
+                name='Hy4 preview',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.87987'), cache_read_mtok=Decimal('0.04431'), output_mtok=Decimal('2.638555')
+                ),
+            ),
+            ModelInfo(
+                id='thedrummer/cydonia-24b-v4.1',
+                match=ClauseEquals(equals='thedrummer/cydonia-24b-v4.1'),
+                name='Cydonia 24B V4.1',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3165'), cache_read_mtok=Decimal('0.15825'), output_mtok=Decimal('0.5275')
+                ),
+            ),
+            ModelInfo(
+                id='thedrummer/skyfall-36b-v2',
+                match=ClauseEquals(equals='thedrummer/skyfall-36b-v2'),
+                name='Skyfall 36B V2',
+                context_window=32768,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.58025'), cache_read_mtok=Decimal('0.26375'), output_mtok=Decimal('0.844')
+                ),
+            ),
+            ModelInfo(
+                id='thinkingmachines/inkling',
+                match=ClauseEquals(equals='thinkingmachines/inkling'),
+                name='Inkling',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.055'), cache_read_mtok=Decimal('0.17935'), output_mtok=Decimal('4.27275')
+                ),
+            ),
+            ModelInfo(
+                id='thinkingmachines/inkling-2-mini',
+                match=ClauseEquals(equals='thinkingmachines/inkling-2-mini'),
+                name='Inkling 2 Mini',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.079125'), cache_read_mtok=Decimal('0.015825'), output_mtok=Decimal('0.3165')
+                ),
+            ),
+            ModelInfo(
+                id='thinkingmachines/inkling-2-small',
+                match=ClauseEquals(equals='thinkingmachines/inkling-2-small'),
+                name='Inkling 2 Small',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3165'), cache_read_mtok=Decimal('0.03165'), output_mtok=Decimal('1.055')
+                ),
+            ),
+            ModelInfo(
+                id='thinkingmachines/inkling-small',
+                match=ClauseEquals(equals='thinkingmachines/inkling-small'),
+                name='Inkling Small',
+                context_window=524288,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3165'), cache_read_mtok=Decimal('0.0633'), output_mtok=Decimal('1.266')
+                ),
+            ),
+            ModelInfo(
+                id='trustedrouter/advanced',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/advanced'), ClauseEquals(equals='nyte/advanced')]
+                ),
+                name='TrustedRouter Advanced',
+                context_window=1050000,
+                prices=ModelPrice(input_mtok=Decimal('0.3798'), output_mtok=Decimal('10.0225')),
+            ),
+            ModelInfo(
+                id='trustedrouter/advisor',
+                match=ClauseOr(or_=[ClauseEquals(equals='trustedrouter/advisor'), ClauseEquals(equals='nyte/advisor')]),
+                name='TrustedRouter Advisor',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('0.09495'), output_mtok=Decimal('0.1899')),
+            ),
+            ModelInfo(
+                id='trustedrouter/aristotle',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/aristotle'),
+                        ClauseEquals(equals='nyte/aristotle'),
+                        ClauseEquals(equals='trustedrouter/aristotle-2.0'),
+                        ClauseEquals(equals='nyte/aristotle-2.0'),
+                    ]
+                ),
+                name='TrustedRouter Aristotle',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.15825'), output_mtok=Decimal('0.633')),
+            ),
+            ModelInfo(
+                id='trustedrouter/aristotle-1.0',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/aristotle-1.0'), ClauseEquals(equals='nyte/aristotle-1.0')]
+                ),
+                name='TrustedRouter Aristotle 1.0',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('0.09495'), output_mtok=Decimal('0.1899')),
+            ),
+            ModelInfo(
+                id='trustedrouter/aristotle-1.1',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/aristotle-1.1'), ClauseEquals(equals='nyte/aristotle-1.1')]
+                ),
+                name='TrustedRouter Aristotle 1.1',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.24265'), output_mtok=Decimal('0.91785')),
+            ),
+            ModelInfo(
+                id='trustedrouter/auto',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/auto'),
+                        ClauseEquals(equals='nyte/auto'),
+                        ClauseEquals(equals='trustedrouter/auto-routing'),
+                        ClauseEquals(equals='nyte/auto-routing'),
+                    ]
+                ),
+                name='TrustedRouter Auto',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.026375'), output_mtok=Decimal('0.07385')),
+            ),
+            ModelInfo(
+                id='trustedrouter/cheap',
+                match=ClauseOr(or_=[ClauseEquals(equals='trustedrouter/cheap'), ClauseEquals(equals='nyte/cheap')]),
+                name='TrustedRouter Cheap',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.01'), output_mtok=Decimal('0.01')),
+            ),
+            ModelInfo(
+                id='trustedrouter/confidential',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/confidential'), ClauseEquals(equals='nyte/confidential')]
+                ),
+                name='TrustedRouter Confidential',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.01055'), output_mtok=Decimal('0.07385')),
+            ),
+            ModelInfo(
+                id='trustedrouter/e2e',
+                match=ClauseOr(or_=[ClauseEquals(equals='trustedrouter/e2e'), ClauseEquals(equals='nyte/e2e')]),
+                name='TrustedRouter E2E',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.01055'), output_mtok=Decimal('0.07385')),
+            ),
+            ModelInfo(
+                id='trustedrouter/efficient',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/efficient'), ClauseEquals(equals='nyte/efficient')]
+                ),
+                name='TrustedRouter Efficient',
+                context_window=1050000,
+                prices=ModelPrice(input_mtok=Decimal('0.0422'), output_mtok=Decimal('0.09495')),
+            ),
+            ModelInfo(
+                id='trustedrouter/eu',
+                match=ClauseOr(or_=[ClauseEquals(equals='trustedrouter/eu'), ClauseEquals(equals='nyte/eu')]),
+                name='TrustedRouter EU',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.01'), output_mtok=Decimal('0.01')),
+            ),
+            ModelInfo(
+                id='trustedrouter/fast',
+                match=ClauseOr(or_=[ClauseEquals(equals='trustedrouter/fast'), ClauseEquals(equals='nyte/fast')]),
+                name='TrustedRouter Fast',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.36925'), output_mtok=Decimal('0.79125')),
+            ),
+            ModelInfo(
+                id='trustedrouter/frontier',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/frontier'), ClauseEquals(equals='nyte/frontier')]
+                ),
+                name='TrustedRouter Frontier',
+                context_window=1050000,
+                prices=ModelPrice(input_mtok=Decimal('4.22'), output_mtok=Decimal('21.1')),
+            ),
+            ModelInfo(
+                id='trustedrouter/fusion',
+                match=ClauseOr(or_=[ClauseEquals(equals='trustedrouter/fusion'), ClauseEquals(equals='nyte/fusion')]),
+                name='TrustedRouter Synth Legacy Alias',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('0.1055'), output_mtok=Decimal('0.3587')),
+            ),
+            ModelInfo(
+                id='trustedrouter/fusion-code',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/fusion-code'), ClauseEquals(equals='nyte/fusion-code')]
+                ),
+                name='TrustedRouter Synth Code Legacy Alias',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('0.1055'), output_mtok=Decimal('0.3587')),
+            ),
+            ModelInfo(
+                id='trustedrouter/green',
+                match=ClauseOr(or_=[ClauseEquals(equals='trustedrouter/green'), ClauseEquals(equals='nyte/green')]),
+                name='TrustedRouter Green',
+                context_window=120000,
+                prices=ModelPrice(input_mtok=Decimal('0.115787'), output_mtok=Decimal('0.231573')),
+            ),
+            ModelInfo(
+                id='trustedrouter/iris',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/iris'),
+                        ClauseEquals(equals='nyte/iris'),
+                        ClauseEquals(equals='trustedrouter/iris-3.0'),
+                        ClauseEquals(equals='nyte/iris-3.0'),
+                    ]
+                ),
+                name='TrustedRouter Iris',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.15825'), output_mtok=Decimal('0.633')),
+            ),
+            ModelInfo(
+                id='trustedrouter/iris-1.0',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/iris-1.0'), ClauseEquals(equals='nyte/iris-1.0')]
+                ),
+                name='TrustedRouter Iris 1.0',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('0.24265'), output_mtok=Decimal('1.0128')),
+            ),
+            ModelInfo(
+                id='trustedrouter/iris-2.0',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/iris-2.0'), ClauseEquals(equals='nyte/iris-2.0')]
+                ),
+                name='TrustedRouter Iris 2.0',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.24265'), output_mtok=Decimal('1.0128')),
+            ),
+            ModelInfo(
+                id='trustedrouter/iris-code',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/iris-code'), ClauseEquals(equals='nyte/iris-code')]
+                ),
+                name='TrustedRouter Iris Code',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('0.15825'), output_mtok=Decimal('0.633')),
+            ),
+            ModelInfo(
+                id='trustedrouter/iris-code-1.0',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/iris-code-1.0'), ClauseEquals(equals='nyte/iris-code-1.0')]
+                ),
+                name='TrustedRouter Iris Code 1.0',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('0.24265'), output_mtok=Decimal('1.0128')),
+            ),
+            ModelInfo(
+                id='trustedrouter/liberty-1.0',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/liberty-1.0'), ClauseEquals(equals='nyte/liberty-1.0')]
+                ),
+                name='TrustedRouter Liberty 1.0',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.1055'), output_mtok=Decimal('0.3587')),
+            ),
+            ModelInfo(
+                id='trustedrouter/liberty-1.0-1m',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/liberty-1.0-1m'),
+                        ClauseEquals(equals='nyte/liberty-1.0-1m'),
+                    ]
+                ),
+                name='TrustedRouter Liberty 1.0 1M',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.5275'), output_mtok=Decimal('2.26825')),
+            ),
+            ModelInfo(
+                id='trustedrouter/liberty-2.0',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/liberty-2.0'), ClauseEquals(equals='nyte/liberty-2.0')]
+                ),
+                name='TrustedRouter Liberty 2.0',
+                context_window=262144,
+                prices=ModelPrice(input_mtok=Decimal('0.1055'), output_mtok=Decimal('0.3587')),
+            ),
+            ModelInfo(
+                id='trustedrouter/liberty-3.0',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/liberty-3.0'), ClauseEquals(equals='nyte/liberty-3.0')]
+                ),
+                name='TrustedRouter Liberty 3.0',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.03165'), output_mtok=Decimal('0.17935')),
+            ),
+            ModelInfo(
+                id='trustedrouter/liberty-4.0',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/liberty-4.0'), ClauseEquals(equals='nyte/liberty-4.0')]
+                ),
+                name='TrustedRouter Liberty 4.0',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.422'), output_mtok=Decimal('1.266')),
+            ),
+            ModelInfo(
+                id='trustedrouter/liberty-4.1',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/liberty-4.1'), ClauseEquals(equals='nyte/liberty-4.1')]
+                ),
+                name='TrustedRouter Liberty 4.1',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.3165'), output_mtok=Decimal('1.055')),
+            ),
+            ModelInfo(
+                id='trustedrouter/mapreduce',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/mapreduce'), ClauseEquals(equals='nyte/mapreduce')]
+                ),
+                name='TrustedRouter MapReduce',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('0.09495'), output_mtok=Decimal('0.1899')),
+            ),
+            ModelInfo(
+                id='trustedrouter/openpatcher-a1',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/openpatcher-a1'),
+                        ClauseEquals(equals='nyte/openpatcher-a1'),
+                    ]
+                ),
+                name='TrustedRouter OpenPatcher-A1',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('0.1055'), output_mtok=Decimal('0.3587')),
+            ),
+            ModelInfo(
+                id='trustedrouter/openpatcher-fast1',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/openpatcher-fast1'),
+                        ClauseEquals(equals='nyte/openpatcher-fast1'),
+                    ]
+                ),
+                name='TrustedRouter OpenPatcher-Fast1',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('0.1055'), output_mtok=Decimal('0.3587')),
+            ),
+            ModelInfo(
+                id='trustedrouter/openpatcher-g1',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/openpatcher-g1'),
+                        ClauseEquals(equals='nyte/openpatcher-g1'),
+                    ]
+                ),
+                name='TrustedRouter OpenPatcher-G1',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.3587'), output_mtok=Decimal('0.91785')),
+            ),
+            ModelInfo(
+                id='trustedrouter/openpatcher-g2',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/openpatcher-g2'),
+                        ClauseEquals(equals='nyte/openpatcher-g2'),
+                    ]
+                ),
+                name='TrustedRouter OpenPatcher-G2',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.1055'), output_mtok=Decimal('0.3587')),
+            ),
+            ModelInfo(
+                id='trustedrouter/openpatcher-g3',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/openpatcher-g3'),
+                        ClauseEquals(equals='nyte/openpatcher-g3'),
+                    ]
+                ),
+                name='TrustedRouter OpenPatcher-G3',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.1055'), output_mtok=Decimal('0.3587')),
+            ),
+            ModelInfo(
+                id='trustedrouter/openpatcher-s1',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/openpatcher-s1'),
+                        ClauseEquals(equals='nyte/openpatcher-s1'),
+                    ]
+                ),
+                name='TrustedRouter OpenPatcher-S1',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('0.3587'), output_mtok=Decimal('1.5825')),
+            ),
+            ModelInfo(
+                id='trustedrouter/openpatcher-s2',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/openpatcher-s2'),
+                        ClauseEquals(equals='nyte/openpatcher-s2'),
+                    ]
+                ),
+                name='TrustedRouter OpenPatcher-S2',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.3587'), output_mtok=Decimal('1.5825')),
+            ),
+            ModelInfo(
+                id='trustedrouter/openpatcher-s3',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/openpatcher-s3'),
+                        ClauseEquals(equals='nyte/openpatcher-s3'),
+                    ]
+                ),
+                name='TrustedRouter OpenPatcher-S3',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.15825'), output_mtok=Decimal('0.633')),
+            ),
+            ModelInfo(
+                id='trustedrouter/plato',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/plato'),
+                        ClauseEquals(equals='nyte/plato'),
+                        ClauseEquals(equals='trustedrouter/plato-4.0'),
+                        ClauseEquals(equals='nyte/plato-4.0'),
+                    ]
+                ),
+                name='TrustedRouter Plato',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('0.01055'), output_mtok=Decimal('0.1266')),
+            ),
+            ModelInfo(
+                id='trustedrouter/plato-1.0',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/plato-1.0'), ClauseEquals(equals='nyte/plato-1.0')]
+                ),
+                name='TrustedRouter Plato 1.0',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('0.09495'), output_mtok=Decimal('0.1899')),
+            ),
+            ModelInfo(
+                id='trustedrouter/plato-3.0',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/plato-3.0'), ClauseEquals(equals='nyte/plato-3.0')]
+                ),
+                name='TrustedRouter Plato 3.0',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.15825'), output_mtok=Decimal('0.633')),
+            ),
+            ModelInfo(
+                id='trustedrouter/plato-pro',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/plato-pro'),
+                        ClauseEquals(equals='nyte/plato-pro'),
+                        ClauseEquals(equals='trustedrouter/plato-pro-2.0'),
+                        ClauseEquals(equals='nyte/plato-pro-2.0'),
+                    ]
+                ),
+                name='TrustedRouter Plato Pro',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.24265'), output_mtok=Decimal('0.91785')),
+            ),
+            ModelInfo(
+                id='trustedrouter/plato-pro-1.0',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/plato-pro-1.0'), ClauseEquals(equals='nyte/plato-pro-1.0')]
+                ),
+                name='TrustedRouter Plato Pro 1.0',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.3587'), output_mtok=Decimal('0.91785')),
+            ),
+            ModelInfo(
+                id='trustedrouter/polyphemus-1.0',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/polyphemus-1.0'),
+                        ClauseEquals(equals='nyte/polyphemus-1.0'),
+                    ]
+                ),
+                name='Polyphemus 1.0',
+                context_window=65536,
+                prices=ModelPrice(input_mtok=Decimal('0.06'), output_mtok=Decimal('0.01')),
+            ),
+            ModelInfo(
+                id='trustedrouter/professional',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/professional'), ClauseEquals(equals='nyte/professional')]
+                ),
+                name='TrustedRouter Professional',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.026375'), output_mtok=Decimal('0.07385')),
+            ),
+            ModelInfo(
+                id='trustedrouter/prometheus',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/prometheus'),
+                        ClauseEquals(equals='nyte/prometheus'),
+                        ClauseEquals(equals='trustedrouter/prometheus-4.0'),
+                        ClauseEquals(equals='nyte/prometheus-4.0'),
+                    ]
+                ),
+                name='TrustedRouter Prometheus',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('0.01055'), output_mtok=Decimal('0.1266')),
+            ),
+            ModelInfo(
+                id='trustedrouter/prometheus-1.0',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/prometheus-1.0'),
+                        ClauseEquals(equals='nyte/prometheus-1.0'),
+                    ]
+                ),
+                name='TrustedRouter Prometheus 1.0',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('0.1055'), output_mtok=Decimal('0.3587')),
+            ),
+            ModelInfo(
+                id='trustedrouter/prometheus-1.0-1m',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/prometheus-1.0-1m'),
+                        ClauseEquals(equals='nyte/prometheus-1.0-1m'),
+                    ]
+                ),
+                name='TrustedRouter Prometheus 1.0 1M',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.3587'), output_mtok=Decimal('0.91785')),
+            ),
+            ModelInfo(
+                id='trustedrouter/prometheus-2.0',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/prometheus-2.0'),
+                        ClauseEquals(equals='nyte/prometheus-2.0'),
+                    ]
+                ),
+                name='TrustedRouter Prometheus 2.0',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.24265'), output_mtok=Decimal('0.91785')),
+            ),
+            ModelInfo(
+                id='trustedrouter/prometheus-3.0',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/prometheus-3.0'),
+                        ClauseEquals(equals='nyte/prometheus-3.0'),
+                    ]
+                ),
+                name='TrustedRouter Prometheus 3.0',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.15825'), output_mtok=Decimal('0.633')),
+            ),
+            ModelInfo(
+                id='trustedrouter/prometheus-code',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/prometheus-code'),
+                        ClauseEquals(equals='nyte/prometheus-code'),
+                        ClauseEquals(equals='trustedrouter/prometheus-code-1.0'),
+                        ClauseEquals(equals='nyte/prometheus-code-1.0'),
+                    ]
+                ),
+                name='TrustedRouter Prometheus Code',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('0.1055'), output_mtok=Decimal('0.3587')),
+            ),
+            ModelInfo(
+                id='trustedrouter/selector',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/selector'), ClauseEquals(equals='nyte/selector')]
+                ),
+                name='TrustedRouter Selector',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('0.1055'), output_mtok=Decimal('0.3587')),
+            ),
+            ModelInfo(
+                id='trustedrouter/socrates',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/socrates'),
+                        ClauseEquals(equals='nyte/socrates'),
+                        ClauseEquals(equals='trustedrouter/socrates-3.0'),
+                        ClauseEquals(equals='nyte/socrates-3.0'),
+                    ]
+                ),
+                name='TrustedRouter Socrates',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('0.01055'), output_mtok=Decimal('0.1266')),
+            ),
+            ModelInfo(
+                id='trustedrouter/socrates-1.0',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/socrates-1.0'), ClauseEquals(equals='nyte/socrates-1.0')]
+                ),
+                name='TrustedRouter Socrates 1.0',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('0.09495'), output_mtok=Decimal('0.1899')),
+            ),
+            ModelInfo(
+                id='trustedrouter/socrates-1.1',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/socrates-1.1'), ClauseEquals(equals='nyte/socrates-1.1')]
+                ),
+                name='TrustedRouter Socrates 1.1',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('0.09495'), output_mtok=Decimal('0.1899')),
+            ),
+            ModelInfo(
+                id='trustedrouter/socrates-2.0',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/socrates-2.0'), ClauseEquals(equals='nyte/socrates-2.0')]
+                ),
+                name='TrustedRouter Socrates 2.0',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.15825'), output_mtok=Decimal('0.633')),
+            ),
+            ModelInfo(
+                id='trustedrouter/socrates-pro',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/socrates-pro'),
+                        ClauseEquals(equals='nyte/socrates-pro'),
+                        ClauseEquals(equals='trustedrouter/socrates-pro-1.0'),
+                        ClauseEquals(equals='nyte/socrates-pro-1.0'),
+                    ]
+                ),
+                name='TrustedRouter Socrates Pro',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('5.275'), output_mtok=Decimal('26.375')),
+            ),
+            ModelInfo(
+                id='trustedrouter/socrates-pro-plus',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/socrates-pro-plus'),
+                        ClauseEquals(equals='nyte/socrates-pro-plus'),
+                        ClauseEquals(equals='trustedrouter/socrates-pro-plus-1.0'),
+                        ClauseEquals(equals='nyte/socrates-pro-plus-1.0'),
+                    ]
+                ),
+                name='TrustedRouter Socrates Pro Plus',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('0.09495'), output_mtok=Decimal('0.1899')),
+            ),
+            ModelInfo(
+                id='trustedrouter/subagent',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/subagent'), ClauseEquals(equals='nyte/subagent')]
+                ),
+                name='TrustedRouter Subagent',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('0.09495'), output_mtok=Decimal('0.1899')),
+            ),
+            ModelInfo(
+                id='trustedrouter/trusted',
+                match=ClauseOr(or_=[ClauseEquals(equals='trustedrouter/trusted'), ClauseEquals(equals='nyte/trusted')]),
+                name='TrustedRouter Trusted',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.15825'), output_mtok=Decimal('0.633')),
+            ),
+            ModelInfo(
+                id='trustedrouter/zdr',
+                match=ClauseOr(or_=[ClauseEquals(equals='trustedrouter/zdr'), ClauseEquals(equals='nyte/zdr')]),
+                name='TrustedRouter ZDR',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.03165'), output_mtok=Decimal('0.1266')),
+            ),
+            ModelInfo(
+                id='trustedrouter/zeus',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/zeus'),
+                        ClauseEquals(equals='nyte/zeus'),
+                        ClauseEquals(equals='trustedrouter/zeus-3.0'),
+                        ClauseEquals(equals='nyte/zeus-3.0'),
+                    ]
+                ),
+                name='TrustedRouter Zeus',
+                context_window=1000000,
+                prices=ModelPrice(input_mtok=Decimal('0.01055'), output_mtok=Decimal('0.1266')),
+            ),
+            ModelInfo(
+                id='trustedrouter/zeus-1.0',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/zeus-1.0'), ClauseEquals(equals='nyte/zeus-1.0')]
+                ),
+                name='TrustedRouter Zeus 1.0',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.24265'), output_mtok=Decimal('0.91785')),
+            ),
+            ModelInfo(
+                id='trustedrouter/zeus-1.0-mini',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/zeus-1.0-mini'), ClauseEquals(equals='nyte/zeus-1.0-mini')]
+                ),
+                name='TrustedRouter Zeus 1.0 Mini',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.24265'), output_mtok=Decimal('0.91785')),
+            ),
+            ModelInfo(
+                id='trustedrouter/zeus-2.0',
+                match=ClauseOr(
+                    or_=[ClauseEquals(equals='trustedrouter/zeus-2.0'), ClauseEquals(equals='nyte/zeus-2.0')]
+                ),
+                name='TrustedRouter Zeus 2.0',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.15825'), output_mtok=Decimal('0.633')),
+            ),
+            ModelInfo(
+                id='trustedrouter/zeus-code',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='trustedrouter/zeus-code'),
+                        ClauseEquals(equals='nyte/zeus-code'),
+                        ClauseEquals(equals='trustedrouter/zeus-code-1.0'),
+                        ClauseEquals(equals='nyte/zeus-code-1.0'),
+                    ]
+                ),
+                name='TrustedRouter Zeus Code',
+                context_window=200000,
+                prices=ModelPrice(input_mtok=Decimal('0.633'), output_mtok=Decimal('3.165')),
+            ),
+            ModelInfo(
+                id='typesafe-ai/jev',
+                match=ClauseEquals(equals='typesafe-ai/jev'),
+                name='TypeSafe AI Jev',
+                context_window=32000,
+                prices=ModelPrice(input_mtok=Decimal('0.04431')),
+            ),
+            ModelInfo(
+                id='undi95/remm-slerp-l2-13b',
+                match=ClauseEquals(equals='undi95/remm-slerp-l2-13b'),
+                name='ReMM-SLerp',
+                prices=ModelPrice(input_mtok=Decimal('0.505388'), output_mtok=Decimal('0.842312')),
+            ),
+            ModelInfo(
+                id='upstage/solar-pro4',
+                match=ClauseEquals(equals='upstage/solar-pro4'),
+                name='solar-pro4',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15825'), cache_read_mtok=Decimal('0.03165'), output_mtok=Decimal('0.633')
+                ),
+            ),
+            ModelInfo(
+                id='voyage/rerank-1',
+                match=ClauseEquals(equals='voyage/rerank-1'),
+                name='rerank-1',
+                context_window=8000,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='voyage/rerank-2',
+                match=ClauseEquals(equals='voyage/rerank-2'),
+                name='rerank-2',
+                context_window=16000,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='voyage/rerank-2-lite',
+                match=ClauseEquals(equals='voyage/rerank-2-lite'),
+                name='rerank-2-lite',
+                context_window=8000,
+                prices=ModelPrice(input_mtok=Decimal('0.0211')),
+            ),
+            ModelInfo(
+                id='voyage/rerank-2.5',
+                match=ClauseEquals(equals='voyage/rerank-2.5'),
+                name='rerank-2.5',
+                context_window=32000,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='voyage/rerank-2.5-lite',
+                match=ClauseEquals(equals='voyage/rerank-2.5-lite'),
+                name='rerank-2.5-lite',
+                context_window=32000,
+                prices=ModelPrice(input_mtok=Decimal('0.0211')),
+            ),
+            ModelInfo(
+                id='voyage/rerank-3',
+                match=ClauseEquals(equals='voyage/rerank-3'),
+                name='rerank-3',
+                context_window=32000,
+                prices=ModelPrice(input_mtok=Decimal('0.05275')),
+            ),
+            ModelInfo(
+                id='voyage/rerank-3-lite',
+                match=ClauseEquals(equals='voyage/rerank-3-lite'),
+                name='rerank-3-lite',
+                context_window=32000,
+                prices=ModelPrice(input_mtok=Decimal('0.0211')),
+            ),
+            ModelInfo(
+                id='voyage/rerank-lite-1',
+                match=ClauseEquals(equals='voyage/rerank-lite-1'),
+                name='rerank-lite-1',
+                context_window=4000,
+                prices=ModelPrice(input_mtok=Decimal('0.0211')),
+            ),
+            ModelInfo(
+                id='voyage/voyage-3-large',
+                match=ClauseEquals(equals='voyage/voyage-3-large'),
+                name='Voyage 3 Large',
+                context_window=32000,
+                prices=ModelPrice(input_mtok=Decimal('0.1899')),
+            ),
+            ModelInfo(
+                id='writer/palmyra-vision-7b',
+                match=ClauseEquals(equals='writer/palmyra-vision-7b'),
+                name='palmyra-vision-7b',
+                context_window=4000,
+                prices=ModelPrice(input_mtok=Decimal('0.15825'), output_mtok=Decimal('0.633')),
+            ),
+            ModelInfo(
+                id='x-ai/grok-4.1-fast-non-reasoning',
+                match=ClauseEquals(equals='x-ai/grok-4.1-fast-non-reasoning'),
+                name='grok-4-1-fast-non-reasoning',
+                prices=ModelPrice(input_mtok=Decimal('0.211'), output_mtok=Decimal('0.5275')),
+            ),
+            ModelInfo(
+                id='x-ai/grok-4.1-fast-reasoning',
+                match=ClauseEquals(equals='x-ai/grok-4.1-fast-reasoning'),
+                name='grok-4-1-fast-reasoning',
+                prices=ModelPrice(input_mtok=Decimal('0.211'), output_mtok=Decimal('0.5275')),
+            ),
+            ModelInfo(
+                id='x-ai/grok-4.20',
+                match=ClauseEquals(equals='x-ai/grok-4.20'),
+                name='Grok 4.20',
+                context_window=2000000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(
+                        base=Decimal('1.31875'), tiers=[Tier(start=199999, price=Decimal('2.6375'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.211'), tiers=[Tier(start=199999, price=Decimal('0.422'))]
+                    ),
+                    output_mtok=TieredPrices(
+                        base=Decimal('2.6375'), tiers=[Tier(start=199999, price=Decimal('5.275'))]
+                    ),
+                ),
+            ),
+            ModelInfo(
+                id='x-ai/grok-4.20-non-reasoning',
+                match=ClauseEquals(equals='x-ai/grok-4.20-non-reasoning'),
+                name='grok-4-20-non-reasoning',
+                prices=ModelPrice(input_mtok=Decimal('1.31875'), output_mtok=Decimal('2.6375')),
+            ),
+            ModelInfo(
+                id='x-ai/grok-4.20-reasoning',
+                match=ClauseEquals(equals='x-ai/grok-4.20-reasoning'),
+                name='grok-4.20-0309-reasoning',
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(
+                        base=Decimal('1.31875'), tiers=[Tier(start=199999, price=Decimal('2.6375'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.211'), tiers=[Tier(start=199999, price=Decimal('0.422'))]
+                    ),
+                    output_mtok=TieredPrices(
+                        base=Decimal('2.6375'), tiers=[Tier(start=199999, price=Decimal('5.275'))]
+                    ),
+                ),
+            ),
+            ModelInfo(
+                id='x-ai/grok-4.3',
+                match=ClauseEquals(equals='x-ai/grok-4.3'),
+                name='Grok 4.3',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(
+                        base=Decimal('1.31875'), tiers=[Tier(start=199999, price=Decimal('2.6375'))]
+                    ),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.211'), tiers=[Tier(start=199999, price=Decimal('0.422'))]
+                    ),
+                    output_mtok=TieredPrices(
+                        base=Decimal('2.6375'), tiers=[Tier(start=199999, price=Decimal('5.275'))]
+                    ),
+                ),
+            ),
+            ModelInfo(
+                id='x-ai/grok-4.5',
+                match=ClauseEquals(equals='x-ai/grok-4.5'),
+                name='Grok 4.5',
+                context_window=500000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2.11'), tiers=[Tier(start=199999, price=Decimal('4.22'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.3165'), tiers=[Tier(start=199999, price=Decimal('0.633'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('6.33'), tiers=[Tier(start=199999, price=Decimal('12.66'))]),
+                ),
+            ),
+            ModelInfo(
+                id='x-ai/grok-4.6',
+                match=ClauseEquals(equals='x-ai/grok-4.6'),
+                name='Grok 4.6',
+                context_window=500000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2.11'), tiers=[Tier(start=199999, price=Decimal('4.22'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.5275'), tiers=[Tier(start=199999, price=Decimal('1.055'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('6.33'), tiers=[Tier(start=199999, price=Decimal('12.66'))]),
+                ),
+            ),
+            ModelInfo(
+                id='x-ai/grok-4.7',
+                match=ClauseEquals(equals='x-ai/grok-4.7'),
+                name='Grok 4.7',
+                context_window=500000,
+                prices=ModelPrice(
+                    input_mtok=TieredPrices(base=Decimal('2.11'), tiers=[Tier(start=199999, price=Decimal('4.22'))]),
+                    cache_read_mtok=TieredPrices(
+                        base=Decimal('0.5275'), tiers=[Tier(start=199999, price=Decimal('1.055'))]
+                    ),
+                    output_mtok=TieredPrices(base=Decimal('6.33'), tiers=[Tier(start=199999, price=Decimal('12.66'))]),
+                ),
+            ),
+            ModelInfo(
+                id='x-ai/grok-voice-tts-1.0',
+                match=ClauseEquals(equals='x-ai/grok-voice-tts-1.0'),
+                name='Grok Voice TTS 1.0',
+                prices=ModelPrice(input_mchars=Decimal('15.825')),
+            ),
+            ModelInfo(
+                id='xiaomi/mimo-v2.5',
+                match=ClauseEquals(equals='xiaomi/mimo-v2.5'),
+                name='MiMo-V2.5',
+                context_window=1000000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1477'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.2954')
+                ),
+            ),
+            ModelInfo(
+                id='xiaomi/mimo-v2.5-pro',
+                match=ClauseEquals(equals='xiaomi/mimo-v2.5-pro'),
+                name='MiMo V2.5 Pro',
+                context_window=1024000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.458925'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.91785')
+                ),
+            ),
+            ModelInfo(
+                id='xiaomi/mimo-v2.6-distill-qwen-9b',
+                match=ClauseEquals(equals='xiaomi/mimo-v2.6-distill-qwen-9b'),
+                name='XiaomiMiMo/MiMo-V2.6-Distill-Qwen-9B',
+                context_window=32768,
+                prices=ModelPrice(input_mtok=Decimal('0.454916'), output_mtok=Decimal('1.1816')),
+            ),
+            ModelInfo(
+                id='xiaomi/mimo-v2.6-flash',
+                match=ClauseEquals(equals='xiaomi/mimo-v2.6-flash'),
+                name='MiMo-V2.6-Flash',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1477'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.2954')
+                ),
+            ),
+            ModelInfo(
+                id='xiaomi/mimo-v2.6-flash-mopd',
+                match=ClauseEquals(equals='xiaomi/mimo-v2.6-flash-mopd'),
+                name='XiaomiMiMo/MiMo-V2.6-Flash-MOPD',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.15825'), output_mtok=Decimal('0.4431')),
+            ),
+            ModelInfo(
+                id='xiaomi/mimo-v2.6-flash-rl',
+                match=ClauseEquals(equals='xiaomi/mimo-v2.6-flash-rl'),
+                name='XiaomiMiMo/MiMo-V2.6-Flash-RL',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.113729'), output_mtok=Decimal('0.2954')),
+            ),
+            ModelInfo(
+                id='xiaomi/mimo-v2.6-pro',
+                match=ClauseEquals(equals='xiaomi/mimo-v2.6-pro'),
+                name='MiMo-V2.6-Pro',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.45365'), cache_read_mtok=Decimal('0.01'), output_mtok=Decimal('0.91785')
+                ),
+            ),
+            ModelInfo(
+                id='xiaomi/mimo-v2.6-pro-ultraspeed',
+                match=ClauseEquals(equals='xiaomi/mimo-v2.6-pro-ultraspeed'),
+                name='Xiaomi MiMo V2.6 Pro UltraSpeed',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('4.58925'), cache_read_mtok=Decimal('0.03798'), output_mtok=Decimal('9.1785')
+                ),
+            ),
+            ModelInfo(
+                id='z-ai/glm-4.5-air',
+                match=ClauseEquals(equals='z-ai/glm-4.5-air'),
+                name='GLM 4.5 Air',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.1477'), output_mtok=Decimal('0.9073')),
+            ),
+            ModelInfo(
+                id='z-ai/glm-4.6',
+                match=ClauseEquals(equals='z-ai/glm-4.6'),
+                name='GLM 4.6',
+                context_window=202752,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.45365'), cache_read_mtok=Decimal('0.0844'), output_mtok=Decimal('1.84625')
+                ),
+            ),
+            ModelInfo(
+                id='z-ai/glm-4.7',
+                match=ClauseEquals(equals='z-ai/glm-4.7'),
+                name='GLM 4.7',
+                context_window=202752,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.422'), cache_read_mtok=Decimal('0.0844'), output_mtok=Decimal('1.84625')
+                ),
+            ),
+            ModelInfo(
+                id='z-ai/glm-4.7-flash',
+                match=ClauseEquals(equals='z-ai/glm-4.7-flash'),
+                name='GLM 4.7 Flash',
+                context_window=131072,
+                prices=ModelPrice(input_mtok=Decimal('0.063828'), output_mtok=Decimal('0.422')),
+            ),
+            ModelInfo(
+                id='z-ai/glm-4.7-fp8',
+                match=ClauseEquals(equals='z-ai/glm-4.7-fp8'),
+                name='zai-org/GLM-4.7',
+                context_window=202752,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.633'), cache_read_mtok=Decimal('0.11605'), output_mtok=Decimal('2.321')
+                ),
+            ),
+            ModelInfo(
+                id='z-ai/glm-5',
+                match=ClauseEquals(equals='z-ai/glm-5'),
+                name='GLM 5',
+                context_window=202752,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.9917'), cache_read_mtok=Decimal('0.49585'), output_mtok=Decimal('2.69025')
+                ),
+            ),
+            ModelInfo(
+                id='z-ai/glm-5-3-flash-uncensored',
+                match=ClauseOr(
+                    or_=[
+                        ClauseEquals(equals='z-ai/glm-5-3-flash-uncensored'),
+                        ClauseEquals(equals='z-ai/glm-5.3-flash-uncensored'),
+                    ]
+                ),
+                name='GLM 5.3 Flash Uncensored',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.174075'), cache_read_mtok=Decimal('0.034815'), output_mtok=Decimal('0.58025')
+                ),
+            ),
+            ModelInfo(
+                id='z-ai/glm-5-turbo',
+                match=ClauseEquals(equals='z-ai/glm-5-turbo'),
+                name='GLM 5 Turbo',
+                context_window=202752,
+                prices=ModelPrice(input_mtok=Decimal('1.266'), output_mtok=Decimal('4.22')),
+            ),
+            ModelInfo(
+                id='z-ai/glm-5.1',
+                match=ClauseEquals(equals='z-ai/glm-5.1'),
+                name='GLM 5.1',
+                context_window=202752,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.9495'), cache_read_mtok=Decimal('0.09495'), output_mtok=Decimal('3.0595')
+                ),
+            ),
+            ModelInfo(
+                id='z-ai/glm-5.2',
+                match=ClauseEquals(equals='z-ai/glm-5.2'),
+                name='GLM 5.2',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3587'), cache_read_mtok=Decimal('0.17935'), output_mtok=Decimal('1.5825')
+                ),
+            ),
+            ModelInfo(
+                id='z-ai/glm-5.2-fast',
+                match=ClauseEquals(equals='z-ai/glm-5.2-fast'),
+                name='GLM 5.2 Fast',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.2155'), cache_read_mtok=Decimal('0.22155'), output_mtok=Decimal('6.963')
+                ),
+            ),
+            ModelInfo(
+                id='z-ai/glm-5.3',
+                match=ClauseEquals(equals='z-ai/glm-5.3'),
+                name='GLM 5.3',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.1899'), cache_read_mtok=Decimal('0.131875'), output_mtok=Decimal('1.5825')
+                ),
+            ),
+            ModelInfo(
+                id='z-ai/glm-5.3-fast',
+                match=ClauseEquals(equals='z-ai/glm-5.3-fast'),
+                name='GLM 5.3 Fast on Fireworks',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('2.2155'), cache_read_mtok=Decimal('0.41145'), output_mtok=Decimal('6.963')
+                ),
+            ),
+            ModelInfo(
+                id='z-ai/glm-5.3-flash',
+                match=ClauseEquals(equals='z-ai/glm-5.3-flash'),
+                name='GLM 5.3 Flash',
+                context_window=1048576,
+                prices=ModelPrice(input_mtok=Decimal('0.026375'), output_mtok=Decimal('0.07385')),
+            ),
+            ModelInfo(
+                id='z-ai/glm-5.3-flashx',
+                match=ClauseEquals(equals='z-ai/glm-5.3-flashx'),
+                name='GLM 5.3 FlashX',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.39035'), cache_read_mtok=Decimal('0.079125'), output_mtok=Decimal('1.31875')
+                ),
+            ),
+            ModelInfo(
+                id='z-ai/glm-5.3-flashx-legal',
+                match=ClauseEquals(equals='z-ai/glm-5.3-flashx-legal'),
+                name='GLM 5.3 FlashX Legal',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.39035'), cache_read_mtok=Decimal('0.079125'), output_mtok=Decimal('1.31875')
+                ),
+            ),
+            ModelInfo(
+                id='z-ai/glm-5.3-p',
+                match=ClauseEquals(equals='z-ai/glm-5.3-p'),
+                name='zai-org/glm-5.3-p',
+                context_window=1048576,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.477'), cache_read_mtok=Decimal('0.2743'), output_mtok=Decimal('4.642')
+                ),
+            ),
+            ModelInfo(
+                id='z-ai/glm-5v-turbo',
+                match=ClauseEquals(equals='z-ai/glm-5v-turbo'),
+                name='GLM 5V Turbo',
+                context_window=202752,
+                prices=ModelPrice(input_mtok=Decimal('1.266'), output_mtok=Decimal('4.22')),
+            ),
+            ModelInfo(
+                id='zai-org/autoglm-phone-9b-multilingual',
+                match=ClauseEquals(equals='zai-org/autoglm-phone-9b-multilingual'),
+                name='AutoGLM Phone 9B Multilingual',
+                context_window=65536,
+                prices=ModelPrice(input_mtok=Decimal('0.036925'), output_mtok=Decimal('0.14559')),
+            ),
+            ModelInfo(
+                id='zai-org/glm-4.5-air',
+                match=ClauseEquals(equals='zai-org/glm-4.5-air'),
+                name='GLM 4.5 Air',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.13715'), cache_read_mtok=Decimal('0.026375'), output_mtok=Decimal('0.89675')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/glm-4.5v',
+                match=ClauseEquals(equals='zai-org/glm-4.5v'),
+                name='GLM 4.5V',
+                context_window=65536,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.633'), cache_read_mtok=Decimal('0.11605'), output_mtok=Decimal('1.899')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/glm-4.6',
+                match=ClauseEquals(equals='zai-org/glm-4.6'),
+                name='GLM 4.6',
+                context_window=204800,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.58025'), cache_read_mtok=Decimal('0.11605'), output_mtok=Decimal('2.321')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/glm-4.6v',
+                match=ClauseEquals(equals='zai-org/glm-4.6v'),
+                name='GLM 4.6V',
+                context_window=131072,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3165'), cache_read_mtok=Decimal('0.058025'), output_mtok=Decimal('0.9495')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/glm-4.7',
+                match=ClauseEquals(equals='zai-org/glm-4.7'),
+                name='GLM 4.7',
+                context_window=204800,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.633'), cache_read_mtok=Decimal('0.11605'), output_mtok=Decimal('2.321')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/glm-4.7-flash',
+                match=ClauseEquals(equals='zai-org/glm-4.7-flash'),
+                name='GLM 4.7 Flash',
+                context_window=200000,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.07385'), cache_read_mtok=Decimal('0.01055'), output_mtok=Decimal('0.422')
+                ),
+            ),
+            ModelInfo(
+                id='zai-org/glm-5',
+                match=ClauseEquals(equals='zai-org/glm-5'),
+                name='GLM 5',
+                context_window=202800,
+                prices=ModelPrice(
+                    input_mtok=Decimal('1.055'), cache_read_mtok=Decimal('0.211'), output_mtok=Decimal('3.376')
+                ),
+            ),
+            ModelInfo(
+                id='zero-g/0gm-1.0-35b-a3b',
+                match=ClauseEquals(equals='zero-g/0gm-1.0-35b-a3b'),
+                name='0GM-1.0-35B-A3B',
+                context_window=262144,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.0844'), cache_read_mtok=Decimal('0.028134'), output_mtok=Decimal('0.5064')
+                ),
+            ),
+            ModelInfo(
+                id='zero-g/0gm-1.0-35b-a3b-sia',
+                match=ClauseEquals(equals='zero-g/0gm-1.0-35b-a3b-sia'),
+                name='0GM-1.0-35B-A3B-SIA',
+                context_window=32768,
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.56548'), cache_read_mtok=Decimal('0.188494'), output_mtok=Decimal('3.39288')
+                ),
+            ),
+        ],
+    ),
+    Provider(
         id='typesafe',
         name='TypeSafe',
         api_pattern='https://api\\.typesafe\\.ai',
