@@ -4740,6 +4740,13 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='databricks-deepseek-v4-1-flash-1017',
+                match=ClauseEquals(equals='databricks-deepseek-v4-1-flash-1017'),
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.3'), cache_read_mtok=Decimal('0.007'), output_mtok=Decimal('1.2')
+                ),
+            ),
+            ModelInfo(
                 id='databricks-deepseek-v4-flash-0731',
                 match=ClauseOr(
                     or_=[
@@ -4886,6 +4893,11 @@ providers: list[Provider] = [
                 prices=ModelPrice(input_mtok=Decimal('3'), cache_read_mtok=Decimal('0.3'), output_mtok=Decimal('15')),
             ),
             ModelInfo(
+                id='databricks-kimi-k3-1-pro',
+                match=ClauseEquals(equals='databricks-kimi-k3-1-pro'),
+                prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
                 id='databricks-llama-4-maverick',
                 match=ClauseOr(
                     or_=[
@@ -4922,6 +4934,11 @@ providers: list[Provider] = [
                 context_window=128000,
                 price_comments='7.143 input and 21.429 output DBU per 1M tokens.',
                 prices=ModelPrice(input_mtok=Decimal('0.5'), output_mtok=Decimal('1.5')),
+            ),
+            ModelInfo(
+                id='databricks-openjev-qwen35-4b',
+                match=ClauseEquals(equals='databricks-openjev-qwen35-4b'),
+                prices=ModelPrice(input_mtok=Decimal('0.042')),
             ),
             ModelInfo(
                 id='databricks-qwen3-embedding-0-6b',
@@ -5736,11 +5753,35 @@ providers: list[Provider] = [
                 ),
             ),
             ModelInfo(
+                id='glm-5p3-flash-flex',
+                match=ClauseEquals(equals='accounts/fireworks/routers/glm-5p3-flash-flex'),
+                name='GLM 5.3 Flash Flex',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.075'), cache_read_mtok=Decimal('0.015'), output_mtok=Decimal('0.25')
+                ),
+            ),
+            ModelInfo(
                 id='glm-5p3-flash-us',
                 match=ClauseEquals(equals='accounts/fireworks/routers/glm-5p3-flash-us'),
                 name='GLM 5.3 Flash US',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.225'), cache_read_mtok=Decimal('0.045'), output_mtok=Decimal('0.75')
+                ),
+            ),
+            ModelInfo(
+                id='glm-5p3-flex',
+                match=ClauseEquals(equals='accounts/fireworks/routers/glm-5p3-flex'),
+                name='GLM 5.3 Flex',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.7'), cache_read_mtok=Decimal('0.13'), output_mtok=Decimal('2.2')
+                ),
+            ),
+            ModelInfo(
+                id='glm-5p3-spot',
+                match=ClauseEquals(equals='accounts/fireworks/models/glm-5p3-spot'),
+                name='GLM 5.3 Spot',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.7'), cache_read_mtok=Decimal('0.13'), output_mtok=Decimal('2.2')
                 ),
             ),
             ModelInfo(
@@ -5800,6 +5841,14 @@ providers: list[Provider] = [
                 price_comments='Standard serverless pricing. See https://fireworks.ai/models/fireworks/inkling.',
                 prices=ModelPrice(
                     input_mtok=Decimal('1'), cache_read_mtok=Decimal('0.17'), output_mtok=Decimal('4.05')
+                ),
+            ),
+            ModelInfo(
+                id='inkling-2-mini',
+                match=ClauseEquals(equals='accounts/fireworks/models/inkling-2-mini'),
+                name='Inkling 2 Mini',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.15'), cache_read_mtok=Decimal('0.015'), output_mtok=Decimal('0.5')
                 ),
             ),
             ModelInfo(
@@ -5894,6 +5943,12 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='accounts/fireworks/models/kimi-k3p1-pro'),
                 name='Kimi K3.1 Pro',
                 prices=ModelPrice(input_mtok=Decimal('2'), cache_read_mtok=Decimal('0.2'), output_mtok=Decimal('10')),
+            ),
+            ModelInfo(
+                id='kimi-k3p1-pro-ultrafast',
+                match=ClauseEquals(equals='accounts/fireworks/routers/kimi-k3p1-pro-ultrafast'),
+                name='Kimi K3.1 Pro Ultra-fast (Preview)',
+                prices=ModelPrice(input_mtok=Decimal('5'), cache_read_mtok=Decimal('0.5'), output_mtok=Decimal('25')),
             ),
             ModelInfo(
                 id='kimi-k3p1-pro-us',
@@ -13384,15 +13439,32 @@ providers: list[Provider] = [
                             input_audio_hours=Decimal('0.24'),
                         ),
                     ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 27)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.1'),
+                            cache_read_mtok=Decimal('0.01'),
+                            output_mtok=Decimal('0.3'),
+                            audio_hours=Decimal('0.24'),
+                            input_audio_hours=Decimal('0.24'),
+                        ),
+                    ),
                 ],
                 price_variants=[
+                    PriceVariant(
+                        when={'processing': 'batch'},
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.05'), cache_read_mtok=Decimal('0.005'), output_mtok=Decimal('0.15')
+                        ),
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 27)),
+                    ),
                     PriceVariant(
                         when={'processing': 'batch'},
                         prices=ModelPrice(
                             input_mtok=Decimal('0.05'), cache_read_mtok=Decimal('0.005'), output_mtok=Decimal('0.2')
                         ),
                         constraint=StartDateConstraint(start_date=datetime.date(2026, 10, 14)),
-                    )
+                    ),
                 ],
             ),
             ModelInfo(
@@ -13490,6 +13562,14 @@ providers: list[Provider] = [
                 name='DeepSeek V4.1 Flash 1017',
                 prices=ModelPrice(
                     input_mtok=Decimal('0.25'), cache_read_mtok=Decimal('0.005'), output_mtok=Decimal('1')
+                ),
+            ),
+            ModelInfo(
+                id='deepseek-ai/DeepSeek-V4.1-Flash-1017-EU',
+                match=ClauseEquals(equals='deepseek-ai/DeepSeek-V4.1-Flash-1017-EU'),
+                name='DeepSeek V4.1 Flash 1017 EU',
+                prices=ModelPrice(
+                    input_mtok=Decimal('0.375'), cache_read_mtok=Decimal('0.0075'), output_mtok=Decimal('1.5')
                 ),
             ),
             ModelInfo(
@@ -14356,7 +14436,15 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='qwen/qwen-mt-plus'),
                 name='Qwen MT Plus',
                 context_window=16384,
-                prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('0.75')),
+                prices=[
+                    ConditionalPrice(
+                        constraint=None, prices=ModelPrice(input_mtok=Decimal('0.25'), output_mtok=Decimal('0.75'))
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 26)),
+                        prices=ModelPrice(input_mtok=Decimal('0.259'), output_mtok=Decimal('0.775')),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='qwen/qwen3-omni-30b-a3b-thinking',
@@ -29660,9 +29748,23 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='hy4-flash'),
                 name='Hy4 Flash',
                 context_window=1048576,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.0385'), cache_read_mtok=Decimal('0.00165'), output_mtok=Decimal('0.1546')
-                ),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.0385'),
+                            cache_read_mtok=Decimal('0.00165'),
+                            output_mtok=Decimal('0.1546'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 28)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.077'),
+                            cache_read_mtok=Decimal('0.0033'),
+                            output_mtok=Decimal('0.3091'),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='hy4-preview',
@@ -30231,9 +30333,21 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='Qwen/Qwen4-Max'),
                 name='Qwen4 Max',
                 context_window=1000000,
-                prices=ModelPrice(
-                    input_mtok=Decimal('1.425'), cache_read_mtok=Decimal('0.07125'), output_mtok=Decimal('4.275')
-                ),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.425'),
+                            cache_read_mtok=Decimal('0.07125'),
+                            output_mtok=Decimal('4.275'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 26)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('1.5'), cache_read_mtok=Decimal('0.075'), output_mtok=Decimal('4.5')
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='Undi95/ReMM-SLERP-L2-13B',
