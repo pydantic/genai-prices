@@ -9,7 +9,7 @@ pricing_urls:
   # Gemini 2.x bills each grounded prompt at $35/1k however many queries it ran, and only when it returned a web source.
   # Callers report the billed count as `web_searches`. Free monthly/daily allowances are account-wide and not modelled.
   # https://ai.google.dev/gemini-api/docs/google-search#pricing
-api_pattern: 'https://((.*\.)?googleapis\.com|gateway-[a-z]+\.pydantic\.dev/proxy/google-vertex(/|$))'
+api_pattern: 'https://((.*\.)?googleapis\.com|(gateway-[a-z]+\.pydantic\.dev|gateway\.pydantic\.info)/proxy/google-vertex(/|$))'
 model_match:
   or:
     - contains: gemini

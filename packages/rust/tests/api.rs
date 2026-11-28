@@ -82,19 +82,15 @@ fn context_window_must_be_a_non_negative_integer() {
 #[test]
 fn pydantic_gateway_provider_url() {
     let usage = usage([(UsageKey::INPUT_TOKENS, 1_000.0)]);
-    let price = |url| {
+    let price = |url: &str| {
         genai_prices::calculate(
             &PriceRequest::new("deepseek-ai/DeepSeek-V4.1-Flash", &usage).with_provider_api_url(url),
         )
     };
-    assert_eq!(
-        price("https://gateway-us.pydantic.dev/proxy/doubleword/v1/chat/completions").unwrap().provider_id,
-        "doubleword"
-    );
-    assert_eq!(
-        error_kind(&price("https://gateway-us.pydantic.dev/proxy/doubleword-custom")),
-        Some(ErrorKind::ProviderNotFound)
-    );
+    for gateway in ["https://gateway-us.pydantic.dev/proxy", "https://gateway.pydantic.info/proxy"] {
+        assert_eq!(price(&format!("{gateway}/doubleword/v1/chat/completions")).unwrap().provider_id, "doubleword");
+        assert_eq!(error_kind(&price(&format!("{gateway}/doubleword-custom"))), Some(ErrorKind::ProviderNotFound));
+    }
 }
 
 #[test]

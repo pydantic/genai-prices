@@ -3,7 +3,7 @@ name: Doubleword
 id: doubleword
 pricing_urls:
   - https://docs.doubleword.ai/inference-api/models
-api_pattern: 'https://(api\.doubleword\.ai|gateway-[a-z]+\.pydantic\.dev/proxy/doubleword(/|$))'
+api_pattern: 'https://(api\.doubleword\.ai|(gateway-[a-z]+\.pydantic\.dev|gateway\.pydantic\.info)/proxy/doubleword(/|$))'
 price_comments: >-
   Doubleword publishes Realtime, Async, and Batch prices. This provider currently
   encodes only Realtime pricing.

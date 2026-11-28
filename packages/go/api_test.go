@@ -32,22 +32,23 @@ func TestCalculate(t *testing.T) {
 }
 
 func TestPydanticGatewayProviderURL(t *testing.T) {
-	const gateway = "https://gateway-us.pydantic.dev/proxy/"
 	request := genai_prices.PriceRequest{
-		Model:          "deepseek-ai/DeepSeek-V4.1-Flash",
-		Usage:          genai_prices.Usage{genai_prices.UsageInputTokens: 1_000},
-		ProviderAPIURL: gateway + "doubleword/v1/chat/completions",
+		Model: "deepseek-ai/DeepSeek-V4.1-Flash",
+		Usage: genai_prices.Usage{genai_prices.UsageInputTokens: 1_000},
 	}
-	price, err := genai_prices.Calculate(request)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if price.ProviderID != "doubleword" {
-		t.Fatalf("got provider %q, want doubleword", price.ProviderID)
-	}
-	request.ProviderAPIURL = gateway + "doubleword-custom"
-	if _, err := genai_prices.Calculate(request); !errors.Is(err, genai_prices.ErrProviderNotFound) {
-		t.Fatalf("custom route returned %v, want ErrProviderNotFound", err)
+	for _, gateway := range []string{"https://gateway-us.pydantic.dev/proxy/", "https://gateway.pydantic.info/proxy/"} {
+		request.ProviderAPIURL = gateway + "doubleword/v1/chat/completions"
+		price, err := genai_prices.Calculate(request)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if price.ProviderID != "doubleword" {
+			t.Fatalf("%s: got provider %q, want doubleword", gateway, price.ProviderID)
+		}
+		request.ProviderAPIURL = gateway + "doubleword-custom"
+		if _, err := genai_prices.Calculate(request); !errors.Is(err, genai_prices.ErrProviderNotFound) {
+			t.Fatalf("%s: custom route returned %v, want ErrProviderNotFound", gateway, err)
+		}
 	}
 }
 

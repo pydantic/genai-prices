@@ -2873,10 +2873,11 @@ def test_provider_api_url_matches_at_the_start_of_the_url():
         ('google-vertex/', 'google', 'gemini-2.5-flash'),
     ],
 )
-def test_pydantic_gateway_uses_upstream_prices(route: str, provider_id: str, model: str):
+@pytest.mark.parametrize('host', ['gateway-eu.pydantic.dev', 'gateway.pydantic.info'])
+def test_pydantic_gateway_uses_upstream_prices(host: str, route: str, provider_id: str, model: str):
     usage = Usage(input_tokens=1_000, output_tokens=100)
     expected = calc_price(usage, model, provider_id=provider_id)
-    price = calc_price(usage, model, provider_api_url=f'https://gateway-eu.pydantic.dev/proxy/{route}')
+    price = calc_price(usage, model, provider_api_url=f'https://{host}/proxy/{route}')
     assert price.provider.id == provider_id
     assert price.total_price == expected.total_price
 
@@ -2887,6 +2888,8 @@ def test_pydantic_gateway_uses_upstream_prices(route: str, provider_id: str, mod
         'https://gateway-us.pydantic.dev/proxy/openai-custom',
         'https://gateway-us.pydantic.dev/proxy/my-endpoint/openai',
         'https://gateway.example.com/proxy/openai',
+        'https://gateway.pydantic.info/proxy/openai-custom',
+        'https://gateway.pydantic.info.example.com/proxy/openai',
     ],
 )
 def test_pydantic_gateway_does_not_guess_custom_routes(url: str):
