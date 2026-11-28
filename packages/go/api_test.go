@@ -31,6 +31,26 @@ func TestCalculate(t *testing.T) {
 	}
 }
 
+func TestPydanticGatewayProviderURL(t *testing.T) {
+	const gateway = "https://gateway-us.pydantic.dev/proxy/"
+	request := genai_prices.PriceRequest{
+		Model:          "deepseek-ai/DeepSeek-V4.1-Flash",
+		Usage:          genai_prices.Usage{genai_prices.UsageInputTokens: 1_000},
+		ProviderAPIURL: gateway + "doubleword/v1/chat/completions",
+	}
+	price, err := genai_prices.Calculate(request)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if price.ProviderID != "doubleword" {
+		t.Fatalf("got provider %q, want doubleword", price.ProviderID)
+	}
+	request.ProviderAPIURL = gateway + "doubleword-custom"
+	if _, err := genai_prices.Calculate(request); !errors.Is(err, genai_prices.ErrProviderNotFound) {
+		t.Fatalf("custom route returned %v, want ErrProviderNotFound", err)
+	}
+}
+
 func TestQuickSilverLongContextCatalogTiers(t *testing.T) {
 	for _, test := range []struct {
 		model                                                   string

@@ -5,7 +5,7 @@ export const data: Provider[] = [
     id: 'anthropic',
     name: 'Anthropic',
     pricing_urls: ['https://www.anthropic.com/pricing#api'],
-    api_pattern: 'https://api\\.anthropic\\.com',
+    api_pattern: 'https://(api\\.anthropic\\.com|gateway-[a-z]+\\.pydantic\\.dev/proxy/anthropic(/|$))',
     price_comments:
       "Message Batches API usage is charged at 50% of the standard rates. Prompt caching multipliers stack with the batch discount, so batch cache writes and cache reads are also 50% of standard; on Claude Haiku 5.5 the over-100k-token prompt tier is halved too. Web search ($10 per 1,000 searches) has no published batch rate, so it stays at the standard price. Batch variants cover the active models listed in Anthropic's batch price table as of 2026-10-14; earlier batch history is not modelled. Retired models are skipped. Refs: https://platform.claude.com/docs/en/build-with-claude/batch-processing#pricing, https://platform.claude.com/docs/en/about-claude/pricing#batch-processing",
     model_match: {
@@ -2146,7 +2146,7 @@ export const data: Provider[] = [
     id: 'aws',
     name: 'AWS Bedrock',
     pricing_urls: ['https://aws.amazon.com/bedrock/pricing/'],
-    api_pattern: 'https://bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com(/|$)',
+    api_pattern: 'https://(bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com(/|$)|gateway-[a-z]+\\.pydantic\\.dev/proxy/bedrock(/|$))',
     provider_match: {
       or: [
         {
@@ -8876,7 +8876,7 @@ export const data: Provider[] = [
     id: 'doubleword',
     name: 'Doubleword',
     pricing_urls: ['https://docs.doubleword.ai/inference-api/models'],
-    api_pattern: 'https://api\\.doubleword\\.ai',
+    api_pattern: 'https://(api\\.doubleword\\.ai|gateway-[a-z]+\\.pydantic\\.dev/proxy/doubleword(/|$))',
     price_comments: 'Doubleword publishes Realtime, Async, and Batch prices. This provider currently encodes only Realtime pricing.',
     extractors: [
       {
@@ -11610,7 +11610,7 @@ export const data: Provider[] = [
     id: 'google',
     name: 'Google',
     pricing_urls: ['https://ai.google.dev/gemini-api/docs/pricing', 'https://cloud.google.com/vertex-ai/generative-ai/pricing'],
-    api_pattern: 'https://(.*\\.)?googleapis\\.com',
+    api_pattern: 'https://((.*\\.)?googleapis\\.com|gateway-[a-z]+\\.pydantic\\.dev/proxy/google-vertex(/|$))',
     model_match: {
       or: [
         {
@@ -15075,7 +15075,7 @@ export const data: Provider[] = [
     id: 'groq',
     name: 'Groq',
     pricing_urls: ['https://console.groq.com/docs/models'],
-    api_pattern: 'https://api\\.groq\\.com',
+    api_pattern: 'https://(api\\.groq\\.com|gateway-[a-z]+\\.pydantic\\.dev/proxy/groq(/|$))',
     extractors: [
       {
         api_flavor: 'default',
@@ -25338,7 +25338,7 @@ export const data: Provider[] = [
       'https://platform.openai.com/docs/models',
       'https://help.openai.com/en/articles/7127956-how-much-does-gpt-4-cost',
     ],
-    api_pattern: 'https://api\\.openai\\.com',
+    api_pattern: 'https://(api\\.openai\\.com|gateway-[a-z]+\\.pydantic\\.dev/proxy/openai(/|$))',
     model_match: {
       or: [
         {
