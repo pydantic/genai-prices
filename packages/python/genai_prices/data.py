@@ -11,7 +11,7 @@ providers: list[Provider] = [
     Provider(
         id='anthropic',
         name='Anthropic',
-        api_pattern='https://api\\.anthropic\\.com',
+        api_pattern='https://(api\\.anthropic\\.com|(gateway-[a-z]+\\.pydantic\\.dev|gateway\\.pydantic\\.info)/proxy/anthropic(/|$))',
         pricing_urls=['https://www.anthropic.com/pricing#api'],
         price_comments="Message Batches API usage is charged at 50% of the standard rates. Prompt caching multipliers stack with the batch discount, so batch cache writes and cache reads are also 50% of standard; on Claude Haiku 5.5 the over-100k-token prompt tier is halved too. Web search ($10 per 1,000 searches) has no published batch rate, so it stays at the standard price. Batch variants cover the active models listed in Anthropic's batch price table as of 2026-10-14; earlier batch history is not modelled. Retired models are skipped. Refs: https://platform.claude.com/docs/en/build-with-claude/batch-processing#pricing, https://platform.claude.com/docs/en/about-claude/pricing#batch-processing",
         model_match=ClauseContains(contains='claude'),
@@ -1399,7 +1399,7 @@ providers: list[Provider] = [
     Provider(
         id='aws',
         name='AWS Bedrock',
-        api_pattern='https://bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com(/|$)',
+        api_pattern='https://(bedrock-runtime\\.[a-z0-9-]+\\.amazonaws\\.com(/|$)|(gateway-[a-z]+\\.pydantic\\.dev|gateway\\.pydantic\\.info)/proxy/bedrock(/|$))',
         pricing_urls=['https://aws.amazon.com/bedrock/pricing/'],
         provider_match=ClauseOr(or_=[ClauseContains(contains='bedrock'), ClauseContains(contains='amazon')]),
         extractors=[
@@ -5196,7 +5196,7 @@ providers: list[Provider] = [
     Provider(
         id='doubleword',
         name='Doubleword',
-        api_pattern='https://api\\.doubleword\\.ai',
+        api_pattern='https://(api\\.doubleword\\.ai|(gateway-[a-z]+\\.pydantic\\.dev|gateway\\.pydantic\\.info)/proxy/doubleword(/|$))',
         pricing_urls=['https://docs.doubleword.ai/inference-api/models'],
         price_comments='Doubleword publishes Realtime, Async, and Batch prices. This provider currently encodes only Realtime pricing.',
         extractors=[
@@ -6712,7 +6712,7 @@ providers: list[Provider] = [
     Provider(
         id='google',
         name='Google',
-        api_pattern='https://(.*\\.)?googleapis\\.com',
+        api_pattern='https://((.*\\.)?googleapis\\.com|(gateway-[a-z]+\\.pydantic\\.dev|gateway\\.pydantic\\.info)/proxy/google-vertex(/|$))',
         pricing_urls=[
             'https://ai.google.dev/gemini-api/docs/pricing',
             'https://cloud.google.com/vertex-ai/generative-ai/pricing',
@@ -8728,7 +8728,7 @@ providers: list[Provider] = [
     Provider(
         id='groq',
         name='Groq',
-        api_pattern='https://api\\.groq\\.com',
+        api_pattern='https://(api\\.groq\\.com|(gateway-[a-z]+\\.pydantic\\.dev|gateway\\.pydantic\\.info)/proxy/groq(/|$))',
         pricing_urls=['https://console.groq.com/docs/models'],
         extractors=[
             UsageExtractor(
@@ -14720,7 +14720,7 @@ providers: list[Provider] = [
     Provider(
         id='openai',
         name='OpenAI',
-        api_pattern='https://api\\.openai\\.com',
+        api_pattern='https://(api\\.openai\\.com|(gateway-[a-z]+\\.pydantic\\.dev|gateway\\.pydantic\\.info)/proxy/openai(/|$))',
         pricing_urls=[
             'https://developers.openai.com/api/docs/pricing',
             'https://developers.openai.com/api/docs/guides/prompt-caching',

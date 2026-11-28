@@ -234,6 +234,13 @@ describe('Provider Matching', () => {
       )
     })
 
+    it('recognizes the default Doubleword Gateway route but leaves custom endpoints unmatched', () => {
+      for (const base of ['https://gateway-us.pydantic.dev/proxy', 'https://gateway.pydantic.info/proxy']) {
+        expect(matchProvider(actualProviders, { providerApiUrl: `${base}/doubleword/v1/chat/completions` })?.id).toBe('doubleword')
+        expect(matchProvider(actualProviders, { providerApiUrl: `${base}/doubleword-custom` })).toBeUndefined()
+      }
+    })
+
     it('keeps shared OpenAI URLs on OpenAI and selects Decisions by normalized provider ID', () => {
       for (const providerApiUrl of [
         'https://api.openai.com/v1/',
