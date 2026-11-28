@@ -52770,11 +52770,26 @@ export const data: Provider[] = [
           equals: 'hy4-flash',
         },
         context_window: 1048576,
-        prices: {
-          input_mtok: 0.0385,
-          cache_read_mtok: 0.00165,
-          output_mtok: 0.1546,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.0385,
+              cache_read_mtok: 0.00165,
+              output_mtok: 0.1546,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-28',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.077,
+              cache_read_mtok: 0.0033,
+              output_mtok: 0.3091,
+            },
+          },
+        ],
       },
       {
         id: 'hy4-preview',

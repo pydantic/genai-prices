@@ -29748,9 +29748,23 @@ providers: list[Provider] = [
                 match=ClauseEquals(equals='hy4-flash'),
                 name='Hy4 Flash',
                 context_window=1048576,
-                prices=ModelPrice(
-                    input_mtok=Decimal('0.0385'), cache_read_mtok=Decimal('0.00165'), output_mtok=Decimal('0.1546')
-                ),
+                prices=[
+                    ConditionalPrice(
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.0385'),
+                            cache_read_mtok=Decimal('0.00165'),
+                            output_mtok=Decimal('0.1546'),
+                        )
+                    ),
+                    ConditionalPrice(
+                        constraint=StartDateConstraint(start_date=datetime.date(2026, 11, 28)),
+                        prices=ModelPrice(
+                            input_mtok=Decimal('0.077'),
+                            cache_read_mtok=Decimal('0.0033'),
+                            output_mtok=Decimal('0.3091'),
+                        ),
+                    ),
+                ],
             ),
             ModelInfo(
                 id='hy4-preview',
