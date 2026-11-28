@@ -8163,6 +8163,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'databricks-deepseek-v4-1-flash-1017',
+        match: {
+          equals: 'databricks-deepseek-v4-1-flash-1017',
+        },
+        prices: {
+          input_mtok: 0.3,
+          cache_read_mtok: 0.007,
+          output_mtok: 1.2,
+        },
+      },
+      {
         id: 'databricks-deepseek-v4-flash-0731',
         name: 'DeepSeek V4 Flash (0731)',
         match: {
@@ -8410,6 +8421,17 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'databricks-kimi-k3-1-pro',
+        match: {
+          equals: 'databricks-kimi-k3-1-pro',
+        },
+        prices: {
+          input_mtok: 2,
+          cache_read_mtok: 0.2,
+          output_mtok: 10,
+        },
+      },
+      {
         id: 'databricks-llama-4-maverick',
         name: 'Llama 4 Maverick',
         match: {
@@ -8466,6 +8488,15 @@ export const data: Provider[] = [
         prices: {
           input_mtok: 0.5,
           output_mtok: 1.5,
+        },
+      },
+      {
+        id: 'databricks-openjev-qwen35-4b',
+        match: {
+          equals: 'databricks-openjev-qwen35-4b',
+        },
+        prices: {
+          input_mtok: 0.042,
         },
       },
       {
@@ -9730,6 +9761,18 @@ export const data: Provider[] = [
         },
       },
       {
+        id: 'glm-5p3-flash-flex',
+        name: 'GLM 5.3 Flash Flex',
+        match: {
+          equals: 'accounts/fireworks/routers/glm-5p3-flash-flex',
+        },
+        prices: {
+          input_mtok: 0.075,
+          cache_read_mtok: 0.015,
+          output_mtok: 0.25,
+        },
+      },
+      {
         id: 'glm-5p3-flash-us',
         name: 'GLM 5.3 Flash US',
         match: {
@@ -9739,6 +9782,30 @@ export const data: Provider[] = [
           input_mtok: 0.225,
           cache_read_mtok: 0.045,
           output_mtok: 0.75,
+        },
+      },
+      {
+        id: 'glm-5p3-flex',
+        name: 'GLM 5.3 Flex',
+        match: {
+          equals: 'accounts/fireworks/routers/glm-5p3-flex',
+        },
+        prices: {
+          input_mtok: 0.7,
+          cache_read_mtok: 0.13,
+          output_mtok: 2.2,
+        },
+      },
+      {
+        id: 'glm-5p3-spot',
+        name: 'GLM 5.3 Spot',
+        match: {
+          equals: 'accounts/fireworks/models/glm-5p3-spot',
+        },
+        prices: {
+          input_mtok: 0.7,
+          cache_read_mtok: 0.13,
+          output_mtok: 2.2,
         },
       },
       {
@@ -9825,6 +9892,18 @@ export const data: Provider[] = [
           input_mtok: 1,
           cache_read_mtok: 0.17,
           output_mtok: 4.05,
+        },
+      },
+      {
+        id: 'inkling-2-mini',
+        name: 'Inkling 2 Mini',
+        match: {
+          equals: 'accounts/fireworks/models/inkling-2-mini',
+        },
+        prices: {
+          input_mtok: 0.15,
+          cache_read_mtok: 0.015,
+          output_mtok: 0.5,
         },
       },
       {
@@ -9979,6 +10058,18 @@ export const data: Provider[] = [
           input_mtok: 2,
           cache_read_mtok: 0.2,
           output_mtok: 10,
+        },
+      },
+      {
+        id: 'kimi-k3p1-pro-ultrafast',
+        name: 'Kimi K3.1 Pro Ultra-fast (Preview)',
+        match: {
+          equals: 'accounts/fireworks/routers/kimi-k3p1-pro-ultrafast',
+        },
+        prices: {
+          input_mtok: 5,
+          cache_read_mtok: 0.5,
+          output_mtok: 25,
         },
       },
       {
@@ -23129,8 +23220,35 @@ export const data: Provider[] = [
               input_audio_hours: 0.24,
             },
           },
+          {
+            constraint: {
+              start_date: '2026-11-27',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.1,
+              cache_read_mtok: 0.01,
+              output_mtok: 0.3,
+              audio_hours: 0.24,
+              input_audio_hours: 0.24,
+            },
+          },
         ],
         price_variants: [
+          {
+            when: {
+              processing: 'batch',
+            },
+            prices: {
+              input_mtok: 0.05,
+              cache_read_mtok: 0.005,
+              output_mtok: 0.15,
+            },
+            constraint: {
+              start_date: '2026-11-27',
+              type: 'start_date',
+            },
+          },
           {
             when: {
               processing: 'batch',
@@ -23305,6 +23423,18 @@ export const data: Provider[] = [
           input_mtok: 0.25,
           cache_read_mtok: 0.005,
           output_mtok: 1,
+        },
+      },
+      {
+        id: 'deepseek-ai/DeepSeek-V4.1-Flash-1017-EU',
+        name: 'DeepSeek V4.1 Flash 1017 EU',
+        match: {
+          equals: 'deepseek-ai/DeepSeek-V4.1-Flash-1017-EU',
+        },
+        prices: {
+          input_mtok: 0.375,
+          cache_read_mtok: 0.0075,
+          output_mtok: 1.5,
         },
       },
       {
@@ -24730,10 +24860,24 @@ export const data: Provider[] = [
           equals: 'qwen/qwen-mt-plus',
         },
         context_window: 16384,
-        prices: {
-          input_mtok: 0.25,
-          output_mtok: 0.75,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 0.25,
+              output_mtok: 0.75,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-26',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 0.259,
+              output_mtok: 0.775,
+            },
+          },
+        ],
       },
       {
         id: 'qwen/qwen3-omni-30b-a3b-thinking',
@@ -53538,11 +53682,26 @@ export const data: Provider[] = [
           equals: 'Qwen/Qwen4-Max',
         },
         context_window: 1000000,
-        prices: {
-          input_mtok: 1.425,
-          cache_read_mtok: 0.07125,
-          output_mtok: 4.275,
-        },
+        prices: [
+          {
+            prices: {
+              input_mtok: 1.425,
+              cache_read_mtok: 0.07125,
+              output_mtok: 4.275,
+            },
+          },
+          {
+            constraint: {
+              start_date: '2026-11-26',
+              type: 'start_date',
+            },
+            prices: {
+              input_mtok: 1.5,
+              cache_read_mtok: 0.075,
+              output_mtok: 4.5,
+            },
+          },
+        ],
       },
       {
         id: 'Undi95/ReMM-SLERP-L2-13B',
